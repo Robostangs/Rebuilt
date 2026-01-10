@@ -11,7 +11,6 @@ import java.util.List;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -29,6 +28,7 @@ public class Robot extends TimedRobotstangs {
 
   private final RobotContainer m_robotContainer;
   private static Alert gcAlert = new Alert("MEMORY TWEAKING FIX RN", AlertType.kError);
+  private static GcStatsCollector gscollect = new GcStatsCollector();
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -62,6 +62,8 @@ public class Robot extends TimedRobotstangs {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    gscollect.update();
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

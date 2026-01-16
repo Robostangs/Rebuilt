@@ -11,6 +11,7 @@ import frc.robot.Constants;
 public class Kirby extends SubsystemBase {
     TalonFX kirbyWheels;
     TalonFXConfiguration kirbyConfiguration;
+    private static Kirby mInstance;
 
     /** The intake wheels. */
     public Kirby() {
@@ -27,5 +28,11 @@ public class Kirby extends SubsystemBase {
         SmartDashboard.putString("Intake/status", status);
     }
 
-    
+    public static Kirby getInstance() {
+        if (mInstance == null) {
+            mInstance = new Kirby();
+        }
+        return mInstance;
+    }
+
 }

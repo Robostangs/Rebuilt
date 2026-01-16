@@ -25,7 +25,7 @@ public class Kirby extends SubsystemBase {
     }
 
     public void postStatus(String status) {
-        SmartDashboard.putString("Intake/status", status);
+        SmartDashboard.putString("Kirby/status", status);
     }
 
     public static Kirby getInstance() {

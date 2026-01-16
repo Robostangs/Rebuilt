@@ -20,5 +20,8 @@ public final class Constants {
     public static final int kirbyWheelsID = 20;
     public static final double KirbyCurrentLimit = 0;
   }
+   public static class PunisherConstants {
+    public static final int punisherMotorID = 21;
 
+}
 }

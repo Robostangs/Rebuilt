@@ -25,7 +25,6 @@ public class Adjudication extends Command {
 
     @Override
     public void execute(){
-
     }
     @Override
     public void end(boolean interrupted) {

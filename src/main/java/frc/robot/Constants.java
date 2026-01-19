@@ -63,7 +63,13 @@ public final class Constants {
 
   public static class PunisherConstants {
     public static final int punisherMotorID = 35;
-    public static final int jigsaswMotorID = 45;
+    public static final int microMotorID = 45;
+    public static final double kAmyTeeth = 0;
+    public static final double kBillyTeeth = 0;
+    public static final double kPilgramGearteeth = 0;
+    public static final int kAmyID = 0;
+    public static final int kBillyID = 0;
+    public static final int curitsMotorID = 0;
 
   }
 

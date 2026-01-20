@@ -4,18 +4,26 @@
 
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix6.HootAutoReplay;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
     private final RobotContainer m_robotContainer;
+    public static ShuffleboardTab disableTab;
+    private BooleanSupplier isCoast = () -> false;
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -27,9 +35,19 @@ public class Robot extends TimedRobot {
     }
 
     @Override
+    public void robotInit() {
+        disableTab = Shuffleboard.getTab("Disabled");
+
+        disableTab.add("Set Drivetrain motors to coast", new InstantCommand(() -> {isCoast = () -> true;}));
+        disableTab.add("Set Drivetrain motors to brake", new InstantCommand(() -> {isCoast = () -> false;}));
+
+    }
+
+    @Override
     public void robotPeriodic() {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
+        CommandSwerveDrivetrain.getInstance().setCoastMode(isCoast.getAsBoolean());
     }
 
     @Override

@@ -7,7 +7,9 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule.ModuleRequest;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -275,6 +277,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
+    public void setCoastMode(boolean isCoast) {
+        for (var module : getModules()) {
+            module.getDriveMotor().setNeutralMode(isCoast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
+            module.getSteerMotor().setNeutralMode(isCoast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
+        }
+    }
+
     /**
      * Adds a vision measurement to the Kalman Filter. This will correct the
      * odometry pose estimate
@@ -339,5 +348,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     @Override
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
+    }
+
+
+    private static CommandSwerveDrivetrain mDrivetrain;
+
+    public static CommandSwerveDrivetrain getInstance() {
+        if (mDrivetrain == null) {
+            mDrivetrain = new CommandSwerveDrivetrain(Constants.ZiroTunerConstants.DrivetrainConstants,
+                    Constants.ZiroTunerConstants.FrontLeft,
+                    Constants.ZiroTunerConstants.FrontRight, Constants.ZiroTunerConstants.BackLeft,
+                    Constants.ZiroTunerConstants.BackRight);
+        }
+        return mDrivetrain;
     }
 }

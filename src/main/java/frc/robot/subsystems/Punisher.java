@@ -6,8 +6,6 @@ import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.InvertedValue;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -42,6 +40,10 @@ public class Punisher extends SubsystemBase {
 
     TalonFXConfiguration punisherConfig;
 
+    TalonFXConfiguration curtisConfig;
+
+    TalonFXConfiguration microConfig;
+
     private static Punisher mInstance;
 
     /**
@@ -57,20 +59,34 @@ public class Punisher extends SubsystemBase {
         amyCANcoder = new CANcoder(Constants.PunisherConstants.kAmyID);
         billyCANcoder = new CANcoder(Constants.PunisherConstants.kBillyID);
 
-
-
-
-
-    
-
         punisherConfig = new TalonFXConfiguration();
+        curtisConfig = new TalonFXConfiguration();
+        microConfig = new TalonFXConfiguration();
 
-        punisherConfig.Feedback.SensorToMechanismRatio = 19/200;
-        punisherConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        // TODO find supply current limit for each motor
+        configurePunisher();
+        configureCurtis();
+        configureMicro();
 
 
+
+    }
+
+    public void configurePunisher() {
+        punisherConfig.Feedback.SensorToMechanismRatio = 19 / 200;
+        punisherConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        punisherConfig.CurrentLimits.SupplyCurrentLimit = Constants.PunisherConstants.PunisherSupplyCurrentLimit;
         punisherMotor.getConfigurator().apply(punisherConfig);
+    }
 
+    public void configureCurtis() {
+        curtisConfig.CurrentLimits.SupplyCurrentLimit = Constants.PunisherConstants.CurtisSupplyCurrentLimit;
+        curtisMotor.getConfigurator().apply(curtisConfig);
+    }
+
+    public void configureMicro() {
+        microConfig.CurrentLimits.SupplyCurrentLimit = Constants.PunisherConstants.MicroSupplyCurrentLimit;
+        microMotor.getConfigurator().apply(microConfig);
     }
 
     public static Punisher getInstance() {
@@ -110,6 +126,14 @@ public class Punisher extends SubsystemBase {
         return (remainder)
                 * ((Constants.PunisherConstants.kAmyTeeth * Constants.PunisherConstants.kBillyTeeth)
                         / (Constants.PunisherConstants.kPilgramGearteeth * 2));
+    }
+
+    public double getRawGearPositionAmy() {
+        return amyCANcoder.getAbsolutePosition().getValueAsDouble();
+    }
+
+    public double getRawGearPositionBilly() {
+        return billyCANcoder.getAbsolutePosition().getValueAsDouble();
     }
 
     public void setMicrodutycycle(double speed) {

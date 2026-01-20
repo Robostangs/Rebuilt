@@ -70,6 +70,9 @@ public final class Constants {
     public static final int kAmyID = 0;
     public static final int kBillyID = 0;
     public static final int curitsMotorID = 0;
+    public static final double CurtisSupplyCurrentLimit = 0;
+    public static final double MicroSupplyCurrentLimit = 0;
+    public static final double PunisherSupplyCurrentLimit = 0;
 
   }
 

@@ -279,7 +279,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public void setCoastMode(boolean isCoast) {
         for (var module : getModules()) {
-            module.getDriveMotor().setNeutralMode(isCoast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
             module.getSteerMotor().setNeutralMode(isCoast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
         }
     }

@@ -38,8 +38,8 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         disableTab = Shuffleboard.getTab("Disabled");
 
-        disableTab.add("Set Drivetrain motors to coast", new InstantCommand(() -> {isCoast = () -> true;}));
-        disableTab.add("Set Drivetrain motors to brake", new InstantCommand(() -> {isCoast = () -> false;}));
+        disableTab.add("Set Drivetrain motors to coast", new InstantCommand(()-> CommandSwerveDrivetrain.getInstance().setCoastMode(true)).ignoringDisable(true));
+        disableTab.add("Set Drivetrain motors to brake", new InstantCommand(()-> CommandSwerveDrivetrain.getInstance().setCoastMode(false)).ignoringDisable(true));
 
     }
 
@@ -47,7 +47,6 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
-        CommandSwerveDrivetrain.getInstance().setCoastMode(isCoast.getAsBoolean());
     }
 
     @Override

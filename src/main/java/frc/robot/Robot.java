@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
 
         disableTab.add("Set Drivetrain motors to coast", new InstantCommand(()-> CommandSwerveDrivetrain.getInstance().setCoastMode(true)).ignoringDisable(true));
         disableTab.add("Set Drivetrain motors to brake", new InstantCommand(()-> CommandSwerveDrivetrain.getInstance().setCoastMode(false)).ignoringDisable(true));
+        // disabledTab.add()
 
     }
 

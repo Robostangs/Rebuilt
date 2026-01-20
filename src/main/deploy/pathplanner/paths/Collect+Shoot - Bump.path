@@ -64,108 +64,28 @@
     },
     {
       "anchor": {
-        "x": 4.549238636363636,
-        "y": 2.313761363636364
+        "x": 2.6884615384608694,
+        "y": 3.6212522361414354
       },
       "prevControl": {
-        "x": 6.619454707370982,
-        "y": 1.8522915775352913
+        "x": 2.6073345259355225,
+        "y": 1.7877817531347537
       },
       "nextControl": {
-        "x": 2.283567372670113,
-        "y": 2.8187998705219037
+        "x": 2.8688133325725174,
+        "y": 7.697202782917604
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.6560107334525935,
-        "y": 4.383846153846154
+        "x": 1.0983720930196013,
+        "y": 3.6212522361414354
       },
       "prevControl": {
-        "x": 2.587664549582674,
-        "y": 4.143369961364613
-      },
-      "nextControl": {
-        "x": 2.730093885891375,
-        "y": 4.644507882369499
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.2611249999999994,
-        "y": 5.56830053667263
-      },
-      "prevControl": {
-        "x": 2.449178249495758,
-        "y": 5.211325212955287
-      },
-      "nextControl": {
-        "x": 2.0967293532116047,
-        "y": 5.880367408089986
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.380178890876565,
-        "y": 1.9662611806797852
-      },
-      "prevControl": {
-        "x": 2.663156780355747,
-        "y": 2.698877416632802
-      },
-      "nextControl": {
-        "x": 2.2452545811141045,
-        "y": 1.6169485890187862
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.0,
-        "y": 5.6981037567084085
-      },
-      "prevControl": {
-        "x": 3.0770098513367783,
-        "y": 3.381233480088276
-      },
-      "nextControl": {
-        "x": 1.4964783924900766,
-        "y": 6.781282563873227
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.0,
-        "y": 2.0960644007155635
-      },
-      "prevControl": {
-        "x": 2.917619165619798,
-        "y": 4.387255778350277
-      },
-      "nextControl": {
-        "x": 1.146518378285459,
-        "y": -0.034982776488096334
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.0172450805008941,
-        "y": 3.6699284436493738
-      },
-      "prevControl": {
-        "x": 2.5653845505227233,
-        "y": 2.349915983377101
+        "x": 1.9907692307655762,
+        "y": 2.4043470483047
       },
       "nextControl": null,
       "isLocked": false,
@@ -186,11 +106,42 @@
       "rotationDegrees": -90.6820603931726
     },
     {
-      "waypointRelativePos": 4,
+      "waypointRelativePos": 3.25,
       "rotationDegrees": -178.58557678859782
+    },
+    {
+      "waypointRelativePos": 4,
+      "rotationDegrees": -179.99999999994952
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.6610169491525424,
+      "maxWaypointRelativePos": 3.1,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 3.7457627118644066,
+      "maxWaypointRelativePos": 4.711864406779661,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -203,7 +154,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -3.9451862285636192
   },
   "reversed": false,
   "folder": "Bump",

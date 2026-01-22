@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,7 +30,9 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ZiroTunerConstants.TunerSwerveDrivetrain;
+import frc.robot.LimelightHelpers;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -348,6 +351,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
     }
 
+    public Pose2d getPose(){
+        return this.getState().Pose;
+    }
+
 
     private static CommandSwerveDrivetrain mDrivetrain;
 
@@ -360,4 +367,105 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
         return mDrivetrain;
     }
+
+public void configLL3(){
+
+}
+
+    public void configLL4(){
+
+        /*
+         * Only seed ll4 with external yaw angle if not rotating fast, otherwise use
+         * internal imu with mode 2
+         */
+        if (this.getPigeon2().getAngularVelocityZWorld()
+                .getValueAsDouble() > Constants.VisionConstants.kLL4SeedMaxWz) {
+            /*
+             * 0 - Use external IMU yaw submitted via SetRobotOrientation() for MT2
+             * localization. The internal IMU is ignored entirely.
+             * 1 - Use external IMU yaw submitted via SetRobotOrientation(), and configure
+             * the LL4 internal IMU’s fused yaw to match the submitted yaw value.
+             * 2 - Use internal IMU for MT2 localization. External imu data is ignored
+             * entirely
+             */
+            LimelightHelpers.SetIMUMode(Constants.VisionConstants.kLimelightFour, 2);
+        } else {
+            LimelightHelpers.SetIMUMode(Constants.VisionConstants.kLimelightFour, 1);
+
+            LimelightHelpers.SetRobotOrientation(Constants.VisionConstants.kLimelightFour,
+                    this.getState().Pose.getRotation().getDegrees(),
+                    0d,
+                    0d,
+                    0d,
+                    0d,
+                    0d);
+
+        }
+
+        /** Seed the three unconditionally bc it doesn't got that dawg(imu) in him */
+        LimelightHelpers.SetRobotOrientation(Constants.VisionConstants.kLimelightThree,
+                this.getState().Pose.getRotation().getDegrees(),
+                0d,
+                0d,
+                0d,
+                0d,
+                0d);
+
+        if (DriverStation.isDisabled()) {
+            NetworkTableInstance.getDefault().getTable(Constants.VisionConstants.kLimelightFour)
+                    .getEntry("throttle-set").setNumber(200);
+        } else {
+            NetworkTableInstance.getDefault().getTable(Constants.VisionConstants.kLimelightFour)
+                    .getEntry("throttle-set").setNumber(0);
+        }
+        if (!Robot.isSimulation()) {
+
+
+
+            LimelightHelpers.PoseEstimate fourPoseEsti, threePoseEsti;
+            if (DriverStation.isDisabled()) {
+
+                fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.VisionConstants.kLimelightFour);
+                threePoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.VisionConstants.kLimelightThree);
+            } else if (this.getPigeon2().getAngularVelocityZWorld()
+                    .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
+
+                fourPoseEsti = LimelightHelpers
+                        .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.VisionConstants.kLimelightFour);
+                threePoseEsti = LimelightHelpers
+                        .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.VisionConstants.kLimelightThree);
+            } else {
+                fourPoseEsti = LimelightHelpers
+                        .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.VisionConstants.kLimelightFour);
+                threePoseEsti = null;
+
+            }
+
+            if (isPosegoo(threePoseEsti)) {
+                this.addVisionMeasurement(threePoseEsti.pose, threePoseEsti.timestampSeconds);
+                Robot.teleopField.getObject("Limelight Three Pose").setPose(threePoseEsti.pose);
+            }
+
+            if (isPosegoo(fourPoseEsti)) {
+                this.addVisionMeasurement(fourPoseEsti.pose, fourPoseEsti.timestampSeconds);
+                Robot.teleopField.getObject("Limelight Four Pose").setPose(fourPoseEsti.pose);
+            }
+
+        }
+
+    }
+
+    private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
+        if (yoPoseEsti == null) {
+            return false;
+        }
+        if (yoPoseEsti.tagCount < 1) {
+            return false;
+        }
+
+        SmartDashboard.putNumber("Error Distance", yoPoseEsti.pose.getTranslation().minus(this.getState().Pose.getTranslation()).getNorm());
+
+        return RobotContainer.useVision;
+    }
+
 }

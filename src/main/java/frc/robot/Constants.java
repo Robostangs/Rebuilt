@@ -102,6 +102,15 @@ public final class Constants {
 
   }
 
+  public class VisionConstants {
+    public static final double kLL4SeedMaxWz = 1;
+    public static final String kLimelightFour = "limelight-cyclops";
+    public static final String kLimelightThree = "limelight-agomoto";
+        public static final double kVisionAngularThreshold = 22.5;
+
+
+  }
+
   public class ZiroTunerConstants {
     // Both sets of gains need to be tuned to your individual robot.
 
@@ -370,4 +379,5 @@ public final class Constants {
       }
     }
   }
+
 }

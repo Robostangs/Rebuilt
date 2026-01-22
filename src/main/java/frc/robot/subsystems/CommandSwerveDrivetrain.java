@@ -259,9 +259,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                                 : kBlueAlliancePerspectiveRotation);
                 m_hasAppliedOperatorPerspective = true;
             });
+
+            configLL3(Constants.VisionConstants.kLimelightThree);
+            configLL4(Constants.VisionConstants.kLimelightFour);
         }
 
-        SmartDashboard.putBoolean("Robot/is red",  Robot.isRed());
+        SmartDashboard.putBoolean("Robot/is red", Robot.isRed());
     }
 
     private void startSimThread() {
@@ -326,17 +329,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds),
                 visionMeasurementStdDevs);
     }
-    public void configurePathPlanner(){
-        AutoBuilder.configure(() ->this.getState().Pose, 
-        (pose) -> this.resetPose(pose), 
-        () -> this.getState().Speeds, 
-        (speed,feedforward) -> new SwerveRequest.ApplyRobotSpeeds()
-            .withSpeeds(speed)
-            .withWheelForceFeedforwardsX(feedforward.robotRelativeForcesX())
-            .withWheelForceFeedforwardsY(feedforward.robotRelativeForcesY()), 
-            new PPHolonomicDriveController((Constants.AutoConstants.rotationPID), (Constants.AutoConstants.translationPID)) , 
-            Constants.AutoConstants.RobotConfig , 
-            () ->Robot.isRed());
+
+    public void configurePathPlanner() {
+        AutoBuilder.configure(() -> this.getState().Pose,
+                (pose) -> this.resetPose(pose),
+                () -> this.getState().Speeds,
+                (speed, feedforward) -> new SwerveRequest.ApplyRobotSpeeds()
+                        .withSpeeds(speed)
+                        .withWheelForceFeedforwardsX(feedforward.robotRelativeForcesX())
+                        .withWheelForceFeedforwardsY(feedforward.robotRelativeForcesY()),
+                new PPHolonomicDriveController((Constants.AutoConstants.rotationPID),
+                        (Constants.AutoConstants.translationPID)),
+                Constants.AutoConstants.RobotConfig,
+                () -> Robot.isRed());
     }
 
     /**
@@ -351,10 +356,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
     }
 
-    public Pose2d getPose(){
+    public Pose2d getPose() {
         return this.getState().Pose;
     }
-
 
     private static CommandSwerveDrivetrain mDrivetrain;
 
@@ -368,11 +372,40 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return mDrivetrain;
     }
 
-public void configLL3(){
+    public void configLL3(String LLname) {
 
-}
+        LimelightHelpers.PoseEstimate threePoseEsti;
 
-    public void configLL4(){
+        /** Seed the three unconditionally bc it doesn't got that dawg(imu) in him */
+        LimelightHelpers.SetRobotOrientation(LLname,
+                this.getState().Pose.getRotation().getDegrees(),
+                0d,
+                0d,
+                0d,
+                0d,
+                0d);
+
+        if (DriverStation.isDisabled()) {
+
+            threePoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(LLname);
+        } else if (this.getPigeon2().getAngularVelocityZWorld()
+                .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
+
+            threePoseEsti = LimelightHelpers
+                    .getBotPoseEstimate_wpiBlue_MegaTag2(LLname);
+        } else {
+            threePoseEsti = null;
+
+        }
+
+        if (isPosegoo(threePoseEsti)) {
+            this.addVisionMeasurement(threePoseEsti.pose, threePoseEsti.timestampSeconds);
+            Robot.teleopField.getObject("Limelight Three Pose").setPose(threePoseEsti.pose);
+        }
+
+    }
+
+    public void configLL4(String LLname) {
 
         /*
          * Only seed ll4 with external yaw angle if not rotating fast, otherwise use
@@ -388,11 +421,11 @@ public void configLL3(){
              * 2 - Use internal IMU for MT2 localization. External imu data is ignored
              * entirely
              */
-            LimelightHelpers.SetIMUMode(Constants.VisionConstants.kLimelightFour, 2);
+            LimelightHelpers.SetIMUMode(LLname, 2);
         } else {
-            LimelightHelpers.SetIMUMode(Constants.VisionConstants.kLimelightFour, 1);
+            LimelightHelpers.SetIMUMode(LLname, 1);
 
-            LimelightHelpers.SetRobotOrientation(Constants.VisionConstants.kLimelightFour,
+            LimelightHelpers.SetRobotOrientation(LLname,
                     this.getState().Pose.getRotation().getDegrees(),
                     0d,
                     0d,
@@ -402,50 +435,30 @@ public void configLL3(){
 
         }
 
-        /** Seed the three unconditionally bc it doesn't got that dawg(imu) in him */
-        LimelightHelpers.SetRobotOrientation(Constants.VisionConstants.kLimelightThree,
-                this.getState().Pose.getRotation().getDegrees(),
-                0d,
-                0d,
-                0d,
-                0d,
-                0d);
-
         if (DriverStation.isDisabled()) {
-            NetworkTableInstance.getDefault().getTable(Constants.VisionConstants.kLimelightFour)
+            NetworkTableInstance.getDefault().getTable(LLname)
                     .getEntry("throttle-set").setNumber(200);
         } else {
-            NetworkTableInstance.getDefault().getTable(Constants.VisionConstants.kLimelightFour)
+            NetworkTableInstance.getDefault().getTable(LLname)
                     .getEntry("throttle-set").setNumber(0);
         }
         if (!Robot.isSimulation()) {
 
-
-
-            LimelightHelpers.PoseEstimate fourPoseEsti, threePoseEsti;
+            LimelightHelpers.PoseEstimate fourPoseEsti;
             if (DriverStation.isDisabled()) {
 
-                fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.VisionConstants.kLimelightFour);
-                threePoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.VisionConstants.kLimelightThree);
+                fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(LLname);
             } else if (this.getPigeon2().getAngularVelocityZWorld()
                     .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
 
                 fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.VisionConstants.kLimelightFour);
-                threePoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.VisionConstants.kLimelightThree);
+                        .getBotPoseEstimate_wpiBlue_MegaTag2(LLname);
+
             } else {
                 fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue_MegaTag2(Constants.VisionConstants.kLimelightFour);
-                threePoseEsti = null;
+                        .getBotPoseEstimate_wpiBlue_MegaTag2(LLname);
 
             }
-
-            if (isPosegoo(threePoseEsti)) {
-                this.addVisionMeasurement(threePoseEsti.pose, threePoseEsti.timestampSeconds);
-                Robot.teleopField.getObject("Limelight Three Pose").setPose(threePoseEsti.pose);
-            }
-
             if (isPosegoo(fourPoseEsti)) {
                 this.addVisionMeasurement(fourPoseEsti.pose, fourPoseEsti.timestampSeconds);
                 Robot.teleopField.getObject("Limelight Four Pose").setPose(fourPoseEsti.pose);
@@ -463,7 +476,8 @@ public void configLL3(){
             return false;
         }
 
-        SmartDashboard.putNumber("Error Distance", yoPoseEsti.pose.getTranslation().minus(this.getState().Pose.getTranslation()).getNorm());
+        SmartDashboard.putNumber("Error Distance",
+                yoPoseEsti.pose.getTranslation().minus(this.getState().Pose.getTranslation()).getNorm());
 
         return RobotContainer.useVision;
     }

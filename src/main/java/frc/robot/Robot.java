@@ -26,7 +26,6 @@ public class Robot extends TimedRobot {
 
     private final RobotContainer m_robotContainer;
     public static ShuffleboardTab disableTab;
-    private BooleanSupplier isCoast = () -> false;
 
     public static Field2d teleopField = new Field2d();
 

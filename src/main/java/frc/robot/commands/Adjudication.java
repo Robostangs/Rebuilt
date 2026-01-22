@@ -1,21 +1,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Punisher;
+import frc.robot.subsystems.IronMan;
 
 public class Adjudication extends Command {
 
-    Punisher punisher;
+    IronMan punisher;
 
     public Adjudication( ) {
-        this.punisher = Punisher.getInstance();
+        this.punisher = IronMan.getInstance();
         addRequirements(punisher);
     }
 
     @Override
     public void initialize() {
-            punisher.setPunisherdutycycle(-0.4);
-            punisher.setMicrodutycycle(-0.25);
+            punisher.setPepperdutycycle(-0.4);
+            punisher.setHappyDutyCycle(-0.25);
 
     }
 
@@ -24,7 +24,7 @@ public class Adjudication extends Command {
     }
     @Override
     public void end(boolean interrupted) {
-        punisher.setPunisherdutycycle(0);
-        punisher.setMicrodutycycle(0);
+        punisher.setPepperdutycycle(0);
+        punisher.setHappyDutyCycle(0);
     }
 }

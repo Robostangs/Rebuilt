@@ -16,7 +16,6 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
-import com.pathplanner.lib.controllers.PathFollowingController;
 import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
@@ -62,14 +61,14 @@ public final class Constants {
   }
 
   public static class PunisherConstants {
-    public static final int punisherMotorID = 35;
-    public static final int microMotorID = 45;
+    public static final int ironmanMotorID = 35;
+    public static final int happyMotorID = 45;
     public static final double kAmyTeeth = 0;
     public static final double kBillyTeeth = 0;
     public static final double kPilgramGearteeth = 0;
     public static final int kAmyID = 0;
     public static final int kBillyID = 0;
-    public static final int curitsMotorID = 0;
+    public static final int pepperMotorID = 0;
     public static final double CurtisSupplyCurrentLimit = 0;
     public static final double MicroSupplyCurrentLimit = 0;
     public static final double PunisherSupplyCurrentLimit = 0;

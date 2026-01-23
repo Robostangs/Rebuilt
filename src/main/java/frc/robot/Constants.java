@@ -78,10 +78,10 @@ public final class Constants {
     public static final int pepperMotorID = 0;
     public static final double CurtisSupplyCurrentLimit = 0;
     public static final double MicroSupplyCurrentLimit = 0;
-    public static final double PunisherSupplyCurrentLimit = 0;
+    public static final double IronManSupplyCurrentLimit = 0;
     public static final double dumbThing = ((19d * 21d) / 200d) / 2d;
-    public static Object kIronmanToRobotCenterX;
-    public static Object kIronmanToRobotCenterY;
+    public static final double kIronmanToRobotCenterX = 0;
+    public static final double kIronmanToRobotCenterY = 0;
 
   }
 

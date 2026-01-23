@@ -121,7 +121,7 @@ public class IronMan extends SubsystemBase {
     /**
      * @param rotations Set motion magic target position in rotations
      */
-    public void setIronmanposition(double rotations) {
+    public void setIronmansetpoint(double rotations) {
         controlThreeThousand.Position = rotations;
     }
     // get sensor to mechinasm ratio (19:200) and (21:200)
@@ -129,7 +129,7 @@ public class IronMan extends SubsystemBase {
     // ** on initilize get small tooth, use raw gear postions, then use formula,
     // result of formula is the set postion we use to set the current to that */
 
-    public double getBigGearposition(double theta1, double theta2) {
+    private double getGearDifference(double theta1, double theta2) {
 
         double remainder = (theta1 - theta2) % 1;
         if (remainder < 0) {
@@ -140,6 +140,27 @@ public class IronMan extends SubsystemBase {
         return (remainder)
                 * ((Constants.IronManConstants.kHarleyTeeth * Constants.IronManConstants.kYinsenTeeth)
                         / (Constants.IronManConstants.kObadiahGearteeth * 2));
+    }
+
+    /**
+     * @param theta1 small gear position in rotations
+     * @param theta2 big gear position in rotations 
+     * @return big gear position in rotations
+     */
+    public double getBigGearPosition(double theta1, double theta2) {
+        
+        double geardiff = getGearDifference(theta1, theta2);
+
+        if(geardiff > 0.5){
+            return (geardiff - 1)*Constants.IronManConstants.dumbThing;
+        } else {
+            return geardiff*Constants.IronManConstants.dumbThing;
+        }
+    
+    }
+
+    public void setIronmanRotation(double rotations){
+        ironManPose.transformBy(new Transform2d(0,0 , new Rotation2d(Units.rotationsToRadians(rotations))));
     }
 
     public double getRawGearPositionHarley() {
@@ -182,7 +203,6 @@ public class IronMan extends SubsystemBase {
     public void periodic() {
 
         // TODO get this to be right, in rotations
-
         ironManPose.rotateBy(new Rotation2d(Units.rotationsToRadians(IronManPosition())));
 
         controlThreeThousand.Position = aimingJohnsRotaions();

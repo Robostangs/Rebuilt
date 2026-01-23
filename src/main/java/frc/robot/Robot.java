@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import java.util.function.BooleanSupplier;
-
 import com.ctre.phoenix6.HootAutoReplay;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -19,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.IronMan;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
@@ -42,6 +41,10 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         SmartDashboard.putData("Field", teleopField);
 
+        IronMan tony = IronMan.getInstance();
+        tony.setIronmanRotation(
+                tony.getBigGearPosition(tony.getRawGearPositionHarley(), tony.getRawGearPositionYinsen()));
+
         disableTab = Shuffleboard.getTab("Disabled");
 
         disableTab.add("Set Drivetrain motors to coast",
@@ -50,6 +53,7 @@ public class Robot extends TimedRobot {
         disableTab.add("Set Drivetrain motors to brake",
                 new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(false))
                         .ignoringDisable(true));
+
         // disabledTab.add()
 
     }
@@ -106,10 +110,6 @@ public class Robot extends TimedRobot {
     public void teleopExit() {
     }
 
-    
-
-
-
     @Override
     public void testInit() {
         CommandScheduler.getInstance().cancelAll();
@@ -129,7 +129,7 @@ public class Robot extends TimedRobot {
 
     public static boolean isRed() {
         if (Robot.isSimulation()) {
-        return false;
+            return false;
         }
         if (DriverStation.getAlliance().get() == (Alliance.Red)) {
             return true;

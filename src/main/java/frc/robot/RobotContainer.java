@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.Adjudication;
+import frc.robot.commands.Repulsor;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class RobotContainer {
@@ -71,7 +71,7 @@ public class RobotContainer {
                                                                                   // negative X (left)
                 ));}
 
-        xDrive.rightTrigger().whileTrue(new Adjudication());
+        xDrive.rightTrigger().whileTrue(new Repulsor());
 
         // Reset the field-centric heading on left bumper press.
         xDrive.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));

@@ -6,6 +6,12 @@ import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import edu.wpi.first.math.geometry.Translation2d;
+
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -44,20 +50,23 @@ public class IronMan extends SubsystemBase {
 
     TalonFXConfiguration happyConfig;
 
+    ;
+
     private static IronMan mInstance;
 
     /**
      * The Turret
      */
     public IronMan() {
-        pepperMotor = new TalonFX(Constants.PunisherConstants.pepperMotorID);
-        happyMotor = new TalonFX(Constants.PunisherConstants.happyMotorID);
-        ironmanMotor = new TalonFX(Constants.PunisherConstants.ironmanMotorID);
+        pepperMotor = new TalonFX(Constants.IronManConstants.pepperMotorID);
+        happyMotor = new TalonFX(Constants.IronManConstants.happyMotorID);
+        ironmanMotor = new TalonFX(Constants.IronManConstants.ironmanMotorID);
 
         controlThreeThousand = new MotionMagicTorqueCurrentFOC(ironmanMotor.getPosition().getValueAsDouble());
 
-        harleyCANcoder = new CANcoder(Constants.PunisherConstants.kAmyID);
-        yinsenCANcoder = new CANcoder(Constants.PunisherConstants.kBillyID);
+        harleyConfig = new CANcoderConfiguration();
+
+        
 
         ironmanConfig = new TalonFXConfiguration();
         pepperConfig = new TalonFXConfiguration();
@@ -75,17 +84,19 @@ public class IronMan extends SubsystemBase {
     public void configureIronman() {
         ironmanConfig.Feedback.SensorToMechanismRatio = 19 / 200;
         ironmanConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        ironmanConfig.CurrentLimits.SupplyCurrentLimit = Constants.PunisherConstants.PunisherSupplyCurrentLimit;
+        ironmanConfig.CurrentLimits.SupplyCurrentLimit = Constants.IronManConstants.PunisherSupplyCurrentLimit;
+        ironmanConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        ironmanConfig.Feedback.FeedbackRemoteSensorID = harleyCANcoder.getDeviceID();
         ironmanMotor.getConfigurator().apply(ironmanConfig);
     }
 
     public void configurePepper() {
-        pepperConfig.CurrentLimits.SupplyCurrentLimit = Constants.PunisherConstants.CurtisSupplyCurrentLimit;
+        pepperConfig.CurrentLimits.SupplyCurrentLimit = Constants.IronManConstants.CurtisSupplyCurrentLimit;
         pepperMotor.getConfigurator().apply(pepperConfig);
     }
 
     public void configureHappy() {
-        happyConfig.CurrentLimits.SupplyCurrentLimit = Constants.PunisherConstants.MicroSupplyCurrentLimit;
+        happyConfig.CurrentLimits.SupplyCurrentLimit = Constants.IronManConstants.MicroSupplyCurrentLimit;
         happyMotor.getConfigurator().apply(happyConfig);
     }
 
@@ -124,8 +135,8 @@ public class IronMan extends SubsystemBase {
         }
 
         return (remainder)
-                * ((Constants.PunisherConstants.kAmyTeeth * Constants.PunisherConstants.kBillyTeeth)
-                        / (Constants.PunisherConstants.kPilgramGearteeth * 2));
+                * ((Constants.IronManConstants.kHarleyTeeth * Constants.IronManConstants.kYinsenTeeth)
+                        / (Constants.IronManConstants.kObadiahGearteeth * 2));
     }
 
     public double getRawGearPositionHarley() {
@@ -136,16 +147,42 @@ public class IronMan extends SubsystemBase {
         return yinsenCANcoder.getAbsolutePosition().getValueAsDouble();
     }
 
+    public Rotation2d aimingJohns(){
+        Pose2d ironManPose = CommandSwerveDrivetrain.getInstance().getPose().transformBy(
+            new Transform2d(
+                new Translation2d(
+                    //TODO find these values
+                    (double)Constants.IronManConstants.kIronmanToRobotCenterX,
+                    (double)Constants.IronManConstants.kIronmanToRobotCenterY
+                ),
+                new Rotation2d()
+        ));
+        Translation2d ironManTranslation = ironManPose.getTranslation().minus(
+                Constants.FieldConstants.HubPosition.getTranslation()
+        );
+        Rotation2d targetAngle = 
+        new Rotation2d(Math.atan2(
+            ironManTranslation.getY(),
+            ironManTranslation.getX()
+            ));
+        return targetAngle;
+    }
+
     public void setHappyDutyCycle(double speed) {
         happyMotor.set(speed);
 
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("Ironman/Position", ironmanMotor.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Ironman/Target", controlThreeThousand.Position);
+  
+
+        //TODO get this to be right, in rotations
+        controlThreeThousand.Position = aimingJohns().getDegrees();
 
         ironmanMotor.setControl(controlThreeThousand);
+
+        SmartDashboard.putNumber("Ironman/Position", ironmanMotor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Ironman/Target", controlThreeThousand.Position);
 
     }
 

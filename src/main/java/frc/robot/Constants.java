@@ -22,6 +22,8 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -60,18 +62,26 @@ public final class Constants {
     public static final double KirbyCurrentLimit = 0;
   }
 
-  public static class PunisherConstants {
+  public static class FieldConstants {
+    public static final Pose2d HubPosition = Robot.isRed() ? new Pose2d(11.9, 4d, new Rotation2d())
+        : new Pose2d(4.6, 4d, new Rotation2d());
+  }
+
+  public static class IronManConstants {
     public static final int ironmanMotorID = 35;
     public static final int happyMotorID = 45;
-    public static final double kAmyTeeth = 0;
-    public static final double kBillyTeeth = 0;
-    public static final double kPilgramGearteeth = 0;
+    public static final double kHarleyTeeth = 0;
+    public static final double kYinsenTeeth = 0;
+    public static final double kObadiahGearteeth = 0;
     public static final int kAmyID = 0;
     public static final int kBillyID = 0;
     public static final int pepperMotorID = 0;
     public static final double CurtisSupplyCurrentLimit = 0;
     public static final double MicroSupplyCurrentLimit = 0;
     public static final double PunisherSupplyCurrentLimit = 0;
+    public static final double dumbThing = ((19d * 21d) / 200d) / 2d;
+    public static Object kIronmanToRobotCenterX;
+    public static Object kIronmanToRobotCenterY;
 
   }
 
@@ -106,8 +116,7 @@ public final class Constants {
     public static final double kLL4SeedMaxWz = 1;
     public static final String kLimelightFour = "limelight-cyclops";
     public static final String kLimelightThree = "limelight-agomoto";
-        public static final double kVisionAngularThreshold = 22.5;
-
+    public static final double kVisionAngularThreshold = 22.5;
 
   }
 

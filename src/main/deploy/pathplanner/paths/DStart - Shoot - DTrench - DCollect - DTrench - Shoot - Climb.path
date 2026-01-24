@@ -3,89 +3,89 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 3.398459277201601,
+        "y": 7.351525257005095
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5700909090909088,
-        "y": 7.858829545454546
+        "x": 4.568131867721031,
+        "y": 7.586780164779855
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.580159090909091,
-        "y": 7.456863636363637
+        "x": 5.616141512008734,
+        "y": 7.507555381186318
       },
       "prevControl": {
-        "x": 4.0132840909090906,
-        "y": 7.518704545454545
+        "x": 5.098407356329053,
+        "y": 7.8212494669998005
       },
       "nextControl": {
-        "x": 6.059140837378903,
-        "y": 7.295520173112386
+        "x": 7.730845986690946,
+        "y": 6.226260184271512
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.661897727272727,
-        "y": 5.890227272727272
+        "x": 7.758127444959971,
+        "y": 5.952041257278021
       },
       "prevControl": {
-        "x": 6.964397848256127,
-        "y": 6.64586246033077
+        "x": 7.717250527509274,
+        "y": 6.240312299439686
       },
       "nextControl": {
-        "x": 8.156621352260519,
-        "y": 5.354269360151584
+        "x": 7.957889885826056,
+        "y": 4.543282216612082
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.125704545454544,
-        "y": 2.313761363636364
+        "x": 6.955736672125182,
+        "y": 4.78932013054949
       },
       "prevControl": {
-        "x": 8.826623417757514,
-        "y": 2.8839590407544984
+        "x": 7.121506382752563,
+        "y": 4.246226983351212
       },
       "nextControl": {
-        "x": 7.511956505674008,
-        "y": 1.814477180477144
+        "x": 6.589222957605531,
+        "y": 5.990088871451965
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.384329545454545,
-        "y": 0.5409886363636371
+        "x": 5.736916507459971,
+        "y": 7.145429858078603
       },
       "prevControl": {
-        "x": 6.249081200766888,
-        "y": 0.4424114563471256
+        "x": 6.926562596429622,
+        "y": 6.440608530760918
       },
       "nextControl": {
-        "x": 2.044681818181818,
-        "y": 0.6646704545454556
+        "x": 3.855279976346434,
+        "y": 8.260229939956332
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.1789090909090907,
-        "y": 3.6433409090909095
+        "x": 1.3510687886644832,
+        "y": 4.24877473389738
       },
       "prevControl": {
-        "x": 1.8122898032200352,
-        "y": 3.2642933810375667
+        "x": 2.2551289410707414,
+        "y": 5.921715164200847
       },
       "nextControl": null,
       "isLocked": false,
@@ -94,19 +94,11 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1,
-      "rotationDegrees": 0.0
-    },
-    {
       "waypointRelativePos": 2,
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 3,
-      "rotationDegrees": -90.6820603931726
-    },
-    {
-      "waypointRelativePos": 4,
+      "waypointRelativePos": 3.0,
       "rotationDegrees": -178.58557678859782
     }
   ],
@@ -114,7 +106,7 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 1.6610169491525424,
-      "maxWaypointRelativePos": 3.3728813559322006,
+      "maxWaypointRelativePos": 2.7,
       "constraints": {
         "maxVelocity": 2.0,
         "maxAcceleration": 3.0,
@@ -137,13 +129,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -1.2966531219995652
   },
   "reversed": false,
   "folder": "Trench",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 2.2586912582200283
+    "rotation": -42.118526862711555
   },
   "useDefaultConstraints": true
 }

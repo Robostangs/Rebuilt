@@ -102,9 +102,9 @@ public class RobotContainer {
     }
     public void configureManipBindings(){
         //Turret target hub
-        xManip.x().onTrue(new InstantCommand(() -> IronMan.setManipTarget(true)));
+        xManip.y().onTrue(new InstantCommand(() -> IronMan.setManipTarget(true)));
         //Turret target pass
-        xManip.y().onTrue(new InstantCommand(() -> IronMan.setManipTarget(false)));
+        xManip.b().onTrue(new InstantCommand(() -> IronMan.setManipTarget(false)));
 
 
     }

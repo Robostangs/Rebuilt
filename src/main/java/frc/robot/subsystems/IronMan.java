@@ -50,6 +50,10 @@ public class IronMan extends SubsystemBase {
 
     TalonFXConfiguration happyConfig;
 
+     
+    
+    
+
     Pose2d ironManPose;
 
     static boolean isHub = true;
@@ -86,6 +90,8 @@ public class IronMan extends SubsystemBase {
         configurePepper();
         configureHappy();
 
+        controlThreeThousand.
+
     }
 
     public void configureIronman() {
@@ -94,6 +100,7 @@ public class IronMan extends SubsystemBase {
         ironmanConfig.CurrentLimits.SupplyCurrentLimit = Constants.IronManConstants.IronManSupplyCurrentLimit;
         ironmanConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         ironmanConfig.Feedback.FeedbackRemoteSensorID = harleyCANcoder.getDeviceID();
+
         ironmanMotor.getConfigurator().apply(ironmanConfig);
     }
 
@@ -141,6 +148,7 @@ public class IronMan extends SubsystemBase {
 
         }
 
+        // TODO, make this constant
         return (remainder)
                 * ((Constants.IronManConstants.kHarleyTeeth * Constants.IronManConstants.kYinsenTeeth)
                         / (Constants.IronManConstants.kObadiahGearteeth * 2));
@@ -148,23 +156,23 @@ public class IronMan extends SubsystemBase {
 
     /**
      * @param theta1 small gear position in rotations
-     * @param theta2 big gear position in rotations 
+     * @param theta2 big gear position in rotations
      * @return big gear position in rotations
      */
     public double getBigGearPosition(double theta1, double theta2) {
-        
+
         double geardiff = getGearDifference(theta1, theta2);
 
-        if(geardiff > 0.5){
-            return (geardiff - 1)*Constants.IronManConstants.dumbThing;
+        if (geardiff > 0.5) {
+            return (geardiff - 1) * Constants.IronManConstants.dumbThing;
         } else {
-            return geardiff*Constants.IronManConstants.dumbThing;
+            return geardiff * Constants.IronManConstants.dumbThing;
         }
-    
+
     }
 
-    public void setIronmanRotation(double rotations){
-        ironManPose.transformBy(new Transform2d(0,0 , new Rotation2d(Units.rotationsToRadians(rotations))));
+    public void setIronmanRotation(double rotations) {
+        ironManPose.transformBy(new Transform2d(0, 0, new Rotation2d(Units.rotationsToRadians(rotations))));
     }
 
     public double getRawGearPositionHarley() {
@@ -175,20 +183,28 @@ public class IronMan extends SubsystemBase {
         return yinsenCANcoder.getAbsolutePosition().getValueAsDouble();
     }
 
-    public static void setManipTarget(boolean hub){
+    public static void setManipTarget(boolean hub) {
         manualTarget = true;
         isHub = hub;
     }
 
+    public void updateIronManPose(){
+        CommandSwerveDrivetrain.getInstance().getPose().transformBy(
+                new Transform2d(
+                        new Translation2d(
+                                // TODO find these values
+                                Constants.IronManConstants.kIronmanToRobotCenterX,
+                                Constants.IronManConstants.kIronmanToRobotCenterY),
+                                        // TODO get this to be right, in rotations
+
+                       new Rotation2d(Units.rotationsToRadians(IronManPosition()))))
+    }
+
     public Rotation2d aimingJohns() {
-       
+
         Translation2d ironManTranslation = ironManPose.getTranslation().minus(
-                (isHub ?
-                Constants.FieldConstants.HubPosition.getTranslation()
-                :
-                Constants.FieldConstants.PassTarget.getTranslation()
-                ));
-        
+                (isHub ? Constants.FieldConstants.HubPosition.getTranslation()
+                        : Constants.FieldConstants.PassTarget.getTranslation()));
 
         Rotation2d targetAngle = new Rotation2d(Math.atan2(
                 ironManTranslation.getY(),
@@ -207,7 +223,7 @@ public class IronMan extends SubsystemBase {
 
     }
 
-    public double IronManPosition(){
+    public double IronManPosition() {
         return ironmanMotor.getPosition().getValueAsDouble();
     }
 
@@ -215,21 +231,20 @@ public class IronMan extends SubsystemBase {
         happyMotor.set(speed);
     }
 
-    public void targetHubPose(){
-        if( Robot.isRed()?
-            CommandSwerveDrivetrain.getInstance().getPose().getX() > 12.5:
-            CommandSwerveDrivetrain.getInstance().getPose().getX() < 4){
-                isHub = true;
-            }
-            else{
-                isHub = false;
-            }
+    public void targetHubPose() {
+        if (Robot.isRed() ? CommandSwerveDrivetrain.getInstance().getPose().getX() > 12.5
+                : CommandSwerveDrivetrain.getInstance().getPose().getX() < 4) {
+            isHub = true;
+        } else {
+            isHub = false;
+        }
     }
 
     public void periodic() {
 
-        // TODO get this to be right, in rotations
-        ironManPose.rotateBy(new Rotation2d(Units.rotationsToRadians(IronManPosition())));
+        updateIronManPose();
+
+
 
 
         if(!manualTarget){

@@ -132,7 +132,7 @@
         "y": 4.373638725894835
       },
       "prevControl": {
-        "x": 1.074207008760947,
+        "x": 1.0742070087609468,
         "y": 4.3094030184703795
       },
       "nextControl": null,
@@ -218,7 +218,7 @@
     "rotation": -0.8588438036189683
   },
   "reversed": false,
-  "folder": "Trench",
+  "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

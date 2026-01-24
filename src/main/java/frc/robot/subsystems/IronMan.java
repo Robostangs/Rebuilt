@@ -53,6 +53,7 @@ public class IronMan extends SubsystemBase {
     Pose2d ironManPose;
 
     static boolean isHub = true;
+    static boolean manualTarget = false;
 
     private static IronMan mInstance;
 
@@ -174,19 +175,21 @@ public class IronMan extends SubsystemBase {
         return yinsenCANcoder.getAbsolutePosition().getValueAsDouble();
     }
 
-    public static void setIsHub(boolean hub){
+    public static void setManipTarget(boolean hub){
+        manualTarget = true;
         isHub = hub;
     }
 
     public Rotation2d aimingJohns() {
        
         Translation2d ironManTranslation = ironManPose.getTranslation().minus(
-                isHub ?
+                (isHub ?
                 Constants.FieldConstants.HubPosition.getTranslation()
                 :
                 Constants.FieldConstants.PassTarget.getTranslation()
-                );
-                
+                ));
+        
+
         Rotation2d targetAngle = new Rotation2d(Math.atan2(
                 ironManTranslation.getY(),
                 ironManTranslation.getX()));
@@ -212,12 +215,7 @@ public class IronMan extends SubsystemBase {
         happyMotor.set(speed);
     }
 
-    public void periodic() {
-
-        // TODO get this to be right, in rotations
-        ironManPose.rotateBy(new Rotation2d(Units.rotationsToRadians(IronManPosition())));
-
-
+    public void targetHubPose(){
         if( Robot.isRed()?
             CommandSwerveDrivetrain.getInstance().getPose().getX() > 12.5:
             CommandSwerveDrivetrain.getInstance().getPose().getX() < 4){
@@ -226,7 +224,18 @@ public class IronMan extends SubsystemBase {
             else{
                 isHub = false;
             }
+    }
 
+    public void periodic() {
+
+        // TODO get this to be right, in rotations
+        ironManPose.rotateBy(new Rotation2d(Units.rotationsToRadians(IronManPosition())));
+
+
+        if(!manualTarget){
+            targetHubPose();
+        }
+      
         controlThreeThousand.Position = aimingJohnsRotaions();
 
         ironmanMotor.setControl(controlThreeThousand);

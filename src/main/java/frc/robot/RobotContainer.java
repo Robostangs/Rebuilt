@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Repulsor;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.IronMan;
 
 public class RobotContainer {
     public static boolean useVision = true;
@@ -100,7 +101,11 @@ public class RobotContainer {
                 drivetrain.applyRequest(() -> idle));
     }
     public void configureManipBindings(){
-        
+        //Turret target hub
+        xManip.x().onTrue(new InstantCommand(() -> IronMan.setManipTarget(true)));
+        //Turret target pass
+        xManip.y().onTrue(new InstantCommand(() -> IronMan.setManipTarget(false)));
+
 
     }
 }

@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -251,6 +252,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          * This ensures driving behavior doesn't change until an explicit disable event
          * occurs during testing.
          */
+
+        if (this.getPigeon2().getPitch().getValueAsDouble() > Constants.AutoConstants.kHumpPitchMin) {
+            this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionHump);
+        } else {
+            this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionReg);
+        }
+
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
                 setOperatorPerspectiveForward(
@@ -265,6 +273,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         SmartDashboard.putBoolean("Robot/is red", Robot.isRed());
+
     }
 
     private void startSimThread() {

@@ -22,12 +22,15 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -109,6 +112,13 @@ public final class Constants {
     // Robot weight, robot MOI, robot module configs, modulue postions[]
     public static final RobotConfig RobotConfig = new RobotConfig(robotWeight,
         kRobotMomentOfInertia.baseUnitMagnitude(), kModuleConfig, kModulePositions);
+
+    //TODO: find this john
+    public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(100));
+    public static final Vector<N3> kErrorInMyVisionHump = VecBuilder.fill(0.0, 0.0, Units.degreesToRadians(5));
+   
+    //TODO: find this john
+    public static final double kHumpPitchMin = 0;
 
   }
 

@@ -22,11 +22,15 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.util.FlippingUtil;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -60,6 +64,7 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static final AprilTagFieldLayout kAprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
   public static class KirbyConstants {
     public static final int kirbyWheelsID = 20;
@@ -136,6 +141,8 @@ public final class Constants {
     public static final String kLimelightFour = "limelight-cyclops";
     public static final String kLimelightThree = "limelight-agomoto";
     public static final double kVisionAngularThreshold = 22.5;
+    public static final String kPhotonCamName = "DeadpoolX";
+    public static final Transform3d kRobotToCam = new Transform3d(new Transform2d());
 
   }
 

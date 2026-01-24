@@ -16,13 +16,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Vision.PhotonVision;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.IronMan;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
-
+    private PhotonVision photonVision=new PhotonVision(drivetrain,"DeadpoolX");
     private final RobotContainer m_robotContainer;
     public static ShuffleboardTab disableTab;
 
@@ -63,7 +64,7 @@ public class Robot extends TimedRobot {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
         teleopField.setRobotPose(drivetrain.getPose());
-
+        photonVision.periodic();
     }
 
     @Override

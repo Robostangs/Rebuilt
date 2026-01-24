@@ -38,10 +38,10 @@ public class IronMan extends SubsystemBase {
 
     MotionMagicTorqueCurrentFOC controlThreeThousand;
 
-    CANcoder harleyCANcoder;
+    CANcoder harleyCANcoder=new CANcoder(0);
     CANcoderConfiguration harleyConfig;
 
-    CANcoder yinsenCANcoder;
+    CANcoder yinsenCANcoder=new CANcoder(043);
     CANcoderConfiguration yinsenConfig;
 
     TalonFXConfiguration ironmanConfig;
@@ -90,7 +90,6 @@ public class IronMan extends SubsystemBase {
         configurePepper();
         configureHappy();
 
-        controlThreeThousand.
 
     }
 
@@ -197,7 +196,7 @@ public class IronMan extends SubsystemBase {
                                 Constants.IronManConstants.kIronmanToRobotCenterY),
                                         // TODO get this to be right, in rotations
 
-                       new Rotation2d(Units.rotationsToRadians(IronManPosition()))))
+                       new Rotation2d(Units.rotationsToRadians(IronManPosition()))));
     }
 
     public Rotation2d aimingJohns() {

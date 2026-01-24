@@ -255,7 +255,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          * occurs during testing.
          */
 
-        if (this.getPigeon2().getPitch().getValueAsDouble() > Constants.AutoConstants.kHumpPitchMin) {
+        if (this.getPigeon2().getPitch().getValueAsDouble() < Constants.AutoConstants.kHumpPitchMin) {
             this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionHump);
         } else {
             this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionReg);

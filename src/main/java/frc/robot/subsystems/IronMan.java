@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 /**
  * The turret
@@ -50,6 +51,8 @@ public class IronMan extends SubsystemBase {
     TalonFXConfiguration happyConfig;
 
     Pose2d ironManPose;
+
+    static boolean isHub = true;
 
     private static IronMan mInstance;
 
@@ -171,10 +174,19 @@ public class IronMan extends SubsystemBase {
         return yinsenCANcoder.getAbsolutePosition().getValueAsDouble();
     }
 
+    public static void setIsHub(boolean hub){
+        isHub = hub;
+    }
+
     public Rotation2d aimingJohns() {
        
         Translation2d ironManTranslation = ironManPose.getTranslation().minus(
-                Constants.FieldConstants.HubPosition.getTranslation());
+                isHub ?
+                Constants.FieldConstants.HubPosition.getTranslation()
+                :
+                Constants.FieldConstants.PassTarget.getTranslation()
+                );
+                
         Rotation2d targetAngle = new Rotation2d(Math.atan2(
                 ironManTranslation.getY(),
                 ironManTranslation.getX()));
@@ -205,9 +217,20 @@ public class IronMan extends SubsystemBase {
         // TODO get this to be right, in rotations
         ironManPose.rotateBy(new Rotation2d(Units.rotationsToRadians(IronManPosition())));
 
+
+        if( Robot.isRed()?
+            CommandSwerveDrivetrain.getInstance().getPose().getX() > 12.5:
+            CommandSwerveDrivetrain.getInstance().getPose().getX() < 4){
+                isHub = true;
+            }
+            else{
+                isHub = false;
+            }
+
         controlThreeThousand.Position = aimingJohnsRotaions();
 
         ironmanMotor.setControl(controlThreeThousand);
+
 
         SmartDashboard.putNumber("Ironman/Position", ironmanMotor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Ironman/Target", controlThreeThousand.Position);

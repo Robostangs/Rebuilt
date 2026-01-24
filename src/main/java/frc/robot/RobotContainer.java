@@ -42,12 +42,12 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = Constants.ZiroTunerConstants.createDrivetrain();
 
     public RobotContainer() {
-        configureBindings();
+        configureDrivingBinding();
         logger.initSwerveLog();
 
     }
 
-    private void configureBindings() {
+    private void configureDrivingBinding() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
 
@@ -73,6 +73,8 @@ public class RobotContainer {
 
         xDrive.rightTrigger().whileTrue(new Repulsor());
 
+        
+
         // Reset the field-centric heading on left bumper press.
         xDrive.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
@@ -96,5 +98,9 @@ public class RobotContainer {
                         .withTimeout(5.0),
                 // Finally idle for the rest of auton
                 drivetrain.applyRequest(() -> idle));
+    }
+    public void configureManipBindings(){
+        
+
     }
 }

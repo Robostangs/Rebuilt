@@ -136,6 +136,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SwerveDrivetrainConstants drivetrainConstants,
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
+        this.setVisionMeasurementStdDevs(Constants.AutoConstants.kErrorInMyVisionReg);
+
         if (Utils.isSimulation()) {
             startSimThread();
         }

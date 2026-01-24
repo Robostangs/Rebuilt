@@ -20,6 +20,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -68,6 +69,12 @@ public final class Constants {
   public static class FieldConstants {
     public static final Pose2d HubPosition = Robot.isRed() ? new Pose2d(11.9, 4d, new Rotation2d())
         : new Pose2d(4.6, 4d, new Rotation2d());
+
+    //TODO find these johns
+    public static final Pose2d PassTarget = !Robot.isRed() ? new Pose2d(6.23, 2.59, new Rotation2d())
+        : FlippingUtil.flipFieldPose(new Pose2d(6.23, 2.59, new Rotation2d()));
+
+
   }
 
   public static class IronManConstants {
@@ -79,12 +86,14 @@ public final class Constants {
     public static final int kAmyID = 0;
     public static final int kBillyID = 0;
     public static final int pepperMotorID = 0;
-    public static final double CurtisSupplyCurrentLimit = 0;
-    public static final double MicroSupplyCurrentLimit = 0;
-    public static final double IronManSupplyCurrentLimit = 0;
+    public static final double CurtisSupplyCurrentLimit =50;
+    public static final double MicroSupplyCurrentLimit = 50;
+    public static final double IronManSupplyCurrentLimit = 50;
     public static final double dumbThing = ((19d * 21d) / 200d) / 2d;
     public static final double kIronmanToRobotCenterX = 0;
     public static final double kIronmanToRobotCenterY = 0;
+
+    
 
   }
 
@@ -115,7 +124,7 @@ public final class Constants {
 
     //TODO: find this john
     public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(100));
-    public static final Vector<N3> kErrorInMyVisionHump = VecBuilder.fill(0.0, 0.0, Units.degreesToRadians(5));
+    public static final Vector<N3> kErrorInMyVisionHump = VecBuilder.fill(0.0, 0.0, Units.degreesToRadians(100));
    
     //TODO: find this john
     public static final double kHumpPitchMin = 0;

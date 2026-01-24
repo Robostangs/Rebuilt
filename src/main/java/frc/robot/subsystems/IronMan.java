@@ -2,9 +2,12 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.signals.ExternalFeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -34,7 +37,7 @@ public class IronMan extends SubsystemBase {
     /**
      * Pivot control
      */
-    TalonFX ironmanMotor;
+    TalonFXS ironmanMotor;
 
     MotionMagicTorqueCurrentFOC controlThreeThousand;
 
@@ -44,7 +47,7 @@ public class IronMan extends SubsystemBase {
     CANcoder yinsenCANcoder;
     CANcoderConfiguration yinsenConfig;
 
-    TalonFXConfiguration ironmanConfig;
+    TalonFXSConfiguration ironmanConfig;
 
     TalonFXConfiguration pepperConfig;
 
@@ -67,7 +70,7 @@ public class IronMan extends SubsystemBase {
     public IronMan() {
         pepperMotor = new TalonFX(Constants.IronManConstants.pepperMotorID);
         happyMotor = new TalonFX(Constants.IronManConstants.happyMotorID);
-        ironmanMotor = new TalonFX(Constants.IronManConstants.ironmanMotorID);
+        ironmanMotor = new TalonFXS(Constants.IronManConstants.ironmanMotorID);
 
         ironManPose = CommandSwerveDrivetrain.getInstance().getPose().transformBy(
                 new Transform2d(
@@ -81,7 +84,7 @@ public class IronMan extends SubsystemBase {
 
         harleyConfig = new CANcoderConfiguration();
 
-        ironmanConfig = new TalonFXConfiguration();
+        ironmanConfig = new TalonFXSConfiguration();
         pepperConfig = new TalonFXConfiguration();
         happyConfig = new TalonFXConfiguration();
 
@@ -90,16 +93,28 @@ public class IronMan extends SubsystemBase {
         configurePepper();
         configureHappy();
 
-        controlThreeThousand.
 
     }
 
     public void configureIronman() {
-        ironmanConfig.Feedback.SensorToMechanismRatio = 19 / 200;
-        ironmanConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        ironmanConfig.ExternalFeedback.SensorToMechanismRatio = 19 / 200;
+        ironmanConfig.ExternalFeedback.ExternalFeedbackSensorSource = ExternalFeedbackSensorSourceValue.RemoteCANcoder;
         ironmanConfig.CurrentLimits.SupplyCurrentLimit = Constants.IronManConstants.IronManSupplyCurrentLimit;
-        ironmanConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        ironmanConfig.Feedback.FeedbackRemoteSensorID = harleyCANcoder.getDeviceID();
+        ironmanConfig.ExternalFeedback.FeedbackRemoteSensorID = harleyCANcoder.getDeviceID();
+        ironmanConfig.ExternalFeedback.RotorToSensorRatio= Constants.IronManConstants.kRotorToSensorRatio;
+        
+
+
+        var ironmanMM = ironmanConfig.Slot0;
+
+        ironmanMM.kV = Constants.IronManConstants.IronmanMotionMagicKv;
+        ironmanMM.kA = Constants.IronManConstants.IronmanMotionMagicKa;
+        ironmanMM.kS = Constants.IronManConstants.IronmanMotionMagicKS;
+
+        ironmanMM.kP = Constants.IronManConstants.IronmanMotionMagicKP;
+        ironmanMM.kI = Constants.IronManConstants.IronmanMotionMagicKI;
+        ironmanMM.kD = Constants.IronManConstants.IronmanMotionMagicKD;
+
 
         ironmanMotor.getConfigurator().apply(ironmanConfig);
     }
@@ -197,7 +212,7 @@ public class IronMan extends SubsystemBase {
                                 Constants.IronManConstants.kIronmanToRobotCenterY),
                                         // TODO get this to be right, in rotations
 
-                       new Rotation2d(Units.rotationsToRadians(IronManPosition()))))
+                       new Rotation2d(Units.rotationsToRadians(IronManPosition()))));
     }
 
     public Rotation2d aimingJohns() {

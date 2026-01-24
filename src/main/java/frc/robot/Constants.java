@@ -92,6 +92,13 @@ public final class Constants {
     public static final double dumbThing = ((19d * 21d) / 200d) / 2d;
     public static final double kIronmanToRobotCenterX = 0;
     public static final double kIronmanToRobotCenterY = 0;
+    public static final double IronmanMotionMagicKa = 0;
+    public static final double IronmanMotionMagicKv = 0;
+    public static final double IronmanMotionMagicKS = 0;
+    public static final double IronmanMotionMagicKP = 0;
+    public static final double IronmanMotionMagicKI = 0;
+    public static final double IronmanMotionMagicKD = 0;
+    public static final double kRotorToSensorRatio = 81;
 
     
 

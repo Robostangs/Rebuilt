@@ -191,18 +191,18 @@ public class Turret extends SubsystemBase {
 
     public double getTurretMotorSensorModPosition() {
         /* Convert mechanism position to sensor position */
-        return mathMod(turretMotor.getPosition().getValueAsDouble()
-                * Constants.TurretConstants.kTurretMotorSensorToMechanismRatio, 1);
+        return mathMod1(turretMotor.getPosition().getValueAsDouble()
+                * Constants.TurretConstants.kTurretMotorSensorToMechanismRatio);
     }
 
     public double getTurretCANcoderModPosition() {
         /* Convert mechanism position to sensor position */
-        return mathMod(turretCANcoder.getPosition().getValueAsDouble(), 1);
+        return mathMod1(turretCANcoder.getPosition().getValueAsDouble());
     }
 
     // Modulo that matches like math and google sheets
-    private static double mathMod(double dividend, double divisor) {
-        double remainder = dividend % divisor;
+    private static double mathMod1(double dividend) {
+        double remainder = dividend % 1;
         if (remainder < 0) {
             remainder = remainder + 1;
         }
@@ -214,7 +214,7 @@ public class Turret extends SubsystemBase {
 
     private double getGearDifference(double theta1, double theta2) {
 
-        double modulo = mathMod((theta1 - theta2), 1);
+        double modulo = mathMod1(theta1 - theta2);
 
         // TODO, make this constant
         return (modulo)
@@ -250,29 +250,7 @@ public class Turret extends SubsystemBase {
         double calculatedMotorSensorPos = correctedGearDiff
                 * Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
 
-        double calculatedMotorSensorWholeNumberPos = Math.round(calculatedMotorSensorPos);
-        double calculatedMotorSensorModPos = mathMod(calculatedMotorSensorPos, 1);
-
-        double trialActualSensorPosition1;
-        if (actualMotorSensorModPos > 0.5) {
-            trialActualSensorPosition1 = calculatedMotorSensorWholeNumberPos + actualMotorSensorModPos + 1;
-        } else {
-            trialActualSensorPosition1 = calculatedMotorSensorWholeNumberPos + actualMotorSensorModPos - 1;
-        }
-
-        double trialActualSensorPosition2 = calculatedMotorSensorWholeNumberPos + actualMotorSensorModPos;
-
-        SmartDashboard.putNumber("Ironman/trialActualSensorPosition2", trialActualSensorPosition2);
-        SmartDashboard.putNumber("Ironman/trialActualSensorPosition1", trialActualSensorPosition1);
-        SmartDashboard.putNumber("Ironman/calculatedMotorSensorPos", calculatedMotorSensorPos);
-
-        if (Math.abs(trialActualSensorPosition1 - calculatedMotorSensorPos) < 0.5) {
-            return trialActualSensorPosition1 / Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
-        } else {
-            return trialActualSensorPosition2 / Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
-
-        }
-
+        return (Math.round(calculatedMotorSensorPos - actualMotorSensorModPos) + actualMotorSensorModPos) / Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
     }
 
     public void setTurretRotation(double rotations) {
@@ -358,8 +336,8 @@ public class Turret extends SubsystemBase {
 
         double calculatedPosition = getBigGearPosition();
 
-        double newMotorModPosition = mathMod(calculatedPosition * Constants.TurretConstants.kTurretRingTeeth
-                / Constants.TurretConstants.kTurretMotorTeeth, 1);
+        double newMotorModPosition = mathMod1(calculatedPosition * Constants.TurretConstants.kTurretRingTeeth
+                / Constants.TurretConstants.kTurretMotorTeeth);
 
         SmartDashboard.putNumber("Ironman/SunTzuResetPotentialError", (newMotorModPosition - oldMotorModPosition));
 

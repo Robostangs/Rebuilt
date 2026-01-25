@@ -1,0 +1,180 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.6315320801491993,
+        "y": 7.3580576783115
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.631532080149199,
+        "y": 7.3580576783115
+      },
+      "isLocked": true,
+      "linkedName": "DepotStart"
+    },
+    {
+      "anchor": {
+        "x": 5.6321484375,
+        "y": 7.3580576783115
+      },
+      "prevControl": {
+        "x": 5.100602189748465,
+        "y": 7.267621181604542
+      },
+      "nextControl": {
+        "x": 8.519079728438864,
+        "y": 7.84923592157933
+      },
+      "isLocked": false,
+      "linkedName": "DepotTrenchOut"
+    },
+    {
+      "anchor": {
+        "x": 7.761518320141921,
+        "y": 4.606412333970161
+      },
+      "prevControl": {
+        "x": 7.8380056700260745,
+        "y": 5.078519515228474
+      },
+      "nextControl": {
+        "x": 7.701629480531295,
+        "y": 4.236757073326055
+      },
+      "isLocked": false,
+      "linkedName": "DepotFuelEdge"
+    },
+    {
+      "anchor": {
+        "x": 6.503004969523289,
+        "y": 5.438473264647016
+      },
+      "prevControl": {
+        "x": 6.8578002183406115,
+        "y": 4.22827988537118
+      },
+      "nextControl": {
+        "x": 6.297287227166995,
+        "y": 6.140168821814251
+      },
+      "isLocked": false,
+      "linkedName": "DepotFuelCollect"
+    },
+    {
+      "anchor": {
+        "x": 5.6321484375,
+        "y": 7.3580576783115
+      },
+      "prevControl": {
+        "x": 6.317728587559108,
+        "y": 7.37608592388809
+      },
+      "nextControl": {
+        "x": 5.159969068413392,
+        "y": 7.34564109124818
+      },
+      "isLocked": false,
+      "linkedName": "DepotTrenchOut"
+    },
+    {
+      "anchor": {
+        "x": 3.8390237217976706,
+        "y": 7.3580576783115
+      },
+      "prevControl": {
+        "x": 4.660604404452196,
+        "y": 7.375037924226212
+      },
+      "nextControl": {
+        "x": 2.251445881095341,
+        "y": 7.325245974344979
+      },
+      "isLocked": false,
+      "linkedName": "DepotTrenchIn"
+    },
+    {
+      "anchor": {
+        "x": 1.2921273994723435,
+        "y": 4.215364640192868
+      },
+      "prevControl": {
+        "x": 2.4618297398107716,
+        "y": 4.668844329967249
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "DepotClimb"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.3477076480263153,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 2.5427631578947354,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 4.428608141447368,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.43254724801061,
+      "maxWaypointRelativePos": 2.5500870358090175,
+      "constraints": {
+        "maxVelocity": 2.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Pass",
+      "waypointRelativePos": 1.423097645888594,
+      "endWaypointRelativePos": 1.8033197944297066,
+      "command": null
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 1.4847687334217508,
+      "endWaypointRelativePos": 2.5520764257294433,
+      "command": null
+    },
+    {
+      "name": "Pass",
+      "waypointRelativePos": 2.8172248010610095,
+      "endWaypointRelativePos": 3.7136936339522557,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.12,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Trench",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

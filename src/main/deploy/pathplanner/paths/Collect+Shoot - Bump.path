@@ -69,7 +69,7 @@
       },
       "prevControl": {
         "x": 2.6073345259355225,
-        "y": 1.7877817531347542
+        "y": 1.787781753134754
       },
       "nextControl": {
         "x": 2.8688133325725174,
@@ -157,7 +157,7 @@
     "rotation": -3.9451862285636192
   },
   "reversed": false,
-  "folder": "Outpost",
+  "folder": "Bump",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 2.2586912582200283

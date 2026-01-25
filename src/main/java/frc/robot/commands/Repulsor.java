@@ -1,14 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IronMan;
+import frc.robot.subsystems.Turret;
 
 public class Repulsor extends Command {
 
-    IronMan ironMan;
+    Turret ironMan;
 
     public Repulsor( ) {
-        this.ironMan = IronMan.getInstance();
+        this.ironMan = Turret.getInstance();
         addRequirements(ironMan);
     }
 

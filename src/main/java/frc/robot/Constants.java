@@ -77,19 +77,21 @@ public final class Constants {
 
   }
 
-  public static class IronManConstants {
-    public static final int ironmanMotorID = 35;
+  public static class TurretConstants {
+    public static final int turretMotorID = 1;
+    public static final int turretCANcoderID = 2;
     public static final int happyMotorID = 45;
-    public static final double kHarleyTeeth = 0;
-    public static final double kYinsenTeeth = 0;
-    public static final double kObadiahGearteeth = 0;
+    public static final double kTurretMotorTeeth = 19;
+    public static final double kTurretCANcoderTeeth = 21;
+    public static final double kTurretRingTeeth = 200;
+    public static final double kTurretMotorSensorToMechanismRatio = Constants.TurretConstants.kTurretRingTeeth / Constants.TurretConstants.kTurretMotorTeeth;
     public static final int kAmyID = 0;
     public static final int kBillyID = 0;
     public static final int pepperMotorID = 0;
     public static final double CurtisSupplyCurrentLimit =50;
     public static final double MicroSupplyCurrentLimit = 50;
-    public static final double IronManSupplyCurrentLimit = 50;
-    public static final double dumbThing = ((19d * 21d) / 200d) / 2d;
+    public static final double TurretMotorSupplyCurrentLimit = 10;
+    public static final double dumbThing = (((double)kTurretMotorTeeth * (double)kTurretCANcoderTeeth) / (double)kTurretRingTeeth) / 2;
     public static final double kIronmanToRobotCenterX = 0;
     public static final double kIronmanToRobotCenterY = 0;
     public static final double IronmanMotionMagicKa = 0;
@@ -98,7 +100,7 @@ public final class Constants {
     public static final double IronmanMotionMagicKP = 0;
     public static final double IronmanMotionMagicKI = 0;
     public static final double IronmanMotionMagicKD = 0;
-    public static final double kRotorToSensorRatio = 81;
+    public static final double kTurretPlanetaryRatio = 9;
 
     
 

@@ -3,8 +3,9 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "Outpost",
-    "Depot"
+    "Depot",
+    "Center",
+    "Outpost"
   ],
   "autoFolders": [],
   "defaultMaxVel": 5.12,

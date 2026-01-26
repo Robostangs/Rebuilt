@@ -110,6 +110,10 @@
   ],
   "rotationTargets": [
     {
+      "waypointRelativePos": 0.8810135690789471,
+      "rotationDegrees": 0.0
+    },
+    {
       "waypointRelativePos": 1.3477076480263153,
       "rotationDegrees": -90.0
     },
@@ -139,6 +143,12 @@
   ],
   "pointTowardsZones": [],
   "eventMarkers": [
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 0.2146054376657824,
+      "command": null
+    },
     {
       "name": "Pass",
       "waypointRelativePos": 1.423097645888594,
@@ -174,7 +184,7 @@
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 0.8375104754245732
   },
   "useDefaultConstraints": true
 }

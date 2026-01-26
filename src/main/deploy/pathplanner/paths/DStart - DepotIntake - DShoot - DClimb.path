@@ -1,0 +1,128 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.6315320801491993,
+        "y": 7.3580576783115
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.02925280886099,
+        "y": 6.883634347707424
+      },
+      "isLocked": false,
+      "linkedName": "DepotStart"
+    },
+    {
+      "anchor": {
+        "x": 1.055165063227802,
+        "y": 5.894944903111354
+      },
+      "prevControl": {
+        "x": 1.6143104075691412,
+        "y": 6.407465713700874
+      },
+      "nextControl": {
+        "x": 0.6537734677010327,
+        "y": 5.527023488786541
+      },
+      "isLocked": false,
+      "linkedName": "DepotIntake"
+    },
+    {
+      "anchor": {
+        "x": 2.933709914028384,
+        "y": 5.868266693959243
+      },
+      "prevControl": {
+        "x": 2.4645242121141537,
+        "y": 5.842604703504045
+      },
+      "nextControl": {
+        "x": 3.4028956159426142,
+        "y": 5.893928684414441
+      },
+      "isLocked": false,
+      "linkedName": "DepotShoot"
+    },
+    {
+      "anchor": {
+        "x": 1.2921273994723435,
+        "y": 4.215364640192868
+      },
+      "prevControl": {
+        "x": 2.6931073735443958,
+        "y": 3.973914380913392
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "DepotClimb"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9960252192982452,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 2.3068205180921053,
+      "rotationDegrees": 45.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.7889485245358092,
+      "maxWaypointRelativePos": 1.407182526525199,
+      "constraints": {
+        "maxVelocity": 2.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 0.019085709549071662,
+      "endWaypointRelativePos": 2.8730209714854107,
+      "command": null
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.8191623839522546,
+      "endWaypointRelativePos": 1.576902354111406,
+      "command": null
+    },
+    {
+      "name": "Climb",
+      "waypointRelativePos": 3.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.12,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Depot",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.8375104754245732
+  },
+  "useDefaultConstraints": true
+}

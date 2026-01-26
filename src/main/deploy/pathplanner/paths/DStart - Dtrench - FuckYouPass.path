@@ -64,12 +64,12 @@
     },
     {
       "anchor": {
-        "x": 6.221811658478893,
-        "y": 1.722223662663755
+        "x": 6.0735606008915575,
+        "y": 0.755076248635371
       },
       "prevControl": {
-        "x": 6.969798830967976,
-        "y": 0.5717695255640465
+        "x": 7.194693640829694,
+        "y": 0.6298133301491986
       },
       "nextControl": null,
       "isLocked": false,
@@ -99,12 +99,6 @@
   ],
   "pointTowardsZones": [],
   "eventMarkers": [
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 0.23925522214854106,
-      "command": null
-    },
     {
       "name": "Intake",
       "waypointRelativePos": 2.1356100795755966,

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Repulsor;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret;
@@ -102,9 +103,15 @@ public class RobotContainer {
     }
     public void configureManipBindings(){
         //Turret target hub
-        xManip.y().onTrue(new InstantCommand(() -> Turret.setManipTarget(true)));
+        // xManip.y().onTrue(new InstantCommand(() -> Turret.setManipTarget(true)));
         //Turret target pass
-        xManip.b().onTrue(new InstantCommand(() -> Turret.setManipTarget(false)));
+        // xManip.b().onTrue(new InstantCommand(() -> Turret.setManipTarget(false)));
+
+        new Trigger(() -> xManip.getLeftY() > 0.1 || xManip.getLeftY() < -0.1)
+                .whileTrue(new InstantCommand(() -> Turret.getInstance().setTurretSetpointDoubleSupplier(
+                        () -> xManip.getLeftY()
+                )));
+
 
 
     }

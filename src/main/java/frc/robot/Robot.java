@@ -58,6 +58,8 @@ public class Robot extends TimedRobot {
         new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
             .ignoringDisable(true));
 
+        disableTab.add("Set turret to setpoint", new InstantCommand(() -> Turret.getInstance().setMotionMagic()));
+
         // disabledTab.add()
 
     }

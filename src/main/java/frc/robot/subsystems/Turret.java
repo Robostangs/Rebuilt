@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
@@ -186,6 +188,18 @@ public class Turret extends SubsystemBase {
      */
     public void setIronmansetpoint(double rotations) {
         controlThreeThousand.Position = rotations;
+    }
+
+    public void setTurretSetpointDoubleSupplier(DoubleSupplier doubleSupplier) {
+        setIronmansetpoint(doubleSupplier.getAsDouble()/2);
+                SmartDashboard.putString("Your a wizard Ron", "Hagrid");
+
+
+    }
+
+    public void setMotionMagic(){
+        turretMotor.setControl(controlThreeThousand);
+        SmartDashboard.putString("Your a wizard harry", "Hagrid");
     }
     // get sensor to mechinasm ratio (19:200) and (21:200)
 

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.02925280886099,
-        "y": 6.883634347707424
+        "x": 3.243259194665775,
+        "y": 7.1793217066888255
       },
       "isLocked": false,
       "linkedName": "DepotStart"
@@ -20,31 +20,15 @@
         "y": 5.958374215338429
       },
       "prevControl": {
-        "x": 1.643980565411208,
-        "y": 6.470895025927948
+        "x": 0.38283429650577083,
+        "y": 7.025762391569789
       },
       "nextControl": {
-        "x": 0.6834436255430998,
-        "y": 5.590452801013615
+        "x": 1.2850358075451624,
+        "y": 5.653970429814923
       },
       "isLocked": false,
       "linkedName": "DepotIntake"
-    },
-    {
-      "anchor": {
-        "x": 2.933709914028384,
-        "y": 5.868266693959243
-      },
-      "prevControl": {
-        "x": 2.4645242121141537,
-        "y": 5.842604703504045
-      },
-      "nextControl": {
-        "x": 3.4028956159426142,
-        "y": 5.893928684414441
-      },
-      "isLocked": false,
-      "linkedName": "DepotShoot"
     },
     {
       "anchor": {
@@ -52,8 +36,8 @@
         "y": 4.215364640192868
       },
       "prevControl": {
-        "x": 2.6931073735443958,
-        "y": 3.973914380913392
+        "x": 3.3070881076388896,
+        "y": 4.6167685908564815
       },
       "nextControl": null,
       "isLocked": false,
@@ -64,17 +48,13 @@
     {
       "waypointRelativePos": 0.9960252192982452,
       "rotationDegrees": 180.0
-    },
-    {
-      "waypointRelativePos": 2.3068205180921053,
-      "rotationDegrees": 45.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0.7889485245358092,
-      "maxWaypointRelativePos": 1.407182526525199,
+      "maxWaypointRelativePos": 1.2,
       "constraints": {
         "maxVelocity": 2.5,
         "maxAcceleration": 3.0,
@@ -101,7 +81,7 @@
     },
     {
       "name": "Climb",
-      "waypointRelativePos": 3.0,
+      "waypointRelativePos": 2.0,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -122,7 +102,7 @@
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.8375104754245732
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

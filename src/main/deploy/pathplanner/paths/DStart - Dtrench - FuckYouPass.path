@@ -56,8 +56,8 @@
         "y": 2.3476406704876274
       },
       "nextControl": {
-        "x": 8.643282531102171,
-        "y": -0.3028400942996028
+        "x": 8.606338154715935,
+        "y": 0.5521442315257514
       },
       "isLocked": false,
       "linkedName": null
@@ -134,7 +134,7 @@
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.8375104754245732
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

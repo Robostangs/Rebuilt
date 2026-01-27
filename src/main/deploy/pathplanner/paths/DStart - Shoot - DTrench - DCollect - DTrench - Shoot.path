@@ -146,7 +146,7 @@
     {
       "name": "Shoot",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": 0.27162425397878,
+      "endWaypointRelativePos": null,
       "command": null
     },
     {
@@ -178,7 +178,7 @@
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.8375104754245732
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

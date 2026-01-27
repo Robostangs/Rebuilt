@@ -141,9 +141,12 @@ public final class Constants {
     public static final String kLimelightFour = "limelight-cyclops";
     public static final String kLimelightThree = "limelight-agomoto";
     public static final double kVisionAngularThreshold = 22.5;
-    public static final String kPhotonCamName = "DeadpoolX";
-    public static final Transform3d kRobotToCam = new Transform3d(new Transform2d());
+    
+    public static final String kPhotonCamNameFront = "Jarvis";
+    public static final Transform3d kRobotToCamFront = new Transform3d(new Transform2d());
 
+    public static final String kPhotonCamNameBack = "DeadpoolX";
+    public static final Transform3d kRobotToCamBack = new Transform3d(new Transform2d());
   }
 
   public class ZiroTunerConstants {

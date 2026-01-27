@@ -14,11 +14,12 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class PhotonVision {
     private final PhotonCamera camera;
     private final CommandSwerveDrivetrain drivetrain;
+    private final Transform3d robotToCam;
 
-    public PhotonVision(CommandSwerveDrivetrain drivetrain, String photonCamName) {
+    public PhotonVision(CommandSwerveDrivetrain drivetrain, String photonCamName,Transform3d robotToCam) {
         camera = new PhotonCamera(photonCamName);
         this.drivetrain = drivetrain;
-
+        this.robotToCam = robotToCam;
     }
 
     Pose3d getPose(PhotonTrackedTarget target) {
@@ -26,7 +27,7 @@ public class PhotonVision {
         if (Constants.kAprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
             robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
                     Constants.kAprilTagFieldLayout.getTagPose(target.getFiducialId()).get(),
-                    Constants.VisionConstants.kRobotToCam);
+                    robotToCam);
             return robotPose;
         } else {
             return null;

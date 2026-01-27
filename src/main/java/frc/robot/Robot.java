@@ -23,7 +23,9 @@ import frc.robot.subsystems.IronMan;
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
-    private PhotonVision photonVision=new PhotonVision(drivetrain,"DeadpoolX");
+    private PhotonVision photonVisionFront=new PhotonVision(drivetrain,Constants.VisionConstants.kPhotonCamNameFront, Constants.VisionConstants.kRobotToCamFront);
+    private PhotonVision photonVisionBack=new PhotonVision(drivetrain,Constants.VisionConstants.kPhotonCamNameBack, Constants.VisionConstants.kRobotToCamBack);
+
     private final RobotContainer m_robotContainer;
     public static ShuffleboardTab disableTab;
 
@@ -64,7 +66,8 @@ public class Robot extends TimedRobot {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
         teleopField.setRobotPose(drivetrain.getPose());
-        photonVision.periodic();
+        photonVisionFront.periodic();
+        photonVisionBack.periodic();
     }
 
     @Override

@@ -250,7 +250,8 @@ public class Turret extends SubsystemBase {
         double calculatedMotorSensorPos = correctedGearDiff
                 * Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
 
-        return (Math.round(calculatedMotorSensorPos - actualMotorSensorModPos) + actualMotorSensorModPos) / Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
+        return (Math.round(calculatedMotorSensorPos - actualMotorSensorModPos) + actualMotorSensorModPos)
+                / Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
     }
 
     public void setTurretRotation(double rotations) {
@@ -324,6 +325,7 @@ public class Turret extends SubsystemBase {
         double newMotorModPosition = getTurretMotorSensorModPosition();
 
         SmartDashboard.putNumber("Ironman/SunTzuResetError", (newMotorModPosition - oldMotorModPosition));
+        SmartDashboard.putString("IF Sun Tzu","You have art of warred");
     }
 
     public void periodic() {

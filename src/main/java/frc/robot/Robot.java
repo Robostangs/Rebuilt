@@ -54,6 +54,10 @@ public class Robot extends TimedRobot {
                 new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(false))
                         .ignoringDisable(true));
 
+        disableTab.add("RESET TO SUN TZUUUUUU", 
+        new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
+            .ignoringDisable(true));
+
         // disabledTab.add()
 
     }

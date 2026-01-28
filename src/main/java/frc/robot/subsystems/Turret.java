@@ -5,6 +5,8 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -45,7 +47,7 @@ public class Turret extends SubsystemBase {
      */
     TalonFXS turretMotor;
 
-    MotionMagicTorqueCurrentFOC controlThreeThousand;
+    MotionMagicExpoVoltage controlThreeThousand;
 
     CANcoder turretCANcoder;
     TalonFXConfiguration pepperConfig;
@@ -76,7 +78,7 @@ public class Turret extends SubsystemBase {
                                 Constants.TurretConstants.kIronmanToRobotCenterY),
                         new Rotation2d()));
 
-        controlThreeThousand = new MotionMagicTorqueCurrentFOC(turretMotor.getPosition().getValueAsDouble());
+        controlThreeThousand = new MotionMagicExpoVoltage(0);
 
         pepperConfig = new TalonFXConfiguration();
         happyConfig = new TalonFXConfiguration();
@@ -188,16 +190,25 @@ public class Turret extends SubsystemBase {
      */
     public void setIronmansetpoint(double rotations) {
         controlThreeThousand.Position = rotations;
+        SmartDashboard.putString("Setpoint has gotten set", "New setpoint at " + rotations);
     }
+
+    public Runnable setMotionMagicZero = () ->{
+            controlThreeThousand.Position = 0;
+            turretMotor.setControl(controlThreeThousand);
+    };
+      public Runnable setMotionMagicPointThree = () ->{
+            controlThreeThousand.Position = 0.3;
+            turretMotor.setControl(controlThreeThousand);
+    };
+
 
     public void setTurretSetpointDoubleSupplier(DoubleSupplier doubleSupplier) {
-        setIronmansetpoint(doubleSupplier.getAsDouble()/2);
-                SmartDashboard.putString("Your a wizard Ron", "Hagrid");
-
+        setIronmansetpoint(doubleSupplier.getAsDouble() / 2);
 
     }
 
-    public void setMotionMagic(){
+    public void setMotionMagic() {
         turretMotor.setControl(controlThreeThousand);
         SmartDashboard.putString("Your a wizard harry", "Hagrid");
     }
@@ -339,9 +350,10 @@ public class Turret extends SubsystemBase {
         double newMotorModPosition = getTurretMotorSensorModPosition();
 
         SmartDashboard.putNumber("Ironman/SunTzuResetError", (newMotorModPosition - oldMotorModPosition));
-        SmartDashboard.putString("IF Sun Tzu","You have art of warred");
+        SmartDashboard.putString("IF Sun Tzu", "You have art of warred");
     }
 
+    @Override
     public void periodic() {
 
         updateIronManPose();
@@ -364,9 +376,10 @@ public class Turret extends SubsystemBase {
             targetHubPose();
         }
 
-        controlThreeThousand.Position = aimingJohnsRotaions();
+        // controlThreeThousand.Position = aimingJohnsRotaions();
 
         turretMotor.setControl(controlThreeThousand);
+        
 
         SmartDashboard.putNumber("Ironman/Position", turretMotor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Ironman/Target", controlThreeThousand.Position);

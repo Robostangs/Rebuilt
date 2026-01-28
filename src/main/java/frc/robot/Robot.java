@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
 
     private final RobotContainer m_robotContainer;
-    public static ShuffleboardTab disableTab;
+    public static ShuffleboardTab disableTab, teleopTab;
 
     public static Field2d teleopField = new Field2d();
 
@@ -41,11 +41,8 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         SmartDashboard.putData("Field", teleopField);
 
-        Turret tony = Turret.getInstance();
-        //tony.setIronmanRotation(
-                //tony.getBigGearPosition(tony.getTurretMotorSensorModPosition(), tony.getTurretCANcoderModPosition()));
-
         disableTab = Shuffleboard.getTab("Disabled");
+        teleopTab = Shuffleboard.getTab("Teleop");
 
         disableTab.add("Set Drivetrain motors to coast",
                 new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(true))
@@ -54,11 +51,15 @@ public class Robot extends TimedRobot {
                 new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(false))
                         .ignoringDisable(true));
 
-        disableTab.add("RESET TO SUN TZUUUUUU", 
-        new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
-            .ignoringDisable(true));
+        disableTab.add("RESET TO SUN TZUUUUUU",
+                new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
+                        .ignoringDisable(true));
 
-        disableTab.add("Set turret to setpoint", new InstantCommand(() -> Turret.getInstance().setMotionMagic()));
+        teleopTab.add("Motion Magic", new InstantCommand(() -> Turret.getInstance().setMotionMagic()));
+        teleopTab.add("Set turret to setpoint 0 ",
+                new InstantCommand(Turret.getInstance().setMotionMagicZero));
+        teleopTab.add("Set turret to setpoint 0.3",
+                new InstantCommand(Turret.getInstance().setMotionMagicPointThree));
 
         // disabledTab.add()
 
@@ -106,6 +107,7 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
+
     }
 
     @Override

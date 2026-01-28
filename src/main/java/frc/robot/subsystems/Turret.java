@@ -195,11 +195,11 @@ public class Turret extends SubsystemBase {
 
     public Runnable setMotionMagicZero = () ->{
             controlThreeThousand.Position = 0;
-            turretMotor.setControl(controlThreeThousand);
+            // turretMotor.setControl(controlThreeThousand);
     };
       public Runnable setMotionMagicPointThree = () ->{
             controlThreeThousand.Position = 0.3;
-            turretMotor.setControl(controlThreeThousand);
+            // turretMotor.setControl(controlThreeThousand);
     };
 
 
@@ -209,7 +209,7 @@ public class Turret extends SubsystemBase {
     }
 
     public void setMotionMagic() {
-        turretMotor.setControl(controlThreeThousand);
+        // turretMotor.setControl(controlThreeThousand);
         SmartDashboard.putString("Your a wizard harry", "Hagrid");
     }
     // get sensor to mechinasm ratio (19:200) and (21:200)
@@ -378,8 +378,11 @@ public class Turret extends SubsystemBase {
 
         // controlThreeThousand.Position = aimingJohnsRotaions();
 
-        turretMotor.setControl(controlThreeThousand);
+        // turretMotor.setControl(controlThreeThousand);
         
+        SmartDashboard.putNumber("Acceleration Turret Piviot", 
+        turretMotor.getAcceleration().getValueAsDouble()
+        );
 
         SmartDashboard.putNumber("Ironman/Position", turretMotor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Ironman/Target", controlThreeThousand.Position);

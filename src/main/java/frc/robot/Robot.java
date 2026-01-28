@@ -4,10 +4,17 @@
 
 package frc.robot;
 
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.util.List;
+
 import com.ctre.phoenix6.HootAutoReplay;
 
+import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -16,10 +23,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret;
 
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobotstangs {
     private Command m_autonomousCommand;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
 
@@ -27,6 +35,8 @@ public class Robot extends TimedRobot {
     public static ShuffleboardTab disableTab, teleopTab;
 
     public static Field2d teleopField = new Field2d();
+    private static GcStatsCollector gscollect = new GcStatsCollector();
+    public static Alert gcAlert = new Alert("MEMORY TWEAKING LOOK INTO TS RN", AlertType.kWarning);
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -69,6 +79,7 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
+        gscollect.update();
         teleopField.setRobotPose(drivetrain.getPose());
 
     }
@@ -145,5 +156,38 @@ public class Robot extends TimedRobot {
             return false;
         }
 
+    }
+
+    private static final class GcStatsCollector {
+
+        private List<GarbageCollectorMXBean> gcBeans = ManagementFactory.getGarbageCollectorMXBeans();
+        private MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
+        private final long[] lastTimes = new long[gcBeans.size()];
+        private final long[] lastCounts = new long[gcBeans.size()];
+
+        public void update() {
+            long accumTime = 0;
+            long accumCounts = 0;
+            for (int i = 0; i < gcBeans.size(); i++) {
+                long gcTime = gcBeans.get(i).getCollectionTime();
+                long gcCount = gcBeans.get(i).getCollectionCount();
+                accumTime += gcTime - lastTimes[i];
+                accumCounts += gcCount - lastCounts[i];
+
+                lastTimes[i] = gcTime;
+                lastCounts[i] = gcCount;
+            }
+
+            SmartDashboard.putNumber("Memory/GC Time MS", (double) accumTime);
+            SmartDashboard.putNumber("Memory/GCCounts", (double) accumCounts);
+            SmartDashboard.putNumber("Memory/Usage", (double) memBean.getHeapMemoryUsage().getUsed());
+
+            if (accumTime > (20)) {
+                gcAlert.set(true);
+            } else {
+                gcAlert.set(false);
+
+            }
+        }
     }
 }

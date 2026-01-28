@@ -1,0 +1,124 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.59243728393377,
+        "y": 5.205450327510918
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.166732851164483,
+        "y": 6.843592101073508
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.084835221069869,
+        "y": 5.958374215338429
+      },
+      "prevControl": {
+        "x": 0.9544038669678832,
+        "y": 6.171652582425019
+      },
+      "nextControl": {
+        "x": 1.2152665751718548,
+        "y": 5.745095848251839
+      },
+      "isLocked": false,
+      "linkedName": "DepotIntake"
+    },
+    {
+      "anchor": {
+        "x": 2.343946961426492,
+        "y": 5.012768831877729
+      },
+      "prevControl": {
+        "x": 2.264557199150506,
+        "y": 5.506576811748753
+      },
+      "nextControl": {
+        "x": 2.3872304858078603,
+        "y": 4.743543315593159
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.3626376569323144,
+        "y": 3.183242073780932
+      },
+      "prevControl": {
+        "x": 2.713502490447598,
+        "y": 3.634477802037846
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "OutpostClimb"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0114874588815785,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.0877611074270561,
+      "maxWaypointRelativePos": 1.2878502155172415,
+      "constraints": {
+        "maxVelocity": 2.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 2.910197695623339,
+      "command": null
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 1.009708637267905,
+      "endWaypointRelativePos": 1.3306220988063666,
+      "command": null
+    },
+    {
+      "name": "Climb",
+      "waypointRelativePos": 2.9489597148541113,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.12,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.3502807852949637
+  },
+  "reversed": false,
+  "folder": "Center",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

@@ -47,6 +47,8 @@ public class Turret extends SubsystemBase {
      */
     TalonFXS turretMotor;
 
+    TalonFXS hoodMotor;
+
     MotionMagicExpoVoltage turretControl;
 
     CANcoder turretCANcoder;
@@ -69,6 +71,7 @@ public class Turret extends SubsystemBase {
         happyMotor = new TalonFX(Constants.TurretConstants.happyMotorID);
         turretMotor = new TalonFXS(Constants.TurretConstants.turretMotorID);
         turretCANcoder = new CANcoder(Constants.TurretConstants.turretCANcoderID);
+        hoodMotor = new TalonFXS(Constants.TurretConstants.hoodMotorID);
 
         turretPose = CommandSwerveDrivetrain.getInstance().getPose().transformBy(
                 new Transform2d(
@@ -89,6 +92,13 @@ public class Turret extends SubsystemBase {
         configurePepper();
         configureHappy();
 
+        /**
+         * Kv should be doing mos to of the work(volts)
+         * find the actual 19 tooth position by getting the raw pulse width and then sub tracting from offset
+         * get raw pulse width by making the hz or sum idk look at docs
+         * once we have good postition we pid tune-
+         */
+
     }
 
     public void configureTurretMotor() {
@@ -103,32 +113,11 @@ public class Turret extends SubsystemBase {
         turretMotorConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.TurretMotorSupplyCurrentLimit;
 
         turretMotorConfig.ExternalFeedback.AbsoluteSensorDiscontinuityPoint = 1;
-        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset = oldConfigs.ExternalFeedback.AbsoluteSensorOffset; /*
-                                                                                                                     * When
-                                                                                                                     * offset
-                                                                                                                     * is
-                                                                                                                     * set
-                                                                                                                     * in
-                                                                                                                     * tuner,
-                                                                                                                     * it
-                                                                                                                     * may
-                                                                                                                     * cause
-                                                                                                                     * the
-                                                                                                                     * sensor
-                                                                                                                     * position
-                                                                                                                     * to
-                                                                                                                     * be
-                                                                                                                     * 1
-                                                                                                                     * .
-                                                                                                                     * 000
-                                                                                                                     * not
-                                                                                                                     * 0
-                                                                                                                     * .
-                                                                                                                     * 000,
-                                                                                                                     * that
-                                                                                                                     * is
-                                                                                                                     * fine
-                                                                                                                     */
+        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset = oldConfigs.ExternalFeedback.AbsoluteSensorOffset; 
+        /*
+         * When offset is set in tuner, it may cause the sensor position to be 1.00 not 0.00 that is fine
+         *
+         */
         turretMotorConfig.ExternalFeedback.ExternalFeedbackSensorSource = ExternalFeedbackSensorSourceValue.PulseWidth;
         turretMotorConfig.ExternalFeedback.RotorToSensorRatio = Constants.TurretConstants.kTurretPlanetaryRatio;
         turretMotorConfig.ExternalFeedback.SensorToMechanismRatio = Constants.TurretConstants.kTurretRingTeeth
@@ -149,6 +138,10 @@ public class Turret extends SubsystemBase {
         turretMotorConfig.MotionMagic.MotionMagicExpo_kA = Constants.TurretConstants.IronmanMotionMagicKa;
 
         turretMotor.getConfigurator().apply(turretMotorConfig);
+    }
+
+    public void configureHoodMotor() {
+      
     }
 
     public void configureTurretCANcoder() {

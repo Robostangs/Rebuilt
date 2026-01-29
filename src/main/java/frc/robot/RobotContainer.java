@@ -21,105 +21,118 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret;
 
 public class RobotContainer {
-    public static boolean useVision = true;
-    private double MaxSpeed = 1.0 * Constants.ZiroTunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts
-                                                                                                      // desired top
-                                                                                                      // speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
-                                                                                      // max angular velocity
+        public static boolean useVision = true;
+        private double MaxSpeed = 1.0 * Constants.ZiroTunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts
+                                                                                                          // desired top
+                                                                                                          // speed
+        private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
+                                                                                          // second
+                                                                                          // max angular velocity
 
-    /* Setting up bindings for necessary control of the swerve drive platform */
-    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+        /* Setting up bindings for necessary control of the swerve drive platform */
+        private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+                        .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+                        .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive
+                                                                                 // motors
+        private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+        private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-    private final Telemetry logger = new Telemetry(MaxSpeed);
+        private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController xDrive = new CommandXboxController(0);
-    private final CommandXboxController xManip = new CommandXboxController(1);
-    private final GenericHID xSim = new GenericHID(2);
+        private final CommandXboxController xDrive = new CommandXboxController(0);
+        private final CommandXboxController xManip = new CommandXboxController(1);
+        private final GenericHID xSim = new GenericHID(2);
 
-    public final CommandSwerveDrivetrain drivetrain = Constants.ZiroTunerConstants.createDrivetrain();
+        public final CommandSwerveDrivetrain drivetrain = Constants.ZiroTunerConstants.createDrivetrain();
 
-    public RobotContainer() {
-        configureDrivingBinding();
-        logger.initSwerveLog();
+        public RobotContainer() {
+                configureDrivingBinding();
+                logger.initSwerveLog();
 
-    }
+        }
 
-    private void configureDrivingBinding() {
-        // Note that X is defined as forward according to WPILib convention,
-        // and Y is defined as to the left according to WPILib convention.
+        private void configureDrivingBinding() {
+                // Note that X is defined as forward according to WPILib convention,
+                // and Y is defined as to the left according to WPILib convention.
 
-        if (Robot.isSimulation()) {
+                if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(() -> drive.withVelocityX((-xSim.getRawAxis(0))
-                                                        * MaxSpeed
-                                                                        )
+                                                        * MaxSpeed)
                                                         .withVelocityY((xSim.getRawAxis(1))
                                                                         * MaxSpeed)
                                                         .withRotationalRate((-xSim.getRawAxis(2))
                                                                         * MaxAngularRate)));
-                } else{
-        
-        if( drivetrain.isPastDeadzone(xDrive)){
-        drivetrain.setDefaultCommand(
-                // Drivetrain will execute this command periodically
-                drivetrain.applyRequest(() -> drive.withVelocityX(-xDrive.getLeftY() * MaxSpeed) // Drive forward with
-                                                                                                 // negative Y
-                                                                                                 // (forward)
-                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                        .withRotationalRate(-xDrive.getRightX() * MaxAngularRate) // Drive counterclockwise with
-                                                                                  // negative X (left)
-                ));}
-                else{
-                    drivetrain.setDefaultCommand(
-                            // Drivetrain will execute this command periodically
-                            drivetrain.applyRequest(() -> brake));
-                }}
+                } else {
 
-        xDrive.rightTrigger().whileTrue(new Repulsor());
+                        if (drivetrain.isPastDeadzone(xDrive)) {
+                                drivetrain.setDefaultCommand(
+                                                // Drivetrain will execute this command periodically
+                                                drivetrain.applyRequest(() -> drive
+                                                                .withVelocityX(-xDrive.getLeftY() * MaxSpeed) // Drive
+                                                                                                              // forward
+                                                                                                              // with
+                                                                                                              // negative
+                                                                                                              // Y
+                                                                                                              // (forward)
+                                                                .withVelocityY(-xDrive.getLeftX() * MaxSpeed) // Drive
+                                                                                                              // left
+                                                                                                              // with
+                                                                                                              // negative
+                                                                                                              // X
+                                                                                                              // (left)
+                                                                .withRotationalRate(
+                                                                                -xDrive.getRightX() * MaxAngularRate) // Drive
+                                                                                                                      // counterclockwise
+                                                                                                                      // with
+                                                                                                                      // negative
+                                                                                                                      // X
+                                                                                                                      // (left)
+                                                ));
+                        } else {
+                                drivetrain.setDefaultCommand(
+                                                // Drivetrain will execute this command periodically
+                                                drivetrain.applyRequest(() -> brake));
+                        }
+                }
 
-        
+                xDrive.rightTrigger().whileTrue(new Repulsor());
 
-        // Reset the field-centric heading on left bumper press.
-        xDrive.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+                // Reset the field-centric heading on left bumper press.
+                xDrive.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        xDrive.povRight().onTrue(new InstantCommand(
-                (() -> useVision = !useVision)));
+                xDrive.povRight().onTrue(new InstantCommand(
+                                (() -> useVision = !useVision)));
 
-        drivetrain.registerTelemetry(logger::telemeterize);
-    }
+                drivetrain.registerTelemetry(logger::telemeterize);
+        }
 
-    public Command getAutonomousCommand() {
-        // Simple drive forward auton
-        final var idle = new SwerveRequest.Idle();
-        return Commands.sequence(
-                // Reset our field centric heading to match the robot
-                // facing away from our alliance station wall (0 deg).
-                drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
-                // Then slowly drive forward (away from us) for 5 seconds.
-                drivetrain.applyRequest(() -> drive.withVelocityX(0.5)
-                        .withVelocityY(0)
-                        .withRotationalRate(0))
-                        .withTimeout(5.0),
-                // Finally idle for the rest of auton
-                drivetrain.applyRequest(() -> idle));
-    }
-    public void configureManipBindings(){
-        //Turret target hub
-        // xManip.y().onTrue(new InstantCommand(() -> Turret.setManipTarget(true)));
-        //Turret target pass
-        // xManip.b().onTrue(new InstantCommand(() -> Turret.setManipTarget(false)));
+        public Command getAutonomousCommand() {
+                // Simple drive forward auton
+                final var idle = new SwerveRequest.Idle();
+                return Commands.sequence(
+                                // Reset our field centric heading to match the robot
+                                // facing away from our alliance station wall (0 deg).
+                                drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
+                                // Then slowly drive forward (away from us) for 5 seconds.
+                                drivetrain.applyRequest(() -> drive.withVelocityX(0.5)
+                                                .withVelocityY(0)
+                                                .withRotationalRate(0))
+                                                .withTimeout(5.0),
+                                // Finally idle for the rest of auton
+                                drivetrain.applyRequest(() -> idle));
+        }
 
-        new Trigger(() -> xManip.getLeftY() > 0.1 || xManip.getLeftY() < -0.1)
-                .whileTrue(new InstantCommand(() -> Turret.getInstance().setTurretSetpointDoubleSupplier(
-                        () -> xManip.getLeftY()
-                )));
+        public void configureManipBindings() {
+                // Turret target hub
+                // xManip.y().onTrue(new InstantCommand(() -> Turret.setManipTarget(true)));
+                // Turret target pass
+                // xManip.b().onTrue(new InstantCommand(() -> Turret.setManipTarget(false)));
 
+                new Trigger(() -> xManip.getLeftY() > 0.1 || xManip.getLeftY() < -0.1)
+                                .whileTrue(new InstantCommand(
+                                                () -> Turret.getInstance().setTurretSetpointDoubleSupplier(
+                                                                () -> xManip.getLeftY())));
 
-
-    }
+        }
 }

@@ -94,13 +94,15 @@ public final class Constants {
     public static final double dumbThing = (((double)kTurretMotorTeeth * (double)kTurretCANcoderTeeth) / (double)kTurretRingTeeth) / 2;
     public static final double kIronmanToRobotCenterX = 0;
     public static final double kIronmanToRobotCenterY = 0;
-    public static final double IronmanMotionMagicKa = 0;
-    public static final double IronmanMotionMagicKv = 6.67;
+    public static final double IronmanMotionMagicKa = 0.75;
+    public static final double IronmanMotionMagicKv = 8;
     public static final double IronmanMotionMagicKS = 0.242;
     public static final double IronmanMotionMagicKP = 0;
     public static final double IronmanMotionMagicKI = 0;
     public static final double IronmanMotionMagicKD = 0;
     public static final double kTurretPlanetaryRatio = 9;
+    public static final double IronmanMotionMagicKvFF = 4;
+    public static final double IronmanMotionMagicKaFF = .5;
 
     
 

@@ -47,7 +47,7 @@ public class Turret extends SubsystemBase {
      */
     TalonFXS turretMotor;
 
-    MotionMagicExpoVoltage controlThreeThousand;
+    MotionMagicExpoVoltage turretControl;
 
     CANcoder turretCANcoder;
     TalonFXConfiguration pepperConfig;
@@ -78,7 +78,7 @@ public class Turret extends SubsystemBase {
                                 Constants.TurretConstants.kIronmanToRobotCenterY),
                         new Rotation2d()));
 
-        controlThreeThousand = new MotionMagicExpoVoltage(0);
+        turretControl = new MotionMagicExpoVoltage(0);
 
         pepperConfig = new TalonFXConfiguration();
         happyConfig = new TalonFXConfiguration();
@@ -137,13 +137,16 @@ public class Turret extends SubsystemBase {
 
         var ironmanMM = turretMotorConfig.Slot0;
 
-        ironmanMM.kV = Constants.TurretConstants.IronmanMotionMagicKv;
-        ironmanMM.kA = Constants.TurretConstants.IronmanMotionMagicKa;
+        ironmanMM.kV = Constants.TurretConstants.IronmanMotionMagicKvFF;
+        ironmanMM.kA = Constants.TurretConstants.IronmanMotionMagicKaFF;
         ironmanMM.kS = Constants.TurretConstants.IronmanMotionMagicKS;
 
         ironmanMM.kP = Constants.TurretConstants.IronmanMotionMagicKP;
         ironmanMM.kI = Constants.TurretConstants.IronmanMotionMagicKI;
         ironmanMM.kD = Constants.TurretConstants.IronmanMotionMagicKD;
+
+        turretMotorConfig.MotionMagic.MotionMagicExpo_kV = Constants.TurretConstants.IronmanMotionMagicKv;
+        turretMotorConfig.MotionMagic.MotionMagicExpo_kA = Constants.TurretConstants.IronmanMotionMagicKa;
 
         turretMotor.getConfigurator().apply(turretMotorConfig);
     }
@@ -189,19 +192,18 @@ public class Turret extends SubsystemBase {
      * @param rotations Set motion magic target position in rotations
      */
     public void setIronmansetpoint(double rotations) {
-        controlThreeThousand.Position = rotations;
+        turretControl.Position = rotations;
         SmartDashboard.putString("Setpoint has gotten set", "New setpoint at " + rotations);
     }
 
-    public Runnable setMotionMagicZero = () ->{
-            controlThreeThousand.Position = 0;
-            // turretMotor.setControl(controlThreeThousand);
+    public Runnable setMotionMagicZero = () -> {
+        turretControl.Position = 0;
+        // turretMotor.setControl(controlThreeThousand);
     };
-      public Runnable setMotionMagicPointThree = () ->{
-            controlThreeThousand.Position = 0.3;
-            // turretMotor.setControl(controlThreeThousand);
+    public Runnable setMotionMagicPointThree = () -> {
+        turretControl.Position = 0.3;
+        // turretMotor.setControl(controlThreeThousand);
     };
-
 
     public void setTurretSetpointDoubleSupplier(DoubleSupplier doubleSupplier) {
         setIronmansetpoint(doubleSupplier.getAsDouble() / 2);
@@ -274,6 +276,10 @@ public class Turret extends SubsystemBase {
 
         double calculatedMotorSensorPos = correctedGearDiff
                 * Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
+
+        SmartDashboard.putNumber("correctedGearDiff", correctedGearDiff);
+
+        SmartDashboard.putNumber("calculatedMotorSensorPos", calculatedMotorSensorPos);
 
         return (Math.round(calculatedMotorSensorPos - actualMotorSensorModPos) + actualMotorSensorModPos)
                 / Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
@@ -372,6 +378,10 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Ironman/TurretMotorSensorModPosition", oldMotorModPosition);
         SmartDashboard.putNumber("Ironman/TurretCANcoderModPosition", getTurretCANcoderModPosition());
 
+
+
+        SmartDashboard.putNumber("19Gear-offset, true absolute pos", (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
+
         if (!manualTarget) {
             targetHubPose();
         }
@@ -379,13 +389,12 @@ public class Turret extends SubsystemBase {
         // controlThreeThousand.Position = aimingJohnsRotaions();
 
         // turretMotor.setControl(controlThreeThousand);
-        
-        SmartDashboard.putNumber("Acceleration Turret Piviot", 
-        turretMotor.getAcceleration().getValueAsDouble()
-        );
+
+        SmartDashboard.putNumber("Velocity Turret Piviot", turretMotor.getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Turret motor voltage", turretMotor.getMotorVoltage().getValueAsDouble());
 
         SmartDashboard.putNumber("Ironman/Position", turretMotor.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Ironman/Target", controlThreeThousand.Position);
+        SmartDashboard.putNumber("Ironman/Target", turretControl.Position);
 
     }
 

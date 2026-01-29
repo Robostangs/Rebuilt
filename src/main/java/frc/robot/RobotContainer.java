@@ -63,6 +63,8 @@ public class RobotContainer {
                                                         .withRotationalRate((-xSim.getRawAxis(2))
                                                                         * MaxAngularRate)));
                 } else{
+        
+        if( drivetrain.isPastDeadzone(xDrive)){
         drivetrain.setDefaultCommand(
                 // Drivetrain will execute this command periodically
                 drivetrain.applyRequest(() -> drive.withVelocityX(-xDrive.getLeftY() * MaxSpeed) // Drive forward with
@@ -72,6 +74,11 @@ public class RobotContainer {
                         .withRotationalRate(-xDrive.getRightX() * MaxAngularRate) // Drive counterclockwise with
                                                                                   // negative X (left)
                 ));}
+                else{
+                    drivetrain.setDefaultCommand(
+                            // Drivetrain will execute this command periodically
+                            drivetrain.applyRequest(() -> brake));
+                }}
 
         xDrive.rightTrigger().whileTrue(new Repulsor());
 

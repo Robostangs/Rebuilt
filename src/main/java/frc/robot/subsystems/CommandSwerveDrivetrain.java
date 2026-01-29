@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -275,6 +276,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         SmartDashboard.putBoolean("Robot/is red", Robot.isRed());
 
+        
+
     }
 
     private void startSimThread() {
@@ -296,6 +299,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         for (var module : getModules()) {
             module.getSteerMotor().setNeutralMode(isCoast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
         }
+    }
+
+    public boolean isPastDeadzone(CommandXboxController controller){
+        return (Math.abs(controller.getLeftY()) > 0.05
+                || Math.abs(controller.getLeftX()) > 0.05
+                || Math.abs(controller.getRightX()) > 0.05);
     }
 
     /**

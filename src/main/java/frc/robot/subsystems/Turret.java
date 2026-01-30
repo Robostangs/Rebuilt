@@ -95,6 +95,7 @@ public class Turret extends SubsystemBase {
         configureTurretCANcoder();
         configurePepper();
         configureHappy();
+        configureHoodMotor();
 
         /**
          * Kv should be doing mos to of the work(volts)
@@ -147,6 +148,11 @@ public class Turret extends SubsystemBase {
     }
 
     public void configureHoodMotor() {
+        TalonFXSConfiguration hoodMotorConfig = new TalonFXSConfiguration();
+
+        hoodMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
+
+        hoodMotor.getConfigurator().apply(hoodMotorConfig);
 
     }
 
@@ -195,17 +201,14 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putString("Setpoint has gotten set", "New setpoint at " + rotations);
     }
 
-    public Runnable setMotionMagicZero = () -> {
-        turretControl.Position = 0;
-        // turretMotor.setControl(controlThreeThousand);
-    };
+
     public Runnable setMotionMagicPointThree = () -> {
         turretControl.Position = 0.3;
-        // turretMotor.setControl(controlThreeThousand);
+        // turretMotor.setControl(turretControl);
     };
 
     public void setTurretSetpointDoubleSupplier(DoubleSupplier doubleSupplier) {
-        setIronmansetpoint(doubleSupplier.getAsDouble() / 2);
+        setIronmansetpoint(doubleSupplier.getAsDouble());
 
     }
 
@@ -385,7 +388,6 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Ironman/SunTzuResetPotentialError", (newMotorModPosition - oldMotorModPosition));
 
         SmartDashboard.putNumber("Ironman/TurretMotorSensorModPosition", oldMotorModPosition);
-        SmartDashboard.putNumber("Ironman/TurretCANcoderModPosition", getTurretCANcoderModPosition());
 
         SmartDashboard.putNumber("19Gear-offset, true absolute pos",
                 (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
@@ -409,7 +411,7 @@ public class Turret extends SubsystemBase {
 
         // controlThreeThousand.Position = aimingJohnsRotaions();
 
-        // turretMotor.setControl(controlThreeThousand);
+        turretMotor.setControl(turretControl);
 
         aimingJohns();
 

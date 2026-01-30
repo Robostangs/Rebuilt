@@ -47,6 +47,7 @@ public class RobotContainer {
 
         public RobotContainer() {
                 configureDrivingBinding();
+                configureManipBindings() ;
                 logger.initSwerveLog();
 
         }
@@ -129,10 +130,15 @@ public class RobotContainer {
                 // Turret target pass
                 // xManip.b().onTrue(new InstantCommand(() -> Turret.setManipTarget(false)));
 
-                new Trigger(() -> xManip.getLeftY() > 0.1 || xManip.getLeftY() < -0.1)
-                                .whileTrue(new InstantCommand(
-                                                () -> Turret.getInstance().setTurretSetpointDoubleSupplier(
-                                                                () -> xManip.getLeftY())));
+                // new Trigger(() -> xManip.getLeftY() > 0.1 || xManip.getLeftY() < -0.1)
+                //                 .whileTrue(new InstantCommand(
+                //                                 () -> Turret.getInstance().setTurretSetpointDoubleSupplier(
+                //                                                 () -> xManip.getLeftY())));
+
+
+                  new Trigger(() -> Math.abs(xManip.getRightX())> 0.1)
+                                .whileTrue(new InstantCommand(() -> Turret.getInstance().setIronmansetpoint(xManip.getRightX()/10)));
+
 
         }
 }

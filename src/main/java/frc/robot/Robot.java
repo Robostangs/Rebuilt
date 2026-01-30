@@ -8,9 +8,13 @@ import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.util.List;
+import java.util.Map;
+import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.HootAutoReplay;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -36,6 +40,8 @@ public class Robot extends TimedRobotstangs {
     public static Field2d teleopField = new Field2d();
     private static GcStatsCollector gscollect = new GcStatsCollector();
     public static Alert gcAlert = new Alert("MEMORY TWEAKING LOOK INTO TS RN", AlertType.kWarning);
+
+    static NetworkTableEntry turretSetpoint;
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -65,10 +71,14 @@ public class Robot extends TimedRobotstangs {
                         .ignoringDisable(true));
 
         teleopTab.add("Motion Magic", new InstantCommand(() -> Turret.getInstance().setMotionMagic()));
-        teleopTab.add("Set turret to setpoint 0 ",
-                new InstantCommand(Turret.getInstance().setMotionMagicZero));
-        teleopTab.add("Set turret to setpoint 0.3",
-                new InstantCommand(Turret.getInstance().setMotionMagicPointThree));
+        teleopTab.add("Turret Position",
+                0)
+                .withProperties(Map.of("min_value", -0.5, "max_value", 0.5, "block increment", 0.1, "Divisions", 6));
+        turretSetpoint = NetworkTableInstance.getDefault().getTable("Shuffleboard")
+                .getSubTable(teleopTab.getTitle())
+                .getEntry("Turret Position");
+
+        ;
 
         // disabledTab.add()
 
@@ -122,6 +132,8 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopPeriodic() {
+        Turret.getInstance().setIronmansetpoint(turretSetpoint.getDouble(0));
+
     }
 
     @Override

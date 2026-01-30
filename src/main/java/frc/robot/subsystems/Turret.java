@@ -5,25 +5,25 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.AdvancedHallSupportValue;
 import com.ctre.phoenix6.signals.ExternalFeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 import com.ctre.phoenix6.signals.SensorPhaseValue;
+import com.ctre.phoenix6.sim.TalonFXSSimState;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
@@ -47,6 +47,8 @@ public class Turret extends SubsystemBase {
      */
     TalonFXS turretMotor;
 
+    TalonFXSSimState turretMotorSim;
+
     TalonFXS hoodMotor;
 
     MotionMagicExpoVoltage turretControl;
@@ -62,6 +64,8 @@ public class Turret extends SubsystemBase {
     static boolean manualTarget = false;
 
     private static Turret mInstance;
+
+    Mechanism2d turretSim;
 
     /**
      * The Turret
@@ -91,6 +95,8 @@ public class Turret extends SubsystemBase {
         configureTurretCANcoder();
         configurePepper();
         configureHappy();
+
+
 
         /**
          * Kv should be doing mos to of the work(volts)
@@ -287,38 +293,34 @@ public class Turret extends SubsystemBase {
         isHub = hub;
     }
 
-    public void updateIronManPose() {
-        turretPose = CommandSwerveDrivetrain.getInstance().getPose().transformBy(
-                new Transform2d(
-                        new Translation2d(
-                                // TODO find these values
-                                Constants.TurretConstants.kIronmanToRobotCenterX,
-                                Constants.TurretConstants.kIronmanToRobotCenterY),
-                        // TODO get this to be right, in rotations
-
-                        new Rotation2d(Units.rotationsToRadians(getTurretPosition()))));
-    }
-
     public Rotation2d aimingJohns() {
 
         Translation2d ironManTranslation = turretPose.getTranslation().minus(
-                (isHub ? Constants.FieldConstants.HubPosition.getTranslation()
-                        : Constants.FieldConstants.PassTarget.getTranslation()));
+                Constants.FieldConstants.HubPosition.getTranslation()
 
-        Rotation2d targetAngle = new Rotation2d(Math.atan2(
-                ironManTranslation.getY(),
-                ironManTranslation.getX()));
+                // (isHub ? Constants.FieldConstants.HubPosition.getTranslation()
+                //         : Constants.FieldConstants.PassTarget.getTranslation())
+                        
+                        );
+
+        Rotation2d targetAngle = ironManTranslation.getAngle();
+
+        SmartDashboard.putNumber("Ironman/TargetAngleRotiation", targetAngle.getRotations());
         return targetAngle;
     }
 
-    public double aimingJohnsRotaions() {
-        if (aimingJohns().getRadians() / (2 * Math.PI) > 0.495 || aimingJohns().getRadians() / (2 * Math.PI) < -0.495) {
-            // Find out what to do, prevent shooting?, alert to driver to rotate robot?
-            return turretMotor.getPosition().getValueAsDouble();
 
-        } else {
-            return aimingJohns().getRadians() / (2 * Math.PI);
-        }
+    public void updateIronManPose() {
+        turretPose = CommandSwerveDrivetrain.getInstance().getPose().rotateBy(
+                new Rotation2d(turretMotor.getPosition().getValueAsDouble()));
+        //  CommandSwerveDrivetrain.getInstance().getPose().transformBy(
+        //         new Transform2d(
+        //                 new Translation2d(
+        //                         // TODO find these values
+        //                         Constants.TurretConstants.kIronmanToRobotCenterX,
+        //                         Constants.TurretConstants.kIronmanToRobotCenterY),
+        //                 new Rotation2d(aimingJohns().getRotations())));
+
 
     }
 
@@ -352,12 +354,9 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putString("IF Sun Tzu", "You have art of warred");
     }
 
-    @Override
-    public void periodic() {
 
-        updateIronManPose();
-
-        SmartDashboard.putNumber("Ironman/SunTzuPosition", getBigGearPosition());
+    public void logTurretThings(){
+SmartDashboard.putNumber("Ironman/SunTzuPosition", getBigGearPosition());
 
         double oldMotorModPosition = getTurretMotorSensorModPosition();
 
@@ -375,7 +374,22 @@ public class Turret extends SubsystemBase {
 
         SmartDashboard.putNumber("19Gear-offset, true absolute pos", (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
 
-        if (!manualTarget) {
+     
+
+        SmartDashboard.putNumber("Velocity Turret Piviot", turretMotor.getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Turret motor voltage", turretMotor.getMotorVoltage().getValueAsDouble());
+
+        SmartDashboard.putNumber("Ironman/Position", turretMotor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Ironman/Target", turretControl.Position);
+    }
+
+    @Override
+    public void periodic() {
+
+        logTurretThings();
+        updateIronManPose();
+
+           if (!manualTarget) {
             targetHubPose();
         }
 
@@ -383,11 +397,9 @@ public class Turret extends SubsystemBase {
 
         // turretMotor.setControl(controlThreeThousand);
 
-        SmartDashboard.putNumber("Velocity Turret Piviot", turretMotor.getVelocity().getValueAsDouble());
-        SmartDashboard.putNumber("Turret motor voltage", turretMotor.getMotorVoltage().getValueAsDouble());
+        aimingJohns();
 
-        SmartDashboard.putNumber("Ironman/Position", turretMotor.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Ironman/Target", turretControl.Position);
+        Robot.teleopField.getObject("Turret").setPose(turretPose);
 
     }
 

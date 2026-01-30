@@ -488,6 +488,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
+       if(Robot.isSimulation()){
+        return false;
+       }
         if (yoPoseEsti == null) {
             return false;
         }

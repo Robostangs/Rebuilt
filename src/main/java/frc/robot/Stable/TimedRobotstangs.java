@@ -11,6 +11,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.hal.NotifierJNI;
+import edu.wpi.first.units.measure.Frequency;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.RobotController;
 
@@ -56,7 +57,7 @@ public class TimedRobotstangs extends IterativeRobotBasestangs {
 
     @Override
     public int hashCode() {
-      return Double.hashCode(expirationTime);
+      return Long.hashCode(expirationTime);
     }
 
     @Override
@@ -75,6 +76,8 @@ public class TimedRobotstangs extends IterativeRobotBasestangs {
   private final int m_notifier = NotifierJNI.initializeNotifier();
 
   private long m_startTimeUs;
+  private long m_loopStartTimeUs;
+
 
   private final PriorityQueue<Callback> m_callbacks = new PriorityQueue<>();
 
@@ -83,10 +86,10 @@ public class TimedRobotstangs extends IterativeRobotBasestangs {
     this(kDefaultPeriod);
   }
 
-  /**
-   * Constructor for TimedRobot.
+    /**
+   * Constructor for TimedRobotstangs.
    *
-   * @param period Period in seconds.
+   * @param period The period of the robot loop function.
    */
   protected TimedRobotstangs(double period) {
     super(period);
@@ -95,6 +98,23 @@ public class TimedRobotstangs extends IterativeRobotBasestangs {
     NotifierJNI.setNotifierName(m_notifier, "TimedRobot");
 
     HAL.report(tResourceType.kResourceType_Framework, tInstances.kFramework_Timed);
+  }
+
+  /**
+   * Constructor for TimedRobot.
+   *
+   * @param period The period of the robot loop function.
+   */
+  protected TimedRobotstangs(Time period) {
+    this(period.in(Seconds));
+  }
+  /**
+   * Constructor for TimedRobot.
+   *
+   * @param frequency The frequency of the robot loop function.
+   */
+  protected TimedRobotstangs(Frequency frequency) {
+    this(frequency.asPeriod());
   }
 
   @Override
@@ -113,7 +133,7 @@ public class TimedRobotstangs extends IterativeRobotBasestangs {
     }
 
     // Tell the DS that the robot is ready to be enabled
-    System.out.println("********** Robot program startup complete **********");
+    System.out.println("********** Robot John startup complete **********");
     DriverStationJNI.observeUserProgramStarting();
 
     // Loop forever, calling the appropriate mode-dependent function
@@ -129,6 +149,8 @@ public class TimedRobotstangs extends IterativeRobotBasestangs {
       if (currentTime == 0) {
         break;
       }
+
+      m_loopStartTimeUs = RobotController.getFPGATime();
 
       callback.func.run();
 
@@ -159,6 +181,16 @@ public class TimedRobotstangs extends IterativeRobotBasestangs {
   @Override
   public void endCompetition() {
     NotifierJNI.stopNotifier(m_notifier);
+  }
+  /**
+   * Return the system clock time in micrseconds for the start of the current periodic loop. This is
+   * in the same time base as Timer.getFPGATimestamp(), but is stable through a loop. It is updated
+   * at the beginning of every periodic callback (including the normal periodic loop).
+   *
+   * @return Robot running time in microseconds, as of the start of the current periodic function.
+   */
+  public long getLoopStartTime() {
+    return m_loopStartTimeUs;
   }
 
   /**

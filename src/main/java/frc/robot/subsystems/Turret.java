@@ -96,11 +96,10 @@ public class Turret extends SubsystemBase {
         configurePepper();
         configureHappy();
 
-
-
         /**
          * Kv should be doing mos to of the work(volts)
-         * find the actual 19 tooth position by getting the raw pulse width and then sub tracting from offset
+         * find the actual 19 tooth position by getting the raw pulse width and then sub
+         * tracting from offset
          * get raw pulse width by making the hz or sum idk look at docs
          * once we have good postition we pid tune-
          */
@@ -119,9 +118,10 @@ public class Turret extends SubsystemBase {
         turretMotorConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.TurretMotorSupplyCurrentLimit;
 
         turretMotorConfig.ExternalFeedback.AbsoluteSensorDiscontinuityPoint = 1;
-        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset = oldConfigs.ExternalFeedback.AbsoluteSensorOffset; 
+        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset = oldConfigs.ExternalFeedback.AbsoluteSensorOffset;
         /*
-         * When offset is set in tuner, it may cause the sensor position to be 1.00 not 0.00 that is fine
+         * When offset is set in tuner, it may cause the sensor position to be 1.00 not
+         * 0.00 that is fine
          *
          */
         turretMotorConfig.ExternalFeedback.ExternalFeedbackSensorSource = ExternalFeedbackSensorSourceValue.PulseWidth;
@@ -147,7 +147,7 @@ public class Turret extends SubsystemBase {
     }
 
     public void configureHoodMotor() {
-      
+
     }
 
     public void configureTurretCANcoder() {
@@ -294,34 +294,52 @@ public class Turret extends SubsystemBase {
     }
 
     public Rotation2d aimingJohns() {
+        // get current robot pose
+        Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
 
-        Translation2d ironManTranslation = turretPose.getTranslation().minus(
-                Constants.FieldConstants.HubPosition.getTranslation()
+        // calculate turret position in field space
+        Translation2d turretOffset = new Translation2d(
+                Constants.TurretConstants.kIronmanToRobotCenterX,
+                Constants.TurretConstants.kIronmanToRobotCenterY);
 
-                // (isHub ? Constants.FieldConstants.HubPosition.getTranslation()
-                //         : Constants.FieldConstants.PassTarget.getTranslation())
-                        
-                        );
+        Translation2d turretFieldPosition = robotPose.getTranslation()
+                .plus(turretOffset.rotateBy(robotPose.getRotation()));
 
-        Rotation2d targetAngle = ironManTranslation.getAngle();
+        // the vector from turret to target
+        Translation2d targetVector = Constants.FieldConstants.HubPosition.getTranslation()
+                .minus(turretFieldPosition);
 
-        SmartDashboard.putNumber("Ironman/TargetAngleRotiation", targetAngle.getRotations());
-        return targetAngle;
+        // angle to target in world frame
+        Rotation2d targetAngle = targetVector.getAngle();
+
+        // Convert to turret relative angle
+        Rotation2d turretRelativeAngle = targetAngle.minus(robotPose.getRotation());
+
+        SmartDashboard.putNumber("Ironman/TargetAngleRotation", turretRelativeAngle.getRotations());
+
+        return turretRelativeAngle;
     }
 
-
     public void updateIronManPose() {
-        turretPose = CommandSwerveDrivetrain.getInstance().getPose().rotateBy(
-                new Rotation2d(turretMotor.getPosition().getValueAsDouble()));
-        //  CommandSwerveDrivetrain.getInstance().getPose().transformBy(
-        //         new Transform2d(
-        //                 new Translation2d(
-        //                         // TODO find these values
-        //                         Constants.TurretConstants.kIronmanToRobotCenterX,
-        //                         Constants.TurretConstants.kIronmanToRobotCenterY),
-        //                 new Rotation2d(aimingJohns().getRotations())));
+        // Get the robot's pose
+        Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
 
+        // turret's position robot relative
+        Translation2d turretOffsetFromRobotCenter = new Translation2d(
+                Constants.TurretConstants.kIronmanToRobotCenterX,
+                Constants.TurretConstants.kIronmanToRobotCenterY);
 
+        // the turret offset by the robot's rotation to get field relative pose
+        Translation2d turretFieldPosition = robotPose.getTranslation()
+                .plus(turretOffsetFromRobotCenter.rotateBy(robotPose.getRotation()));
+
+        // The turret's field relative rotation is the robot rotation + turret relative
+        // rotation
+        Rotation2d turretFieldRotation = robotPose.getRotation()
+                .plus(new Rotation2d(Units.rotationsToRadians(turretMotor.getPosition().getValueAsDouble())));
+
+        // Create the turret pose
+        turretPose = new Pose2d(turretFieldPosition, turretFieldRotation);
     }
 
     public double getTurretPosition() {
@@ -354,9 +372,8 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putString("IF Sun Tzu", "You have art of warred");
     }
 
-
-    public void logTurretThings(){
-SmartDashboard.putNumber("Ironman/SunTzuPosition", getBigGearPosition());
+    public void logTurretThings() {
+        SmartDashboard.putNumber("Ironman/SunTzuPosition", getBigGearPosition());
 
         double oldMotorModPosition = getTurretMotorSensorModPosition();
 
@@ -370,11 +387,8 @@ SmartDashboard.putNumber("Ironman/SunTzuPosition", getBigGearPosition());
         SmartDashboard.putNumber("Ironman/TurretMotorSensorModPosition", oldMotorModPosition);
         SmartDashboard.putNumber("Ironman/TurretCANcoderModPosition", getTurretCANcoderModPosition());
 
-
-
-        SmartDashboard.putNumber("19Gear-offset, true absolute pos", (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
-
-     
+        SmartDashboard.putNumber("19Gear-offset, true absolute pos",
+                (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
 
         SmartDashboard.putNumber("Velocity Turret Piviot", turretMotor.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Turret motor voltage", turretMotor.getMotorVoltage().getValueAsDouble());
@@ -389,7 +403,7 @@ SmartDashboard.putNumber("Ironman/SunTzuPosition", getBigGearPosition());
         logTurretThings();
         updateIronManPose();
 
-           if (!manualTarget) {
+        if (!manualTarget) {
             targetHubPose();
         }
 

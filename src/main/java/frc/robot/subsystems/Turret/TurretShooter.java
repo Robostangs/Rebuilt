@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Turret;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -9,7 +10,7 @@ import frc.robot.Constants;
 
 public class TurretShooter extends SubsystemBase{
     private TalonFX shooterMotor;
-    private MotionMagicVelocityDutyCycle shooterTargetVelocity;
+    private MotionMagicTorqueCurrentFOC shooterTargetVelocity;
 
     public static TurretShooter instance;
 
@@ -25,8 +26,8 @@ public class TurretShooter extends SubsystemBase{
 
         TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
 
-        shooterConfig.Slot0.kP = Constants.TurretConstants.kShooterMotorP; // An error of 1 rotation results in 2.4 V output
-        shooterConfig.Slot0.kI = Constants.TurretConstants.kShooterMotorI; // no output for integrated error
+        shooterConfig.Slot0.kP = Constants.TurretConstants.kShooterMotorP; 
+        shooterConfig.Slot0.kI = Constants.TurretConstants.kShooterMotorI; 
         shooterConfig.Slot0.kD = Constants.TurretConstants.kShooterMotorD;
         shooterConfig.Slot0.kG = Constants.TurretConstants.kShooterMotorG;
         shooterConfig.Slot0.kA = Constants.TurretConstants.kShooterMotorA;
@@ -44,7 +45,7 @@ public class TurretShooter extends SubsystemBase{
 
     public void setShooterVelocity(double velocity) {
         // Set the shooter motor to the specified duty
-        shooterTargetVelocity=new MotionMagicVelocityDutyCycle(velocity);
+        shooterTargetVelocity=new MotionMagicTorqueCurrentFOC(velocity);
         
     }
     public double currentShooterVelocity() {

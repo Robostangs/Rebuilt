@@ -113,7 +113,7 @@ public final class Constants {
     public static final double kShooterMotorD = 0;
     public static final double kShooterMotorG = 0;
     public static final double kShooterMotorA = 0;
-    public static final double kShooterMotorV = 0;
+    public static final double kShooterMotorV = 0.18;
     public static final double shooterMotionMagicCruiseVelocity = 0;
     public static final double shooterMotionMagicAcceleration = 0;
     public static final double shooterMotionMagicJerk = 0;

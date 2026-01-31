@@ -8,7 +8,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
+import frc.robot.subsystems.Turret.*;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -108,6 +108,7 @@ public class RobotContainer {
                                 (() -> useVision = !useVision)));
 
                 drivetrain.registerTelemetry(logger::telemeterize);
+                xDrive.x().onTrue(new InstantCommand(()-> TurretShooter.getInstance().setShooterRPS(40d)));
         }
 
         public Command getAutonomousCommand() {

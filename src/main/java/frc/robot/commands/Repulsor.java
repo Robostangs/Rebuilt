@@ -16,7 +16,7 @@ public class Repulsor extends Command {
 
     @Override
     public void initialize() {
-        shooter.setShooterVelocity(0.1);
+        shooter.setShooterRPS(0.1);
         //turret.setHappyDutyCycle(-0.25);
     }
 
@@ -25,7 +25,7 @@ public class Repulsor extends Command {
     }
     @Override
     public void end(boolean interrupted) {
-        shooter.setShooterVelocity(0);
+        shooter.setShooterRPS(0);
         //turret.setHappyDutyCycle(0);
     }
 }

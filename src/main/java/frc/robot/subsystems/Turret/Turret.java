@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Turret;
 
 import java.util.function.DoubleSupplier;
 
@@ -28,16 +28,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 /**
  * The turret
  */
 public class Turret extends SubsystemBase {
 
-    /**
-     * Shooter motor
-     */
-    TalonFX pepperMotor;
+    // Shooter motor has its own subsystem
 
     /**
      * Feeder motor
@@ -75,7 +73,6 @@ public class Turret extends SubsystemBase {
      * The Turret
      */
     public Turret() {
-        pepperMotor = new TalonFX(Constants.TurretConstants.pepperMotorID);
         happyMotor = new TalonFX(Constants.TurretConstants.happyMotorID);
         turretMotor = new TalonFXS(Constants.TurretConstants.turretMotorID);
         turretCANcoder = new CANcoder(Constants.TurretConstants.turretCANcoderID);
@@ -98,7 +95,6 @@ public class Turret extends SubsystemBase {
         // TODO find supply current limit for each motor
         configureTurretMotor();
         configureTurretCANcoder();
-        configurePepper();
         configureHappy();
         configureHoodMotor();
 
@@ -184,10 +180,6 @@ public class Turret extends SubsystemBase {
         turretCANcoder.getConfigurator().apply(turretCANcoderConfig);
     }
 
-    public void configurePepper() {
-        pepperConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.CurtisSupplyCurrentLimit;
-        pepperMotor.getConfigurator().apply(pepperConfig);
-    }
 
     public void configureHappy() {
         happyConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.MicroSupplyCurrentLimit;
@@ -205,9 +197,7 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putString("Ironman/status", status);
     }
 
-    public void setPepperdutycycle(double speed) {
-        pepperMotor.set(speed);
-    }
+    
 
     /**
      * @param rotations Set motion magic target position in rotations

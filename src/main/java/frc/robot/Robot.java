@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Turret.Turret;
 
 public class Robot extends TimedRobotstangs {
     private Command m_autonomousCommand;

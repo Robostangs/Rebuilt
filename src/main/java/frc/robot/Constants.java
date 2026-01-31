@@ -107,6 +107,17 @@ public final class Constants {
     public static final int kLimitSwitchId = 0;
     public static final double kHoodHomeDutyCycle = -0.09;
     public static final double kHomePosition = 0;
+    public static final int kFlywheelMotorID = 0;
+    public static final double kShooterMotorP = 0;
+    public static final double kShooterMotorI = 0;
+    public static final double kShooterMotorD = 0;
+    public static final double kShooterMotorG = 0;
+    public static final double kShooterMotorA = 0;
+    public static final double kShooterMotorV = 0;
+    public static final double shooterMotionMagicCruiseVelocity = 0;
+    public static final double shooterMotionMagicAcceleration = 0;
+    public static final double shooterMotionMagicJerk = 0;
+    public static final double kShooterVelocityTolerance = 0;
 
     
 

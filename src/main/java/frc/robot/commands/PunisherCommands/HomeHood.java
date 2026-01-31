@@ -1,7 +1,7 @@
 package frc.robot.commands.PunisherCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Turret.Turret;
 
 public class HomeHood extends Command {
     /*

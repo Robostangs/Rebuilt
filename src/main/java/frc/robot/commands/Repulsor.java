@@ -1,22 +1,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Turret.Turret;
+import frc.robot.subsystems.Turret.TurretShooter;
 
 public class Repulsor extends Command {
 
-    Turret ironMan;
-
+    TurretShooter shooter;
+    Turret turret;
     public Repulsor( ) {
-        this.ironMan = Turret.getInstance();
-        addRequirements(ironMan);
+        this.shooter = TurretShooter.getInstance();
+        this.turret = Turret.getInstance();
+        addRequirements(shooter, turret);
     }
 
     @Override
     public void initialize() {
-            ironMan.setPepperdutycycle(-0.4);
-            ironMan.setHappyDutyCycle(-0.25);
-
+        shooter.setShooterVelocity(0.1);
+        //turret.setHappyDutyCycle(-0.25);
     }
 
     @Override
@@ -24,7 +25,7 @@ public class Repulsor extends Command {
     }
     @Override
     public void end(boolean interrupted) {
-        ironMan.setPepperdutycycle(0);
-        ironMan.setHappyDutyCycle(0);
+        shooter.setShooterVelocity(0);
+        //turret.setHappyDutyCycle(0);
     }
 }

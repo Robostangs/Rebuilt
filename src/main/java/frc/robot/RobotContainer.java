@@ -20,7 +20,7 @@ import frc.robot.commands.Repulsor;
 import frc.robot.commands.PunisherCommands.HomeHood;
 import frc.robot.commands.PunisherCommands.SetHoodDutyCycle;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Turret.Turret;
 
 public class RobotContainer {
         public static boolean useVision = true;

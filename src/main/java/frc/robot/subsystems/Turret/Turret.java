@@ -123,8 +123,7 @@ public class Turret extends SubsystemBase {
         turretMotorConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.TurretMotorSupplyCurrentLimit;
 
         turretMotorConfig.ExternalFeedback.AbsoluteSensorDiscontinuityPoint = 1;
-        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset = turretMotorAbsoluteSensorOffset;
-
+        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset = oldConfigs.ExternalFeedback.AbsoluteSensorOffset;
         /*
          * When offset is set in tuner, it may cause the sensor position to be 1.00 not
          * 0.00 that is fine
@@ -156,6 +155,12 @@ public class Turret extends SubsystemBase {
 
     public void configureHoodMotor() {
         TalonFXSConfiguration hoodMotorConfig = new TalonFXSConfiguration();
+
+        hoodMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
+
+        hoodMotor.getConfigurator().apply(hoodMotorConfig);
+
+    
 
         hoodMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
 
@@ -464,6 +469,9 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putBoolean("Limited",getLimitSwitch());
         logTurretThings();
         updateIronManPose();
+
+        SmartDashboard.putNumber("19Gear-offset, true absolute pos",
+                (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
 
         if (!manualTarget) {
             targetHubPose();

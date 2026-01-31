@@ -87,7 +87,7 @@ public final class Constants {
     public static final double kTurretMotorSensorToMechanismRatio = Constants.TurretConstants.kTurretRingTeeth / Constants.TurretConstants.kTurretMotorTeeth;
     public static final int kAmyID = 0;
     public static final int kBillyID = 0;
-    public static final int pepperMotorID = 0;
+    public static final int pepperMotorID = 11;
     public static final double CurtisSupplyCurrentLimit =50;
     public static final double MicroSupplyCurrentLimit = 50;
     public static final double TurretMotorSupplyCurrentLimit = 10;

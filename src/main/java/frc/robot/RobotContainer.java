@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Repulsor;
+import frc.robot.commands.PunisherCommands.HomeHood;
+import frc.robot.commands.PunisherCommands.SetHoodDutyCycle;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret;
 
@@ -136,8 +138,12 @@ public class RobotContainer {
                 //                                                 () -> xManip.getLeftY())));
 
 
-                  new Trigger(() -> Math.abs(xManip.getRightX())> 0.1)
+                new Trigger(() -> Math.abs(xManip.getRightX())> 0.1)
                                 .whileTrue(new InstantCommand(() -> Turret.getInstance().setIronmansetpoint(xManip.getRightX()/10)));
+                xManip.b().toggleOnTrue(new HomeHood());
+                new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.1)
+                                .whileTrue(new SetHoodDutyCycle(() -> xManip.getLeftY() / 2));
+                
 
 
         }

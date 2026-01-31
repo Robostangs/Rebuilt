@@ -103,7 +103,10 @@ public final class Constants {
     public static final double kTurretPlanetaryRatio = 9;
     public static final double IronmanMotionMagicKvFF = 4;
     public static final double IronmanMotionMagicKaFF = .5;
-    public static final int hoodMotorID = 0;
+    public static final int hoodMotorID = 5;
+    public static final int kLimitSwitchId = 0;
+    public static final double kHoodHomeDutyCycle = -0.09;
+    public static final double kHomePosition = 0;
 
     
 

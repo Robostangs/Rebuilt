@@ -67,6 +67,8 @@ public class Turret extends SubsystemBase {
 
     Mechanism2d turretSim;
 
+    private double turretMotorAbsoluteSensorOffset = 0.0;
+
     /**
      * The Turret
      */
@@ -112,6 +114,7 @@ public class Turret extends SubsystemBase {
 
         TalonFXSConfiguration oldConfigs = new TalonFXSConfiguration();
         turretMotor.getConfigurator().refresh(oldConfigs);
+        turretMotorAbsoluteSensorOffset = oldConfigs.ExternalFeedback.AbsoluteSensorOffset;
 
         turretMotorConfig.Commutation.AdvancedHallSupport = AdvancedHallSupportValue.Enabled;
         turretMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
@@ -119,7 +122,8 @@ public class Turret extends SubsystemBase {
         turretMotorConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.TurretMotorSupplyCurrentLimit;
 
         turretMotorConfig.ExternalFeedback.AbsoluteSensorDiscontinuityPoint = 1;
-        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset = oldConfigs.ExternalFeedback.AbsoluteSensorOffset;
+        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset = turretMotorAbsoluteSensorOffset;
+
         /*
          * When offset is set in tuner, it may cause the sensor position to be 1.00 not
          * 0.00 that is fine
@@ -143,6 +147,8 @@ public class Turret extends SubsystemBase {
 
         turretMotorConfig.MotionMagic.MotionMagicExpo_kV = Constants.TurretConstants.IronmanMotionMagicKv;
         turretMotorConfig.MotionMagic.MotionMagicExpo_kA = Constants.TurretConstants.IronmanMotionMagicKa;
+
+        turretMotor.getRawPulseWidthPosition().setUpdateFrequency(50);
 
         turretMotor.getConfigurator().apply(turretMotorConfig);
     }
@@ -224,6 +230,13 @@ public class Turret extends SubsystemBase {
                 * Constants.TurretConstants.kTurretMotorSensorToMechanismRatio);
     }
 
+
+    //this is pointless cuz the getposition is the sensor not the rotor
+    // public double getTurretMotorSensorModPositon() {
+    //     /* because sensor phase is inverted */
+    //     return mathMod1(1-(turretMotor.getRawPulseWidthPosition().getValueAsDouble() - turretMotorAbsoluteSensorOffset)); //TODO this offset only updates at rio boot
+    // }
+
     public double getTurretCANcoderModPosition() {
         /* Convert mechanism position to sensor position */
         return mathMod1(turretCANcoder.getPosition().getValueAsDouble());
@@ -258,7 +271,41 @@ public class Turret extends SubsystemBase {
      */
     public double getBigGearPosition() {
         double actualMotorSensorModPos = getTurretMotorSensorModPosition();
-        double geardiff = getGearDifference(actualMotorSensorModPos, getTurretCANcoderModPosition());
+        double actualCANcoderModPos = getTurretCANcoderModPosition();
+        double geardiff = getGearDifference(actualMotorSensorModPos, actualCANcoderModPos);
+
+        double correctedGearDiff;
+        if (geardiff > 0.5) {
+            correctedGearDiff = (geardiff - 1) * Constants.TurretConstants.dumbThing;
+        } else {
+            correctedGearDiff = geardiff * Constants.TurretConstants.dumbThing;
+        }
+
+        // re-correct using mod position of motor sensor
+        // Algorithm gives us an estimate which is definitely correct for whole-number
+        // rotations of the sensor,
+        // but may not be accurate for the mod-position of the sensor.
+        // If the algorithm was perfectly accurate, the sensor mod positions shoud not
+        // change when reset
+        // Update calculated big gear position so that it uses the whole-number from the
+        // CRT but the fractional from the motor sensor
+
+        double calculatedCANcoderPos = correctedGearDiff
+                *Constants.TurretConstants.kTurretRingTeeth/Constants.TurretConstants.kTurretCANcoderTeeth;
+
+        SmartDashboard.putNumber("correctedGearDiff", correctedGearDiff);
+
+        SmartDashboard.putNumber("calculatedCANcoderModPos", mathMod1(calculatedCANcoderPos));
+
+
+        return (Math.round(calculatedCANcoderPos - actualCANcoderModPos) + actualCANcoderModPos)
+                / Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
+    }
+
+        public double getBigGearPositionUsingMotorSensor() {
+        double actualMotorSensorModPos = getTurretMotorSensorModPosition();
+        double turretCANcoderSensorModPos = getTurretCANcoderModPosition();
+        double geardiff = getGearDifference(actualMotorSensorModPos, turretCANcoderSensorModPos);
 
         double correctedGearDiff;
         if (geardiff > 0.5) {
@@ -282,6 +329,8 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("correctedGearDiff", correctedGearDiff);
 
         SmartDashboard.putNumber("calculatedMotorSensorPos", calculatedMotorSensorPos);
+        SmartDashboard.putNumber("calculatedMotorSensorModPos", mathMod1(calculatedMotorSensorPos));
+
 
         return (Math.round(calculatedMotorSensorPos - actualMotorSensorModPos) + actualMotorSensorModPos)
                 / Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
@@ -387,10 +436,21 @@ public class Turret extends SubsystemBase {
 
         SmartDashboard.putNumber("Ironman/SunTzuResetPotentialError", (newMotorModPosition - oldMotorModPosition));
 
-        SmartDashboard.putNumber("Ironman/TurretMotorSensorModPosition", oldMotorModPosition);
 
-        SmartDashboard.putNumber("19Gear-offset, true absolute pos",
-                (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
+
+                double calculatedPosition2 = getBigGearPositionUsingMotorSensor();
+
+        double newMotorModPosition2 = mathMod1(calculatedPosition2 * Constants.TurretConstants.kTurretRingTeeth
+                / Constants.TurretConstants.kTurretMotorTeeth);
+
+        SmartDashboard.putNumber("Ironman/SunTzuResetPotentialErrorUsingMotor", (newMotorModPosition2 - oldMotorModPosition));
+
+
+
+
+        SmartDashboard.putNumber("Ironman/TurretMotorSensorModPosition", oldMotorModPosition);
+                SmartDashboard.putNumber("Ironman/TurretCANcoderModPosition", getTurretCANcoderModPosition());
+
 
         SmartDashboard.putNumber("Velocity Turret Piviot", turretMotor.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Turret motor voltage", turretMotor.getMotorVoltage().getValueAsDouble());

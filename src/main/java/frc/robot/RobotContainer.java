@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Repulsor;
-import frc.robot.commands.PunisherCommands.HomeHood;
-import frc.robot.commands.PunisherCommands.SetHoodDutyCycle;
+import frc.robot.commands.TurretCommands.HomeHood;
+import frc.robot.commands.TurretCommands.SetHoodDutyCycle;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret.Turret;
 

@@ -49,7 +49,6 @@ public class Turret extends SubsystemBase {
 
     TalonFXSSimState turretMotorSim;
 
-    TalonFXS hoodMotor;
 
     MotionMagicExpoVoltage turretControl;
 
@@ -76,7 +75,6 @@ public class Turret extends SubsystemBase {
         happyMotor = new TalonFX(Constants.TurretConstants.happyMotorID);
         turretMotor = new TalonFXS(Constants.TurretConstants.turretMotorID);
         turretCANcoder = new CANcoder(Constants.TurretConstants.turretCANcoderID);
-        hoodMotor = new TalonFXS(Constants.TurretConstants.hoodMotorID);
 
         turretPose = CommandSwerveDrivetrain.getInstance().getPose().transformBy(
                 new Transform2d(
@@ -96,7 +94,6 @@ public class Turret extends SubsystemBase {
         configureTurretMotor();
         configureTurretCANcoder();
         configureHappy();
-        configureHoodMotor();
 
         /**
          * Kv should be doing mos to of the work(volts)
@@ -153,26 +150,7 @@ public class Turret extends SubsystemBase {
         turretMotor.getConfigurator().apply(turretMotorConfig);
     }
 
-    public void configureHoodMotor() {
-        TalonFXSConfiguration hoodMotorConfig = new TalonFXSConfiguration();
-
-        hoodMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
-
-        hoodMotor.getConfigurator().apply(hoodMotorConfig);
-
-    
-
-        hoodMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
-
-        hoodMotor.getConfigurator().apply(hoodMotorConfig);
-
-    }
-    public void setHoodDutyCycle(double dc){
-        hoodMotor.set(dc);
-    }
-    public void setHoodPosition(double pos){
-        hoodMotor.setPosition(pos);
-    }
+   
     public void configureTurretCANcoder() {
         CANcoderConfiguration turretCANcoderConfig = new CANcoderConfiguration();
 

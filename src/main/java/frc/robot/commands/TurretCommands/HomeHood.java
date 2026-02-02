@@ -1,7 +1,7 @@
-package frc.robot.commands.PunisherCommands;
+package frc.robot.commands.TurretCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.Turret.Turret;
+import frc.robot.subsystems.Turret.Hood;
 
 public class HomeHood extends Command {
     /*
@@ -10,17 +10,17 @@ public class HomeHood extends Command {
      * once it reaches the spot {@code kHomePosition}, it will stop moving
      */
 
-    Turret hood;
+    Hood hood;
 
     public HomeHood() {
-        hood = Turret.getInstance();
+        hood = Hood.getInstance();
 
         addRequirements(hood);
     }
 
     @Override
     public void initialize() {
-        hood.postStatus("elevator homing");
+        hood.postStatus("Hood homing");
         hood.setHoodDutyCycle(Constants.TurretConstants.kHoodHomeDutyCycle);
 
     }
@@ -28,15 +28,18 @@ public class HomeHood extends Command {
     @Override
     public void execute() {
     }
+    
 
     @Override
     public void end(boolean interrupted) {
         hood.setHoodDutyCycle(0);
         hood.setHoodPosition(Constants.TurretConstants.kHomePosition);
-        hood.postStatus("elevator homed");
+        hood.postStatus("Hood homed");
 
     }
 
+
+    @Override
     public boolean isFinished() {
         return hood.getLimitSwitch();
     }

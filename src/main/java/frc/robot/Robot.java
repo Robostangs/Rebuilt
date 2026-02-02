@@ -24,12 +24,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Stable.TimedRobotstangs;
+import frc.robot.Vision.PhotonVision;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret.Turret;
 
 public class Robot extends TimedRobotstangs {
     private Command m_autonomousCommand;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
+    private PhotonVision photonVisionFront=new PhotonVision(drivetrain,Constants.VisionConstants.kPhotonCamNameFront, Constants.VisionConstants.kRobotToCamFront);
+    private PhotonVision photonVisionBack=new PhotonVision(drivetrain,Constants.VisionConstants.kPhotonCamNameBack, Constants.VisionConstants.kRobotToCamBack);
 
     private final RobotContainer m_robotContainer;
     public static ShuffleboardTab disableTab, teleopTab;
@@ -87,7 +90,8 @@ public class Robot extends TimedRobotstangs {
         CommandScheduler.getInstance().run();
         gscollect.update();
         teleopField.setRobotPose(drivetrain.getPose());
-
+        photonVisionFront.periodic();
+        photonVisionBack.periodic();
     }
 
     @Override

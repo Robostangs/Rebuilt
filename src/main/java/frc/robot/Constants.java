@@ -69,6 +69,20 @@ public final class Constants {
   public static class KirbyConstants {
     public static final int kirbyWheelsID = 20;
     public static final double KirbyCurrentLimit = 0;
+    public static final double HopperExtenderCurrentLimit = 0;
+    public static final int hopperExtenderID = 0;
+    public static final double kirbyIntakeSpeed = 0.5;
+    public static final double hopperExtenderKP = 0;
+    public static final double hopperExtenderKI = 0;
+    public static final double hopperExtenderKD = 0;
+    public static final double hopperExtenderKS = 0;
+    public static final double kExtenderMotionMagicAcceleration = 0;
+    public static final double kExtenderMotionMagicVelocity = 0;
+    public static final double extenderSensorToMechanismRatio = 0;
+	public static final double kExtendSetpoint = 0;
+    public static final double kRetractSetpoint = 0;
+    //TODO: find this john
+    public static final double kHopperExtensionTolerance = 0.01;
   }
 
   public static class FieldConstants {

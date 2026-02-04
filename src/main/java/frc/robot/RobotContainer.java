@@ -6,9 +6,12 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import frc.robot.subsystems.Turret.*;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,15 +19,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Repulsor;
 import frc.robot.commands.TurretCommands.HomeHood;
 import frc.robot.commands.TurretCommands.SetHoodDutyCycle;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Turret.Turret;
 
 public class RobotContainer {
         public static boolean useVision = true;
-        private double MaxSpeed = 1.0 * Constants.ZiroTunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts
+        private double MaxSpeed = 1.0 * Constants.JabaTunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts
                                                                                                           // desired top
                                                                                                           // speed
         private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
@@ -45,11 +46,11 @@ public class RobotContainer {
         private final CommandXboxController xManip = new CommandXboxController(1);
         private final GenericHID xSim = new GenericHID(2);
 
-        public final CommandSwerveDrivetrain drivetrain = Constants.ZiroTunerConstants.createDrivetrain();
+        public final CommandSwerveDrivetrain drivetrain = Constants.JabaTunerConstants.createDrivetrain();
 
         public RobotContainer() {
                 configureDrivingBinding();
-                configureManipBindings() ;
+                configureManipBindings();
                 logger.initSwerveLog();
 
         }
@@ -68,7 +69,14 @@ public class RobotContainer {
                                                                         * MaxAngularRate)));
                 } else {
 
-                        if (drivetrain.isPastDeadzone(xDrive)) {
+                        DoubleSupplier leftY = () -> xDrive.getLeftY();
+                        DoubleSupplier leftX = () -> xDrive.getLeftX();
+                        DoubleSupplier rightX = () -> xDrive.getRightX();
+                        
+                        if (((Math.abs(leftY.getAsDouble()) > 0.05)
+                                        || Math.abs(leftX.getAsDouble()) > 0.05
+                                        || Math.abs((rightX.getAsDouble())) > 0.05)) {
+
                                 drivetrain.setDefaultCommand(
                                                 // Drivetrain will execute this command periodically
                                                 drivetrain.applyRequest(() -> drive
@@ -94,21 +102,20 @@ public class RobotContainer {
                                                 ));
                         } else {
                                 drivetrain.setDefaultCommand(
-                                                // Drivetrain will execute this command periodically
                                                 drivetrain.applyRequest(() -> brake));
                         }
                 }
 
-                xDrive.rightTrigger().whileTrue(new Repulsor());
-
                 // Reset the field-centric heading on left bumper press.
                 xDrive.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+                // xDrive.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.resetPose(new
+                // Pose2d(3.6, 3.04, drivetrain.getRotation3d().toRotation2d()))));
 
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
                 drivetrain.registerTelemetry(logger::telemeterize);
-                xDrive.x().onTrue(new InstantCommand(()-> TurretShooter.getInstance().setShooterRPS(40d)));
+                xDrive.x().onTrue(new InstantCommand(() -> TurretShooter.getInstance().setShooterRPS(40d)));
         }
 
         public Command getAutonomousCommand() {
@@ -134,18 +141,16 @@ public class RobotContainer {
                 // xManip.b().onTrue(new InstantCommand(() -> Turret.setManipTarget(false)));
 
                 // new Trigger(() -> xManip.getLeftY() > 0.1 || xManip.getLeftY() < -0.1)
-                //                 .whileTrue(new InstantCommand(
-                //                                 () -> Turret.getInstance().setTurretSetpointDoubleSupplier(
-                //                                                 () -> xManip.getLeftY())));
+                // .whileTrue(new InstantCommand(
+                // () -> Turret.getInstance().setTurretSetpointDoubleSupplier(
+                // () -> xManip.getLeftY())));
 
-
-                new Trigger(() -> Math.abs(xManip.getRightX())> 0.1)
-                                .whileTrue(new InstantCommand(() -> Turret.getInstance().setIronmansetpoint(xManip.getRightX()/10)));
+                new Trigger(() -> Math.abs(xManip.getRightX()) > 0.1)
+                                .whileTrue(new InstantCommand(() -> Turret.getInstance()
+                                                .setIronmansetpoint(xManip.getRightX() / 10)));
                 xManip.b().toggleOnTrue(new HomeHood());
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.1)
                                 .whileTrue(new SetHoodDutyCycle(() -> xManip.getLeftY() / 2));
-                
-
 
         }
 }

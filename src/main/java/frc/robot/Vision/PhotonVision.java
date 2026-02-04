@@ -1,10 +1,10 @@
 package frc.robot.Vision;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 import org.photonvision.PhotonCamera;
@@ -54,19 +54,22 @@ public class PhotonVision {
         var result = camera.getLatestResult();
         if (result.hasTargets()) {
             
-            SmartDashboard.putNumber("periodic photon run",0 );
+            
 
             PhotonTrackedTarget target = result.getBestTarget();
             if(isPosegoo(target)) {
-            SmartDashboard.putNumber("pose is goo ", 4);
-            var newPose = getPose(target);
+                
+                var newPose = getPose(target);
 
-            SmartDashboard.putNumber("Photon AprilTag Seen", target.getFiducialId());
-            SmartDashboard.putNumber("periodic photon tag pose",newPose.toPose2d().getX() );
 
-            drivetrain.addVisionMeasurement(newPose.toPose2d(), result.getTimestampSeconds());
+                SmartDashboard.putNumber(camera.getName() + " Photon AprilTag Seen", target.getFiducialId());
+                SmartDashboard.putNumber(camera.getName()+ " Periodic photon tag pose",newPose.toPose2d().getX());
+
+                drivetrain.addVisionMeasurement(newPose.toPose2d(), result.getTimestampSeconds());
+
+                Robot.teleopField.getObject(camera.getName() + " PhotonVision Pose").setPose(newPose.toPose2d());
             
-        }
+            }
     }
     }
 }

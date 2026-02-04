@@ -5,7 +5,6 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -21,11 +20,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -61,7 +58,6 @@ public class Turret extends SubsystemBase {
 
     static boolean isHub = true;
     static boolean manualTarget = false;
-    private DigitalInput limitSwitchHood;
     private static Turret mInstance;
 
     Mechanism2d turretSim;
@@ -88,7 +84,6 @@ public class Turret extends SubsystemBase {
 
         pepperConfig = new TalonFXConfiguration();
         happyConfig = new TalonFXConfiguration();
-        limitSwitchHood=new DigitalInput(Constants.TurretConstants.kLimitSwitchId);
 
         // TODO find supply current limit for each motor
         configureTurretMotor();
@@ -104,9 +99,7 @@ public class Turret extends SubsystemBase {
          */
 
     }
-    public boolean getLimitSwitch() {
-        return limitSwitchHood.get();
-    }
+
     public void configureTurretMotor() {
         TalonFXSConfiguration turretMotorConfig = new TalonFXSConfiguration();
 
@@ -444,7 +437,6 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Limited",getLimitSwitch());
         logTurretThings();
         updateIronManPose();
 

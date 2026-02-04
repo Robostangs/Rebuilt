@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.ZiroTunerConstants.TunerSwerveDrivetrain;
+import frc.robot.Constants.JabaTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Stable.LimelightHelpers;
 
 /**
@@ -383,10 +383,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public static CommandSwerveDrivetrain getInstance() {
         if (mDrivetrain == null) {
-            mDrivetrain = new CommandSwerveDrivetrain(Constants.ZiroTunerConstants.DrivetrainConstants,
-                    Constants.ZiroTunerConstants.FrontLeft,
-                    Constants.ZiroTunerConstants.FrontRight, Constants.ZiroTunerConstants.BackLeft,
-                    Constants.ZiroTunerConstants.BackRight);
+            mDrivetrain = new CommandSwerveDrivetrain(Constants.JabaTunerConstants.DrivetrainConstants,
+                    Constants.JabaTunerConstants.FrontLeft,
+                    Constants.JabaTunerConstants.FrontRight, Constants.JabaTunerConstants.BackLeft,
+                    Constants.JabaTunerConstants.BackRight);
         }
         return mDrivetrain;
     }

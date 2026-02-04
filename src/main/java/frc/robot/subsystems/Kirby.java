@@ -16,9 +16,10 @@ public class Kirby extends SubsystemBase {
     TalonFXConfiguration hopperExtenderConfiguration;
     private static Kirby mInstance;
     MotionMagicTorqueCurrentFOC extenderControl;
+
     /** The intake wheels. */
     public Kirby() {
-        
+
         kirbyWheels = new TalonFX(Constants.KirbyConstants.kirbyWheelsID);
         kirbyConfiguration = new TalonFXConfiguration();
         kirbyConfiguration.CurrentLimits.SupplyCurrentLimit = Constants.KirbyConstants.KirbyCurrentLimit;
@@ -40,6 +41,13 @@ public class Kirby extends SubsystemBase {
         extenderControl = new MotionMagicTorqueCurrentFOC(hopperExtenderMotor.getPosition().getValueAsDouble());
     }
 
+    public static Kirby getInstance() {
+        if (mInstance == null) {
+            mInstance = new Kirby();
+        }
+        return mInstance;
+    }
+
     public void setKirbyWheels(double speed) {
         kirbyWheels.set(speed);
     }
@@ -51,34 +59,20 @@ public class Kirby extends SubsystemBase {
     public void postStatus(String status) {
         SmartDashboard.putString("Kirby/status", status);
     }
-    public boolean intakeExtendAtTargetPosition() {
-        return hopperExtenderMotor.getPosition().getValueAsDouble() >= Constants.KirbyConstants.kExtendSetpoint - Constants.KirbyConstants.kHopperExtensionTolerance;
-    }
-    public static Kirby getInstance() {
-        if (mInstance == null) {
-            mInstance = new Kirby();
-        }
-        return mInstance;
-    }
-    public void setExtendPosition() {
-        extenderControl.Position = Constants.KirbyConstants.kExtendSetpoint;
-    }
-    public void setRetractPosition() {
-        extenderControl.Position = Constants.KirbyConstants.kRetractSetpoint;
+
+    public void setExtenderPosition(double pos) {
+        extenderControl.Position = pos;
     }
 
-    public void setIntakeExtenderBrake() {
-        hopperExtenderMotor.setNeutralMode(NeutralModeValue.Brake);
+    public void setIntakeExtenderMode(NeutralModeValue mode) {
+        hopperExtenderMotor.setNeutralMode(mode);
     }
 
     @Override
-    public void periodic()
-    { 
+    public void periodic() {
         hopperExtenderMotor.setControl(extenderControl);
 
-        //johns
+        // johns
     }
-
-
 
 }

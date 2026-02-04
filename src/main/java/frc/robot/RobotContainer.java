@@ -138,7 +138,7 @@ public class RobotContainer {
                 //                                 () -> Turret.getInstance().setTurretSetpointDoubleSupplier(
                 //                                                 () -> xManip.getLeftY())));
 
-
+                
                 new Trigger(() -> Math.abs(xManip.getRightX())> 0.1)
                                 .whileTrue(new InstantCommand(() -> Turret.getInstance().setIronmansetpoint(xManip.getRightX()/10)));
                 xManip.b().toggleOnTrue(new HomeHood());

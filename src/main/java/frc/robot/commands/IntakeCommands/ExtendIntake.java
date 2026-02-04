@@ -1,5 +1,7 @@
 package frc.robot.commands.IntakeCommands;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Kirby;
@@ -14,19 +16,16 @@ public class ExtendIntake extends Command {
     }
     @Override
     public void initialize() {
-        kirby.setExtendPosition();
+        kirby.setExtenderPosition(Constants.KirbyConstants.kExtendSetpoint);
     }
 
 
     @Override
     public void end(boolean interrupted) {
-        kirby.setIntakeExtenderBrake();
+        kirby.setIntakeExtenderMode(NeutralModeValue.Brake);
 
     }
 
-    @Override
-    public boolean isFinished() {
-        return kirby.intakeExtendAtTargetPosition();
-    }
+
 
 }

@@ -20,7 +20,7 @@
         "y": 0.6801777997634644
       },
       "prevControl": {
-        "x": 3.969696226842982,
+        "x": 3.9696962268429816,
         "y": 0.6524509641688683
       },
       "nextControl": {
@@ -106,11 +106,11 @@
     {
       "name": "Pass",
       "waypointRelativePos": 1.0670175729442968,
-      "endWaypointRelativePos": 4.0,
+      "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "Intake",
+      "name": "Hooddown",
       "waypointRelativePos": 2.095615053050397,
       "endWaypointRelativePos": 3.0483255968169765,
       "command": null

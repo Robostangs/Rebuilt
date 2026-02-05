@@ -68,16 +68,26 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 2.910197695623339,
-      "command": null
+      "name": "Extend",
+      "waypointRelativePos": 0.5787881299734747,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
     },
     {
-      "name": "Intake",
-      "waypointRelativePos": 1.009708637267905,
-      "endWaypointRelativePos": 1.3306220988063666,
-      "command": null
+      "name": "Retract",
+      "waypointRelativePos": 1.5840931697612732,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract"
+        }
+      }
     }
   ],
   "globalConstraints": {

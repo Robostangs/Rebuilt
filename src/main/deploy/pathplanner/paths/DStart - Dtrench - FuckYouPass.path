@@ -100,21 +100,48 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Intake",
-      "waypointRelativePos": 2.1356100795755966,
-      "endWaypointRelativePos": 2.97351624668435,
-      "command": null
+      "name": "Hooddown",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.7849801061007959,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Hooddown"
+        }
+      }
     },
     {
       "name": "Pass",
-      "waypointRelativePos": 2.1698441644562347,
-      "endWaypointRelativePos": 2.4776193633952257,
+      "waypointRelativePos": 0.8897960875331564,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Pass"
+        }
+      }
+    },
+    {
+      "name": "Extend",
+      "waypointRelativePos": 1.8531581564986743,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
+    },
+    {
+      "name": "Dontshoot",
+      "waypointRelativePos": 2.4590102785145866,
+      "endWaypointRelativePos": 2.6372679045092804,
       "command": null
     },
     {
-      "name": "Pass",
-      "waypointRelativePos": 2.6651608090185683,
-      "endWaypointRelativePos": 4.0,
+      "name": "Retract",
+      "waypointRelativePos": 3.5882791777188334,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],
@@ -134,7 +161,7 @@
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 0.8375104754245732
   },
   "useDefaultConstraints": true
 }

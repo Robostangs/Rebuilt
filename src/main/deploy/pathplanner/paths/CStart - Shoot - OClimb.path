@@ -31,20 +31,7 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 0.9372616876657824,
-      "command": null
-    },
-    {
-      "name": "Climb",
-      "waypointRelativePos": 0.9598599137931038,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.12,
     "maxAcceleration": 3.0,

@@ -144,28 +144,81 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot",
-      "waypointRelativePos": 0.0,
+      "name": "Hooddown",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.8538834549071618,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Hooddown"
+        }
+      }
+    },
+    {
+      "name": "Pass",
+      "waypointRelativePos": 1.0129103116710878,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Pass"
+        }
+      }
     },
     {
-      "name": "Pass",
-      "waypointRelativePos": 1.423097645888594,
-      "endWaypointRelativePos": 1.8033197944297066,
-      "command": null
+      "name": "Extend",
+      "waypointRelativePos": 1.3816934681697606,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
     },
     {
-      "name": "Intake",
-      "waypointRelativePos": 1.4847687334217508,
-      "endWaypointRelativePos": 2.5520764257294433,
-      "command": null
+      "name": "Dontshoot",
+      "waypointRelativePos": 1.802325099469496,
+      "endWaypointRelativePos": 2.872616876657827,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Dontshoot"
+        }
+      }
     },
     {
-      "name": "Pass",
-      "waypointRelativePos": 2.8172248010610095,
-      "endWaypointRelativePos": 3.7136936339522557,
-      "command": null
+      "name": "Retract",
+      "waypointRelativePos": 3.2293393567639255,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract"
+        }
+      }
+    },
+    {
+      "name": "Hooddown",
+      "waypointRelativePos": 4.155276027851457,
+      "endWaypointRelativePos": 4.95942473474801,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Hooddown"
+        }
+      }
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 5.015500663129972,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Shoot"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -184,7 +237,7 @@
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 0.8375104754245732
   },
   "useDefaultConstraints": true
 }

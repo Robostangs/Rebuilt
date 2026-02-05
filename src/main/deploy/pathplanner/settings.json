@@ -8,7 +8,8 @@
     "Outpost"
   ],
   "autoFolders": [
-    "Outpost"
+    "Outpost",
+    "Depot"
   ],
   "defaultMaxVel": 5.12,
   "defaultMaxAccel": 3.0,

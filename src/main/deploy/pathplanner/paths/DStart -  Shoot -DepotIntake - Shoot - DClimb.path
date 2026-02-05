@@ -69,21 +69,36 @@
   "eventMarkers": [
     {
       "name": "Shoot",
-      "waypointRelativePos": 0.019085709549071662,
-      "endWaypointRelativePos": 2.8730209714854107,
-      "command": null
-    },
-    {
-      "name": "Intake",
-      "waypointRelativePos": 0.8191623839522546,
-      "endWaypointRelativePos": 1.576902354111406,
-      "command": null
-    },
-    {
-      "name": "Climb",
-      "waypointRelativePos": 2.0,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Shoot"
+        }
+      }
+    },
+    {
+      "name": "Extend",
+      "waypointRelativePos": 0.8191623839522546,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
+    },
+    {
+      "name": "Retract",
+      "waypointRelativePos": 1.2916735742705574,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -102,7 +117,7 @@
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 0.8375104754245732
   },
   "useDefaultConstraints": true
 }

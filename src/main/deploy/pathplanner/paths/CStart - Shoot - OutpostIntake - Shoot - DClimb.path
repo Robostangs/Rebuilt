@@ -3,29 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5518963791848615,
-        "y": 1.9979816002547306
+        "x": 0.6456670191957787,
+        "y": 0.6180449986353711
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5456631527474523,
-        "y": 0.7252066275473066
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 0.540200827874818,
-        "y": 0.6802276655749631
-      },
-      "prevControl": {
-        "x": 0.1486800624684726,
-        "y": 0.3281730108071655
-      },
-      "nextControl": {
-        "x": 2.106884893558952,
-        "y": 2.0889867062409024
+        "x": 2.212351084879913,
+        "y": 2.0268040393013105
       },
       "isLocked": false,
       "linkedName": "OutpostIntake"
@@ -36,7 +20,7 @@
         "y": 4.215364640192868
       },
       "prevControl": {
-        "x": 2.72227887327147,
+        "x": 2.7222788732714704,
         "y": 3.716207867085153
       },
       "nextControl": null,
@@ -44,34 +28,10 @@
       "linkedName": "DepotClimb"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.7930372807017547,
-      "rotationDegrees": 90.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 0.03914539124668435,
-      "endWaypointRelativePos": 1.876678547745358,
-      "command": null
-    },
-    {
-      "name": "OutpostIntake",
-      "waypointRelativePos": 0.8698814655172413,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "Climb",
-      "waypointRelativePos": 2.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.12,
     "maxAcceleration": 3.0,
@@ -88,7 +48,7 @@
   "folder": "Center",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 89.52087771499791
+    "rotation": 177.82496460007664
   },
   "useDefaultConstraints": true
 }

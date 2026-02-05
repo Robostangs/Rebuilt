@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.177149377893519,
-        "y": 0.6666208767361115
+        "x": 4.1772992246496905,
+        "y": 0.6801777997634644
       },
       "isLocked": false,
       "linkedName": "OutpostStart"
@@ -20,12 +20,12 @@
         "y": 0.6801777997634644
       },
       "prevControl": {
-        "x": 4.638325810185186,
-        "y": 0.6540236545138897
+        "x": 4.638325651528654,
+        "y": 0.654027942130147
       },
       "nextControl": {
-        "x": 9.17045556064882,
-        "y": 0.8217417912388761
+        "x": 9.170456419405687,
+        "y": 0.821718583748609
       },
       "isLocked": false,
       "linkedName": "OutpostTrenchOut"
@@ -100,8 +100,8 @@
         "y": 2.3535747020560405
       },
       "prevControl": {
-        "x": 2.9191395126677278,
-        "y": 2.1618221558984434
+        "x": 2.7391078225160252,
+        "y": 1.960603152544071
       },
       "nextControl": null,
       "isLocked": false,
@@ -151,26 +151,36 @@
   ],
   "eventMarkers": [
     {
-      "name": "Shoot",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 0.4308997844827586,
-      "command": null
+      "name": "Extend",
+      "waypointRelativePos": 1.3494176889920422,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
     },
     {
-      "name": "Intake",
-      "waypointRelativePos": 1.3494176889920422,
-      "endWaypointRelativePos": 2.337491710875331,
+      "name": "Retract",
+      "waypointRelativePos": 2.1995291095890415,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract"
+        }
+      }
+    },
+    {
+      "name": "Hooddown",
+      "waypointRelativePos": 3.973473837209302,
+      "endWaypointRelativePos": 4.800482765780729,
       "command": null
     },
     {
       "name": "Shoot",
       "waypointRelativePos": 4.795818136604774,
-      "endWaypointRelativePos": 6.922465600132627,
-      "command": null
-    },
-    {
-      "name": "Climb",
-      "waypointRelativePos": 6.5,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -191,7 +201,7 @@
   "folder": "Outpost",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

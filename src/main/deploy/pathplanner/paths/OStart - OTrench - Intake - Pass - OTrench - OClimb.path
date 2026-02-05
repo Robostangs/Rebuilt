@@ -52,12 +52,12 @@
         "y": 2.5984158365174665
       },
       "prevControl": {
-        "x": 6.51876256595706,
-        "y": 3.0672541962336233
+        "x": 6.265527583973076,
+        "y": 3.1143123036750837
       },
       "nextControl": {
-        "x": 6.1951974594517205,
-        "y": 2.371744564006097
+        "x": 6.428837239583333,
+        "y": 0.71550072337963
       },
       "isLocked": false,
       "linkedName": "OutpostFuelCollect"
@@ -68,12 +68,12 @@
         "y": 0.6801777997634644
       },
       "prevControl": {
-        "x": 5.5939766621109435,
-        "y": 0.7035434113427516
+        "x": 5.897948060529725,
+        "y": 0.6801777997634643
       },
       "nextControl": {
-        "x": 5.054502877092431,
-        "y": 0.6529012008733617
+        "x": 5.0532254124070874,
+        "y": 0.6801777997634644
       },
       "isLocked": false,
       "linkedName": "OutpostTrenchOut"
@@ -122,11 +122,15 @@
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 4.182994106359649,
+      "waypointRelativePos": 4.1137129934210535,
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 5.3,
+      "waypointRelativePos": 4.7349300986842096,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 5.520086348684208,
       "rotationDegrees": -45.0
     }
   ],
@@ -148,33 +152,54 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot",
-      "waypointRelativePos": 0,
+      "name": "Hooddown",
+      "waypointRelativePos": 0.3383253737541527,
+      "endWaypointRelativePos": 1.1040541943521598,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Hooddown"
+        }
+      }
+    },
+    {
+      "name": "Pass",
+      "waypointRelativePos": 1.156924833887043,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "Pass",
-      "waypointRelativePos": 1.266371021220161,
-      "endWaypointRelativePos": 1.8478323938992065,
-      "command": null
-    },
-    {
-      "name": "Intake",
+      "name": "Extend",
       "waypointRelativePos": 1.3494176889920422,
-      "endWaypointRelativePos": 2.337491710875331,
-      "command": null
-    },
-    {
-      "name": "Pass",
-      "waypointRelativePos": 2.745358090185678,
-      "endWaypointRelativePos": 3.8998259283819583,
-      "command": null
-    },
-    {
-      "name": "Climb",
-      "waypointRelativePos": 6.0,
       "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
+    },
+    {
+      "name": "Dontshoot",
+      "waypointRelativePos": 1.7305595930232547,
+      "endWaypointRelativePos": 2.7781613372093026,
+      "command": null
+    },
+    {
+      "name": "Retract",
+      "waypointRelativePos": 2.5433970099667778,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract"
+        }
+      }
+    },
+    {
+      "name": "Hooddown",
+      "waypointRelativePos": 3.952528031561461,
+      "endWaypointRelativePos": 4.949828696013289,
       "command": null
     }
   ],
@@ -188,13 +213,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.3502807852949637
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Outpost",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

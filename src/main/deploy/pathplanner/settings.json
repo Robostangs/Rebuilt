@@ -7,7 +7,9 @@
     "Center",
     "Outpost"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Outpost"
+  ],
   "defaultMaxVel": 5.12,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,

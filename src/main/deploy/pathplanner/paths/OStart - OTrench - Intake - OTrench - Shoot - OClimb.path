@@ -167,26 +167,52 @@
   ],
   "eventMarkers": [
     {
-      "name": "Shoot",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 0.4308997844827586,
-      "command": null
+      "name": "Hooddown",
+      "waypointRelativePos": 0.33094113372093015,
+      "endWaypointRelativePos": 0.9898255813953484,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Hooddown"
+        }
+      }
     },
     {
-      "name": "Intake",
+      "name": "Extend",
       "waypointRelativePos": 1.3494176889920422,
-      "endWaypointRelativePos": 2.337491710875331,
-      "command": null
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
+    },
+    {
+      "name": "Retract",
+      "waypointRelativePos": 2.3376635174418583,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract"
+        }
+      }
+    },
+    {
+      "name": "Hooddown",
+      "waypointRelativePos": 3.945403343023257,
+      "endWaypointRelativePos": 4.901435319767441,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Hooddown"
+        }
+      }
     },
     {
       "name": "Shoot",
-      "waypointRelativePos": 4.795818136604774,
-      "endWaypointRelativePos": 6.922465600132627,
-      "command": null
-    },
-    {
-      "name": "Climb",
-      "waypointRelativePos": 7.0,
+      "waypointRelativePos": 4.884356831395347,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -201,13 +227,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.3502807852949637
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Outpost",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

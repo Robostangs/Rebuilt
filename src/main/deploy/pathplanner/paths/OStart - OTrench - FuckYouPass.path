@@ -104,16 +104,38 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "Hooddown",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 1.0834703947368425,
+      "command": null
+    },
+    {
       "name": "Pass",
-      "waypointRelativePos": 1.0670175729442968,
+      "waypointRelativePos": 1.2719469572368416,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "Dontshoot",
+      "name": "Extend",
       "waypointRelativePos": 2.095615053050397,
-      "endWaypointRelativePos": 3.0483255968169765,
-      "command": null
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
+    },
+    {
+      "name": "Retract",
+      "waypointRelativePos": 3.0595703124999996,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -132,7 +154,7 @@
   "folder": "Outpost",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

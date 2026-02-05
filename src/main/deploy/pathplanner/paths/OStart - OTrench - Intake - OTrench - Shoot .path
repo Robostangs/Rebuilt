@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 4.638325651528654,
-        "y": 0.654027942130147
+        "y": 0.6540279421301471
       },
       "nextControl": {
         "x": 9.170456419405687,
@@ -201,7 +201,7 @@
   "folder": "Outpost",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

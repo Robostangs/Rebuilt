@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 1.084835221069869,
-        "y": 5.958374215338429
+        "x": 0.6368895858373396,
+        "y": 5.8599127979767625
       },
       "prevControl": {
-        "x": 0.9544038669678832,
-        "y": 6.171652582425019
+        "x": 0.5064582317353536,
+        "y": 6.073191165063353
       },
       "nextControl": {
-        "x": 1.2152665751718548,
-        "y": 5.745095848251839
+        "x": 0.7673209399393253,
+        "y": 5.646634430890172
       },
       "isLocked": false,
       "linkedName": "DepotIntake"
@@ -84,20 +84,14 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 2.910197695623339,
+      "name": "Extend",
+      "waypointRelativePos": 0.6854666095890409,
+      "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "Intake",
-      "waypointRelativePos": 1.009708637267905,
-      "endWaypointRelativePos": 1.3306220988063666,
-      "command": null
-    },
-    {
-      "name": "Climb",
-      "waypointRelativePos": 2.9489597148541113,
+      "name": "Retract",
+      "waypointRelativePos": 1.4123822773972612,
       "endWaypointRelativePos": null,
       "command": null
     }

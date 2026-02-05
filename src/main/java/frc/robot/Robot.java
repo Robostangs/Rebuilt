@@ -7,6 +7,7 @@ package frc.robot;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import com.ctre.phoenix6.HootAutoReplay;
@@ -25,7 +26,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.Vision.PhotonVision;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
@@ -36,6 +36,7 @@ import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.Turret.TurretShooter;
 
 public class Robot extends TimedRobotstangs {
+    public static boolean isJaba;
     private Command m_autonomousCommand;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private PhotonVision photonVisionFront = new PhotonVision(drivetrain, Constants.VisionConstants.kPhotonCamNameFront,
@@ -63,6 +64,8 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void robotInit() {
+        isJaba = Paths.get("/home/lvuser/Ultron").toFile().exists();;
+
         SmartDashboard.putData("Field", teleopField);
 
         disableTab = Shuffleboard.getTab("Disabled");

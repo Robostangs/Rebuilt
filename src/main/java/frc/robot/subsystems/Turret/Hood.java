@@ -58,6 +58,7 @@ public class Hood extends SubsystemBase {
     public void setHoodPosition(double pos) {
         hoodMotor.setPosition(pos);
     }
+    
     public boolean getLimitSwitch(){
         return limitSwitch.get();
     }

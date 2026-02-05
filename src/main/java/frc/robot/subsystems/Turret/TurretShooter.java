@@ -13,6 +13,7 @@ public class TurretShooter extends SubsystemBase{
     private MotionMagicVelocityVoltage shooterTargetVelocity;
 
     public static TurretShooter instance;
+    public static boolean shouldShoot;
 
     public static TurretShooter getInstance(){
         if (instance == null) {
@@ -22,9 +23,15 @@ public class TurretShooter extends SubsystemBase{
     }
 
     public TurretShooter(){
+
+        shouldShoot = false;
         shooterMotor =new TalonFX(Constants.TurretConstants.pepperMotorID);
 
-        TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
+       
+    }
+
+   public void configureShooterMotor(){
+         TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
 
         shooterConfig.Slot0.kP = Constants.TurretConstants.kShooterMotorP; 
         shooterConfig.Slot0.kI = Constants.TurretConstants.kShooterMotorI; 
@@ -41,12 +48,14 @@ public class TurretShooter extends SubsystemBase{
         // Apply the PID configurations to the shooter motor
         shooterMotor.getConfigurator().apply(shooterConfig);
 
-    }
-
-   
+   }
     public double currentShooterVelocity() {
         // Get the current velocity of the shooter motor
         return shooterMotor.get(); // Returns the current velocity of the shooter motor
+    }
+
+    public void setShouldShoot(boolean shoot){
+        shouldShoot = shoot;
     }
 
     public boolean shooterAtTargetVelocity(){
@@ -64,6 +73,11 @@ public class TurretShooter extends SubsystemBase{
         shooterMotor.setControl(shooterTargetVelocity);
         SmartDashboard.putNumber("Shooter/velocity",shooterMotor.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Shooter/target",shooterTargetVelocity.Velocity);
+    }
+
+    public void postStatus(String status) {
+        
+        SmartDashboard.putString("TurretShooter/Status", status);
     }
     
 }

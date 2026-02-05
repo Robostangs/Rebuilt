@@ -16,8 +16,8 @@ public class Hood extends SubsystemBase {
     DigitalInput limitSwitch;
 
     public Hood() {
-        hoodMotor = new TalonFXS(Constants.TurretConstants.hoodMotorID);
-        limitSwitch = new DigitalInput(Constants.TurretConstants.kLimitSwitchId);
+        hoodMotor = new TalonFXS(Constants.HoodConstants.hoodMotorID);
+        limitSwitch = new DigitalInput(Constants.HoodConstants.kLimitSwitchId);
     }
 
     public void configureHoodMotor() {
@@ -37,6 +37,8 @@ public class Hood extends SubsystemBase {
         //TODO acc fill this out later
         return currentPose.getX();
     }
+
+    
 
     public void setHoodDutyCycle(double dc) {
         hoodMotor.set(dc);

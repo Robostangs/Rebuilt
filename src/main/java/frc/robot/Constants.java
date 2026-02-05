@@ -72,6 +72,7 @@ public final class Constants {
     public static final double HopperExtenderCurrentLimit = 0;
     public static final int hopperExtenderID = 0;
     public static final double kirbyIntakeSpeed = 0.5;
+    public static final double kirbyOuttakeSpeed = -0.5;
     public static final double hopperExtenderKP = 0;
     public static final double hopperExtenderKI = 0;
     public static final double hopperExtenderKD = 0;
@@ -92,8 +93,20 @@ public final class Constants {
     //TODO find these johns
     public static final Pose2d PassTarget = !Robot.isRed() ? new Pose2d(6.23, 2.59, new Rotation2d())
         : FlippingUtil.flipFieldPose(new Pose2d(6.23, 2.59, new Rotation2d()));
+    
+    //TODO find john
+    public static final Pose2d resetPose = !Robot.isRed() ? new Pose2d(3.489, 4.043, new Rotation2d())
+        : FlippingUtil.flipFieldPose(new Pose2d(3.489, 4.043, new Rotation2d()));
 
 
+  }
+
+  public static class HoodConstants{
+
+    public static final int hoodMotorID = 5;
+    public static final double kHoodDownPos = 0d;
+    public static final int kLimitSwitchId = 0;
+    public static final double kHoodHomeDutyCycle = -0.09;
   }
 
   public static class TurretConstants {
@@ -122,9 +135,6 @@ public final class Constants {
     public static final double kTurretPlanetaryRatio = 9;
     public static final double IronmanMotionMagicKvFF = 4;
     public static final double IronmanMotionMagicKaFF = .5;
-    public static final int hoodMotorID = 5;
-    public static final int kLimitSwitchId = 0;
-    public static final double kHoodHomeDutyCycle = -0.09;
     public static final double kHomePosition = 0;
     public static final int kFlywheelMotorID = 0;
     public static final double kShooterMotorP = 0.1;
@@ -138,8 +148,18 @@ public final class Constants {
     public static final double shooterMotionMagicAcceleration = 0;
     public static final double shooterMotionMagicJerk = 0;
     public static final double kShooterVelocityTolerance = 0;
+    public static final int feederMotorID = 0;
 
     
+
+  }
+
+  public static class FeederConstants{
+
+    public static final int feederMotorID = 0;
+    public static final double feederSupplyLimt = 0;
+    public static final double kFeedDutyCycle = 0.5;
+    public static final int fuelSensorID = 0;
 
   }
 

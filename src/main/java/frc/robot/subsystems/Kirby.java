@@ -22,6 +22,18 @@ public class Kirby extends SubsystemBase {
 
         kirbyWheels = new TalonFX(Constants.KirbyConstants.kirbyWheelsID);
         kirbyConfiguration = new TalonFXConfiguration();
+
+        extenderControl = new MotionMagicTorqueCurrentFOC(hopperExtenderMotor.getPosition().getValueAsDouble());
+    }
+
+    public static Kirby getInstance() {
+        if (mInstance == null) {
+            mInstance = new Kirby();
+        }
+        return mInstance;
+    }
+
+    public void setKirbyConfig() {
         kirbyConfiguration.CurrentLimits.SupplyCurrentLimit = Constants.KirbyConstants.KirbyCurrentLimit;
         hopperExtenderMotor = new TalonFX(Constants.KirbyConstants.hopperExtenderID);
         hopperExtenderConfiguration = new TalonFXConfiguration();
@@ -37,15 +49,6 @@ public class Kirby extends SubsystemBase {
         hopperExtenderConfiguration.MotionMagic.MotionMagicAcceleration = Constants.KirbyConstants.kExtenderMotionMagicAcceleration;
 
         hopperExtenderMotor.getConfigurator().apply(hopperExtenderConfiguration);
-
-        extenderControl = new MotionMagicTorqueCurrentFOC(hopperExtenderMotor.getPosition().getValueAsDouble());
-    }
-
-    public static Kirby getInstance() {
-        if (mInstance == null) {
-            mInstance = new Kirby();
-        }
-        return mInstance;
     }
 
     public void setKirbyWheels(double speed) {
@@ -71,7 +74,6 @@ public class Kirby extends SubsystemBase {
     @Override
     public void periodic() {
         hopperExtenderMotor.setControl(extenderControl);
-
         // johns
     }
 

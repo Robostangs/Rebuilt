@@ -11,7 +11,6 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import frc.robot.subsystems.Turret.*;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,15 +18,17 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Index;
+import frc.robot.commands.IntakeCommands.ExtendIntake;
+import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.TurretCommands.HomeHood;
 import frc.robot.commands.TurretCommands.SetHoodDutyCycle;
+import frc.robot.commands.TurretCommands.setTurretDutyCycle;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class RobotContainer {
         public static boolean useVision = true;
-        private double MaxSpeed = 1.0 * Constants.JabaTunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts
-                                                                                                          // desired top
-                                                                                                          // speed
+        private double MaxSpeed = 1.0 * Constants.JabaTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
                                                                                           // second
                                                                                           // max angular velocity
@@ -37,8 +38,6 @@ public class RobotContainer {
                         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
                         .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive
                                                                                  // motors
-        private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-        private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
         private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -51,14 +50,48 @@ public class RobotContainer {
         public RobotContainer() {
                 configureDrivingBinding();
                 configureManipBindings();
+                drivetrain.registerTelemetry(logger::telemeterize);
                 logger.initSwerveLog();
-
         }
 
         private void configureDrivingBinding() {
-                // Note that X is defined as forward according to WPILib convention,
-                // and Y is defined as to the left according to WPILib convention.
+                setDrivetrain();
 
+                xDrive.y().whileTrue(new Index());
+
+                xDrive.rightStick().toggleOnTrue(new ExtendIntake())
+                                .onFalse(new RetractIntake());
+
+                xDrive.povRight().onTrue(new InstantCommand(
+                                (() -> useVision = !useVision)));
+
+                xDrive.povDown().onTrue(
+                                new InstantCommand(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
+
+                xDrive.povUp().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
+
+        }
+
+        public void configureManipBindings() {
+                xManip.y().onTrue(new InstantCommand(() -> Turret.setManipTarget(true)));
+
+                xManip.b().onTrue(new InstantCommand(() -> Turret.setManipTarget(false)));
+
+                xManip.x().toggleOnTrue(new HomeHood());
+
+                xManip.rightBumper().whileTrue(new setTurretDutyCycle(0.3));
+                xManip.leftBumper().whileTrue(new setTurretDutyCycle(-0.3));
+
+                new Trigger(() -> Math.abs(xManip.getRightX()) > 0.1)
+                                .whileTrue(new InstantCommand(() -> Turret.getInstance()
+                                                .setIronmansetpoint(xManip.getRightX() / 10)));
+
+                new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.1)
+                                .whileTrue(new SetHoodDutyCycle(() -> xManip.getLeftY() / 2));
+
+        }
+
+        private void setDrivetrain() {
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(() -> drive.withVelocityX((-xSim.getRawAxis(0))
@@ -72,7 +105,7 @@ public class RobotContainer {
                         DoubleSupplier leftY = () -> xDrive.getLeftY();
                         DoubleSupplier leftX = () -> xDrive.getLeftX();
                         DoubleSupplier rightX = () -> xDrive.getRightX();
-                        
+
                         if (((Math.abs(leftY.getAsDouble()) > 0.05)
                                         || Math.abs(leftX.getAsDouble()) > 0.05
                                         || Math.abs((rightX.getAsDouble())) > 0.05)) {
@@ -102,55 +135,8 @@ public class RobotContainer {
                                                 ));
                         } else {
                                 drivetrain.setDefaultCommand(
-                                                drivetrain.applyRequest(() -> brake));
+                                                drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
                         }
                 }
-
-                // Reset the field-centric heading on left bumper press.
-                xDrive.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-                // xDrive.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.resetPose(new
-                // Pose2d(3.6, 3.04, drivetrain.getRotation3d().toRotation2d()))));
-
-                xDrive.povRight().onTrue(new InstantCommand(
-                                (() -> useVision = !useVision)));
-
-                drivetrain.registerTelemetry(logger::telemeterize);
-                xDrive.x().onTrue(new InstantCommand(() -> TurretShooter.getInstance().setShooterRPS(40d)));
-        }
-
-        public Command getAutonomousCommand() {
-                // Simple drive forward auton
-                final var idle = new SwerveRequest.Idle();
-                return Commands.sequence(
-                                // Reset our field centric heading to match the robot
-                                // facing away from our alliance station wall (0 deg).
-                                drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
-                                // Then slowly drive forward (away from us) for 5 seconds.
-                                drivetrain.applyRequest(() -> drive.withVelocityX(0.5)
-                                                .withVelocityY(0)
-                                                .withRotationalRate(0))
-                                                .withTimeout(5.0),
-                                // Finally idle for the rest of auton
-                                drivetrain.applyRequest(() -> idle));
-        }
-
-        public void configureManipBindings() {
-                // Turret target hub
-                // xManip.y().onTrue(new InstantCommand(() -> Turret.setManipTarget(true)));
-                // Turret target pass
-                // xManip.b().onTrue(new InstantCommand(() -> Turret.setManipTarget(false)));
-
-                // new Trigger(() -> xManip.getLeftY() > 0.1 || xManip.getLeftY() < -0.1)
-                // .whileTrue(new InstantCommand(
-                // () -> Turret.getInstance().setTurretSetpointDoubleSupplier(
-                // () -> xManip.getLeftY())));
-
-                new Trigger(() -> Math.abs(xManip.getRightX()) > 0.1)
-                                .whileTrue(new InstantCommand(() -> Turret.getInstance()
-                                                .setIronmansetpoint(xManip.getRightX() / 10)));
-                xManip.b().toggleOnTrue(new HomeHood());
-                new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.1)
-                                .whileTrue(new SetHoodDutyCycle(() -> xManip.getLeftY() / 2));
-
         }
 }

@@ -14,7 +14,7 @@ public class OutTake extends Command {
     }
     @Override
     public void initialize() {
-        kirby.setKirbyWheels(-Constants.KirbyConstants.kirbyIntakeSpeed);
+        kirby.setKirbyWheels(Constants.KirbyConstants.kirbyOuttakeSpeed);
     }
 
 

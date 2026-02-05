@@ -10,6 +10,8 @@ import java.lang.management.MemoryMXBean;
 import java.util.List;
 import java.util.Map;
 import com.ctre.phoenix6.HootAutoReplay;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
@@ -23,16 +25,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.Vision.PhotonVision;
+import frc.robot.commands.IntakeCommands.ExtendIntake;
+import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Turret.Hood;
 import frc.robot.subsystems.Turret.Turret;
+import frc.robot.subsystems.Turret.TurretShooter;
 
 public class Robot extends TimedRobotstangs {
     private Command m_autonomousCommand;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
-    private PhotonVision photonVisionFront=new PhotonVision(drivetrain,Constants.VisionConstants.kPhotonCamNameFront, Constants.VisionConstants.kRobotToCamFront);
-    private PhotonVision photonVisionBack=new PhotonVision(drivetrain,Constants.VisionConstants.kPhotonCamNameBack, Constants.VisionConstants.kRobotToCamBack);
+    private PhotonVision photonVisionFront = new PhotonVision(drivetrain, Constants.VisionConstants.kPhotonCamNameFront,
+            Constants.VisionConstants.kRobotToCamFront);
+    private PhotonVision photonVisionBack = new PhotonVision(drivetrain, Constants.VisionConstants.kPhotonCamNameBack,
+            Constants.VisionConstants.kRobotToCamBack);
 
     private final RobotContainer m_robotContainer;
     public static ShuffleboardTab disableTab, teleopTab;
@@ -78,9 +87,19 @@ public class Robot extends TimedRobotstangs {
                 .getSubTable(teleopTab.getTitle())
                 .getEntry("Turret Position");
 
-        ;
+        NamedCommands.registerCommand("Shoot", new InstantCommand(() -> Turret.getInstance().trackHub()));
+        NamedCommands.registerCommand("Extend", new ExtendIntake());
+        NamedCommands.registerCommand("Retract", new RetractIntake());
+        NamedCommands.registerCommand("Dont shoot",
+                new InstantCommand(() -> TurretShooter.getInstance().setShouldShoot(false))
+                        .finallyDo(() -> TurretShooter.getInstance().setShouldShoot(true)));
+        NamedCommands.registerCommand("Hood down", 
+            new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
+            .alongWith( new InstantCommand(() -> TurretShooter.getInstance().setShouldShoot(false))
+                        ).finallyDo(() -> TurretShooter.getInstance().setShouldShoot(true)));
+        
 
-        // disabledTab.add()
+        
 
     }
 
@@ -108,11 +127,9 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void autonomousInit() {
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-        if (m_autonomousCommand != null) {
-            CommandScheduler.getInstance().schedule(m_autonomousCommand);
-        }
+      
+
     }
 
     @Override

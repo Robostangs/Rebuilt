@@ -46,7 +46,6 @@ public class Turret extends SubsystemBase {
 
     TalonFXSSimState turretMotorSim;
 
-
     MotionMagicExpoVoltage turretControl;
 
     CANcoder turretCANcoder;
@@ -143,7 +142,6 @@ public class Turret extends SubsystemBase {
         turretMotor.getConfigurator().apply(turretMotorConfig);
     }
 
-   
     public void configureTurretCANcoder() {
         CANcoderConfiguration turretCANcoderConfig = new CANcoderConfiguration();
 
@@ -155,7 +153,6 @@ public class Turret extends SubsystemBase {
 
         turretCANcoder.getConfigurator().apply(turretCANcoderConfig);
     }
-
 
     public void configureHappy() {
         happyConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.MicroSupplyCurrentLimit;
@@ -173,8 +170,6 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putString("Ironman/status", status);
     }
 
-    
-
     /**
      * @param rotations Set motion magic target position in rotations
      */
@@ -182,7 +177,6 @@ public class Turret extends SubsystemBase {
         turretControl.Position = rotations;
         SmartDashboard.putString("Setpoint has gotten set", "New setpoint at " + rotations);
     }
-
 
     public Runnable setMotionMagicPointThree = () -> {
         turretControl.Position = 0.3;
@@ -192,6 +186,10 @@ public class Turret extends SubsystemBase {
     public void setTurretSetpointDoubleSupplier(DoubleSupplier doubleSupplier) {
         setIronmansetpoint(doubleSupplier.getAsDouble());
 
+    }
+
+    public void trackHub() {
+        turretControl.Position = aimingJohns().getRotations();
     }
 
     public void setMotionMagic() {
@@ -206,11 +204,12 @@ public class Turret extends SubsystemBase {
                 * Constants.TurretConstants.kTurretMotorSensorToMechanismRatio);
     }
 
-
-    //this is pointless cuz the getposition is the sensor not the rotor
+    // this is pointless cuz the getposition is the sensor not the rotor
     // public double getTurretMotorSensorModPositon() {
-    //     /* because sensor phase is inverted */
-    //     return mathMod1(1-(turretMotor.getRawPulseWidthPosition().getValueAsDouble() - turretMotorAbsoluteSensorOffset)); //TODO this offset only updates at rio boot
+    // /* because sensor phase is inverted */
+    // return mathMod1(1-(turretMotor.getRawPulseWidthPosition().getValueAsDouble()
+    // - turretMotorAbsoluteSensorOffset)); //TODO this offset only updates at rio
+    // boot
     // }
 
     public double getTurretCANcoderModPosition() {
@@ -267,18 +266,17 @@ public class Turret extends SubsystemBase {
         // CRT but the fractional from the motor sensor
 
         double calculatedCANcoderPos = correctedGearDiff
-                *Constants.TurretConstants.kTurretRingTeeth/Constants.TurretConstants.kTurretCANcoderTeeth;
+                * Constants.TurretConstants.kTurretRingTeeth / Constants.TurretConstants.kTurretCANcoderTeeth;
 
         SmartDashboard.putNumber("correctedGearDiff", correctedGearDiff);
 
         SmartDashboard.putNumber("calculatedCANcoderModPos", mathMod1(calculatedCANcoderPos));
 
-
         return (Math.round(calculatedCANcoderPos - actualCANcoderModPos) + actualCANcoderModPos)
                 / Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
     }
 
-        public double getBigGearPositionUsingMotorSensor() {
+    public double getBigGearPositionUsingMotorSensor() {
         double actualMotorSensorModPos = getTurretMotorSensorModPosition();
         double turretCANcoderSensorModPos = getTurretCANcoderModPosition();
         double geardiff = getGearDifference(actualMotorSensorModPos, turretCANcoderSensorModPos);
@@ -306,7 +304,6 @@ public class Turret extends SubsystemBase {
 
         SmartDashboard.putNumber("calculatedMotorSensorPos", calculatedMotorSensorPos);
         SmartDashboard.putNumber("calculatedMotorSensorModPos", mathMod1(calculatedMotorSensorPos));
-
 
         return (Math.round(calculatedMotorSensorPos - actualMotorSensorModPos) + actualMotorSensorModPos)
                 / Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
@@ -412,21 +409,16 @@ public class Turret extends SubsystemBase {
 
         SmartDashboard.putNumber("Ironman/SunTzuResetPotentialError", (newMotorModPosition - oldMotorModPosition));
 
-
-
-                double calculatedPosition2 = getBigGearPositionUsingMotorSensor();
+        double calculatedPosition2 = getBigGearPositionUsingMotorSensor();
 
         double newMotorModPosition2 = mathMod1(calculatedPosition2 * Constants.TurretConstants.kTurretRingTeeth
                 / Constants.TurretConstants.kTurretMotorTeeth);
 
-        SmartDashboard.putNumber("Ironman/SunTzuResetPotentialErrorUsingMotor", (newMotorModPosition2 - oldMotorModPosition));
-
-
-
+        SmartDashboard.putNumber("Ironman/SunTzuResetPotentialErrorUsingMotor",
+                (newMotorModPosition2 - oldMotorModPosition));
 
         SmartDashboard.putNumber("Ironman/TurretMotorSensorModPosition", oldMotorModPosition);
-                SmartDashboard.putNumber("Ironman/TurretCANcoderModPosition", getTurretCANcoderModPosition());
-
+        SmartDashboard.putNumber("Ironman/TurretCANcoderModPosition", getTurretCANcoderModPosition());
 
         SmartDashboard.putNumber("Velocity Turret Piviot", turretMotor.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Turret motor voltage", turretMotor.getMotorVoltage().getValueAsDouble());

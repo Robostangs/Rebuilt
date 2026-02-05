@@ -1,4 +1,5 @@
 package frc.robot.commands.TurretCommands;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Turret.Hood;
@@ -12,6 +13,7 @@ public class HomeHood extends Command {
 
     Hood hood;
 
+
     public HomeHood() {
         hood = Hood.getInstance();
 
@@ -21,7 +23,7 @@ public class HomeHood extends Command {
     @Override
     public void initialize() {
         hood.postStatus("Hood homing");
-        hood.setHoodDutyCycle(Constants.TurretConstants.kHoodHomeDutyCycle);
+        hood.setHoodDutyCycle(Constants.HoodConstants.kHoodHomeDutyCycle);
 
     }
 

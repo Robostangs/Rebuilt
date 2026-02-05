@@ -17,12 +17,12 @@ public class ExtendIntake extends Command {
     @Override
     public void initialize() {
         kirby.setExtenderPosition(Constants.KirbyConstants.kExtendSetpoint);
+        kirby.setKirbyWheels(Constants.KirbyConstants.kirbyIntakeSpeed);
     }
 
 
     @Override
     public void end(boolean interrupted) {
-        kirby.setIntakeExtenderMode(NeutralModeValue.Brake);
 
     }
 

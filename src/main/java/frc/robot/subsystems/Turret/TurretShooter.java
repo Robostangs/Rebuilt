@@ -38,6 +38,7 @@ public class TurretShooter extends SubsystemBase{
 
         // Apply the PID configurations to the shooter motor
         shooterMotor.getConfigurator().apply(shooterConfig);
+        setShooterVelocity(0);
 
     }
 

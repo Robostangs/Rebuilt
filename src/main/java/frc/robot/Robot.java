@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
+
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -13,6 +15,10 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.HootAutoReplay;
 
+import edu.wpi.first.epilogue.Epilogue;
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.epilogue.logging.EpilogueBackend;
+import edu.wpi.first.epilogue.logging.NTEpilogueBackend;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
@@ -42,6 +48,7 @@ public class Robot extends TimedRobotstangs {
     public static Alert gcAlert = new Alert("MEMORY TWEAKING LOOK INTO TS RN", AlertType.kWarning);
 
     static NetworkTableEntry turretSetpoint;
+    public NTEpilogueBackend epilogueBackend;
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -51,9 +58,20 @@ public class Robot extends TimedRobotstangs {
     public Robot() {
         m_robotContainer = new RobotContainer();
     }
-
+    public void updateEpilogue(){
+        Epilogue.turretLogger.update(epilogueBackend,Turret.getInstance());
+    }
     @Override
     public void robotInit() {
+        epilogueBackend= new NTEpilogueBackend(NetworkTableInstance.getDefault());
+        Epilogue.configure(config -> {
+            config.root = "RobotLogs"; // Set the base path in NetworkTables
+            config.loggingPeriod = Seconds.of(0.02); // Frequency (default is 20ms/50Hz)
+            config.backend = epilogueBackend;
+            config.minimumImportance = Logged.Importance.DEBUG; // Filter detail levels
+        });
+
+
         SmartDashboard.putData("Field", teleopField);
 
         disableTab = Shuffleboard.getTab("Disabled");
@@ -89,6 +107,7 @@ public class Robot extends TimedRobotstangs {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
         gscollect.update();
+        updateEpilogue();
         teleopField.setRobotPose(drivetrain.getPose());
 
     }

@@ -18,6 +18,7 @@ import com.ctre.phoenix6.sim.TalonFXSSimState;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -33,6 +34,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 /**
  * The turret
  */
+@Logged
 public class Turret extends SubsystemBase {
 
     // Shooter motor has its own subsystem
@@ -59,7 +61,7 @@ public class Turret extends SubsystemBase {
     TalonFXConfiguration happyConfig;
 
     Pose2d turretPose;
-
+    
     static boolean isHub = true;
     static boolean manualTarget = false;
     private DigitalInput limitSwitchHood;

@@ -4,11 +4,14 @@
 
 package frc.robot.Stable;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import java.io.Closeable;
 import java.util.PriorityQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
 import edu.wpi.first.hal.NotifierJNI;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -58,6 +61,16 @@ public class Watchdogstangs implements Closeable, Comparable<Watchdogstangs> {
     m_callback = callback;
     m_tracer = new Tracerstangs();
   }
+   /**
+   * Watchdog constructor.
+   *
+   * @param timeout The watchdog's timeout with microsecond resolution.
+   * @param callback This function is called when the timeout expires.
+   */
+  public Watchdogstangs(Time timeout, Runnable callback) {
+    this(timeout.in(Seconds), callback);
+  }
+
 
   @Override
   public void close() {

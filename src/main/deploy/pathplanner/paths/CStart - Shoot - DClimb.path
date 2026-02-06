@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.580858676207513,
-        "y": 7.417996422182468
+        "x": 3.5365377092430856,
+        "y": 4.215364640192868
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.964116773012531,
-        "y": 7.655899156350418
+        "x": 3.970168461251097,
+        "y": 4.219230469079905
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.9917159090909085,
-        "y": 0.6543636363636369
+        "x": 1.2921273994723435,
+        "y": 4.215364640192868
       },
       "prevControl": {
-        "x": 7.881891254540952,
-        "y": 6.80454429116169
-      },
-      "nextControl": {
-        "x": 8.002022727272726,
-        "y": 0.07718181818181824
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.0137613636363634,
-        "y": 5.921147727272728
-      },
-      "prevControl": {
-        "x": 4.579956273377784,
-        "y": 1.586236440884698
+        "x": 2.181891763805779,
+        "y": 4.23058969866978
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "DepotClimb"
     }
   ],
   "rotationTargets": [],
@@ -49,14 +33,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "",
+      "name": "Shoot",
       "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.8883040450928379,
+      "command": null
+    },
+    {
+      "name": "Climb",
+      "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 5.12,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -68,7 +58,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Center",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

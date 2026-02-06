@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -28,11 +27,12 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.ZiroTunerConstants.TunerSwerveDrivetrain;
+import frc.robot.Constants.JabaTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Stable.LimelightHelpers;
 
 /**
@@ -255,7 +255,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          * occurs during testing.
          */
 
-        if (this.getPigeon2().getPitch().getValueAsDouble() > Constants.AutoConstants.kHumpPitchMin) {
+        if (this.getPigeon2().getPitch().getValueAsDouble() < Constants.AutoConstants.kHumpPitchMin) {
             this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionHump);
         } else {
             this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionReg);
@@ -275,6 +275,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         SmartDashboard.putBoolean("Robot/is red", Robot.isRed());
+
+        
 
     }
 
@@ -297,6 +299,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         for (var module : getModules()) {
             module.getSteerMotor().setNeutralMode(isCoast ? NeutralModeValue.Coast : NeutralModeValue.Brake);
         }
+    }
+
+    public boolean isPastDeadzone(CommandXboxController controller){
+        return (Math.abs(controller.getLeftY()) > 0.05
+                || Math.abs(controller.getLeftX()) > 0.05
+                || Math.abs(controller.getRightX()) > 0.05);
     }
 
     /**
@@ -375,10 +383,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public static CommandSwerveDrivetrain getInstance() {
         if (mDrivetrain == null) {
-            mDrivetrain = new CommandSwerveDrivetrain(Constants.ZiroTunerConstants.DrivetrainConstants,
-                    Constants.ZiroTunerConstants.FrontLeft,
-                    Constants.ZiroTunerConstants.FrontRight, Constants.ZiroTunerConstants.BackLeft,
-                    Constants.ZiroTunerConstants.BackRight);
+            mDrivetrain = new CommandSwerveDrivetrain(Constants.JabaTunerConstants.DrivetrainConstants,
+                    Constants.JabaTunerConstants.FrontLeft,
+                    Constants.JabaTunerConstants.FrontRight, Constants.JabaTunerConstants.BackLeft,
+                    Constants.JabaTunerConstants.BackRight);
         }
         return mDrivetrain;
     }
@@ -480,6 +488,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
+       if(Robot.isSimulation()){
+        return false;
+       }
         if (yoPoseEsti == null) {
             return false;
         }

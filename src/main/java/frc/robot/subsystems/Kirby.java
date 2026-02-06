@@ -11,7 +11,6 @@ import frc.robot.Constants;
 
 public class Kirby extends SubsystemBase {
     TalonFX kirbyWheels;
-    TalonFXConfiguration kirbyConfiguration;
     TalonFX hopperExtenderMotor;
     TalonFXConfiguration hopperExtenderConfiguration;
     private static Kirby mInstance;
@@ -21,7 +20,7 @@ public class Kirby extends SubsystemBase {
     public Kirby() {
 
         kirbyWheels = new TalonFX(Constants.KirbyConstants.kirbyWheelsID);
-        kirbyConfiguration = new TalonFXConfiguration();
+        setKirbyConfig();
 
         extenderControl = new MotionMagicTorqueCurrentFOC(hopperExtenderMotor.getPosition().getValueAsDouble());
     }
@@ -34,7 +33,6 @@ public class Kirby extends SubsystemBase {
     }
 
     public void setKirbyConfig() {
-        kirbyConfiguration.CurrentLimits.SupplyCurrentLimit = Constants.KirbyConstants.KirbyCurrentLimit;
         hopperExtenderMotor = new TalonFX(Constants.KirbyConstants.hopperExtenderID);
         hopperExtenderConfiguration = new TalonFXConfiguration();
         // TODO: Find this john

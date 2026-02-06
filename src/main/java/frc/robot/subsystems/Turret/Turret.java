@@ -178,12 +178,7 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putString("Setpoint has gotten set", "New setpoint at " + rotations);
     }
 
-      /**
-     * @param rotations Set motion magic target position in rotations
-     */
-    public void trackHub() {
-        turretControl.Position = aimingJohns().getRotations();
-    }
+
 
     public Runnable setMotionMagicPointThree = () -> {
         turretControl.Position = 0.3;

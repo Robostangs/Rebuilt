@@ -42,6 +42,8 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 import static edu.wpi.first.units.Units.*;
@@ -160,8 +162,14 @@ public final class Constants {
     public static final int feederMotorID = 0;
     public static final double feederSupplyLimt = 0;
     public static final double kFeedDutyCycle = 0.5;
-    public static final int fuelSensorID = 0;
+    public static final int fuelSensorID = 1;
 
+  }
+
+  public static class ElasticConstants{
+    public static final Color blue = new Color("#0000FF");
+    public static final Color red = new Color("#FF0000");
+    public static final Color purple = new Color("#800080");
   }
 
   public class AutoConstants {

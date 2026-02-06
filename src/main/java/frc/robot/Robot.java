@@ -19,10 +19,12 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -51,6 +53,13 @@ public class Robot extends TimedRobotstangs {
     private static GcStatsCollector gscollect = new GcStatsCollector();
     public static Alert gcAlert = new Alert("MEMORY TWEAKING LOOK INTO TS RN", AlertType.kWarning);
 
+    public static boolean canBlueScore;
+
+    public Color allianceScore = Constants.ElasticConstants.purple;
+
+
+    Timer teleopTime;
+
     static NetworkTableEntry turretSetpoint;
 
     /* log and replay timestamp and joystick data */
@@ -64,8 +73,9 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void robotInit() {
-        isJaba = Paths.get("/home/lvuser/Ultron").toFile().exists();;
+        isJaba = Paths.get("/home/lvuser/Ultron").toFile().exists();
 
+        teleopTime = new Timer();
         SmartDashboard.putData("Field", teleopField);
 
         disableTab = Shuffleboard.getTab("Disabled");
@@ -86,6 +96,7 @@ public class Robot extends TimedRobotstangs {
         teleopTab.add("Turret Position",
                 0)
                 .withProperties(Map.of("min_value", -0.5, "max_value", 0.5, "block increment", 0.1, "Divisions", 6));
+
         turretSetpoint = NetworkTableInstance.getDefault().getTable("Shuffleboard")
                 .getSubTable(teleopTab.getTitle())
                 .getEntry("Turret Position");
@@ -96,13 +107,10 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Dont shoot",
                 new InstantCommand(() -> TurretShooter.getInstance().setShouldShoot(false))
                         .finallyDo(() -> TurretShooter.getInstance().setShouldShoot(true)));
-        NamedCommands.registerCommand("Hood down", 
-            new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
-            .alongWith( new InstantCommand(() -> TurretShooter.getInstance().setShouldShoot(false))
-                        ).finallyDo(() -> TurretShooter.getInstance().setShouldShoot(true)));
-        
-
-        
+        NamedCommands.registerCommand("Hood down",
+                new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
+                        .alongWith(new InstantCommand(() -> TurretShooter.getInstance().setShouldShoot(false)))
+                        .finallyDo(() -> TurretShooter.getInstance().setShouldShoot(true)));
 
     }
 
@@ -114,6 +122,8 @@ public class Robot extends TimedRobotstangs {
         teleopField.setRobotPose(drivetrain.getPose());
         photonVisionFront.periodic();
         photonVisionBack.periodic();
+        SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
+
     }
 
     @Override
@@ -131,8 +141,6 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void autonomousInit() {
 
-      
-
     }
 
     @Override
@@ -145,15 +153,40 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopInit() {
-        if (m_autonomousCommand != null) {
-            CommandScheduler.getInstance().cancel(m_autonomousCommand);
-        }
+        teleopTime.start();
+        String gameData = DriverStation.getGameSpecificMessage();
 
+        if (gameData.length() > 0) {
+            switch (gameData.charAt(0)) {
+                case 'B':
+                    canBlueScore = false;
+                    break;
+                case 'R':
+                    canBlueScore = true;
+                    break;
+                default:
+                    // This is corrupt data
+                    canBlueScore = false;
+                    break;
+            }
+        } else {
+            // Code for no data received yet
+        }
     }
 
     @Override
     public void teleopPeriodic() {
         Turret.getInstance().setIronmansetpoint(turretSetpoint.getDouble(0));
+        if (teleopTime.get() % 25 == 0) {
+            canBlueScore = !canBlueScore;
+        }
+        if (canBlueScore) {
+            allianceScore = Constants.ElasticConstants.blue;
+        } else {
+            allianceScore = Constants.ElasticConstants.red;
+
+        }
+        SmartDashboard.putNumber("Match Time", teleopTime.get());
 
     }
 

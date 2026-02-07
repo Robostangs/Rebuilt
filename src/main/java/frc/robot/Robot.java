@@ -23,6 +23,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -35,11 +36,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret.Turret;
+@Logged
+public class Robot extends TimedRobot {
 
-public class Robot extends TimedRobotstangs {
     private Command m_autonomousCommand;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
-
+    public double debugRobot= 6.7d;
     private final RobotContainer m_robotContainer;
     public static ShuffleboardTab disableTab, teleopTab;
 
@@ -48,7 +50,7 @@ public class Robot extends TimedRobotstangs {
     public static Alert gcAlert = new Alert("MEMORY TWEAKING LOOK INTO TS RN", AlertType.kWarning);
 
     static NetworkTableEntry turretSetpoint;
-    public NTEpilogueBackend epilogueBackend;
+    EpilogueBackend backend;
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -56,24 +58,23 @@ public class Robot extends TimedRobotstangs {
             .withJoystickReplay();
 
     public Robot() {
+        Epilogue.configure(config -> {
+            config.root = "RobotLogs";
+            config.loggingPeriod = Seconds.of(0.02);
+            config.backend = new NTEpilogueBackend(NetworkTableInstance.getDefault());
+            config.minimumImportance = Logged.Importance.DEBUG;
+        });
+        Epilogue.bind(this);
         m_robotContainer = new RobotContainer();
     }
-    public void updateEpilogue(){
-        Epilogue.turretLogger.update(epilogueBackend,Turret.getInstance());
-    }
+
     @Override
     public void robotInit() {
-        epilogueBackend= new NTEpilogueBackend(NetworkTableInstance.getDefault());
-        Epilogue.configure(config -> {
-            config.root = "RobotLogs"; // Set the base path in NetworkTables
-            config.loggingPeriod = Seconds.of(0.02); // Frequency (default is 20ms/50Hz)
-            config.backend = epilogueBackend;
-            config.minimumImportance = Logged.Importance.DEBUG; // Filter detail levels
-        });
+        
+        
 
 
         SmartDashboard.putData("Field", teleopField);
-
         disableTab = Shuffleboard.getTab("Disabled");
         teleopTab = Shuffleboard.getTab("Teleop");
 
@@ -107,8 +108,10 @@ public class Robot extends TimedRobotstangs {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
         gscollect.update();
-        updateEpilogue();
         teleopField.setRobotPose(drivetrain.getPose());
+        if (Robot.isSimulation()) {
+            NetworkTableInstance.getDefault().flush();
+        }
 
     }
 

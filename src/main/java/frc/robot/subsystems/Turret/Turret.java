@@ -48,7 +48,7 @@ public class Turret extends SubsystemBase {
      * Pivot control
      */
     TalonFXS turretMotor;
-
+    double debug;
     TalonFXSSimState turretMotorSim;
 
     TalonFXS hoodMotor;
@@ -59,13 +59,11 @@ public class Turret extends SubsystemBase {
     TalonFXConfiguration pepperConfig;
 
     TalonFXConfiguration happyConfig;
-
     Pose2d turretPose;
-    
-    static boolean isHub = true;
-    static boolean manualTarget = false;
+    static public boolean isHub = true;
+    static public boolean manualTarget = false;
     private DigitalInput limitSwitchHood;
-    private static Turret mInstance;
+    public static Turret mInstance;
 
     Mechanism2d turretSim;
 
@@ -93,7 +91,7 @@ public class Turret extends SubsystemBase {
         pepperConfig = new TalonFXConfiguration();
         happyConfig = new TalonFXConfiguration();
         limitSwitchHood=new DigitalInput(Constants.TurretConstants.kLimitSwitchId);
-
+        debug=6.7d;
         // TODO find supply current limit for each motor
         configureTurretMotor();
         configureTurretCANcoder();

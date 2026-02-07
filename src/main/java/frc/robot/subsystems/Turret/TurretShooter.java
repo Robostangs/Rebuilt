@@ -5,9 +5,10 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
+@Logged
 public class TurretShooter extends SubsystemBase{
     private TalonFX shooterMotor;
     private MotionMagicVelocityVoltage shooterTargetVelocity;

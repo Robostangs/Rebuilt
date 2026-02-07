@@ -18,6 +18,7 @@ import com.ctre.phoenix6.sim.TalonFXSSimState;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -48,7 +49,7 @@ public class Turret extends SubsystemBase {
      * Pivot control
      */
     TalonFXS turretMotor;
-    double debug;
+    public double debug=0.67;
     TalonFXSSimState turretMotorSim;
 
     TalonFXS hoodMotor;
@@ -73,6 +74,8 @@ public class Turret extends SubsystemBase {
      * The Turret
      */
     public Turret() {
+
+
         happyMotor = new TalonFX(Constants.TurretConstants.happyMotorID);
         turretMotor = new TalonFXS(Constants.TurretConstants.turretMotorID);
         turretCANcoder = new CANcoder(Constants.TurretConstants.turretCANcoderID);

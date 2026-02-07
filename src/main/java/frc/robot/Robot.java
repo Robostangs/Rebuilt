@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.io.Console;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -37,7 +38,7 @@ import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret.Turret;
 @Logged
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobotstangs {
 
     private Command m_autonomousCommand;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
@@ -59,12 +60,12 @@ public class Robot extends TimedRobot {
 
     public Robot() {
         Epilogue.configure(config -> {
-            config.root = "RobotLogs";
+            config.root = "JohnLogs";
             config.loggingPeriod = Seconds.of(0.02);
             config.backend = new NTEpilogueBackend(NetworkTableInstance.getDefault());
             config.minimumImportance = Logged.Importance.DEBUG;
         });
-        Epilogue.bind(this);
+        //Epilogue.bind(this);
         m_robotContainer = new RobotContainer();
     }
 
@@ -102,11 +103,36 @@ public class Robot extends TimedRobot {
         // disabledTab.add()
 
     }
+    void updateEpilogue(){
+        var cfg = edu.wpi.first.epilogue.Epilogue.getConfig();
+        if (cfg.backend != null && cfg.root != null) {
+            // base: JohnLogs
+            var rootBackend = cfg.backend.getNested(cfg.root);
 
+            edu.wpi.first.epilogue.Epilogue.robotLogger.tryUpdate(
+                rootBackend.getNested("Robot"),
+                this,
+                cfg.errorHandler);
+            // call the generated turret logger with that nested backend
+            edu.wpi.first.epilogue.Epilogue.turretLogger.tryUpdate(
+                rootBackend.getNested("Turret"),
+                frc.robot.subsystems.Turret.Turret.getInstance(),
+                cfg.errorHandler);
+            edu.wpi.first.epilogue.Epilogue.turretShooterLogger.tryUpdate(
+                rootBackend.getNested("Turret Shooter"),
+                frc.robot.subsystems.Turret.TurretShooter.getInstance(),
+                cfg.errorHandler);
+            edu.wpi.first.epilogue.Epilogue.kirbyLogger.tryUpdate(
+                rootBackend.getNested("Kirby"),
+                frc.robot.subsystems.Kirby.getInstance(),
+                cfg.errorHandler);
+        }
+    }
     @Override
     public void robotPeriodic() {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
+        updateEpilogue();
         gscollect.update();
         teleopField.setRobotPose(drivetrain.getPose());
         if (Robot.isSimulation()) {

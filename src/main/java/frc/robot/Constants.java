@@ -199,7 +199,7 @@ public final class Constants {
 
     //TODO: find this john
     public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(100));
-    public static final Vector<N3> kErrorInMyVisionHump = VecBuilder.fill(0.0, 0.0, Units.degreesToRadians(100));
+    public static final Vector<N3> kErrorInMyVisionHump = VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(100));
    
     //TODO: find this john
     public static final double kHumpPitchMin = 0;
@@ -208,7 +208,7 @@ public final class Constants {
 
   public class VisionConstants {
     public static final double kLL4SeedMaxWz = 1;
-    public static final String kLimelightFour = "limelight-cyclops";
+    public static final String kLimelightFour = "limelight-jarvis";
     public static final String kLimelightThree = "limelight-agomoto";
     public static final double kVisionAngularThreshold = 22.5;
     

@@ -54,18 +54,18 @@ public class RobotContainer {
         private void configureDrivingBinding() {
                 setDrivetrain();
 
-                xDrive.y().whileTrue(new Index());
+                // xDrive.y().whileTrue(new Index());
 
-                xDrive.rightStick().toggleOnTrue(new ExtendIntake())
-                                .onFalse(new RetractIntake());
+                // xDrive.rightStick().toggleOnTrue(new ExtendIntake())
+                //                 .onFalse(new RetractIntake());
 
-                xDrive.povRight().onTrue(new InstantCommand(
-                                (() -> useVision = !useVision)));
+                // xDrive.povRight().onTrue(new InstantCommand(
+                //                 (() -> useVision = !useVision)));
 
-                xDrive.povDown().onTrue(
-                                new InstantCommand(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
+                // xDrive.povDown().onTrue(
+                                // drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
 
-                xDrive.povUp().onTrue(new InstantCommand(() -> drivetrain.seedFieldCentric()));
+                xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         }
 
@@ -103,9 +103,9 @@ public class RobotContainer {
                         DoubleSupplier leftX = () -> xDrive.getLeftX();
                         DoubleSupplier rightX = () -> xDrive.getRightX();
 
-                        if (((Math.abs(leftY.getAsDouble()) > 0.05)
-                                        || Math.abs(leftX.getAsDouble()) > 0.05
-                                        || Math.abs((rightX.getAsDouble())) > 0.05)) {
+                        // if (((Math.abs(leftY.getAsDouble()) > 0.05)
+                        //                 || Math.abs(leftX.getAsDouble()) > 0.05
+                        //                 || Math.abs((rightX.getAsDouble())) > 0.05)) {
 
                                 drivetrain.setDefaultCommand(
                                                 // Drivetrain will execute this command periodically
@@ -130,10 +130,10 @@ public class RobotContainer {
                                                                                                                       // X
                                                                                                                       // (left)
                                                 ));
-                        } else {
-                                drivetrain.setDefaultCommand(
-                                                drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
-                        }
+                        // } else {
+                        //         drivetrain.setDefaultCommand(
+                        //                         drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
+                        // }
                 }
         }
 }

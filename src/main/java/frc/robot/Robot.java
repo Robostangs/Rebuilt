@@ -58,7 +58,7 @@ public class Robot extends TimedRobotstangs {
     public Color allianceScore = Constants.ElasticConstants.purple;
 
 
-    Timer teleopTime;
+    // Timer teleopTime;
 
     static NetworkTableEntry turretSetpoint;
 
@@ -75,7 +75,7 @@ public class Robot extends TimedRobotstangs {
     public void robotInit() {
         isJaba = Paths.get("/home/lvuser/Ultron").toFile().exists();
 
-        teleopTime = new Timer();
+        // teleopTime = new Timer();
         SmartDashboard.putData("Field", teleopField);
 
         disableTab = Shuffleboard.getTab("Disabled");
@@ -119,9 +119,9 @@ public class Robot extends TimedRobotstangs {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
         gscollect.update();
-        teleopField.setRobotPose(drivetrain.getPose());
-        photonVisionFront.periodic();
-        photonVisionBack.periodic();
+        // teleopField.setRobotPose(drivetrain.getState().Pose);
+        // photonVisionFront.periodic();
+        // photonVisionBack.periodic();
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
 
     }
@@ -153,7 +153,7 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopInit() {
-        teleopTime.start();
+        // teleopTime.start();
         String gameData = DriverStation.getGameSpecificMessage();
 
         if (gameData.length() > 0) {
@@ -177,16 +177,16 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void teleopPeriodic() {
         Turret.getInstance().setIronmansetpoint(turretSetpoint.getDouble(0));
-        if (teleopTime.get() % 25 == 0) {
-            canBlueScore = !canBlueScore;
-        }
-        if (canBlueScore) {
-            allianceScore = Constants.ElasticConstants.blue;
-        } else {
-            allianceScore = Constants.ElasticConstants.red;
+        // if (teleopTime.get() % 25 == 0) {
+        //     canBlueScore = !canBlueScore;
+        // }
+        // if (canBlueScore) {
+        //     allianceScore = Constants.ElasticConstants.blue;
+        // } else {
+        //     allianceScore = Constants.ElasticConstants.red;
 
-        }
-        SmartDashboard.putNumber("Match Time", teleopTime.get());
+        // }
+        // SmartDashboard.putNumber("Match Time", teleopTime.get());
 
     }
 

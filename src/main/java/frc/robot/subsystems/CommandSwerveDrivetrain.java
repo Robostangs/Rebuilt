@@ -34,6 +34,7 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.JabaTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Stable.LimelightHelpers;
+ 
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -255,11 +256,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          * occurs during testing.
          */
 
-        if (this.getPigeon2().getPitch().getValueAsDouble() < Constants.AutoConstants.kHumpPitchMin) {
-            this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionHump);
-        } else {
-            this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionReg);
-        }
+        // if (this.getPigeon2().getPitch().getValueAsDouble() < Constants.AutoConstants.kHumpPitchMin) {
+        //     this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionHump);
+        // } else {
+        // }
 
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
@@ -270,13 +270,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
 
-            configLL3(Constants.VisionConstants.kLimelightThree);
-            configLL4(Constants.VisionConstants.kLimelightFour);
         }
 
-        SmartDashboard.putBoolean("Robot/is red", Robot.isRed());
 
-        
+            configLL4(Constants.VisionConstants.kLimelightFour);
+            Robot.teleopField.getObject("CSD Pose").setPose(this.getState().Pose); 
+            Robot.teleopField.setRobotPose(this.getState().Pose);       
 
     }
 
@@ -319,6 +318,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     @Override
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
+          // Debug logging to check timestamp base
+        double fpgaNow = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
+        SmartDashboard.putNumber("Vision/incoming_ts", timestampSeconds);
+        SmartDashboard.putNumber("Vision/fpga_now", fpgaNow);
+        SmartDashboard.putNumber("Vision/delta_fpga_minus_incoming", fpgaNow - timestampSeconds);
+
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds));
     }
 
@@ -345,6 +350,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Pose2d visionRobotPoseMeters,
             double timestampSeconds,
             Matrix<N3, N1> visionMeasurementStdDevs) {
+                // Debug logging to check timestamp base for 3-arg variant
+        double fpgaNow = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
+        SmartDashboard.putNumber("Vision/incoming_ts_3arg", timestampSeconds);
+        SmartDashboard.putNumber("Vision/fpga_now_3arg", fpgaNow);
+        SmartDashboard.putNumber("Vision/delta_fpga_minus_incoming_3arg", fpgaNow - timestampSeconds);
+
+
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds),
                 visionMeasurementStdDevs);
     }
@@ -375,9 +387,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
     }
 
-    public Pose2d getPose() {
-        return this.getState().Pose;
-    }
+
 
     private static CommandSwerveDrivetrain mDrivetrain;
 
@@ -467,6 +477,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             if (DriverStation.isDisabled()) {
 
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(LLname);
+
             } else if (this.getPigeon2().getAngularVelocityZWorld()
                     .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
 
@@ -480,6 +491,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
             if (isPosegoo(fourPoseEsti)) {
                 this.addVisionMeasurement(fourPoseEsti.pose, fourPoseEsti.timestampSeconds);
+                SmartDashboard.putString("Vision/isPoseGoodCheck", "Ts should be tsing");
                 Robot.teleopField.getObject("Limelight Four Pose").setPose(fourPoseEsti.pose);
             }
 
@@ -489,17 +501,28 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
        if(Robot.isSimulation()){
+        SmartDashboard.putString("Vision/LL4_RejectReason", "Simulation mode");
         return false;
        }
         if (yoPoseEsti == null) {
+            SmartDashboard.putString("Vision/LL4_RejectReason", "Pose null");
             return false;
         }
-        if (yoPoseEsti.tagCount < 1) {
+        if (yoPoseEsti.tagCount <= 0) {
+            SmartDashboard.putString("Vision/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
             return false;
         }
 
-        SmartDashboard.putNumber("Error Distance",
-                yoPoseEsti.pose.getTranslation().minus(this.getState().Pose.getTranslation()).getNorm());
+        double errorDist = yoPoseEsti.pose.getTranslation().minus(this.getState().Pose.getTranslation()).getNorm();
+        SmartDashboard.putNumber("Vision/Error Distance", errorDist);
+        SmartDashboard.putNumber("Vision/LL4_Timestamp", yoPoseEsti.timestampSeconds);
+        SmartDashboard.putBoolean("Vision/useVisionFlag", RobotContainer.useVision);
+
+        if (!RobotContainer.useVision) {
+            SmartDashboard.putString("Vision/LL4_RejectReason", "useVision disabled");
+        } else {
+            SmartDashboard.putString("Vision/LL4_RejectReason", "Accepted");
+        }
 
         return RobotContainer.useVision;
     }

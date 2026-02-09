@@ -7,8 +7,11 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
-import org.photonvision.PhotonCamera;
+import java.util.Optional;
 
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -16,11 +19,13 @@ public class PhotonVision {
     private final PhotonCamera camera;
     private final CommandSwerveDrivetrain drivetrain;
     private final Transform3d robotToCam;
+    PhotonPoseEstimator ppe;
 
-    public PhotonVision(CommandSwerveDrivetrain drivetrain, String photonCamName,Transform3d robotToCam) {
+    public PhotonVision(String photonCamName, Transform3d robotToCam) {
         camera = new PhotonCamera(photonCamName);
-        this.drivetrain = drivetrain;
+        this.drivetrain = CommandSwerveDrivetrain.getInstance();
         this.robotToCam = robotToCam;
+        ppe = new PhotonPoseEstimator(Constants.kAprilTagFieldLayout, robotToCam);
     }
 
     Pose3d getPose(PhotonTrackedTarget target) {
@@ -35,41 +40,39 @@ public class PhotonVision {
         }
 
     }
-    
 
     private boolean isPosegoo(PhotonTrackedTarget yoPoseEsti) {
         Pose3d currentPose = PhotonUtils.estimateFieldToRobotAprilTag(yoPoseEsti.getBestCameraToTarget(),
-        Constants.kAprilTagFieldLayout.getTagPose(yoPoseEsti.getFiducialId()).get(),
-        robotToCam);
-        if( yoPoseEsti.getFiducialId() == -1) {
+                Constants.kAprilTagFieldLayout.getTagPose(yoPoseEsti.getFiducialId()).get(),
+                robotToCam);
+        if (yoPoseEsti.getFiducialId() == -1) {
             return false;
         }
-        if(currentPose == null){
+
+        if (currentPose == null) {
             return false;
         }
+
         return true;
     }
 
     public void periodic() {
-        var result = camera.getLatestResult();
-        if (result.hasTargets()) {
-            
-            
 
-            PhotonTrackedTarget target = result.getBestTarget();
-            if(isPosegoo(target)) {
-                
-                var newPose = getPose(target);
-
-
-                SmartDashboard.putNumber(camera.getName() + " Photon AprilTag Seen", target.getFiducialId());
-                SmartDashboard.putNumber(camera.getName()+ " Periodic photon tag pose",newPose.toPose2d().getX());
-
-                drivetrain.addVisionMeasurement(newPose.toPose2d(), result.getTimestampSeconds());
-
-                Robot.teleopField.getObject(camera.getName() + " PhotonVision Pose").setPose(newPose.toPose2d());
-            
+        Optional<EstimatedRobotPose> visionEst = Optional.empty();
+        for (var result : camera.getAllUnreadResults()) {
+            visionEst = ppe.estimateCoprocMultiTagPose(result);
+            if (visionEst.isEmpty()) {
+                visionEst = ppe.estimateLowestAmbiguityPose(result);
             }
-    }
+            visionEst.ifPresent(
+                    est -> {
+                        CommandSwerveDrivetrain.getInstance().addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds);
+                        Robot.teleopField.getObject(camera.getName()+" Pose");
+
+                    });
+        
+        }
+
+       
     }
 }

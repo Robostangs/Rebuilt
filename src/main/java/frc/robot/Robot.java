@@ -41,9 +41,9 @@ public class Robot extends TimedRobotstangs {
     public static boolean isJaba;
     private Command m_autonomousCommand;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
-    private PhotonVision photonVisionFront = new PhotonVision(drivetrain, Constants.VisionConstants.kPhotonCamNameFront,
+    private PhotonVision photonVisionFront = new PhotonVision( Constants.VisionConstants.kPhotonCamNameFront,
             Constants.VisionConstants.kRobotToCamFront);
-    private PhotonVision photonVisionBack = new PhotonVision(drivetrain, Constants.VisionConstants.kPhotonCamNameBack,
+    private PhotonVision photonVisionBack = new PhotonVision( Constants.VisionConstants.kPhotonCamNameBack,
             Constants.VisionConstants.kRobotToCamBack);
 
     private final RobotContainer m_robotContainer;
@@ -102,11 +102,15 @@ public class Robot extends TimedRobotstangs {
                 .getEntry("Turret Position");
 
         NamedCommands.registerCommand("Shoot", new InstantCommand(() -> Turret.getInstance().trackHub()));
+
         NamedCommands.registerCommand("Extend", new ExtendIntake());
+
         NamedCommands.registerCommand("Retract", new RetractIntake());
+
         NamedCommands.registerCommand("Dont shoot",
                 new InstantCommand(() -> TurretShooter.getInstance().setShouldShoot(false))
                         .finallyDo(() -> TurretShooter.getInstance().setShouldShoot(true)));
+
         NamedCommands.registerCommand("Hood down",
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
                         .alongWith(new InstantCommand(() -> TurretShooter.getInstance().setShouldShoot(false)))

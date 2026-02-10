@@ -1,6 +1,9 @@
+
 package frc.robot.Vision;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -22,23 +25,32 @@ public class PhotonVision {
         ppe = new PhotonPoseEstimator(Constants.kAprilTagFieldLayout, robotToCam);
     }
 
+   // ...existing code...
     public void periodic() {
 
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
         for (var result : camera.getAllUnreadResults()) {
+
             visionEst = ppe.estimateCoprocMultiTagPose(result);
+
             if (visionEst.isEmpty()) {
+
                 visionEst = ppe.estimateLowestAmbiguityPose(result);
+
             }
-            visionEst.ifPresent(
-                    est -> {
-                        CommandSwerveDrivetrain.getInstance().addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds);
-                        Robot.teleopField.getObject(camera.getName()+" Pose");
 
-                    });
-        
         }
+        // Only use the estimate if present and valid
+        visionEst.ifPresent(est -> {
+            var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
+            if (pose2d != null) {
+                CommandSwerveDrivetrain.getInstance().addVisionMeasurement(pose2d, est.timestampSeconds);
+                Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
+                SmartDashboard.putString("Vision/TS SHOUDLLLLLD BE TSINGGGGG", "YESSSS");
+            }
+        });
 
-       
     }
+
+
 }

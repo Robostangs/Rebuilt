@@ -86,6 +86,8 @@ public class RobotContainer {
         }
 
         private void setDrivetrain() {
+                double leftTrigger =  ((xDrive.getLeftTriggerAxis() > 0.2) ? 0.25
+                                                                                        : 1);
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(() -> drive.withVelocityX((-xSim.getRawAxis(0))
@@ -96,41 +98,31 @@ public class RobotContainer {
                                                                         * MaxAngularRate)));
                 } else {
 
-                        DoubleSupplier leftY = () -> xDrive.getLeftY();
-                        DoubleSupplier leftX = () -> xDrive.getLeftX();
-                        DoubleSupplier rightX = () -> xDrive.getRightX();
-
-                        // if (((Math.abs(leftY.getAsDouble()) > 0.05)
-                        //                 || Math.abs(leftX.getAsDouble()) > 0.05
-                        //                 || Math.abs((rightX.getAsDouble())) > 0.05)) {
-
+         
                                 drivetrain.setDefaultCommand(
                                                 // Drivetrain will execute this command periodically
                                                 drivetrain.applyRequest(() -> drive
-                                                                .withVelocityX(-xDrive.getLeftY() * MaxSpeed) // Drive
+                                                                .withVelocityX(-xDrive.getLeftY() * MaxSpeed*leftTrigger) // Drive
                                                                                                               // forward
                                                                                                               // with
                                                                                                               // negative
                                                                                                               // Y
                                                                                                               // (forward)
-                                                                .withVelocityY(-xDrive.getLeftX() * MaxSpeed) // Drive
+                                                                .withVelocityY(-xDrive.getLeftX() * MaxSpeed*leftTrigger) // Drive
                                                                                                               // left
                                                                                                               // with
                                                                                                               // negative
                                                                                                               // X
                                                                                                               // (left)
                                                                 .withRotationalRate(
-                                                                                -xDrive.getRightX() * MaxAngularRate) // Drive
+                                                                                -xDrive.getRightX() * MaxAngularRate*leftTrigger) // Drive
                                                                                                                       // counterclockwise
                                                                                                                       // with
                                                                                                                       // negative
                                                                                                                       // X
                                                                                                                       // (left)
                                                 ));
-                        // } else {
-                        //         drivetrain.setDefaultCommand(
-                        //                         drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
-                        // }
+                       
                 }
         }
 }

@@ -274,7 +274,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 
             configLL4(Constants.VisionConstants.kLimelightFour);
-            Robot.teleopField.setRobotPose(this.getState().Pose);       
+            Robot.teleopField.setRobotPose(this.getState().Pose);      
+            Robot.teleopField.getObject("CSD Pose").setPose(this.getState().Pose); 
+
 
     }
 

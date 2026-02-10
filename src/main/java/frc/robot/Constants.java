@@ -98,8 +98,8 @@ public final class Constants {
         : FlippingUtil.flipFieldPose(new Pose2d(6.23, 2.59, new Rotation2d()));
     
     //TODO find john
-    public static final Pose2d resetPose = !Robot.isRed() ? new Pose2d(3.489, 4.043, new Rotation2d())
-        : FlippingUtil.flipFieldPose(new Pose2d(3.489, 4.043, new Rotation2d()));
+    public static final Pose2d resetPose = !Robot.isRed() ? new Pose2d(.47, .46, new Rotation2d(Units.degreesToRadians(180)))
+        : FlippingUtil.flipFieldPose(new Pose2d(.47, .46, new Rotation2d(Units.degreesToRadians(180))));
 
 
   }
@@ -170,6 +170,14 @@ public final class Constants {
     public static final Color blue = new Color("#0000FF");
     public static final Color red = new Color("#FF0000");
     public static final Color purple = new Color("#800080");
+    public static final Color white = new Color("#FFFFFF");
+
+    public static enum whoCanScore{
+        blue,
+        red,
+        both,
+        error
+    }
   }
 
   public class AutoConstants {

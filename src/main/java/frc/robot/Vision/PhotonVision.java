@@ -26,7 +26,7 @@ public class PhotonVision {
     }
 
    // ...existing code...
-    public void periodic() {
+    public void Photonperiodic() {
 
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
         for (var result : camera.getAllUnreadResults()) {
@@ -44,9 +44,8 @@ public class PhotonVision {
         visionEst.ifPresent(est -> {
             var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
             if (pose2d != null) {
-                CommandSwerveDrivetrain.getInstance().addVisionMeasurement(pose2d, est.timestampSeconds);
+                CommandSwerveDrivetrain.getInstance().addVisionMeasurement(pose2d,est.timestampSeconds);
                 Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
-                SmartDashboard.putString("Vision/TS SHOUDLLLLLD BE TSINGGGGG", "YESSSS");
             }
         });
 

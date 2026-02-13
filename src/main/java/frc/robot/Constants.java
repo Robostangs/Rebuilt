@@ -207,8 +207,8 @@ public final class Constants {
         kRobotMomentOfInertia.baseUnitMagnitude(), kModuleConfig, kModulePositions);
 
     //TODO: find this john
-    public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(5));
-    public static final Vector<N3> kErrorInMyVisionHump = VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(5));
+    public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(100));
+    public static final Vector<N3> kErrorInMyVisionHump = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(100));
    
     //TODO: find this john
     public static final double kHumpPitchMin = 0;
@@ -222,10 +222,16 @@ public final class Constants {
     public static final double kVisionAngularThreshold = 22.5;
     
     public static final String kPhotonCamNameFront = "OV9281";
-    public static final Transform3d kRobotToCamFront = new Transform3d(-.32,.31,.22, new Rotation3d(0,Units.degreesToRadians(42.36),Units.degreesToRadians(-90)));
+    public static final Transform3d kRobotToCamFront = new Transform3d(
+    Units.inchesToMeters(-11.6875),
+    Units.inchesToMeters(-12),
+    Units.inchesToMeters(8.375),
+     new Rotation3d(0,Units.degreesToRadians(42.36),Units.degreesToRadians(-90))
+     );
 
     public static final String kPhotonCamNameBack = "DeadpoolX";
     public static final Transform3d kRobotToCamBack = new Transform3d(new Transform2d());
+    public static final double kMTErrorThres = 0.05;
   }
 
   public class ZiroTunerConstants {

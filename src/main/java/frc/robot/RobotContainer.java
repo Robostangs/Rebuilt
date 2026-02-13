@@ -59,8 +59,8 @@ public class RobotContainer {
                 // xDrive.povRight().onTrue(new InstantCommand(
                 //                 (() -> useVision = !useVision)));
 
-                // xDrive.povDown().onTrue(
-                                // drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
+                xDrive.povDown().onTrue(
+                                drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 

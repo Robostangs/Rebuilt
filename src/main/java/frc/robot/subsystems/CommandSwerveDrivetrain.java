@@ -5,6 +5,12 @@ import static edu.wpi.first.units.Units.*;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -17,6 +23,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -25,6 +32,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -34,7 +42,7 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.JabaTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Stable.LimelightHelpers;
- 
+import frc.robot.Vision.PhotonVision;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -59,6 +67,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+
+    private PhotonVision photonVisionFront = new PhotonVision(Constants.VisionConstants.kPhotonCamNameFront,
+            Constants.VisionConstants.kRobotToCamFront);
+    PhotonPoseEstimator ppe = new PhotonPoseEstimator(Constants.kAprilTagFieldLayout,
+            Constants.VisionConstants.kRobotToCamFront);
+    private final PhotonCamera camera = new PhotonCamera(Constants.VisionConstants.kPhotonCamNameFront);
 
     /*
      * SysId routine for characterizing translation. This is used to find PID gains
@@ -256,8 +270,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          * occurs during testing.
          */
 
-        // if (this.getPigeon2().getPitch().getValueAsDouble() < Constants.AutoConstants.kHumpPitchMin) {
-        //     this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionHump);
+        // if (this.getPigeon2().getPitch().getValueAsDouble() <
+        // Constants.AutoConstants.kHumpPitchMin) {
+        // this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionHump);
         // } else {
         // }
 
@@ -272,11 +287,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         }
 
+        configLL4(Constants.VisionConstants.kLimelightFour);
+        Photonperiodic();
 
-            configLL4(Constants.VisionConstants.kLimelightFour);
-            Robot.teleopField.setRobotPose(this.getState().Pose);      
-            Robot.teleopField.getObject("CSD Pose").setPose(this.getState().Pose); 
-
+        Robot.teleopField.setRobotPose(this.getState().Pose);
 
     }
 
@@ -301,29 +315,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
-    public boolean isPastDeadzone(CommandXboxController controller){
+    public boolean isPastDeadzone(CommandXboxController controller) {
         return (Math.abs(controller.getLeftY()) > 0.05
                 || Math.abs(controller.getLeftX()) > 0.05
                 || Math.abs(controller.getRightX()) > 0.05);
     }
 
-    /**
-     * Adds a vision measurement to the Kalman Filter. This will correct the
-     * odometry pose estimate
-     * while still accounting for measurement noise.
-     *
-     * @param visionRobotPoseMeters The pose of the robot as measured by the vision
-     *                              camera.
-     * @param timestampSeconds      The timestamp of the vision measurement in
-     *                              seconds.
-     */
     @Override
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
-          // Debug logging to check timestamp base
-        double fpgaNow = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
-        SmartDashboard.putNumber("Vision/incoming_ts", timestampSeconds);
-        SmartDashboard.putNumber("Vision/fpga_now", fpgaNow);
-        SmartDashboard.putNumber("Vision/delta_fpga_minus_incoming", fpgaNow - timestampSeconds);
 
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds));
     }
@@ -351,12 +350,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Pose2d visionRobotPoseMeters,
             double timestampSeconds,
             Matrix<N3, N1> visionMeasurementStdDevs) {
-                // Debug logging to check timestamp base for 3-arg variant
-        double fpgaNow = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
-        SmartDashboard.putNumber("Vision/incoming_ts_3arg", timestampSeconds);
-        SmartDashboard.putNumber("Vision/fpga_now_3arg", fpgaNow);
-        SmartDashboard.putNumber("Vision/delta_fpga_minus_incoming_3arg", fpgaNow - timestampSeconds);
-
 
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds),
                 visionMeasurementStdDevs);
@@ -387,8 +380,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
     }
-
-
 
     private static CommandSwerveDrivetrain mDrivetrain;
 
@@ -441,19 +432,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          * Only seed ll4 with external yaw angle if not rotating fast, otherwise use
          * internal imu with mode 2
          */
-        if (this.getPigeon2().getAngularVelocityZWorld()
-                .getValueAsDouble() > Constants.VisionConstants.kLL4SeedMaxWz) {
-            /*
-             * 0 - Use external IMU yaw submitted via SetRobotOrientation() for MT2
-             * localization. The internal IMU is ignored entirely.
-             * 1 - Use external IMU yaw submitted via SetRobotOrientation(), and configure
-             * the LL4 internal IMU’s fused yaw to match the submitted yaw value.
-             * 2 - Use internal IMU for MT2 localization. External imu data is ignored
-             * entirely
-             */
-            LimelightHelpers.SetIMUMode(LLname, 2);
-        } else {
+
+        if (DriverStation.isDisabled()) {
             LimelightHelpers.SetIMUMode(LLname, 1);
+        } else {
 
             LimelightHelpers.SetRobotOrientation(LLname,
                     this.getState().Pose.getRotation().getDegrees(),
@@ -463,7 +445,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     0d,
                     0d);
 
+            LimelightHelpers.SetIMUMode(LLname, 4);
+
         }
+
+        LimelightHelpers.SetIMUAssistAlpha(LLname, 0.4);
 
         if (DriverStation.isDisabled()) {
             NetworkTableInstance.getDefault().getTable(LLname)
@@ -501,10 +487,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
-       if(Robot.isSimulation()){
-        SmartDashboard.putString("Vision/LL4_RejectReason", "Simulation mode");
-        return false;
-       }
+        if (Robot.isSimulation()) {
+            SmartDashboard.putString("Vision/LL4_RejectReason", "Simulation mode");
+            return false;
+        }
         if (yoPoseEsti == null) {
             SmartDashboard.putString("Vision/LL4_RejectReason", "Pose null");
             return false;
@@ -513,11 +499,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SmartDashboard.putString("Vision/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
             return false;
         }
-
-        double errorDist = yoPoseEsti.pose.getTranslation().minus(this.getState().Pose.getTranslation()).getNorm();
-        SmartDashboard.putNumber("Vision/Error Distance", errorDist);
-        SmartDashboard.putNumber("Vision/LL4_Timestamp", yoPoseEsti.timestampSeconds);
-        SmartDashboard.putBoolean("Vision/useVisionFlag", RobotContainer.useVision);
 
         if (!RobotContainer.useVision) {
             SmartDashboard.putString("Vision/LL4_RejectReason", "useVision disabled");
@@ -528,4 +509,39 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return RobotContainer.useVision;
     }
 
+    public void Photonperiodic() {
+        double bigAmbiuity = 0d;
+
+        Optional<EstimatedRobotPose> visionEst = Optional.empty();
+        for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
+
+            visionEst = ppe.estimateCoprocMultiTagPose(result);
+
+            if (visionEst.isEmpty()) {
+                visionEst = ppe.estimateLowestAmbiguityPose(result);
+            }
+
+            for (var target : result.targets) {
+                
+                if(target.poseAmbiguity > bigAmbiuity){
+                    bigAmbiuity = target.poseAmbiguity;
+                }
+            }
+
+            SmartDashboard.putNumber(camera.getName()+" biggest ambiguity", bigAmbiuity);
+        }
+
+        if (bigAmbiuity  < 0.2) {
+            // Only use the estimate if present and valid
+            visionEst.ifPresent(est -> {
+                var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
+
+                if (pose2d != null) {
+                    this.addVisionMeasurement(pose2d, est.timestampSeconds);
+                    Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
+                }
+            });
+
+        }
+    }
 }

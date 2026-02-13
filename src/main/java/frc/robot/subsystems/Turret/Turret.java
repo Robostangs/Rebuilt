@@ -437,7 +437,7 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("19Gear-offset, true absolute pos",
                 (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
 
-        if (!manualTarget) {
+        if (!manualTarget&& CommandSwerveDrivetrain.getInstance().getState().Pose != null) {
             targetHubPose();
         }
 

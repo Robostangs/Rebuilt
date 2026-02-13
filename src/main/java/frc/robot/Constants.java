@@ -181,6 +181,16 @@ public final class Constants {
     }
   }
 
+  public static class ClimberConstants{
+
+    public static final int kClimberMotorID = 0;
+    public static final double kClimberCurrentLimit = 0;
+    public static final double kClimberKP = 0;
+    public static final double kClimberKI = 0;
+    public static final double kClimberKD = 0;
+
+  }
+
   public class AutoConstants {
     public static final PIDConstants translationPID = new PIDConstants(0, 0, 0);
     public static final PIDConstants rotationPID = new PIDConstants(0, 0, 0);

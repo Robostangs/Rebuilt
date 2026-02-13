@@ -70,9 +70,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private PhotonVision photonVisionFront = new PhotonVision(Constants.VisionConstants.kPhotonCamNameFront,
             Constants.VisionConstants.kRobotToCamFront);
+
+            
     PhotonPoseEstimator ppe = new PhotonPoseEstimator(Constants.kAprilTagFieldLayout,
             Constants.VisionConstants.kRobotToCamFront);
-    private final PhotonCamera camera = new PhotonCamera(Constants.VisionConstants.kPhotonCamNameFront);
 
     /*
      * SysId routine for characterizing translation. This is used to find PID gains
@@ -288,7 +289,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         configLL4(Constants.VisionConstants.kLimelightFour);
-        Photonperiodic();
+        photonVisionFront.Photonperiodic();
+
 
         Robot.teleopField.setRobotPose(this.getState().Pose);
 
@@ -509,7 +511,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return RobotContainer.useVision;
     }
 
-    public void Photonperiodic() {
+    public void Photonperiodic(PhotonCamera camera) {
         double bigAmbiuity = 0d;
 
         Optional<EstimatedRobotPose> visionEst = Optional.empty();

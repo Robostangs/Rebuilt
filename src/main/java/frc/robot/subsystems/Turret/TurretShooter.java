@@ -25,7 +25,7 @@ public class TurretShooter extends SubsystemBase{
     public TurretShooter(){
 
         shouldShoot = false;
-        shooterMotor =new TalonFX(Constants.TurretConstants.pepperMotorID);
+        shooterMotor =new TalonFX(Constants.TurretConstants.shooterMotorID);
 
        
     }

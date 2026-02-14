@@ -20,7 +20,9 @@ public class PivotClimber extends Command {
     }
 
     @Override
-    public void execute(){}
+    public void execute(){
+        climber.setClimberPivotControl();
+    }
 
     @Override
     public void end(boolean interrupted){

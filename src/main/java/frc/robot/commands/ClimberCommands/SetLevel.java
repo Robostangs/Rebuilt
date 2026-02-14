@@ -20,7 +20,9 @@ public class SetLevel extends Command{
     }
 
     @Override
-    public void execute(){}
+    public void execute(){
+        climber.setClimberControl();
+    }
 
     @Override
     public void end(boolean interrupted){

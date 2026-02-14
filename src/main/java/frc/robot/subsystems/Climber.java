@@ -11,14 +11,13 @@ import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
     public boolean isStowed;
-    public boolean isDeployed;
     private static Climber mInstance;
     TalonFX climberMotor;
     TalonFXConfiguration climberConfig;
     PositionVoltage climberControl;
     TalonFXSConfiguration climberPiviotConfig;
 
-    TalonFXS deployMotor;
+    TalonFXS climberPivot;
     PositionVoltage climberPivotControl;
     
     
@@ -26,9 +25,8 @@ public class Climber extends SubsystemBase {
     public Climber() {
         climberMotor = new TalonFX(Constants.ClimberConstants.kClimberMotorID);
         climberControl = new PositionVoltage(climberMotor.getPosition().getValueAsDouble()).withSlot(0);
-        deployMotor = new TalonFXS(Constants.ClimberConstants.kDeployMotorID);
+        climberPivot = new TalonFXS(Constants.ClimberConstants.kDeployMotorID);
         isStowed = true;
-        isDeployed=false;
     }
 
     public void configureClimber() {
@@ -54,14 +52,13 @@ public class Climber extends SubsystemBase {
         climberConfig.Slot0.kD = Constants.ClimberConstants.kClimberKD;
         climberPiviotConfig.Commutation.MotorArrangement = Constants.ClimberConstants.kClimberPiviotExternalFeedbackSource;
 
-        deployMotor.getConfigurator().apply(climberPiviotConfig);
+        climberPivot.getConfigurator().apply(climberPiviotConfig);
     }
     public void setClimberDutyCycle(double dc){
         climberMotor.set(dc);
     }
     public boolean atZeroPosition(){
         if(climberMotor.getStatorCurrent().getValueAsDouble()>=Constants.ClimberConstants.kZeroVoltageThreshold){
-            // The john is homed
             return true;
         }
         return false;
@@ -96,23 +93,25 @@ public class Climber extends SubsystemBase {
     }
 
     public boolean isPivotAtTarget() {
-        //does the 0.04 make sense idk
-    //also the condition lowkey prob doesnt work
-    //TODO: account for the degrees of pivot position that dont work (collides w turret)
-        if (Math.abs(deployMotor.getPosition().getValueAsDouble()) < Constants.ClimberConstants.kTargetThreshold) {
+     
+        if (Math.abs(climberPivot.getPosition().getValueAsDouble() - climberPivotControl.Position) < Constants.ClimberConstants.kTargetThreshold) {
             return true;
         } else {
             return false;
         }
+
     }
 
+    public void setClimberControl(){
+        climberMotor.setControl(climberControl);
+    }
+    public void setClimberPivotControl(){
+        climberPivot.setControl(climberPivotControl);
+    }
 
     @Override
     public void periodic() {
-        climberMotor.setControl(climberControl);
-        deployMotor.setControl(climberPivotControl);
     }
-
 
     
 }

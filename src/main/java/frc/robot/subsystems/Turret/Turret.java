@@ -67,7 +67,6 @@ public class Turret extends SubsystemBase {
      * The Turret
      */
     public Turret() {
-        happyMotor = new TalonFX(Constants.TurretConstants.happyMotorID);
         turretMotor = new TalonFXS(Constants.TurretConstants.turretMotorID);
         turretCANcoder = new CANcoder(Constants.TurretConstants.turretCANcoderID);
 
@@ -87,7 +86,6 @@ public class Turret extends SubsystemBase {
         // TODO find supply current limit for each motor
         configureTurretMotor();
         configureTurretCANcoder();
-        configureHappy();
 
         /**
          * Kv should be doing mos to of the work(volts)
@@ -97,6 +95,14 @@ public class Turret extends SubsystemBase {
          * once we have good postition we pid tune-
          */
 
+    }
+
+    public void configureTurretMotorSoftLimit() {
+        TalonFXSConfiguration turretMotorConfig = new TalonFXSConfiguration();
+        turretMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Constants.TurretConstants.kForwardSoftLimit;
+        turretMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        turretMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Constants.TurretConstants.kReverseSoftLimit;
+        turretMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     }
 
     public void configureTurretMotor() {
@@ -154,10 +160,7 @@ public class Turret extends SubsystemBase {
         turretCANcoder.getConfigurator().apply(turretCANcoderConfig);
     }
 
-    public void configureHappy() {
-        happyConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.MicroSupplyCurrentLimit;
-        happyMotor.getConfigurator().apply(happyConfig);
-    }
+
 
     public static Turret getInstance() {
         if (mInstance == null) {
@@ -177,8 +180,6 @@ public class Turret extends SubsystemBase {
         turretControl.Position = rotations;
         SmartDashboard.putString("Setpoint has gotten set", "New setpoint at " + rotations);
     }
-
-
 
     public Runnable setMotionMagicPointThree = () -> {
         turretControl.Position = 0.3;
@@ -315,6 +316,21 @@ public class Turret extends SubsystemBase {
         turretMotor.setPosition(rotations);
     }
 
+    public static void setManualTarget(boolean manualTarget) {
+        Turret.manualTarget = manualTarget;
+    }
+
+    public void moveTurretSafe() {
+
+        if (turretMotor.getPosition().getValueAsDouble() > Constants.TurretConstants.kSafeClimberNeg) {
+            turretMotor.setPosition(Constants.TurretConstants.kSafeClimberNeg);
+        } else if (turretMotor.getPosition().getValueAsDouble() < Constants.TurretConstants.kSafeClimberPos) {
+            turretMotor.setPosition(Constants.TurretConstants.kSafeClimberPos);
+
+        }
+        manualTarget = true;
+    }
+
     public static void setManipTarget(boolean hub) {
         manualTarget = true;
         isHub = hub;
@@ -437,12 +453,15 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("19Gear-offset, true absolute pos",
                 (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
 
-        if (!manualTarget&& CommandSwerveDrivetrain.getInstance().getState().Pose != null) {
+        if (!manualTarget && CommandSwerveDrivetrain.getInstance().getState().Pose != null) {
             targetHubPose();
         }
 
         // controlThreeThousand.Position = aimingJohnsRotaions();
 
+        if (!manualTarget) {
+            turretControl.Position = aimingJohns().getRotations();
+        }
         turretMotor.setControl(turretControl);
 
         aimingJohns();

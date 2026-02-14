@@ -1,7 +1,5 @@
 package frc.robot.commands.ClimberCommands;
 
-import java.lang.constant.Constable;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
@@ -24,7 +22,7 @@ public class HomeClimber extends Command{
 
     @Override
     public void execute(){
-
+        
     }
 
     @Override
@@ -36,7 +34,6 @@ public class HomeClimber extends Command{
 
     @Override
     public boolean isFinished(){
-            climber.postStatus("At zero position: "+climber.atZeroPosition());
             return climber.atZeroPosition();
     }
 

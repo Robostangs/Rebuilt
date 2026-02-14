@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.TimedRobotstangs;
-import frc.robot.Vision.PhotonVision;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -39,7 +38,6 @@ import frc.robot.subsystems.Turret.TurretShooter;
 
 public class Robot extends TimedRobotstangs {
     public static boolean isJaba;
-    private Command m_autonomousCommand;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
 
     private final RobotContainer m_robotContainer;

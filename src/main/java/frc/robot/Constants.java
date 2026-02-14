@@ -192,6 +192,9 @@ public final class Constants {
     public static final double kClimberKD = 0;
     public static final MotorArrangementValue kClimberPiviotExternalFeedbackSource = MotorArrangementValue.NEO550_JST;
     public static final double kClimberPiviotCurrentLimit = 0;
+    public static enum climberStates{
+        L0, L1, L2, L3, stowed
+    }
 
   }
 

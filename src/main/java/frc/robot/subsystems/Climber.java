@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
+    public boolean isStowed;
     private static Climber mInstance;
     TalonFX climberMotor;
     TalonFXConfiguration climberConfig;
@@ -27,6 +28,7 @@ public class Climber extends SubsystemBase {
         climberControl = new PositionVoltage(climberMotor.getPosition().getValueAsDouble()).withSlot(0);
 
         climberPivot = new TalonFXS(Constants.ClimberConstants.kClimberMotorID);
+        isStowed = true;
         
     }
 
@@ -72,6 +74,26 @@ public class Climber extends SubsystemBase {
 
     public void postStatus(String status) {
         SmartDashboard.putString("Climber/Status", status);
+    }
+
+    public boolean isStowed(){
+        if (isStowed){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean isPivotAtTarget() {
+        //does the 0.04 make sense idk
+    //also the condition lowkey prob doesnt work
+    //TODO: account for the degrees of pivot position that dont work (collides w turret)
+        if (Math.abs(climberPivot.getPosition().getValueAsDouble()) < 0.04) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

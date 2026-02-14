@@ -198,9 +198,8 @@ public final class Constants {
         }
 
         // TODO: Find these johns
-        public static final double kL1Pos = 0;
-        public static final double kL2Pos = 0;
-        public static final double kL3Pos = 0;
+        public static final double kExtendPos = 0;
+        public static final double kClimbPos = 0;
         public static final double kTargetThreshold = 0.04;
         public static final double kHomeDutyCycle = -0.01;
 

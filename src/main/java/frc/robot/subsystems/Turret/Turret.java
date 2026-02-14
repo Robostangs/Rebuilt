@@ -61,6 +61,8 @@ public class Turret extends SubsystemBase {
 
     Mechanism2d turretSim;
 
+    boolean isSafeNeg = false;
+
     private double turretMotorAbsoluteSensorOffset = 0.0;
 
     /**
@@ -160,8 +162,6 @@ public class Turret extends SubsystemBase {
         turretCANcoder.getConfigurator().apply(turretCANcoderConfig);
     }
 
-
-
     public static Turret getInstance() {
         if (mInstance == null) {
             mInstance = new Turret();
@@ -201,7 +201,7 @@ public class Turret extends SubsystemBase {
     }
     // get sensor to mechinasm ratio (19:200) and (21:200)
 
-    public double getTurretMotorSensorModPosition() {
+    private double getTurretMotorSensorModPosition() {
         /* Convert mechanism position to sensor position */
         return mathMod1(turretMotor.getPosition().getValueAsDouble()
                 * Constants.TurretConstants.kTurretMotorSensorToMechanismRatio);
@@ -215,7 +215,7 @@ public class Turret extends SubsystemBase {
     // boot
     // }
 
-    public double getTurretCANcoderModPosition() {
+    private double getTurretCANcoderModPosition() {
         /* Convert mechanism position to sensor position */
         return mathMod1(turretCANcoder.getPosition().getValueAsDouble());
     }
@@ -247,7 +247,7 @@ public class Turret extends SubsystemBase {
      * @param theta2 big gear position in rotations
      * @return big gear position in rotations
      */
-    public double getBigGearPosition() {
+    private double getBigGearPosition() {
         double actualMotorSensorModPos = getTurretMotorSensorModPosition();
         double actualCANcoderModPos = getTurretCANcoderModPosition();
         double geardiff = getGearDifference(actualMotorSensorModPos, actualCANcoderModPos);
@@ -279,7 +279,7 @@ public class Turret extends SubsystemBase {
                 / Constants.TurretConstants.kTurretMotorSensorToMechanismRatio;
     }
 
-    public double getBigGearPositionUsingMotorSensor() {
+    private double getBigGearPositionUsingMotorSensor() {
         double actualMotorSensorModPos = getTurretMotorSensorModPosition();
         double turretCANcoderSensorModPos = getTurretCANcoderModPosition();
         double geardiff = getGearDifference(actualMotorSensorModPos, turretCANcoderSensorModPos);
@@ -320,23 +320,12 @@ public class Turret extends SubsystemBase {
         Turret.manualTarget = manualTarget;
     }
 
-    public void moveTurretSafe() {
-
-        if (turretMotor.getPosition().getValueAsDouble() > Constants.TurretConstants.kSafeClimberNeg) {
-            turretMotor.setPosition(Constants.TurretConstants.kSafeClimberNeg);
-        } else if (turretMotor.getPosition().getValueAsDouble() < Constants.TurretConstants.kSafeClimberPos) {
-            turretMotor.setPosition(Constants.TurretConstants.kSafeClimberPos);
-
-        }
-        manualTarget = true;
-    }
-
     public static void setManipTarget(boolean hub) {
         manualTarget = true;
         isHub = hub;
     }
 
-    public Rotation2d aimingJohns() {
+    private Rotation2d aimingJohns() {
         // get current robot pose
         Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
 
@@ -363,7 +352,7 @@ public class Turret extends SubsystemBase {
         return turretRelativeAngle;
     }
 
-    public void updateIronManPose() {
+    private void updateIronManPose() {
         // Get the robot's pose
         Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
 
@@ -393,12 +382,35 @@ public class Turret extends SubsystemBase {
         happyMotor.set(speed);
     }
 
-    public void targetHubPose() {
+    private void targetHubPose() {
         if (Robot.isRed() ? CommandSwerveDrivetrain.getInstance().getState().Pose.getX() > 12.5
                 : CommandSwerveDrivetrain.getInstance().getState().Pose.getX() < 4) {
             isHub = true;
         } else {
             isHub = false;
+        }
+    }
+
+    public void moveTurretSafe() {
+
+        if (turretMotor.getPosition().getValueAsDouble() > Constants.TurretConstants.kSafeClimberNeg) {
+            turretControl.Position = Constants.TurretConstants.kSafeClimberNeg;
+            isSafeNeg = true;
+        } else if (turretMotor.getPosition().getValueAsDouble() < Constants.TurretConstants.kSafeClimberPos) {
+            turretControl.Position = Constants.TurretConstants.kSafeClimberPos;
+                isSafeNeg = false;
+
+        }
+        manualTarget = true;
+    }
+
+    public boolean isTurretSafeForClimber() {
+        double turretPosition = turretMotor.getPosition().getValueAsDouble();
+        if(isSafeNeg){
+            return turretPosition <= Constants.TurretConstants.kSafeClimberNeg;
+        }
+        else{
+            return turretPosition >= Constants.TurretConstants.kSafeClimberPos;
         }
     }
 
@@ -415,7 +427,7 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putString("IF Sun Tzu", "You have art of warred");
     }
 
-    public void logTurretThings() {
+    private void logTurretThings() {
         SmartDashboard.putNumber("Ironman/SunTzuPosition", getBigGearPosition());
 
         double oldMotorModPosition = getTurretMotorSensorModPosition();

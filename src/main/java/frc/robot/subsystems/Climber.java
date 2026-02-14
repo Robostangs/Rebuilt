@@ -19,6 +19,7 @@ public class Climber extends SubsystemBase {
 
     TalonFXS climberPivot;
     PositionVoltage climberPivotControl;
+    public static Constants.ClimberConstants.climberStates climberState;
     
     
 
@@ -26,6 +27,7 @@ public class Climber extends SubsystemBase {
         climberMotor = new TalonFX(Constants.ClimberConstants.kClimberMotorID);
         climberControl = new PositionVoltage(climberMotor.getPosition().getValueAsDouble()).withSlot(0);
         climberPivot = new TalonFXS(Constants.ClimberConstants.kDeployMotorID);
+        climberState = Constants.ClimberConstants.climberStates.stowed;
         isStowed = true;
     }
 
@@ -39,6 +41,10 @@ public class Climber extends SubsystemBase {
 
         climberMotor.getConfigurator().apply(climberConfig);
 
+    }
+
+    public void setClimberState(Constants.ClimberConstants.climberStates state) {
+        climberState = state;
     }
 
     public void setClimberMechanismPosition(double pos){

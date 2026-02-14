@@ -21,8 +21,24 @@ public class ClimberFactory{
     //     }
     // }
 
-        // public static Command L1Position(){
-        // }
+        public static Command ClimbToL3(){
+            return new SetLevel(Constants.ClimberConstants.kL1Pos)
+                .andThen(new SetLevel(Constants.ClimberConstants.kL2Pos)
+                .andThen(new SetLevel(Constants.ClimberConstants.kL3Pos)));
+
+        }
+        
+        public static Command ClimbToL2(){
+            return new SetLevel(Constants.ClimberConstants.kL1Pos)
+                .andThen(new SetLevel(Constants.ClimberConstants.kL2Pos));
+
+        }
+
+        public static Command ClimbToL1(){
+            return new SetLevel(Constants.ClimberConstants.kL1Pos);
+                
+
+        }
         // public static Command L2Position(){}
 
         // public static Command L3Position(){}

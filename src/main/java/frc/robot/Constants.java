@@ -124,7 +124,7 @@ public final class Constants {
         public static final double kTurretMotorSensorToMechanismRatio = Constants.TurretConstants.kTurretRingTeeth
                 / Constants.TurretConstants.kTurretMotorTeeth;
         public static final int shooterMotorID = 11;
-        public static final double TurretMotorSupplyCurrentLimit = 10;
+        public static final double TurretMotorSupplyCurrentLimit = 60;
         public static final double dumbThing = (((double) kTurretMotorTeeth * (double) kTurretCANcoderTeeth)
                 / (double) kTurretRingTeeth) / 2;
         public static final double kIronmanToRobotCenterX = 0;
@@ -155,13 +155,14 @@ public final class Constants {
         public static final double kReverseSoftLimit = 0;
         public static final double kSafeClimberPos = 0;
         public static final double kSafeClimberNeg = 0;
+        public static final double kShooterMotorStatorCurrentLimit = 50;
 
     }
 
     public static class FeederConstants {
 
         public static final int feederMotorID = 0;
-        public static final double feederSupplyLimt = 0;
+        public static final double feederSupplyLimt = 60;
         public static final double kFeedDutyCycle = 0.5;
         public static final int fuelSensorID = 1;
 

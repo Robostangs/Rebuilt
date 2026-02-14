@@ -35,9 +35,11 @@ public class Kirby extends SubsystemBase {
     public void setKirbyConfig() {
         hopperExtenderMotor = new TalonFX(Constants.KirbyConstants.hopperExtenderID);
         hopperExtenderConfiguration = new TalonFXConfiguration();
+        
         // TODO: Find this john
         hopperExtenderConfiguration.Feedback.SensorToMechanismRatio = Constants.KirbyConstants.extenderSensorToMechanismRatio;
         hopperExtenderConfiguration.CurrentLimits.SupplyCurrentLimit = Constants.KirbyConstants.HopperExtenderCurrentLimit;
+
         hopperExtenderConfiguration.Slot0.kP = Constants.KirbyConstants.hopperExtenderKP;
         hopperExtenderConfiguration.Slot0.kI = Constants.KirbyConstants.hopperExtenderKI;
         hopperExtenderConfiguration.Slot0.kD = Constants.KirbyConstants.hopperExtenderKD;
@@ -45,6 +47,7 @@ public class Kirby extends SubsystemBase {
 
         hopperExtenderConfiguration.MotionMagic.MotionMagicCruiseVelocity = Constants.KirbyConstants.kExtenderMotionMagicVelocity;
         hopperExtenderConfiguration.MotionMagic.MotionMagicAcceleration = Constants.KirbyConstants.kExtenderMotionMagicAcceleration;
+
 
         hopperExtenderMotor.getConfigurator().apply(hopperExtenderConfiguration);
     }

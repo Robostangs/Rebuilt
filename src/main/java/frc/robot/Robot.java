@@ -34,7 +34,7 @@ import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret.Hood;
 import frc.robot.subsystems.Turret.Turret;
-import frc.robot.subsystems.Turret.TurretShooter;
+import frc.robot.subsystems.Turret.Flywheel;
 
 public class Robot extends TimedRobotstangs {
     public static boolean isJaba;
@@ -100,13 +100,13 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Retract", new RetractIntake());
 
         NamedCommands.registerCommand("Dont shoot",
-                new InstantCommand(() -> TurretShooter.getInstance().setShouldShoot(false))
-                        .finallyDo(() -> TurretShooter.getInstance().setShouldShoot(true)));
+                new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false))
+                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
 
         NamedCommands.registerCommand("Hood down",
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
-                        .alongWith(new InstantCommand(() -> TurretShooter.getInstance().setShouldShoot(false)))
-                        .finallyDo(() -> TurretShooter.getInstance().setShouldShoot(true)));
+                        .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
+                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
 
     }
 

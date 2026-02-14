@@ -40,9 +40,11 @@ public class Climber extends SubsystemBase {
         climberMotor.getConfigurator().apply(climberConfig);
 
     }
+
     public void setClimberMechanismPosition(double pos){
         climberMotor.setPosition(pos);
     }
+
     public void configureClimberPiviot() {
         climberPiviotConfig = new TalonFXSConfiguration();
 
@@ -54,11 +56,13 @@ public class Climber extends SubsystemBase {
 
         climberPivot.getConfigurator().apply(climberPiviotConfig);
     }
+
     public void setClimberDutyCycle(double dc){
         climberMotor.set(dc);
     }
+
     public boolean atZeroPosition(){
-        if(climberMotor.getStatorCurrent().getValueAsDouble()>=Constants.ClimberConstants.kZeroVoltageThreshold){
+        if(climberMotor.getStatorCurrent().getValueAsDouble() >= Constants.ClimberConstants.kZeroVoltageThreshold){
             return true;
         }
         return false;

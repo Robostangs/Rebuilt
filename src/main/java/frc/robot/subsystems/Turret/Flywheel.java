@@ -8,50 +8,54 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class TurretShooter extends SubsystemBase{
-    private TalonFX shooterMotor;
+public class Flywheel extends SubsystemBase{
+    private TalonFX flyWheel;
     private MotionMagicVelocityVoltage shooterTargetVelocity;
 
-    public static TurretShooter instance;
+    public static Flywheel instance;
     public static boolean shouldShoot;
 
-    public static TurretShooter getInstance(){
+    public static Flywheel getInstance(){
         if (instance == null) {
-            instance = new TurretShooter();
+            instance = new Flywheel();
         }
         return instance;
     }
 
-    public TurretShooter(){
+    public Flywheel(){
 
         shouldShoot = false;
-        shooterMotor =new TalonFX(Constants.TurretConstants.shooterMotorID);
+        flyWheel =new TalonFX(Constants.TurretConstants.shooterMotorID);
 
        
     }
 
    public void configureShooterMotor(){
-         TalonFXConfiguration shooterConfig = new TalonFXConfiguration();
+         TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
 
-        shooterConfig.Slot0.kP = Constants.TurretConstants.kShooterMotorP; 
-        shooterConfig.Slot0.kI = Constants.TurretConstants.kShooterMotorI; 
-        shooterConfig.Slot0.kD = Constants.TurretConstants.kShooterMotorD;
-        shooterConfig.Slot0.kA = Constants.TurretConstants.kShooterMotorA;
-        shooterConfig.Slot0.kV = Constants.TurretConstants.kShooterMotorV;
-        shooterConfig.Slot0.kS = Constants.TurretConstants.kShooterMotorS;
+        flywheelConfig.Slot0.kP = Constants.TurretConstants.kShooterMotorP; 
+        flywheelConfig.Slot0.kI = Constants.TurretConstants.kShooterMotorI; 
+        flywheelConfig.Slot0.kD = Constants.TurretConstants.kShooterMotorD;
+        flywheelConfig.Slot0.kA = Constants.TurretConstants.kShooterMotorA;
+        flywheelConfig.Slot0.kV = Constants.TurretConstants.kShooterMotorV;
+        flywheelConfig.Slot0.kS = Constants.TurretConstants.kShooterMotorS;
+        
         // set Motion Magic settings
-        var motionMagicConfigs = shooterConfig.MotionMagic;
+        var motionMagicConfigs = flywheelConfig.MotionMagic;
         motionMagicConfigs.MotionMagicCruiseVelocity = Constants.TurretConstants.shooterMotionMagicCruiseVelocity; 
         motionMagicConfigs.MotionMagicAcceleration = Constants.TurretConstants.shooterMotionMagicAcceleration; 
         shooterTargetVelocity=new MotionMagicVelocityVoltage(0);
 
+        flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.TurretConstants.kShooterMotorStatorCurrentLimit;
+
+
         // Apply the PID configurations to the shooter motor
-        shooterMotor.getConfigurator().apply(shooterConfig);
+        flyWheel.getConfigurator().apply(flywheelConfig);
 
    }
     public double currentShooterVelocity() {
         // Get the current velocity of the shooter motor
-        return shooterMotor.get(); // Returns the current velocity of the shooter motor
+        return flyWheel.get(); // Returns the current velocity of the shooter motor
     }
 
     public void setShouldShoot(boolean shoot){
@@ -70,8 +74,8 @@ public class TurretShooter extends SubsystemBase{
     }
     @Override
     public void periodic() {
-        shooterMotor.setControl(shooterTargetVelocity);
-        SmartDashboard.putNumber("Shooter/velocity",shooterMotor.getVelocity().getValueAsDouble());
+        flyWheel.setControl(shooterTargetVelocity);
+        SmartDashboard.putNumber("Shooter/velocity",flyWheel.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Shooter/target",shooterTargetVelocity.Velocity);
     }
 

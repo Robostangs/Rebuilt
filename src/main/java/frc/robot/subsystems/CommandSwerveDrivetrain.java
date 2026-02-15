@@ -71,6 +71,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private PhotonVision photonVisionFront = new PhotonVision(Constants.VisionConstants.kPhotonCamNameFront,
             Constants.VisionConstants.kRobotToCamFront);
 
+    private PhotonVision photonVisionBack = new PhotonVision(Constants.VisionConstants.kPhotonCamNameBack,
+            Constants.VisionConstants.kRobotToCamBack);
+
             
     PhotonPoseEstimator ppe = new PhotonPoseEstimator(Constants.kAprilTagFieldLayout,
             Constants.VisionConstants.kRobotToCamFront);
@@ -290,6 +293,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         configLL4(Constants.VisionConstants.kLimelightFour);
         photonVisionFront.Photonperiodic();
+        photonVisionBack.Photonperiodic();
 
 
         Robot.teleopField.setRobotPose(this.getState().Pose);

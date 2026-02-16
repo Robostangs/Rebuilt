@@ -380,7 +380,7 @@ public class Turret extends SubsystemBase {
     }
 
     public void setHappyDutyCycle(double speed) {
-        happyMotor.set(speed);
+        // No-op: happyMotor was removed along with its configuration.
     }
 
     private void targetHubPose() {

@@ -94,14 +94,13 @@ public class Climber extends SubsystemBase {
     }
 
     public boolean isStowed(){
-        if (isStowed){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return isStowed;
     }
 
+
+
+
+    }
     public boolean isPivotAtTarget() {
      
         if (Math.abs(climberPivot.getPosition().getValueAsDouble() - climberPivotControl.Position) < Constants.ClimberConstants.kTargetThreshold) {

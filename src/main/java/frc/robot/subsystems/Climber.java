@@ -55,9 +55,9 @@ public class Climber extends SubsystemBase {
         climberPiviotConfig = new TalonFXSConfiguration();
 
         climberPiviotConfig.CurrentLimits.SupplyCurrentLimit = Constants.ClimberConstants.kClimberPiviotCurrentLimit;
-        climberConfig.Slot0.kP = Constants.ClimberConstants.kClimberKP;
-        climberConfig.Slot0.kI = Constants.ClimberConstants.kClimberKI;
-        climberConfig.Slot0.kD = Constants.ClimberConstants.kClimberKD;
+        climberPiviotConfig.Slot0.kP = Constants.ClimberConstants.kClimberKP;
+        climberPiviotConfig.Slot0.kI = Constants.ClimberConstants.kClimberKI;
+        climberPiviotConfig.Slot0.kD = Constants.ClimberConstants.kClimberKD;
         climberPiviotConfig.Commutation.MotorArrangement = Constants.ClimberConstants.kClimberPiviotExternalFeedbackSource;
 
         climberPivot.getConfigurator().apply(climberPiviotConfig);

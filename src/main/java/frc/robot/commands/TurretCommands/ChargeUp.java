@@ -1,15 +1,15 @@
 package frc.robot.commands.TurretCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Turret.TurretShooter;
+import frc.robot.subsystems.Turret.Flywheel;
 
 public class ChargeUp extends Command {
     double targetrps;
-    TurretShooter turretShooter;
+    Flywheel turretShooter;
 
     public ChargeUp(double targetrps) {
         this.targetrps = targetrps;
-        turretShooter = TurretShooter.getInstance();
+        turretShooter = Flywheel.getInstance();
         addRequirements(turretShooter);
     }
 

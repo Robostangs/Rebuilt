@@ -9,8 +9,6 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -23,7 +21,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -32,7 +29,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -70,13 +66,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private PhotonVision photonVisionFront = new PhotonVision(Constants.VisionConstants.kPhotonCamNameFront,
             Constants.VisionConstants.kRobotToCamFront);
-
-    private PhotonVision photonVisionBack = new PhotonVision(Constants.VisionConstants.kPhotonCamNameBack,
-            Constants.VisionConstants.kRobotToCamBack);
-
-            
     PhotonPoseEstimator ppe = new PhotonPoseEstimator(Constants.kAprilTagFieldLayout,
             Constants.VisionConstants.kRobotToCamFront);
+    private final PhotonCamera camera = new PhotonCamera(Constants.VisionConstants.kPhotonCamNameFront);
 
     /*
      * SysId routine for characterizing translation. This is used to find PID gains
@@ -292,9 +284,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         configLL4(Constants.VisionConstants.kLimelightFour);
-        photonVisionFront.PhotonPeriodic();
-        photonVisionBack.PhotonPeriodic();
-
+        Photonperiodic();
 
         Robot.teleopField.setRobotPose(this.getState().Pose);
 
@@ -515,4 +505,39 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return RobotContainer.useVision;
     }
 
+    public void Photonperiodic() {
+        double bigAmbiuity = 0d;
+
+        Optional<EstimatedRobotPose> visionEst = Optional.empty();
+        for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
+
+            visionEst = ppe.estimateCoprocMultiTagPose(result);
+
+            if (visionEst.isEmpty()) {
+                visionEst = ppe.estimateLowestAmbiguityPose(result);
+            }
+
+            for (var target : result.targets) {
+                
+                if(target.poseAmbiguity > bigAmbiuity){
+                    bigAmbiuity = target.poseAmbiguity;
+                }
+            }
+
+            SmartDashboard.putNumber(camera.getName()+" biggest ambiguity", bigAmbiuity);
+        }
+
+        if (bigAmbiuity  < 0.2) {
+            // Only use the estimate if present and valid
+            visionEst.ifPresent(est -> {
+                var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
+
+                if (pose2d != null) {
+                    this.addVisionMeasurement(pose2d, est.timestampSeconds);
+                    Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
+                }
+            });
+
+        }
+    }
 }

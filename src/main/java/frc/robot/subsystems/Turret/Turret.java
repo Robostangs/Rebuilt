@@ -398,7 +398,7 @@ public class Turret extends SubsystemBase {
             isSafeNeg = true;
         } else if (turretMotor.getPosition().getValueAsDouble() < Constants.TurretConstants.kSafeClimberPos) {
             turretControl.Position = Constants.TurretConstants.kSafeClimberPos;
-                isSafeNeg = false;
+            isSafeNeg = false;
 
         }
         manualTarget = true;

@@ -6,19 +6,16 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.io.Console;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.util.List;
 import java.util.Map;
-import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.HootAutoReplay;
 
 import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.epilogue.logging.EpilogueBackend;
 import edu.wpi.first.epilogue.logging.NTEpilogueBackend;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -42,7 +39,6 @@ public class Robot extends TimedRobotstangs {
 
     private Command m_autonomousCommand;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
-    public double debugRobot= 6.7d;
     private final RobotContainer m_robotContainer;
     public static ShuffleboardTab disableTab, teleopTab;
 
@@ -51,7 +47,6 @@ public class Robot extends TimedRobotstangs {
     public static Alert gcAlert = new Alert("MEMORY TWEAKING LOOK INTO TS RN", AlertType.kWarning);
 
     static NetworkTableEntry turretSetpoint;
-    EpilogueBackend backend;
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()

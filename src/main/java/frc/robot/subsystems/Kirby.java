@@ -18,6 +18,7 @@ public class Kirby extends SubsystemBase {
         kirbyWheels = new TalonFX(Constants.KirbyConstants.kirbyWheelsID);
         kirbyConfiguration = new TalonFXConfiguration();
         kirbyConfiguration.CurrentLimits.SupplyCurrentLimit = Constants.KirbyConstants.KirbyCurrentLimit;
+        kirbyConfiguration.CurrentLimits.SupplyCurrentLimitEnable = true;
         kirbyWheels.getConfigurator().apply(kirbyConfiguration);
     }
 

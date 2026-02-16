@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.TurretCommands.HomeHood;
-import frc.robot.commands.TurretCommands.SetHoodDutyCycle;
 import frc.robot.commands.TurretCommands.setTurretDutyCycle;
+import frc.robot.commands.TurretCommands.Hood.HomeHood;
+import frc.robot.commands.TurretCommands.Hood.setHoodDutyCycle;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class RobotContainer {
@@ -79,7 +79,7 @@ public class RobotContainer {
                                                 .setIronmansetpoint(xManip.getRightX() / 10)));
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.1)
-                                .whileTrue(new SetHoodDutyCycle(() -> xManip.getLeftY() / 2));
+                                .whileTrue(new setHoodDutyCycle(() -> xManip.getLeftY() / 2));
 
         }
 

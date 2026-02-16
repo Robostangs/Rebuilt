@@ -112,12 +112,19 @@ public final class Constants {
         public static final double kHoodDownPos = 0d;
         public static final int kLimitSwitchId = 0;
         public static final double kHoodHomeDutyCycle = -0.09;
+        public static final double kHoodMotorP = 0;
+        public static final double kHoodMotorI = 0;
+        public static final double kHoodMotorD = 0;
+        public static final double kHoodMotorS = 0;
+        public static final double kHoodMotorV = 0;
+        public static final double kHoodMotorA = 0;
+        public static final double kHoodMotionMagicCruiseVelocity = 0;
+        public static final double kHoodMotionMagicAcceleration = 0;
     }
 
     public static class TurretConstants {
         public static final int turretMotorID = 1;
         public static final int turretCANcoderID = 2;
-        public static final int happyMotorID = 45;
         public static final double kTurretMotorTeeth = 19;
         public static final double kTurretCANcoderTeeth = 21;
         public static final double kTurretRingTeeth = 200;

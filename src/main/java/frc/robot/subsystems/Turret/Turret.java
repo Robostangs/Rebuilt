@@ -34,10 +34,7 @@ public class Turret extends SubsystemBase {
 
     // Shooter motor has its own subsystem
 
-    /**
-     * Feeder motor
-     */
-    TalonFX happyMotor;
+
 
     /**
      * Pivot control
@@ -51,7 +48,6 @@ public class Turret extends SubsystemBase {
     CANcoder turretCANcoder;
     TalonFXConfiguration pepperConfig;
 
-    TalonFXConfiguration happyConfig;
 
     Pose2d turretPose;
 
@@ -83,7 +79,6 @@ public class Turret extends SubsystemBase {
         turretControl = new MotionMagicExpoVoltage(0);
 
         pepperConfig = new TalonFXConfiguration();
-        happyConfig = new TalonFXConfiguration();
 
         // TODO find supply current limit for each motor
         configureTurretMotor();
@@ -168,6 +163,10 @@ public class Turret extends SubsystemBase {
             mInstance = new Turret();
         }
         return mInstance;
+    }
+
+    public void runTurretDutyCycle(double dutyCycle) {
+        turretMotor.set(dutyCycle);
     }
 
     public void postStatus(String status) {
@@ -379,9 +378,6 @@ public class Turret extends SubsystemBase {
         return turretMotor.getPosition().getValueAsDouble();
     }
 
-    public void setHappyDutyCycle(double speed) {
-        // No-op: happyMotor was removed along with its configuration.
-    }
 
     private void targetHubPose() {
         if (Robot.isRed() ? CommandSwerveDrivetrain.getInstance().getState().Pose.getX() > 12.5

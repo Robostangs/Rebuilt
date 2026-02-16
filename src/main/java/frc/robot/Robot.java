@@ -95,6 +95,18 @@ public class Robot extends TimedRobotstangs {
                 rootBackend.getNested("Hood"),
                 frc.robot.subsystems.Turret.Hood.getInstance(),
                 cfg.errorHandler);
+            edu.wpi.first.epilogue.Epilogue.feederLogger.tryUpdate(
+                rootBackend.getNested("Feeder"),
+                frc.robot.subsystems.Feeder.getInstance(),
+                cfg.errorHandler);
+            edu.wpi.first.epilogue.Epilogue.kirbyLogger.tryUpdate(
+                rootBackend.getNested("Kirby"),
+                frc.robot.subsystems.Kirby.getInstance(),
+                cfg.errorHandler);
+            edu.wpi.first.epilogue.Epilogue.flywheelLogger.tryUpdate(
+                rootBackend.getNested("Flywheel"),
+                frc.robot.subsystems.Turret.Flywheel.getInstance(),
+                cfg.errorHandler);
         }
     }
     @Override

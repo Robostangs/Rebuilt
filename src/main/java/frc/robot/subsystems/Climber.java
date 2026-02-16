@@ -102,13 +102,8 @@ public class Climber extends SubsystemBase {
 
     }
     public boolean isPivotAtTarget() {
-     
-        if (Math.abs(climberPivot.getPosition().getValueAsDouble() - climberPivotControl.Position) < Constants.ClimberConstants.kTargetThreshold) {
-            return true;
-        } else {
-            return false;
-        }
-
+        return Math.abs(climberPivot.getPosition().getValueAsDouble() - climberPivotControl.Position)
+                < Constants.ClimberConstants.kTargetThreshold;
     }
 
     public void setClimberControl(){

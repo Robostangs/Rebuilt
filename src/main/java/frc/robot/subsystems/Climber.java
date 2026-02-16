@@ -27,6 +27,7 @@ public class Climber extends SubsystemBase {
         climberMotor = new TalonFX(Constants.ClimberConstants.kClimberMotorID);
         climberControl = new PositionVoltage(climberMotor.getPosition().getValueAsDouble()).withSlot(0);
         climberPivot = new TalonFXS(Constants.ClimberConstants.kDeployMotorID);
+        climberPivotControl = new PositionVoltage(climberPivot.getPosition().getValueAsDouble()).withSlot(0);
         climberState = Constants.ClimberConstants.climberStates.stowed;
         isStowed = true;
     }
@@ -97,10 +98,6 @@ public class Climber extends SubsystemBase {
         return isStowed;
     }
 
-
-
-
-    }
     public boolean isPivotAtTarget() {
      
         if (Math.abs(climberPivot.getPosition().getValueAsDouble() - climberPivotControl.Position) < Constants.ClimberConstants.kTargetThreshold) {

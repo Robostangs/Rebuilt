@@ -372,8 +372,8 @@ public final class Constants {
         public static final double kClimberKP = 0;
         public static final double kClimberKI = 0;
         public static final double kClimberKD = 0;
-        public static final MotorArrangementValue kClimberPiviotExternalFeedbackSource = MotorArrangementValue.NEO550_JST;
-        public static final double kClimberPiviotCurrentLimit = 60;
+        public static final MotorArrangementValue kClimberPivotExternalFeedbackSource = MotorArrangementValue.NEO550_JST;
+        public static final double kClimberPivotCurrentLimit = 60;
         public static final int kDeployMotorID = 0;
 
         public static enum climberStates {

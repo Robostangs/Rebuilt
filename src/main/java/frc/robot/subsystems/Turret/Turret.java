@@ -105,6 +105,7 @@ public class Turret extends SubsystemBase {
         turretMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         turretMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Constants.TurretConstants.kReverseSoftLimit;
         turretMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+        turretMotor.getConfigurator().apply(turretMotorConfig);
     }
 
     public void configureTurretMotor() {

@@ -54,11 +54,11 @@ public class Climber extends SubsystemBase {
     public void configureClimberPiviot() {
         climberPiviotConfig = new TalonFXSConfiguration();
 
-        climberPiviotConfig.CurrentLimits.SupplyCurrentLimit = Constants.ClimberConstants.kClimberPiviotCurrentLimit;
+        climberPiviotConfig.CurrentLimits.SupplyCurrentLimit = Constants.ClimberConstants.kClimberCurrentLimit;
         climberPiviotConfig.Slot0.kP = Constants.ClimberConstants.kClimberKP;
         climberPiviotConfig.Slot0.kI = Constants.ClimberConstants.kClimberKI;
         climberPiviotConfig.Slot0.kD = Constants.ClimberConstants.kClimberKD;
-        climberPiviotConfig.Commutation.MotorArrangement = Constants.ClimberConstants.kClimberPiviotExternalFeedbackSource;
+        climberPiviotConfig.Commutation.MotorArrangement = Constants.ClimberConstants.kClimberPivotExternalFeedbackSource;
 
         climberPivot.getConfigurator().apply(climberPiviotConfig);
     }
@@ -100,7 +100,7 @@ public class Climber extends SubsystemBase {
 
 
 
-    }
+    
     public boolean isPivotAtTarget() {
         return Math.abs(climberPivot.getPosition().getValueAsDouble() - climberPivotControl.Position)
                 < Constants.ClimberConstants.kTargetThreshold;

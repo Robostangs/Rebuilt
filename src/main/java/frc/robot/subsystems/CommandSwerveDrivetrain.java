@@ -292,8 +292,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         configLL4(Constants.VisionConstants.kLimelightFour);
-        photonVisionFront.Photonperiodic();
-        photonVisionBack.Photonperiodic();
+        photonVisionFront.PhotonPeriodic();
+        photonVisionBack.PhotonPeriodic();
 
 
         Robot.teleopField.setRobotPose(this.getState().Pose);

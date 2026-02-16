@@ -27,9 +27,9 @@ public class PhotonVision {
     }
 
    // ...existing code...
-    public void Photonperiodic() {
+    public void PhotonPeriodic() {
 
-         double bigAmbiuity = 0d;
+         double biggestAmbiguity = -1d;
 
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
         for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
@@ -42,15 +42,15 @@ public class PhotonVision {
 
             for (var target : result.targets) {
                 
-                if(target.poseAmbiguity > bigAmbiuity){
-                    bigAmbiuity = target.poseAmbiguity;
+                if(target.poseAmbiguity > biggestAmbiguity){
+                    biggestAmbiguity = target.poseAmbiguity;
                 }
             }
 
-            SmartDashboard.putNumber(camera.getName()+" biggest ambiguity", bigAmbiuity);
+            SmartDashboard.putNumber(camera.getName()+" biggest ambiguity", biggestAmbiguity);
         }
 
-        if (bigAmbiuity  < 0.2) {
+        if (biggestAmbiguity > 0 && biggestAmbiguity  < 0.2) {
             // Only use the estimate if present and valid
             visionEst.ifPresent(est -> {
                 var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;

@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 public class PhotonVision {
     private final PhotonCamera camera;
@@ -24,30 +25,43 @@ public class PhotonVision {
     }
 
    // ...existing code...
-    public void Photonperiodic() {
+    public void PhotonPeriodic() {
+
+         double biggestAmbiguity = -1d;
 
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
-        for (var result : camera.getAllUnreadResults()) {
+        for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
 
             visionEst = ppe.estimateCoprocMultiTagPose(result);
 
             if (visionEst.isEmpty()) {
-
                 visionEst = ppe.estimateLowestAmbiguityPose(result);
-
             }
+
+            for (var target : result.targets) {
+                
+                if(target.poseAmbiguity > biggestAmbiguity){
+                    biggestAmbiguity = target.poseAmbiguity;
+                }
+            }
+
+            SmartDashboard.putNumber(camera.getName()+" biggest ambiguity", biggestAmbiguity);
+        }
+
+        if (biggestAmbiguity > 0 && biggestAmbiguity  < 0.2) {
+            // Only use the estimate if present and valid
+            visionEst.ifPresent(est -> {
+                var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
+
+                if (pose2d != null) {
+                    CommandSwerveDrivetrain.getInstance().addVisionMeasurement(pose2d, est.timestampSeconds);
+                    Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
+                }
+            });
 
         }
-        // Only use the estimate if present and valid
-        visionEst.ifPresent(est -> {
-            var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
-            if (pose2d != null) {
-                CommandSwerveDrivetrain.getInstance().addVisionMeasurement(pose2d,est.timestampSeconds);
-                Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
-            }
-        });
+    }
 
     }
 
 
-}

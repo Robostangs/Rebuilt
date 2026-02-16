@@ -66,9 +66,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private PhotonVision photonVisionFront = new PhotonVision(Constants.VisionConstants.kPhotonCamNameFront,
             Constants.VisionConstants.kRobotToCamFront);
+
+    private PhotonVision photonVisionBack = new PhotonVision(Constants.VisionConstants.kPhotonCamNameBack,
+            Constants.VisionConstants.kRobotToCamBack);
+
+            
     PhotonPoseEstimator ppe = new PhotonPoseEstimator(Constants.kAprilTagFieldLayout,
             Constants.VisionConstants.kRobotToCamFront);
-    private final PhotonCamera camera = new PhotonCamera(Constants.VisionConstants.kPhotonCamNameFront);
 
     /*
      * SysId routine for characterizing translation. This is used to find PID gains
@@ -284,7 +288,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         configLL4(Constants.VisionConstants.kLimelightFour);
-        Photonperiodic();
+        photonVisionFront.PhotonPeriodic();
+        photonVisionBack.PhotonPeriodic();
+
 
         Robot.teleopField.setRobotPose(this.getState().Pose);
 
@@ -505,39 +511,4 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return RobotContainer.useVision;
     }
 
-    public void Photonperiodic() {
-        double bigAmbiuity = 0d;
-
-        Optional<EstimatedRobotPose> visionEst = Optional.empty();
-        for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
-
-            visionEst = ppe.estimateCoprocMultiTagPose(result);
-
-            if (visionEst.isEmpty()) {
-                visionEst = ppe.estimateLowestAmbiguityPose(result);
-            }
-
-            for (var target : result.targets) {
-                
-                if(target.poseAmbiguity > bigAmbiuity){
-                    bigAmbiuity = target.poseAmbiguity;
-                }
-            }
-
-            SmartDashboard.putNumber(camera.getName()+" biggest ambiguity", bigAmbiuity);
-        }
-
-        if (bigAmbiuity  < 0.2) {
-            // Only use the estimate if present and valid
-            visionEst.ifPresent(est -> {
-                var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
-
-                if (pose2d != null) {
-                    this.addVisionMeasurement(pose2d, est.timestampSeconds);
-                    Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
-                }
-            });
-
-        }
-    }
 }

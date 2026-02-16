@@ -168,7 +168,6 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopPeriodic() {
-        // Turret.getInstance().setIronmansetpoint(turretSetpoint.getDouble(0));
         if (canBlueScore == whoCanScore.error) {
             shiftAlert.set(true);
         }

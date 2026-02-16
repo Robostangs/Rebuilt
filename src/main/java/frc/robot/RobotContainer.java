@@ -21,7 +21,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 public class RobotContainer {
         public static boolean useVision = true;
         private double MaxSpeed = 1.0 * Constants.JabaTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-        private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
+        private double MaxAngularRate = RotationsPerSecond.of(.75).in(RadiansPerSecond); // 3/4 of a rotation per
                                                                                           // second
                                                                                           // max angular velocity
 
@@ -37,7 +37,7 @@ public class RobotContainer {
         private final CommandXboxController xManip = new CommandXboxController(1);
         private final GenericHID xSim = new GenericHID(2);
 
-        public final CommandSwerveDrivetrain drivetrain = Constants.JabaTunerConstants.createDrivetrain();
+        public final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
 
         public RobotContainer() {
                 configureDrivingBinding();
@@ -48,6 +48,7 @@ public class RobotContainer {
 
         private void configureDrivingBinding() {
                 setDrivetrain();
+
 
                 // xDrive.y().whileTrue(new Index());
 
@@ -84,8 +85,6 @@ public class RobotContainer {
         }
 
         private void setDrivetrain() {
-                double leftTrigger =  ((xDrive.getLeftTriggerAxis() > 0.2) ? 0.25
-                                                                                        : 1);
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(() -> drive.withVelocityX((-xSim.getRawAxis(0))
@@ -100,25 +99,14 @@ public class RobotContainer {
                                 drivetrain.setDefaultCommand(
                                                 // Drivetrain will execute this command periodically
                                                 drivetrain.applyRequest(() -> drive
-                                                                .withVelocityX(-xDrive.getLeftY() * MaxSpeed*leftTrigger) // Drive
-                                                                                                              // forward
-                                                                                                              // with
-                                                                                                              // negative
-                                                                                                              // Y
-                                                                                                              // (forward)
-                                                                .withVelocityY(-xDrive.getLeftX() * MaxSpeed*leftTrigger) // Drive
-                                                                                                              // left
-                                                                                                              // with
-                                                                                                              // negative
-                                                                                                              // X
-                                                                                                              // (left)
+                                                                .withVelocityX(-xDrive.getLeftY() * MaxSpeed * ((xDrive.getLeftTriggerAxis() > 0.2) ? 0.25 : 1)) 
+                                                                                                        
+                                                                .withVelocityY(-xDrive.getLeftX() * MaxSpeed * ((xDrive.getLeftTriggerAxis() > 0.2) ? 0.25 : 1))
+
                                                                 .withRotationalRate(
-                                                                                -xDrive.getRightX() * MaxAngularRate*leftTrigger) // Drive
-                                                                                                                      // counterclockwise
-                                                                                                                      // with
-                                                                                                                      // negative
-                                                                                                                      // X
-                                                                                                                      // (left)
+                                                                                -xDrive.getRightX() * MaxAngularRate * ((xDrive.getLeftTriggerAxis() > 0.2) ? 0.25 : 1))
+        
+                                                          
                                                 ));
                        
                 }

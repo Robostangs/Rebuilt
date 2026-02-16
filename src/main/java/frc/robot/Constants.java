@@ -345,7 +345,7 @@ public final class Constants {
     public static class FeederConstants {
 
         public static final int feederMotorID = 0;
-        public static final double feederSupplyLimt = 60;
+        public static final double feederSupplyLimit = 60;
         public static final double kFeedDutyCycle = 0.5;
         public static final int fuelSensorID = 1;
 

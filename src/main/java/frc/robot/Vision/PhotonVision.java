@@ -1,75 +1,69 @@
+
 package frc.robot.Vision;
 
-import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
-import org.photonvision.PhotonCamera;
+import java.util.Optional;
 
-import org.photonvision.PhotonUtils;
-import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 public class PhotonVision {
     private final PhotonCamera camera;
-    private final CommandSwerveDrivetrain drivetrain;
     private final Transform3d robotToCam;
+    PhotonPoseEstimator ppe;
 
-    public PhotonVision(CommandSwerveDrivetrain drivetrain, String photonCamName,Transform3d robotToCam) {
+    public PhotonVision(String photonCamName, Transform3d robotToCam) {
         camera = new PhotonCamera(photonCamName);
-        this.drivetrain = drivetrain;
         this.robotToCam = robotToCam;
+        ppe = new PhotonPoseEstimator(Constants.kAprilTagFieldLayout, robotToCam);
     }
 
-    Pose3d getPose(PhotonTrackedTarget target) {
-        Pose3d robotPose = new Pose3d();
-        if (Constants.kAprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
-            robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
-                    Constants.kAprilTagFieldLayout.getTagPose(target.getFiducialId()).get(),
-                    robotToCam);
-            return robotPose;
-        } else {
-            return null;
-        }
+   // ...existing code...
+    public void PhotonPeriodic() {
 
-    }
-    
+         double biggestAmbiguity = -1d;
 
-    private boolean isPosegoo(PhotonTrackedTarget yoPoseEsti) {
-        Pose3d currentPose = PhotonUtils.estimateFieldToRobotAprilTag(yoPoseEsti.getBestCameraToTarget(),
-        Constants.kAprilTagFieldLayout.getTagPose(yoPoseEsti.getFiducialId()).get(),
-        robotToCam);
-        if( yoPoseEsti.getFiducialId() == -1) {
-            return false;
-        }
-        if(currentPose == null){
-            return false;
-        }
-        return true;
-    }
+        Optional<EstimatedRobotPose> visionEst = Optional.empty();
+        for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
 
-    public void periodic() {
-        var result = camera.getLatestResult();
-        if (result.hasTargets()) {
-            
-            
+            visionEst = ppe.estimateCoprocMultiTagPose(result);
 
-            PhotonTrackedTarget target = result.getBestTarget();
-            if(isPosegoo(target)) {
-                
-                var newPose = getPose(target);
-
-
-                SmartDashboard.putNumber(camera.getName() + " Photon AprilTag Seen", target.getFiducialId());
-                SmartDashboard.putNumber(camera.getName()+ " Periodic photon tag pose",newPose.toPose2d().getX());
-
-                drivetrain.addVisionMeasurement(newPose.toPose2d(), result.getTimestampSeconds());
-
-                Robot.teleopField.getObject(camera.getName() + " PhotonVision Pose").setPose(newPose.toPose2d());
-            
+            if (visionEst.isEmpty()) {
+                visionEst = ppe.estimateLowestAmbiguityPose(result);
             }
+
+            for (var target : result.targets) {
+                
+                if(target.poseAmbiguity > biggestAmbiguity){
+                    biggestAmbiguity = target.poseAmbiguity;
+                }
+            }
+
+            SmartDashboard.putNumber(camera.getName()+" biggest ambiguity", biggestAmbiguity);
+        }
+
+        if (biggestAmbiguity > 0 && biggestAmbiguity  < 0.2) {
+            // Only use the estimate if present and valid
+            visionEst.ifPresent(est -> {
+                var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
+
+                if (pose2d != null) {
+                    CommandSwerveDrivetrain.getInstance().addVisionMeasurement(pose2d, est.timestampSeconds);
+                    Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
+                }
+            });
+
+        }
     }
+
     }
-}
+
+

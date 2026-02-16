@@ -29,6 +29,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -98,8 +99,8 @@ public final class Constants {
         : FlippingUtil.flipFieldPose(new Pose2d(6.23, 2.59, new Rotation2d()));
     
     //TODO find john
-    public static final Pose2d resetPose = !Robot.isRed() ? new Pose2d(3.489, 4.043, new Rotation2d())
-        : FlippingUtil.flipFieldPose(new Pose2d(3.489, 4.043, new Rotation2d()));
+    public static final Pose2d resetPose = !Robot.isRed() ? new Pose2d(.47, .46, new Rotation2d(Units.degreesToRadians(180)))
+        : FlippingUtil.flipFieldPose(new Pose2d(.47, .46, new Rotation2d(Units.degreesToRadians(180))));
 
 
   }
@@ -170,6 +171,14 @@ public final class Constants {
     public static final Color blue = new Color("#0000FF");
     public static final Color red = new Color("#FF0000");
     public static final Color purple = new Color("#800080");
+    public static final Color white = new Color("#FFFFFF");
+
+    public static enum whoCanScore{
+        blue,
+        red,
+        both,
+        error
+    }
   }
 
   public class AutoConstants {
@@ -198,8 +207,8 @@ public final class Constants {
         kRobotMomentOfInertia.baseUnitMagnitude(), kModuleConfig, kModulePositions);
 
     //TODO: find this john
-    public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(100));
-    public static final Vector<N3> kErrorInMyVisionHump = VecBuilder.fill(0.0, 0.0, Units.degreesToRadians(100));
+    public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(100));
+    public static final Vector<N3> kErrorInMyVisionHump = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(100));
    
     //TODO: find this john
     public static final double kHumpPitchMin = 0;
@@ -208,15 +217,26 @@ public final class Constants {
 
   public class VisionConstants {
     public static final double kLL4SeedMaxWz = 1;
-    public static final String kLimelightFour = "limelight-cyclops";
+    public static final String kLimelightFour = "limelight-jarvis";
     public static final String kLimelightThree = "limelight-agomoto";
     public static final double kVisionAngularThreshold = 22.5;
     
-    public static final String kPhotonCamNameFront = "Jarvis";
-    public static final Transform3d kRobotToCamFront = new Transform3d(new Transform2d());
+    public static final String kPhotonCamNameFront = "OV9281";
+    public static final Transform3d kRobotToCamFront = new Transform3d(
+    Units.inchesToMeters(-11.6875),
+    Units.inchesToMeters(-12),
+    Units.inchesToMeters(8.375),
+     new Rotation3d(0,Units.degreesToRadians(42.36),Units.degreesToRadians(-90))
+     );
 
-    public static final String kPhotonCamNameBack = "DeadpoolX";
-    public static final Transform3d kRobotToCamBack = new Transform3d(new Transform2d());
+    public static final String kPhotonCamNameBack = "Kratos";
+    public static final Transform3d kRobotToCamBack = new Transform3d(
+    Units.inchesToMeters(-11.6875),
+    Units.inchesToMeters(12),
+    Units.inchesToMeters(8.375),
+     new Rotation3d(0,Units.degreesToRadians(42.36),Units.degreesToRadians(90))
+     );
+    public static final double kMTErrorThres = 0.05;
   }
 
   public class ZiroTunerConstants {
@@ -393,7 +413,7 @@ public final class Constants {
      * Creates a CommandSwerveDrivetrain instance.
      * This should only be called once in your robot program,.
      */
-    public static CommandSwerveDrivetrain createDrivetrain() {
+    private static CommandSwerveDrivetrain createDrivetrain() {
       return new CommandSwerveDrivetrain(
           DrivetrainConstants, FrontLeft, FrontRight, BackLeft, BackRight);
     }
@@ -665,7 +685,7 @@ public final class Constants {
      * Creates a CommandSwerveDrivetrain instance.
      * This should only be called once in your robot program,.
      */
-    public static CommandSwerveDrivetrain createDrivetrain() {
+    private static CommandSwerveDrivetrain createDrivetrain() {
         return new CommandSwerveDrivetrain(
             DrivetrainConstants, FrontLeft, FrontRight, BackLeft, BackRight
         );
@@ -936,7 +956,7 @@ public class TunerConstants{
      * Creates a CommandSwerveDrivetrain instance.
      * This should only be called once in your robot program,.
      */
-    public static CommandSwerveDrivetrain createDrivetrain() {
+    private static CommandSwerveDrivetrain createDrivetrain() {
         return new CommandSwerveDrivetrain(
             DrivetrainConstants, FrontLeft, FrontRight, BackLeft, BackRight
         );

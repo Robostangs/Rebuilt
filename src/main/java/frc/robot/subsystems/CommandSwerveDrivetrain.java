@@ -5,6 +5,12 @@ import static edu.wpi.first.units.Units.*;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -17,6 +23,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -25,6 +32,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -34,6 +42,7 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.JabaTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Stable.LimelightHelpers;
+import frc.robot.Vision.PhotonVision;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -58,6 +67,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+
+    private PhotonVision photonVisionFront = new PhotonVision(Constants.VisionConstants.kPhotonCamNameFront,
+            Constants.VisionConstants.kRobotToCamFront);
+
+    private PhotonVision photonVisionBack = new PhotonVision(Constants.VisionConstants.kPhotonCamNameBack,
+            Constants.VisionConstants.kRobotToCamBack);
+
+            
+    PhotonPoseEstimator ppe = new PhotonPoseEstimator(Constants.kAprilTagFieldLayout,
+            Constants.VisionConstants.kRobotToCamFront);
 
     /*
      * SysId routine for characterizing translation. This is used to find PID gains
@@ -255,11 +274,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          * occurs during testing.
          */
 
-        if (this.getPigeon2().getPitch().getValueAsDouble() < Constants.AutoConstants.kHumpPitchMin) {
-            this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionHump);
-        } else {
-            this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionReg);
-        }
+        // if (this.getPigeon2().getPitch().getValueAsDouble() <
+        // Constants.AutoConstants.kHumpPitchMin) {
+        // this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionHump);
+        // } else {
+        // }
 
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
@@ -270,13 +289,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
 
-            configLL3(Constants.VisionConstants.kLimelightThree);
-            configLL4(Constants.VisionConstants.kLimelightFour);
         }
 
-        SmartDashboard.putBoolean("Robot/is red", Robot.isRed());
+        configLL4(Constants.VisionConstants.kLimelightFour);
+        photonVisionFront.PhotonPeriodic();
+        photonVisionBack.PhotonPeriodic();
 
-        
+
+        Robot.teleopField.setRobotPose(this.getState().Pose);
 
     }
 
@@ -301,24 +321,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
-    public boolean isPastDeadzone(CommandXboxController controller){
+    public boolean isPastDeadzone(CommandXboxController controller) {
         return (Math.abs(controller.getLeftY()) > 0.05
                 || Math.abs(controller.getLeftX()) > 0.05
                 || Math.abs(controller.getRightX()) > 0.05);
     }
 
-    /**
-     * Adds a vision measurement to the Kalman Filter. This will correct the
-     * odometry pose estimate
-     * while still accounting for measurement noise.
-     *
-     * @param visionRobotPoseMeters The pose of the robot as measured by the vision
-     *                              camera.
-     * @param timestampSeconds      The timestamp of the vision measurement in
-     *                              seconds.
-     */
     @Override
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
+
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds));
     }
 
@@ -345,6 +356,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Pose2d visionRobotPoseMeters,
             double timestampSeconds,
             Matrix<N3, N1> visionMeasurementStdDevs) {
+
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds),
                 visionMeasurementStdDevs);
     }
@@ -373,10 +385,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     @Override
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
-    }
-
-    public Pose2d getPose() {
-        return this.getState().Pose;
     }
 
     private static CommandSwerveDrivetrain mDrivetrain;
@@ -430,19 +438,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          * Only seed ll4 with external yaw angle if not rotating fast, otherwise use
          * internal imu with mode 2
          */
-        if (this.getPigeon2().getAngularVelocityZWorld()
-                .getValueAsDouble() > Constants.VisionConstants.kLL4SeedMaxWz) {
-            /*
-             * 0 - Use external IMU yaw submitted via SetRobotOrientation() for MT2
-             * localization. The internal IMU is ignored entirely.
-             * 1 - Use external IMU yaw submitted via SetRobotOrientation(), and configure
-             * the LL4 internal IMU’s fused yaw to match the submitted yaw value.
-             * 2 - Use internal IMU for MT2 localization. External imu data is ignored
-             * entirely
-             */
-            LimelightHelpers.SetIMUMode(LLname, 2);
-        } else {
+
+        if (DriverStation.isDisabled()) {
             LimelightHelpers.SetIMUMode(LLname, 1);
+        } else {
 
             LimelightHelpers.SetRobotOrientation(LLname,
                     this.getState().Pose.getRotation().getDegrees(),
@@ -452,7 +451,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     0d,
                     0d);
 
+            LimelightHelpers.SetIMUMode(LLname, 4);
+
         }
+
+        LimelightHelpers.SetIMUAssistAlpha(LLname, 0.4);
 
         if (DriverStation.isDisabled()) {
             NetworkTableInstance.getDefault().getTable(LLname)
@@ -467,6 +470,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             if (DriverStation.isDisabled()) {
 
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(LLname);
+
             } else if (this.getPigeon2().getAngularVelocityZWorld()
                     .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
 
@@ -480,6 +484,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
             if (isPosegoo(fourPoseEsti)) {
                 this.addVisionMeasurement(fourPoseEsti.pose, fourPoseEsti.timestampSeconds);
+                SmartDashboard.putString("Vision/isPoseGoodCheck", "Ts should be tsing");
                 Robot.teleopField.getObject("Limelight Four Pose").setPose(fourPoseEsti.pose);
             }
 
@@ -488,18 +493,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
-       if(Robot.isSimulation()){
-        return false;
-       }
-        if (yoPoseEsti == null) {
+        if (Robot.isSimulation()) {
+            SmartDashboard.putString("Vision/LL4_RejectReason", "Simulation mode");
             return false;
         }
-        if (yoPoseEsti.tagCount < 1) {
+        if (yoPoseEsti == null) {
+            SmartDashboard.putString("Vision/LL4_RejectReason", "Pose null");
+            return false;
+        }
+        if (yoPoseEsti.tagCount <= 0) {
+            SmartDashboard.putString("Vision/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
             return false;
         }
 
-        SmartDashboard.putNumber("Error Distance",
-                yoPoseEsti.pose.getTranslation().minus(this.getState().Pose.getTranslation()).getNorm());
+        if (!RobotContainer.useVision) {
+            SmartDashboard.putString("Vision/LL4_RejectReason", "useVision disabled");
+        } else {
+            SmartDashboard.putString("Vision/LL4_RejectReason", "Accepted");
+        }
 
         return RobotContainer.useVision;
     }

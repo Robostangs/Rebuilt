@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -28,6 +27,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.Vision.PhotonVision;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
@@ -41,24 +41,18 @@ public class Robot extends TimedRobotstangs {
     public static boolean isJaba;
     private Command m_autonomousCommand;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
-    private PhotonVision photonVisionFront = new PhotonVision(drivetrain, Constants.VisionConstants.kPhotonCamNameFront,
-            Constants.VisionConstants.kRobotToCamFront);
-    private PhotonVision photonVisionBack = new PhotonVision(drivetrain, Constants.VisionConstants.kPhotonCamNameBack,
-            Constants.VisionConstants.kRobotToCamBack);
 
     private final RobotContainer m_robotContainer;
     public static ShuffleboardTab disableTab, teleopTab;
 
     public static Field2d teleopField = new Field2d();
     private static GcStatsCollector gscollect = new GcStatsCollector();
-    public static Alert gcAlert = new Alert("MEMORY TWEAKING LOOK INTO TS RN", AlertType.kWarning);
+    public static Alert gcAlert = new Alert("MEMORY TWEAKING LOOK INTO TS RN", AlertType.kError);
+    public static Alert shiftAlert = new Alert("Alliance shift may not be accurate", AlertType.kWarning);
 
-    public static boolean canBlueScore;
+    public static Constants.ElasticConstants.whoCanScore canBlueScore;
 
     public Color allianceScore = Constants.ElasticConstants.purple;
-
-
-    Timer teleopTime;
 
     static NetworkTableEntry turretSetpoint;
 
@@ -75,7 +69,6 @@ public class Robot extends TimedRobotstangs {
     public void robotInit() {
         isJaba = Paths.get("/home/lvuser/Ultron").toFile().exists();
 
-        teleopTime = new Timer();
         SmartDashboard.putData("Field", teleopField);
 
         disableTab = Shuffleboard.getTab("Disabled");
@@ -93,6 +86,7 @@ public class Robot extends TimedRobotstangs {
                         .ignoringDisable(true));
 
         teleopTab.add("Motion Magic", new InstantCommand(() -> Turret.getInstance().setMotionMagic()));
+        
         teleopTab.add("Turret Position",
                 0)
                 .withProperties(Map.of("min_value", -0.5, "max_value", 0.5, "block increment", 0.1, "Divisions", 6));
@@ -102,11 +96,15 @@ public class Robot extends TimedRobotstangs {
                 .getEntry("Turret Position");
 
         NamedCommands.registerCommand("Shoot", new InstantCommand(() -> Turret.getInstance().trackHub()));
+
         NamedCommands.registerCommand("Extend", new ExtendIntake());
+
         NamedCommands.registerCommand("Retract", new RetractIntake());
+
         NamedCommands.registerCommand("Dont shoot",
                 new InstantCommand(() -> TurretShooter.getInstance().setShouldShoot(false))
                         .finallyDo(() -> TurretShooter.getInstance().setShouldShoot(true)));
+
         NamedCommands.registerCommand("Hood down",
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
                         .alongWith(new InstantCommand(() -> TurretShooter.getInstance().setShouldShoot(false)))
@@ -119,9 +117,6 @@ public class Robot extends TimedRobotstangs {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
         gscollect.update();
-        teleopField.setRobotPose(drivetrain.getPose());
-        photonVisionFront.periodic();
-        photonVisionBack.periodic();
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
 
     }
@@ -153,40 +148,56 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopInit() {
-        teleopTime.start();
         String gameData = DriverStation.getGameSpecificMessage();
 
         if (gameData.length() > 0) {
             switch (gameData.charAt(0)) {
                 case 'B':
-                    canBlueScore = false;
+                    canBlueScore = whoCanScore.red;
                     break;
                 case 'R':
-                    canBlueScore = true;
+                    canBlueScore = whoCanScore.blue;
                     break;
                 default:
-                    // This is corrupt data
-                    canBlueScore = false;
+                    canBlueScore = whoCanScore.error;
                     break;
             }
         } else {
-            // Code for no data received yet
+            canBlueScore = whoCanScore.error;
+
         }
     }
 
     @Override
     public void teleopPeriodic() {
-        Turret.getInstance().setIronmansetpoint(turretSetpoint.getDouble(0));
-        if (teleopTime.get() % 25 == 0) {
-            canBlueScore = !canBlueScore;
+        if (canBlueScore == whoCanScore.error) {
+            shiftAlert.set(true);
         }
-        if (canBlueScore) {
-            allianceScore = Constants.ElasticConstants.blue;
-        } else {
-            allianceScore = Constants.ElasticConstants.red;
 
+        if (DriverStation.getMatchTime() < 110) {
+            canBlueScore = whoCanScore.both;
+        } else if (DriverStation.getMatchTime() % 25 == 0) {
+            if (canBlueScore == whoCanScore.blue) {
+                canBlueScore = whoCanScore.red;
+            } else {
+                canBlueScore = whoCanScore.blue;
+            }
         }
-        SmartDashboard.putNumber("Match Time", teleopTime.get());
+
+        if (canBlueScore == whoCanScore.blue) {
+            allianceScore = Constants.ElasticConstants.blue;
+        } 
+        else if (canBlueScore == whoCanScore.red) {
+            allianceScore = Constants.ElasticConstants.red;
+        } 
+        else if(canBlueScore == whoCanScore.both){
+            allianceScore = Constants.ElasticConstants.purple;
+        }
+        else{
+            allianceScore = Constants.ElasticConstants.white;
+        }
+
+        SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
 
     }
 

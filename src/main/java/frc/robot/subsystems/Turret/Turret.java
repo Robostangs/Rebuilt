@@ -71,7 +71,7 @@ public class Turret extends SubsystemBase {
         turretMotor = new TalonFXS(Constants.TurretConstants.turretMotorID);
         turretCANcoder = new CANcoder(Constants.TurretConstants.turretCANcoderID);
 
-        turretPose = CommandSwerveDrivetrain.getInstance().getPose().transformBy(
+        turretPose = CommandSwerveDrivetrain.getInstance().getState().Pose.transformBy(
                 new Transform2d(
                         new Translation2d(
                                 // TODO find these values
@@ -322,7 +322,7 @@ public class Turret extends SubsystemBase {
 
     public Rotation2d aimingJohns() {
         // get current robot pose
-        Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
+        Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
 
         // calculate turret position in field space
         Translation2d turretOffset = new Translation2d(
@@ -349,7 +349,7 @@ public class Turret extends SubsystemBase {
 
     public void updateIronManPose() {
         // Get the robot's pose
-        Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
+        Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
 
         // turret's position robot relative
         Translation2d turretOffsetFromRobotCenter = new Translation2d(
@@ -378,8 +378,8 @@ public class Turret extends SubsystemBase {
     }
 
     public void targetHubPose() {
-        if (Robot.isRed() ? CommandSwerveDrivetrain.getInstance().getPose().getX() > 12.5
-                : CommandSwerveDrivetrain.getInstance().getPose().getX() < 4) {
+        if (Robot.isRed() ? CommandSwerveDrivetrain.getInstance().getState().Pose.getX() > 12.5
+                : CommandSwerveDrivetrain.getInstance().getState().Pose.getX() < 4) {
             isHub = true;
         } else {
             isHub = false;
@@ -437,7 +437,7 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("19Gear-offset, true absolute pos",
                 (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
 
-        if (!manualTarget) {
+        if (!manualTarget&& CommandSwerveDrivetrain.getInstance().getState().Pose != null) {
             targetHubPose();
         }
 

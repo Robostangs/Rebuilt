@@ -29,6 +29,7 @@ public class PhotonVision {
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
         for (var result : camera.getAllUnreadResults()) {
 
+            
             visionEst = ppe.estimateCoprocMultiTagPose(result);
 
             if (visionEst.isEmpty()) {

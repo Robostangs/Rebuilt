@@ -26,7 +26,7 @@ public class Flywheel extends SubsystemBase{
 
         shouldShoot = false;
         flyWheel =new TalonFX(Constants.TurretConstants.shooterMotorID);
-
+configureShooterMotor();
        
     }
 

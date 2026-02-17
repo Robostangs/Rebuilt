@@ -259,6 +259,10 @@ public final class Constants {
         public static final String kPhotonCamNameBack = "DeadpoolX";
         public static final Transform3d kRobotToCamBack = new Transform3d(new Transform2d());
         public static final double kMTErrorThres = 0.05;
+        public static final String kLimelightLeft = null;
+        public static final String kLimelightRight = null;
+        public static final String kPhotonCamNameRear = null;
+        public static final Transform3d kRobotToCamRear = null;
     }
 
     public class ZiroTunerConstants {

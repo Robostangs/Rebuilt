@@ -2,13 +2,12 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.targeting.PhotonPipelineResult;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -23,10 +22,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,10 +32,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.JabaTunerConstants.TunerSwerveDrivetrain;
-import frc.robot.Stable.LimelightHelpers;
-import frc.robot.Vision.PhotonVision;
+import frc.robot.Vision.LimelightVision;
+import frc.robot.Vision.VisionStangs;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -64,11 +60,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
-    private PhotonVision photonVisionFront = new PhotonVision(Constants.VisionConstants.kPhotonCamNameFront,
+    private VisionStangs photonVisionFront = new VisionStangs(Constants.VisionConstants.kPhotonCamNameFront,
             Constants.VisionConstants.kRobotToCamFront);
-    PhotonPoseEstimator ppe = new PhotonPoseEstimator(Constants.kAprilTagFieldLayout,
-            Constants.VisionConstants.kRobotToCamFront);
-    private final PhotonCamera camera = new PhotonCamera(Constants.VisionConstants.kPhotonCamNameFront);
+    
+
+    private VisionStangs limelightVisionLeft = new VisionStangs(Constants.VisionConstants.kLimelightLeft);
+
+    private ArrayList<VisionStangs> visionPoses = new ArrayList<>();
 
     /*
      * SysId routine for characterizing translation. This is used to find PID gains
@@ -254,24 +252,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
-        /*
-         * Periodically try to apply the operator perspective.
-         * If we haven't applied the operator perspective before, then we should apply
-         * it regardless of DS state.
-         * This allows us to correct the perspective in case the robot code restarts
-         * mid-match.
-         * Otherwise, only check and apply the operator perspective if the DS is
-         * disabled.
-         * This ensures driving behavior doesn't change until an explicit disable event
-         * occurs during testing.
-         */
-
-        // if (this.getPigeon2().getPitch().getValueAsDouble() <
-        // Constants.AutoConstants.kHumpPitchMin) {
-        // this.setStateStdDevs(Constants.AutoConstants.kErrorInMyVisionHump);
-        // } else {
-        // }
-
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
                 setOperatorPerspectiveForward(
@@ -280,11 +260,28 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                                 : kBlueAlliancePerspectiveRotation);
                 m_hasAppliedOperatorPerspective = true;
             });
-
         }
 
-        configLL4(Constants.VisionConstants.kLimelightFour);
-        Photonperiodic();
+        limelightVisionLeft.periodic();
+        photonVisionFront.periodic();
+
+        visionPoses.add(limelightVisionLeft);
+        visionPoses.add(photonVisionFront);
+
+        double smallestAmbiuity = 100;
+        int index = -1;
+        for(int c = 0; c < visionPoses.size(); c++){
+            if(visionPoses.get(c).getAmbiguity() < smallestAmbiuity){
+                smallestAmbiuity = visionPoses.get(c).getAmbiguity();
+                index = c;
+            }
+        }
+
+        this.addVisionMeasurement(visionPoses.get(index).getPose(), visionPoses.get(index).getTimeStamp());
+
+
+        int bestindex = -1;
+        double bestAmbiguity = 100;
 
         Robot.teleopField.setRobotPose(this.getState().Pose);
 
@@ -389,155 +386,4 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return mDrivetrain;
     }
 
-    public void configLL3(String LLname) {
-
-        LimelightHelpers.PoseEstimate threePoseEsti;
-
-        /** Seed the three unconditionally bc it doesn't got that dawg(imu) in him */
-        LimelightHelpers.SetRobotOrientation(LLname,
-                this.getState().Pose.getRotation().getDegrees(),
-                0d,
-                0d,
-                0d,
-                0d,
-                0d);
-
-        if (DriverStation.isDisabled()) {
-
-            threePoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(LLname);
-        } else if (this.getPigeon2().getAngularVelocityZWorld()
-                .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
-
-            threePoseEsti = LimelightHelpers
-                    .getBotPoseEstimate_wpiBlue_MegaTag2(LLname);
-        } else {
-            threePoseEsti = null;
-
-        }
-
-        if (isPosegoo(threePoseEsti)) {
-            this.addVisionMeasurement(threePoseEsti.pose, threePoseEsti.timestampSeconds);
-            Robot.teleopField.getObject("Limelight Three Pose").setPose(threePoseEsti.pose);
-        }
-
-    }
-
-    public void configLL4(String LLname) {
-
-        /*
-         * Only seed ll4 with external yaw angle if not rotating fast, otherwise use
-         * internal imu with mode 2
-         */
-
-        if (DriverStation.isDisabled()) {
-            LimelightHelpers.SetIMUMode(LLname, 1);
-        } else {
-
-            LimelightHelpers.SetRobotOrientation(LLname,
-                    this.getState().Pose.getRotation().getDegrees(),
-                    0d,
-                    0d,
-                    0d,
-                    0d,
-                    0d);
-
-            LimelightHelpers.SetIMUMode(LLname, 4);
-
-        }
-
-        LimelightHelpers.SetIMUAssistAlpha(LLname, 0.4);
-
-        if (DriverStation.isDisabled()) {
-            NetworkTableInstance.getDefault().getTable(LLname)
-                    .getEntry("throttle-set").setNumber(200);
-        } else {
-            NetworkTableInstance.getDefault().getTable(LLname)
-                    .getEntry("throttle-set").setNumber(0);
-        }
-        if (!Robot.isSimulation()) {
-
-            LimelightHelpers.PoseEstimate fourPoseEsti;
-            if (DriverStation.isDisabled()) {
-
-                fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(LLname);
-
-            } else if (this.getPigeon2().getAngularVelocityZWorld()
-                    .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
-
-                fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue_MegaTag2(LLname);
-
-            } else {
-                fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue_MegaTag2(LLname);
-
-            }
-            if (isPosegoo(fourPoseEsti)) {
-                this.addVisionMeasurement(fourPoseEsti.pose, fourPoseEsti.timestampSeconds);
-                SmartDashboard.putString("Vision/isPoseGoodCheck", "Ts should be tsing");
-                Robot.teleopField.getObject("Limelight Four Pose").setPose(fourPoseEsti.pose);
-            }
-
-        }
-
-    }
-
-    private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
-        if (Robot.isSimulation()) {
-            SmartDashboard.putString("Vision/LL4_RejectReason", "Simulation mode");
-            return false;
-        }
-        if (yoPoseEsti == null) {
-            SmartDashboard.putString("Vision/LL4_RejectReason", "Pose null");
-            return false;
-        }
-        if (yoPoseEsti.tagCount <= 0) {
-            SmartDashboard.putString("Vision/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
-            return false;
-        }
-
-        if (!RobotContainer.useVision) {
-            SmartDashboard.putString("Vision/LL4_RejectReason", "useVision disabled");
-        } else {
-            SmartDashboard.putString("Vision/LL4_RejectReason", "Accepted");
-        }
-
-        return RobotContainer.useVision;
-    }
-
-    public void Photonperiodic() {
-        double bigAmbiuity = 0d;
-
-        Optional<EstimatedRobotPose> visionEst = Optional.empty();
-        for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
-
-            visionEst = ppe.estimateCoprocMultiTagPose(result);
-
-            if (visionEst.isEmpty()) {
-                visionEst = ppe.estimateLowestAmbiguityPose(result);
-            }
-
-            for (var target : result.targets) {
-                
-                if(target.poseAmbiguity > bigAmbiuity){
-                    bigAmbiuity = target.poseAmbiguity;
-                }
-            }
-
-            SmartDashboard.putNumber(camera.getName()+" biggest ambiguity", bigAmbiuity);
-        }
-
-        if (bigAmbiuity  < 0.2) {
-            // Only use the estimate if present and valid
-            visionEst.ifPresent(est -> {
-                var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
-
-                if (pose2d != null) {
-                    this.addVisionMeasurement(pose2d, est.timestampSeconds);
-                    Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
-                }
-            });
-
-        }
-    }
 }

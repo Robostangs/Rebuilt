@@ -75,43 +75,7 @@ public class Robot extends TimedRobotstangs {
             config.minimumImportance = Logged.Importance.DEBUG;
         });
     }
-    void updateEpilogue(){
-        var cfg = edu.wpi.first.epilogue.Epilogue.getConfig();
-        if (cfg.backend != null && cfg.root != null) {
-            // base: JohnLogs
-            var rootBackend = cfg.backend.getNested(cfg.root);
 
-            edu.wpi.first.epilogue.Epilogue.robotLogger.tryUpdate(
-                rootBackend.getNested("Robot"),
-                this,
-                cfg.errorHandler);
-            // call the generated turret logger with that nested backend
-            edu.wpi.first.epilogue.Epilogue.turretLogger.tryUpdate(
-                rootBackend.getNested("Turret"),
-                frc.robot.subsystems.Turret.Turret.getInstance(),
-                cfg.errorHandler);
-            edu.wpi.first.epilogue.Epilogue.climberLogger.tryUpdate(
-                rootBackend.getNested("Climber"),
-                frc.robot.subsystems.Climber.getInstance(),
-                cfg.errorHandler);
-            edu.wpi.first.epilogue.Epilogue.hoodLogger.tryUpdate(
-                rootBackend.getNested("Hood"),
-                frc.robot.subsystems.Turret.Hood.getInstance(),
-                cfg.errorHandler);
-            edu.wpi.first.epilogue.Epilogue.feederLogger.tryUpdate(
-                rootBackend.getNested("Feeder"),
-                frc.robot.subsystems.Feeder.getInstance(),
-                cfg.errorHandler);
-            edu.wpi.first.epilogue.Epilogue.kirbyLogger.tryUpdate(
-                rootBackend.getNested("Kirby"),
-                frc.robot.subsystems.Kirby.getInstance(),
-                cfg.errorHandler);
-            edu.wpi.first.epilogue.Epilogue.flywheelLogger.tryUpdate(
-                rootBackend.getNested("Flywheel"),
-                frc.robot.subsystems.Turret.Flywheel.getInstance(),
-                cfg.errorHandler);
-        }
-    }
     void updateEpilogue() {
         var cfg = edu.wpi.first.epilogue.Epilogue.getConfig();
         if (cfg.backend != null && cfg.root != null) {

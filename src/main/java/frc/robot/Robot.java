@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -12,12 +14,15 @@ import java.util.List;
 import java.util.Map;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.pathplanner.lib.auto.NamedCommands;
-
+import edu.wpi.first.epilogue.Epilogue;
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.epilogue.logging.NTEpilogueBackend;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -36,12 +41,10 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret.Hood;
 import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.Turret.Flywheel;
-
 @Logged
 public class Robot extends TimedRobotstangs {
     public static boolean isJaba;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
-
     private final RobotContainer m_robotContainer;
     public static ShuffleboardTab disableTab, teleopTab;
 
@@ -65,8 +68,50 @@ public class Robot extends TimedRobotstangs {
 
     public Robot() {
         m_robotContainer = new RobotContainer();
+        Epilogue.configure(config -> {
+            config.root = "JohnLogs";
+            config.loggingPeriod = Seconds.of(0.02);
+            config.backend = new NTEpilogueBackend(NetworkTableInstance.getDefault());
+            config.minimumImportance = Logged.Importance.DEBUG;
+        });
     }
+    void updateEpilogue(){
+        var cfg = edu.wpi.first.epilogue.Epilogue.getConfig();
+        if (cfg.backend != null && cfg.root != null) {
+            // base: JohnLogs
+            var rootBackend = cfg.backend.getNested(cfg.root);
 
+            edu.wpi.first.epilogue.Epilogue.robotLogger.tryUpdate(
+                rootBackend.getNested("Robot"),
+                this,
+                cfg.errorHandler);
+            // call the generated turret logger with that nested backend
+            edu.wpi.first.epilogue.Epilogue.turretLogger.tryUpdate(
+                rootBackend.getNested("Turret"),
+                frc.robot.subsystems.Turret.Turret.getInstance(),
+                cfg.errorHandler);
+            edu.wpi.first.epilogue.Epilogue.climberLogger.tryUpdate(
+                rootBackend.getNested("Climber"),
+                frc.robot.subsystems.Climber.getInstance(),
+                cfg.errorHandler);
+            edu.wpi.first.epilogue.Epilogue.hoodLogger.tryUpdate(
+                rootBackend.getNested("Hood"),
+                frc.robot.subsystems.Turret.Hood.getInstance(),
+                cfg.errorHandler);
+            edu.wpi.first.epilogue.Epilogue.feederLogger.tryUpdate(
+                rootBackend.getNested("Feeder"),
+                frc.robot.subsystems.Feeder.getInstance(),
+                cfg.errorHandler);
+            edu.wpi.first.epilogue.Epilogue.kirbyLogger.tryUpdate(
+                rootBackend.getNested("Kirby"),
+                frc.robot.subsystems.Kirby.getInstance(),
+                cfg.errorHandler);
+            edu.wpi.first.epilogue.Epilogue.flywheelLogger.tryUpdate(
+                rootBackend.getNested("Flywheel"),
+                frc.robot.subsystems.Turret.Flywheel.getInstance(),
+                cfg.errorHandler);
+        }
+    }
     void updateEpilogue() {
         var cfg = edu.wpi.first.epilogue.Epilogue.getConfig();
         if (cfg.backend != null && cfg.root != null) {
@@ -156,9 +201,10 @@ public class Robot extends TimedRobotstangs {
     public void robotPeriodic() {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
+        updateEpilogue();
         gscollect.update();
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
-
+        
     }
 
     @Override

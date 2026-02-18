@@ -1,11 +1,11 @@
-package frc.robot.commands.TurretCommands;
+package frc.robot.commands.TurretCommands.Hood;
 
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Turret.Hood;
 
-public class SetHoodDutyCycle extends Command {
+public class setHoodDutyCycle extends Command {
 
   /*
    * This reads the input from the manip controller and sets the hood to that
@@ -18,7 +18,7 @@ public class SetHoodDutyCycle extends Command {
   Hood hood;
   DoubleSupplier speed;
 
-  public SetHoodDutyCycle(DoubleSupplier speed) {
+  public setHoodDutyCycle(DoubleSupplier speed) {
     hood = Hood.getInstance();
     this.speed = speed;
     addRequirements(hood);

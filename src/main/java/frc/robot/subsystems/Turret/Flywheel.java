@@ -2,6 +2,7 @@ package frc.robot.subsystems.Turret;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.epilogue.Logged;
@@ -11,7 +12,7 @@ import frc.robot.Constants;
 @Logged
 public class Flywheel extends SubsystemBase{
     private TalonFX flyWheel;
-    private MotionMagicVelocityVoltage shooterTargetVelocity;
+    private VelocityVoltage shooterTargetVelocity;
 
     public static Flywheel instance;
     public static boolean shouldShoot;
@@ -41,12 +42,6 @@ configureShooterMotor();
         flywheelConfig.Slot0.kV = Constants.TurretConstants.kShooterMotorV;
         flywheelConfig.Slot0.kS = Constants.TurretConstants.kShooterMotorS;
         
-        // set Motion Magic settings
-        var motionMagicConfigs = flywheelConfig.MotionMagic;
-        motionMagicConfigs.MotionMagicCruiseVelocity = Constants.TurretConstants.shooterMotionMagicCruiseVelocity; 
-        motionMagicConfigs.MotionMagicAcceleration = Constants.TurretConstants.shooterMotionMagicAcceleration; 
-        shooterTargetVelocity=new MotionMagicVelocityVoltage(0);
-
         flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.TurretConstants.kShooterMotorStatorCurrentLimit;
 
 
@@ -70,11 +65,11 @@ configureShooterMotor();
     }
     public void setShooterRPS(double rps){
         shooterTargetVelocity.Velocity = rps;
-
-
     }
+
     @Override
     public void periodic() {
+        shooterTargetVelocity.Velocity = SmartDashboard.getNumber("Flywheel RPM target", 0);
         flyWheel.setControl(shooterTargetVelocity);
         SmartDashboard.putNumber("Shooter/velocity",flyWheel.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Shooter/target",shooterTargetVelocity.Velocity);

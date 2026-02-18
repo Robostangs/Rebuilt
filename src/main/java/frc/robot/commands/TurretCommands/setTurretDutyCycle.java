@@ -17,13 +17,13 @@ public class setTurretDutyCycle extends Command {
 
 	@Override
 	public void initialize() {
-		turret.setHappyDutyCycle(dutyCycle);
+		turret.runTurretDutyCycle(dutyCycle);
 		turret.postStatus("setTurretDutyCycle started: " + dutyCycle);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		turret.setHappyDutyCycle(0.0);
+		turret.runTurretDutyCycle(0.0);
 		turret.postStatus("setTurretDutyCycle ended");
 	}
 

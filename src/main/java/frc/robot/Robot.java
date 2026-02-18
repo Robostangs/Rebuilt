@@ -120,46 +120,15 @@ public class Robot extends TimedRobotstangs {
 
         SmartDashboard.putData("Field", teleopField);
 
-        disableTab = Shuffleboard.getTab("Disabled");
-        teleopTab = Shuffleboard.getTab("Teleop");
+        configureDisabledTab();
+        configureTeleopTab();
+        loadNamedCommands();
 
-        disableTab.add("Set Drivetrain motors to coast",
-                new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(true))
-                        .ignoringDisable(true));
-        disableTab.add("Set Drivetrain motors to brake",
-                new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(false))
-                        .ignoringDisable(true));
 
-        disableTab.add("RESET TO SUN TZUUUUUU",
-                new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
-                        .ignoringDisable(true));
 
-        teleopTab.add("Motion Magic", new InstantCommand(() -> Turret.getInstance().setMotionMagic()));
-
-        teleopTab.add("Turret Position",
-                0)
-                .withProperties(Map.of("min_value", -0.5, "max_value", 0.5, "block increment", 0.1, "Divisions", 6));
-
-        turretSetpoint = NetworkTableInstance.getDefault().getTable("Shuffleboard")
-                .getSubTable(teleopTab.getTitle())
-                .getEntry("Turret Position");
-
-        NamedCommands.registerCommand("Shoot", new InstantCommand(() -> Turret.getInstance().trackHub()));
-
-        NamedCommands.registerCommand("Extend", new ExtendIntake());
-
-        NamedCommands.registerCommand("Retract", new RetractIntake());
-
-        NamedCommands.registerCommand("Dont shoot",
-                new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false))
-                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
-
-        NamedCommands.registerCommand("Hood down",
-                new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
-                        .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
-                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
 
     }
+
 
     @Override
     public void robotPeriodic() {
@@ -288,6 +257,48 @@ public class Robot extends TimedRobotstangs {
         }
 
     }
+
+        public void configureDisabledTab(){
+
+        disableTab = Shuffleboard.getTab("Disabled");
+
+        disableTab.add("Set Drivetrain motors to coast",
+                new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(true))
+                        .ignoringDisable(true));
+        disableTab.add("Set Drivetrain motors to brake",
+                new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(false))
+                        .ignoringDisable(true));
+
+        disableTab.add("RESET TO SUN TZUUUUUU",
+                new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
+                        .ignoringDisable(true));
+    }
+
+    public void configureTeleopTab(){
+        teleopTab = Shuffleboard.getTab("Teleop");
+
+
+        
+    }
+
+public void loadNamedCommands(){
+
+        NamedCommands.registerCommand("Shoot", new InstantCommand(() -> Turret.getInstance().trackHub()));
+
+        NamedCommands.registerCommand("Extend", new ExtendIntake());
+
+        NamedCommands.registerCommand("Retract", new RetractIntake());
+
+        NamedCommands.registerCommand("Dont shoot",
+                new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false))
+                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
+
+        NamedCommands.registerCommand("Hood down",
+                new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
+                        .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
+                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
+
+}
 
     private static final class GcStatsCollector {
 

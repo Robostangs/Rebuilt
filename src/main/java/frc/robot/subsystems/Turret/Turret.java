@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -68,11 +69,18 @@ public class Turret extends SubsystemBase {
     boolean isSafeNeg = false;
 
 
-    Mechanism2d simMain=new Mechanism2d(1, 1);
-    MechanismRoot2d simRoot=simMain.getRoot("root", 0.5, 0.5);
-    MechanismLigament2d simDisplay=simRoot.append(new MechanismLigament2d("Turret Sim", 4, 0));
+    Mechanism2d simMain= new Mechanism2d(60, 60);
+    MechanismRoot2d simRoot=simMain.getRoot("TurretBase", 30, 30);
+    MechanismLigament2d simDisplay=simRoot.append(
+    new MechanismLigament2d("TurretArm", 15, 90, 10, new Color8Bit(150, 150, 150))
+);
+private final MechanismLigament2d m_shooter = simDisplay.append(
+    new MechanismLigament2d("Shooter", 10, 0, 6, new Color8Bit(0, 200, 255))
+);
 
     private double turretMotorAbsoluteSensorOffset = 0.0;
+
+
 
     /**
      * The Turret

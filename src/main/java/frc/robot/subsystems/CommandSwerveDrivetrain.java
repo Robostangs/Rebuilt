@@ -3,8 +3,6 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -24,6 +22,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,7 +32,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.JabbaTunerConstants.TunerSwerveDrivetrain;
-import frc.robot.Vision.LimelightVision;
 import frc.robot.Vision.VisionStangs;
 
 /**
@@ -62,7 +60,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private VisionStangs photonVisionFront = new VisionStangs(Constants.VisionConstants.kPhotonCamNameFront,
             Constants.VisionConstants.kRobotToCamFront);
-    
 
     private VisionStangs limelightVisionLeft = new VisionStangs(Constants.VisionConstants.kLimelightLeft);
 
@@ -277,8 +274,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
         }
 
+        if(visionPoses.get(index).getPose() != null){
+        SmartDashboard.putString("Vision/Camera with best Pose: ", "Best vision value is: "+ visionPoses.get(index).getName());
+        SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
+         visionPoses.get(index).getAmbiguity());
         this.addVisionMeasurement(visionPoses.get(index).getPose(), visionPoses.get(index).getTimeStamp());
-
+        }
 
         int bestindex = -1;
         double bestAmbiguity = 100;

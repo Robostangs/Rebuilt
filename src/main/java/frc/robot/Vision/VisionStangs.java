@@ -30,12 +30,12 @@ public class VisionStangs {
     private boolean isLL;
     private double timestampSeconds;
 
-    private String LLname;
+    private String CameraName;
 
     public VisionStangs(String LLname, Transform3d robotToCam) {
         camera = new PhotonCamera(LLname);
         this.robotToCam = robotToCam;
-        this.LLname = LLname;
+        this.CameraName = LLname;
         ppe = new PhotonPoseEstimator(Constants.kAprilTagFieldLayout, robotToCam);
         highestAmbiguity = -1;
         isLL = false;
@@ -43,7 +43,7 @@ public class VisionStangs {
 
 
     public VisionStangs(String LLname) {
-        this.LLname = LLname;
+        this.CameraName = LLname;
         highestAmbiguity = -1;
         isLL = true;
     }
@@ -96,10 +96,10 @@ public class VisionStangs {
          */
 
         if (DriverStation.isDisabled()) {
-            LimelightHelpers.SetIMUMode(LLname, 1);
+            LimelightHelpers.SetIMUMode(CameraName, 1);
         } else {
 
-            LimelightHelpers.SetRobotOrientation(LLname,
+            LimelightHelpers.SetRobotOrientation(CameraName,
                     CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees(),
                     0d,
                     0d,
@@ -107,17 +107,17 @@ public class VisionStangs {
                     0d,
                     0d);
 
-            LimelightHelpers.SetIMUMode(LLname, 4);
+            LimelightHelpers.SetIMUMode(CameraName, 4);
 
         }
 
-        LimelightHelpers.SetIMUAssistAlpha(LLname, 0.4);
+        LimelightHelpers.SetIMUAssistAlpha(CameraName, 0.4);
 
         if (DriverStation.isDisabled()) {
-            NetworkTableInstance.getDefault().getTable(LLname)
+            NetworkTableInstance.getDefault().getTable(CameraName)
                     .getEntry("throttle-set").setNumber(200);
         } else {
-            NetworkTableInstance.getDefault().getTable(LLname)
+            NetworkTableInstance.getDefault().getTable(CameraName)
                     .getEntry("throttle-set").setNumber(0);
         }
         if (!Robot.isSimulation()) {
@@ -125,17 +125,17 @@ public class VisionStangs {
             LimelightHelpers.PoseEstimate fourPoseEsti;
             if (DriverStation.isDisabled()) {
 
-                fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(LLname);
+                fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
 
             } else if (CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityZWorld()
                     .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
 
                 fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue_MegaTag2(LLname);
+                        .getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
 
             } else {
                 fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue_MegaTag2(LLname);
+                        .getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
 
             }
             if (isPosegoo(fourPoseEsti)) {
@@ -161,6 +161,9 @@ public class VisionStangs {
     }
     public Pose2d getPose(){
         return currentPose;
+    }
+    public String getName(){
+        return CameraName;
     }
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {

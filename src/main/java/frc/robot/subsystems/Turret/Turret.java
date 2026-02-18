@@ -31,6 +31,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 /**
  * The turret
  */
+
 @Logged
 public class Turret extends SubsystemBase {
 
@@ -70,6 +71,7 @@ public class Turret extends SubsystemBase {
     /**
      * The Turret
      */
+    //#region Initializers & Config
     public Turret() {
         turretMotor = new TalonFXS(Constants.TurretConstants.turretMotorID);
         turretCANcoder = new CANcoder(Constants.TurretConstants.turretCANcoderID);
@@ -109,6 +111,13 @@ public class Turret extends SubsystemBase {
         turretMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
         turretMotor.getConfigurator().apply(turretMotorConfig);
     }
+
+    /*
+    * Configure the motor for the turret
+    * Sets up the current limit, configures the external feedback sensor as a pulse width sensor, 
+    * and applies pid for motion magic control.
+    *
+    */
 
     public void configureTurretMotor() {
         TalonFXSConfiguration turretMotorConfig = new TalonFXSConfiguration();
@@ -153,6 +162,11 @@ public class Turret extends SubsystemBase {
         turretMotor.getConfigurator().apply(turretMotorConfig);
     }
 
+    /*
+    * Configure the turret cancoder
+    *
+    */
+
     public void configureTurretCANcoder() {
         CANcoderConfiguration turretCANcoderConfig = new CANcoderConfiguration();
 
@@ -164,7 +178,13 @@ public class Turret extends SubsystemBase {
 
         turretCANcoder.getConfigurator().apply(turretCANcoderConfig);
     }
-
+    //endregion
+    // region Utils
+    /*
+    * Get the current instance of the Turret
+    *
+    */
+    
     public static Turret getInstance() {
         if (mInstance == null) {
             mInstance = new Turret();
@@ -175,7 +195,15 @@ public class Turret extends SubsystemBase {
     public void postStatus(String status) {
         SmartDashboard.putString("Ironman/status", status);
     }
-
+    public boolean isTurretSafeForClimber() {
+        double turretPosition = turretMotor.getPosition().getValueAsDouble();
+        if(isSafeNeg){
+            return turretPosition <= Constants.TurretConstants.kSafeClimberNeg;
+        }
+        else{
+            return turretPosition >= Constants.TurretConstants.kSafeClimberPos;
+        }
+    }
     /**
      * @param rotations Set motion magic target position in rotations
      */
@@ -202,8 +230,10 @@ public class Turret extends SubsystemBase {
         // turretMotor.setControl(controlThreeThousand);
         SmartDashboard.putString("Your a wizard harry", "Hagrid");
     }
+    // endregion
+    //#region Turret Calculations
     // get sensor to mechinasm ratio (19:200) and (21:200)
-
+    
     private double getTurretMotorSensorModPosition() {
         /* Convert mechanism position to sensor position */
         return mathMod1(turretMotor.getPosition().getValueAsDouble()
@@ -244,7 +274,7 @@ public class Turret extends SubsystemBase {
                 * ((Constants.TurretConstants.kTurretMotorTeeth * Constants.TurretConstants.kTurretCANcoderTeeth)
                         / (Constants.TurretConstants.kTurretRingTeeth * 2));
     }
-
+    
     /**
      * @param theta1 small gear position in rotations
      * @param theta2 big gear position in rotations
@@ -407,15 +437,7 @@ public class Turret extends SubsystemBase {
         manualTarget = true;
     }
 
-    public boolean isTurretSafeForClimber() {
-        double turretPosition = turretMotor.getPosition().getValueAsDouble();
-        if(isSafeNeg){
-            return turretPosition <= Constants.TurretConstants.kSafeClimberNeg;
-        }
-        else{
-            return turretPosition >= Constants.TurretConstants.kSafeClimberPos;
-        }
-    }
+    
 
     public void resetPositionWithSunTzu() {
         double oldMotorModPosition = getTurretMotorSensorModPosition();
@@ -429,7 +451,8 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Ironman/SunTzuResetError", (newMotorModPosition - oldMotorModPosition));
         SmartDashboard.putString("IF Sun Tzu", "You have art of warred");
     }
-
+    //endregion
+    //region Logging & Periodic
     private void logTurretThings() {
         SmartDashboard.putNumber("Ironman/SunTzuPosition", getBigGearPosition());
 
@@ -459,7 +482,7 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Ironman/Position", turretMotor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Ironman/Target", turretControl.Position);
     }
-
+    
     @Override
     public void periodic() {
         logTurretThings();
@@ -484,5 +507,5 @@ public class Turret extends SubsystemBase {
         Robot.teleopField.getObject("Turret").setPose(turretPose);
 
     }
-
+//endregion
 }

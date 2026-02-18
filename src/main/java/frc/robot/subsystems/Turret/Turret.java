@@ -22,6 +22,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -64,6 +66,11 @@ public class Turret extends SubsystemBase {
     Mechanism2d turretSim;
 
     boolean isSafeNeg = false;
+
+
+    Mechanism2d simMain=new Mechanism2d(1, 1);
+    MechanismRoot2d simRoot=simMain.getRoot("root", 0.5, 0.5);
+    MechanismLigament2d simDisplay=simRoot.append(new MechanismLigament2d("Turret Sim", 4, 0));
 
     private double turretMotorAbsoluteSensorOffset = 0.0;
 
@@ -208,6 +215,14 @@ public class Turret extends SubsystemBase {
         /* Convert mechanism position to sensor position */
         return mathMod1(turretMotor.getPosition().getValueAsDouble()
                 * Constants.TurretConstants.kTurretMotorSensorToMechanismRatio);
+    }
+
+    private void updateTurretSim(){
+
+  
+        simDisplay.setAngle(aimingJohns().getDegrees());
+
+        SmartDashboard.putData("Turret Pivot", simMain);
     }
 
     // this is pointless cuz the getposition is the sensor not the rotor
@@ -464,6 +479,7 @@ public class Turret extends SubsystemBase {
     public void periodic() {
         logTurretThings();
         updateIronManPose();
+        updateTurretSim();
 
         SmartDashboard.putNumber("19Gear-offset, true absolute pos",
                 (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));

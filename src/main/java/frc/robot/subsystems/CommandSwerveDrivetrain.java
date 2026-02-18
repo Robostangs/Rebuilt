@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Constants.JabaTunerConstants.TunerSwerveDrivetrain;
+import frc.robot.Constants.JabbaTunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Vision.LimelightVision;
 import frc.robot.Vision.VisionStangs;
 
@@ -378,10 +378,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public static CommandSwerveDrivetrain getInstance() {
         if (mDrivetrain == null) {
-            mDrivetrain = new CommandSwerveDrivetrain(Constants.JabaTunerConstants.DrivetrainConstants,
-                    Constants.JabaTunerConstants.FrontLeft,
-                    Constants.JabaTunerConstants.FrontRight, Constants.JabaTunerConstants.BackLeft,
-                    Constants.JabaTunerConstants.BackRight);
+            mDrivetrain = new CommandSwerveDrivetrain(Constants.JabbaTunerConstants.DrivetrainConstants,
+                    Constants.JabbaTunerConstants.FrontLeft,
+                    Constants.JabbaTunerConstants.FrontRight, Constants.JabbaTunerConstants.BackLeft,
+                    Constants.JabbaTunerConstants.BackRight);
         }
         return mDrivetrain;
     }

@@ -20,7 +20,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class RobotContainer {
         public static boolean useVision = true;
-        private double MaxSpeed = 1.0 * Constants.JabaTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+        private double MaxSpeed = 1.0 * Constants.JabbaTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
                                                                                           // second
                                                                                           // max angular velocity
@@ -37,7 +37,7 @@ public class RobotContainer {
         private final CommandXboxController xManip = new CommandXboxController(1);
         private final GenericHID xSim = new GenericHID(2);
 
-        public final CommandSwerveDrivetrain drivetrain = Constants.JabaTunerConstants.createDrivetrain();
+        public final CommandSwerveDrivetrain drivetrain = Constants.JabbaTunerConstants.createDrivetrain();
 
         public RobotContainer() {
                 configureDrivingBinding();

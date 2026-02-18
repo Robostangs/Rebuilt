@@ -10,7 +10,6 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Stable.LimelightHelpers;
-import frc.robot.Stable.LimelightHelpers.PoseEstimate;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 import java.util.Optional;
@@ -48,7 +47,7 @@ public class VisionStangs {
         isLL = true;
     }
 
-    // ...existing code...
+
     private void Photonperiodic() {
 
         double bigAmbiuity = 0d;
@@ -87,6 +86,7 @@ public class VisionStangs {
         }
 
     }
+
 
     private void LLperiodic() {
 
@@ -165,6 +165,13 @@ public class VisionStangs {
     public String getName(){
         return CameraName;
     }
+    public double[] getLLstds(){
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("stddevs").getDoubleArray(new double[12]);
+    }
+    public boolean isLL(){
+        return isLL;
+    }
+
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
         if (Robot.isSimulation()) {

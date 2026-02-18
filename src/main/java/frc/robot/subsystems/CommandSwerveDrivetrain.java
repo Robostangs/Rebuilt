@@ -16,10 +16,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -278,7 +281,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putString("Vision/Camera with best Pose: ", "Best vision value is: "+ visionPoses.get(index).getName());
         SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
          visionPoses.get(index).getAmbiguity());
-        this.addVisionMeasurement(visionPoses.get(index).getPose(), visionPoses.get(index).getTimeStamp());
+        if(visionPoses.get(index).isLL()){
+            this.addVisionMeasurement(visionPoses.get(index).getPose(), 
+            visionPoses.get(index).getTimeStamp()
+            ,  VecBuilder.fill(
+                 visionPoses.get(index).getLLstds()[7],
+                 visionPoses.get(index).getLLstds()[8],
+                 Units.degreesToRadians(100)
+
+            )
+            
+           );}
+
+
         }
 
         int bestindex = -1;

@@ -243,7 +243,6 @@ public final class Constants {
 
         // TODO: find this john
         public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(100));
-        public static final Vector<N3> kErrorInMyVisionHump = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(100));
 
         // TODO: find this john
         public static final double kHumpPitchMin = 0;

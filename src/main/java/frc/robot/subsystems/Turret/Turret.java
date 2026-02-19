@@ -21,6 +21,8 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -67,8 +69,6 @@ public class Turret extends SubsystemBase {
     Mechanism2d turretSim;
 
     boolean isSafeNeg = false;
-
-
     Mechanism2d simMain= new Mechanism2d(60, 60);
     MechanismRoot2d simRoot=simMain.getRoot("TurretBase", 30, 30);
     MechanismLigament2d simDisplay=simRoot.append(
@@ -105,7 +105,6 @@ private final MechanismLigament2d m_shooter = simDisplay.append(
         // TODO find supply current limit for each motor
         configureTurretMotor();
         configureTurretCANcoder();
-
         /**
          * Kv should be doing mos to of the work(volts)
          * find the actual 19 tooth position by getting the raw pulse width and then sub
@@ -227,9 +226,14 @@ private final MechanismLigament2d m_shooter = simDisplay.append(
 
     private void updateTurretSim(){
 
-  
-        simDisplay.setAngle(aimingJohns().getDegrees());
+        Pose2d robotPose= CommandSwerveDrivetrain.getInstance().getState().Pose;
+        Rotation2d angle=robotPose.getRotation().plus(aimingJohns());
+        simDisplay.setAngle(angle.getDegrees());
+        
+        
+        Pose2d turretPose = new Pose2d(robotPose.getTranslation(),angle);
 
+        Robot.teleopField.getObject("Turret Pivot").setPose(turretPose);
         SmartDashboard.putData("Turret Pivot", simMain);
     }
 

@@ -7,7 +7,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.AdvancedHallSupportValue;
 import com.ctre.phoenix6.signals.ExternalFeedbackSensorSourceValue;
@@ -42,10 +41,7 @@ public class Turret extends SubsystemBase {
 
     // Shooter motor has its own subsystem
 
-    /**
-     * Feeder motor
-     */
-    TalonFX happyMotor;
+
 
     /**
      * Pivot control
@@ -59,7 +55,6 @@ public class Turret extends SubsystemBase {
     CANcoder turretCANcoder;
     TalonFXConfiguration pepperConfig;
 
-    TalonFXConfiguration happyConfig;
 
     Pose2d turretPose;
 
@@ -102,7 +97,6 @@ private final MechanismLigament2d m_shooter = simDisplay.append(
         turretControl = new MotionMagicExpoVoltage(0);
 
         pepperConfig = new TalonFXConfiguration();
-        happyConfig = new TalonFXConfiguration();
 
         // TODO find supply current limit for each motor
         configureTurretMotor();
@@ -204,6 +198,10 @@ private final MechanismLigament2d m_shooter = simDisplay.append(
             mInstance = new Turret();
         }
         return mInstance;
+    }
+
+    public void runTurretDutyCycle(double dutyCycle) {
+        turretMotor.set(dutyCycle);
     }
 
     public void postStatus(String status) {
@@ -438,9 +436,6 @@ private final MechanismLigament2d m_shooter = simDisplay.append(
         return turretMotor.getPosition().getValueAsDouble();
     }
 
-    public void setHappyDutyCycle(double speed) {
-        // No-op: happyMotor was removed along with its configuration.
-    }
 
     private void targetHubPose() {
         if (Robot.isRed() ? CommandSwerveDrivetrain.getInstance().getState().Pose.getX() > 12.5

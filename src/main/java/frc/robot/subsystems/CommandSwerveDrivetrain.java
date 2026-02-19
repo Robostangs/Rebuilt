@@ -281,17 +281,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putString("Vision/Camera with best Pose: ", "Best vision value is: "+ visionPoses.get(index).getName());
         SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
          visionPoses.get(index).getAmbiguity());
-        if(visionPoses.get(index).isLL()){
-            this.addVisionMeasurement(visionPoses.get(index).getPose(), 
-            visionPoses.get(index).getTimeStamp()
-            ,  VecBuilder.fill(
-                 visionPoses.get(index).getLLstds()[7],
-                 visionPoses.get(index).getLLstds()[8],
-                 Units.degreesToRadians(100)
-
-            )
-            
-           );}
 
 
         }

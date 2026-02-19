@@ -165,6 +165,7 @@ public class VisionStangs {
     public String getName(){
         return CameraName;
     }
+    //TODO plot stds and make standard deviations based on this input
     public double[] getLLstds(){
         return NetworkTableInstance.getDefault().getTable("limelight").getEntry("stddevs").getDoubleArray(new double[12]);
     }
@@ -182,7 +183,7 @@ public class VisionStangs {
             SmartDashboard.putString("Vision/LL4_RejectReason", "Pose null");
             return false;
         }
-        if (yoPoseEsti.tagCount <= 0) {
+        if (yoPoseEsti.tagCount < 1) {
             SmartDashboard.putString("Vision/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
             return false;
         }

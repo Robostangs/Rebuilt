@@ -17,13 +17,11 @@ public class ClimberFactory {
     static Alert stowAlert = new Alert("Cannot go to stow", Alert.AlertType.kError);
     static Alert pivotAlert = new Alert("Cannot pivot", Alert.AlertType.kError);
 
-
     public static Command ClimbToL3() {
         return ClimbToL2()
                 .andThen(new SetLevel(Constants.ClimberConstants.kExtendPos))
                 .andThen(new SetLevel(Constants.ClimberConstants.kClimbPos))
                 .finallyDo(() -> Climber.getInstance().setClimberState(Constants.ClimberConstants.climberStates.L3));
-
     }
 
     public static Command ClimbToL2() {
@@ -31,17 +29,15 @@ public class ClimberFactory {
                 .andThen(new SetLevel(Constants.ClimberConstants.kExtendPos))
                 .andThen(new SetLevel(Constants.ClimberConstants.kClimbPos))
                 .finallyDo(() -> Climber.getInstance().setClimberState(Constants.ClimberConstants.climberStates.L2));
-
     }
 
     public static Command ClimbToL1() {
         return new SetLevel(Constants.ClimberConstants.kExtendPos)
                 .andThen(new SetLevel(Constants.ClimberConstants.kClimbPos))
                 .finallyDo(() -> Climber.getInstance().setClimberState(Constants.ClimberConstants.climberStates.L1));
-
     }
 
-    public Command setClimberPivot(double pos) {
+    private Command setClimberPivot(double pos) {
         return new InstantCommand(() -> {
             Turret.getInstance().moveTurretSafe();
         })

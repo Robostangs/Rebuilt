@@ -31,6 +31,7 @@ public class Climber extends SubsystemBase {
         climberPivot = new TalonFXS(Constants.ClimberConstants.kDeployMotorID);
         climberState = Constants.ClimberConstants.climberStates.stowed;
         isStowed = true;
+        climberPivotControl = new PositionVoltage(0);
     }
 
     public void configureClimber() {

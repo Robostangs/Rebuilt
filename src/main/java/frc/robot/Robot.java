@@ -11,7 +11,6 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.epilogue.Epilogue;
@@ -21,7 +20,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -29,7 +27,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
@@ -49,6 +46,8 @@ public class Robot extends TimedRobotstangs {
 
     public static Field2d teleopField = new Field2d();
     private static GcStatsCollector gscollect = new GcStatsCollector();
+    private int lastMatchSecond = -1;
+
     public static Alert gcAlert = new Alert("MEMORY TWEAKING LOOK INTO TS RN", AlertType.kError);
     public static Alert shiftAlert = new Alert("Alliance shift may not be accurate", AlertType.kWarning);
 
@@ -72,89 +71,60 @@ public class Robot extends TimedRobotstangs {
             config.minimumImportance = Logged.Importance.DEBUG;
         });
     }
-    void updateEpilogue(){
+
+    void updateEpilogue() {
         var cfg = edu.wpi.first.epilogue.Epilogue.getConfig();
         if (cfg.backend != null && cfg.root != null) {
             // base: JohnLogs
             var rootBackend = cfg.backend.getNested(cfg.root);
 
             edu.wpi.first.epilogue.Epilogue.robotLogger.tryUpdate(
-                rootBackend.getNested("Robot"),
-                this,
-                cfg.errorHandler);
+                    rootBackend.getNested("Robot"),
+                    this,
+                    cfg.errorHandler);
             // call the generated turret logger with that nested backend
             edu.wpi.first.epilogue.Epilogue.turretLogger.tryUpdate(
-                rootBackend.getNested("Turret"),
-                frc.robot.subsystems.Turret.Turret.getInstance(),
-                cfg.errorHandler);
+                    rootBackend.getNested("Turret"),
+                    frc.robot.subsystems.Turret.Turret.getInstance(),
+                    cfg.errorHandler);
             edu.wpi.first.epilogue.Epilogue.climberLogger.tryUpdate(
-                rootBackend.getNested("Climber"),
-                frc.robot.subsystems.Climber.getInstance(),
-                cfg.errorHandler);
+                    rootBackend.getNested("Climber"),
+                    frc.robot.subsystems.Climber.getInstance(),
+                    cfg.errorHandler);
             edu.wpi.first.epilogue.Epilogue.hoodLogger.tryUpdate(
-                rootBackend.getNested("Hood"),
-                frc.robot.subsystems.Turret.Hood.getInstance(),
-                cfg.errorHandler);
+                    rootBackend.getNested("Hood"),
+                    frc.robot.subsystems.Turret.Hood.getInstance(),
+                    cfg.errorHandler);
             edu.wpi.first.epilogue.Epilogue.feederLogger.tryUpdate(
-                rootBackend.getNested("Feeder"),
-                frc.robot.subsystems.Feeder.getInstance(),
-                cfg.errorHandler);
+                    rootBackend.getNested("Feeder"),
+                    frc.robot.subsystems.Feeder.getInstance(),
+                    cfg.errorHandler);
             edu.wpi.first.epilogue.Epilogue.kirbyLogger.tryUpdate(
-                rootBackend.getNested("Kirby"),
-                frc.robot.subsystems.Kirby.getInstance(),
-                cfg.errorHandler);
+                    rootBackend.getNested("Kirby"),
+                    frc.robot.subsystems.Kirby.getInstance(),
+                    cfg.errorHandler);
             edu.wpi.first.epilogue.Epilogue.flywheelLogger.tryUpdate(
-                rootBackend.getNested("Flywheel"),
-                frc.robot.subsystems.Turret.Flywheel.getInstance(),
-                cfg.errorHandler);
+                    rootBackend.getNested("Flywheel"),
+                    frc.robot.subsystems.Turret.Flywheel.getInstance(),
+                    cfg.errorHandler);
         }
     }
+
     @Override
     public void robotInit() {
         isJaba = Paths.get("/home/lvuser/Ultron").toFile().exists();
 
         SmartDashboard.putData("Field", teleopField);
 
-        disableTab = Shuffleboard.getTab("Disabled");
-        teleopTab = Shuffleboard.getTab("Teleop");
+        configureDisabledTab();
+        configureTeleopTab();
+        loadNamedCommands();
 
-        disableTab.add("Set Drivetrain motors to coast",
-                new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(true))
-                        .ignoringDisable(true));
-        disableTab.add("Set Drivetrain motors to brake",
-                new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(false))
-                        .ignoringDisable(true));
 
-        disableTab.add("RESET TO SUN TZUUUUUU",
-                new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
-                        .ignoringDisable(true));
 
-        teleopTab.add("Motion Magic", new InstantCommand(() -> Turret.getInstance().setMotionMagic()));
-        
-        teleopTab.add("Turret Position",
-                0)
-                .withProperties(Map.of("min_value", -0.5, "max_value", 0.5, "block increment", 0.1, "Divisions", 6));
-
-        turretSetpoint = NetworkTableInstance.getDefault().getTable("Shuffleboard")
-                .getSubTable(teleopTab.getTitle())
-                .getEntry("Turret Position");
-
-        NamedCommands.registerCommand("Shoot", new InstantCommand(() -> Turret.getInstance().trackHub()));
-
-        NamedCommands.registerCommand("Extend", new ExtendIntake());
-
-        NamedCommands.registerCommand("Retract", new RetractIntake());
-
-        NamedCommands.registerCommand("Dont shoot",
-                new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false))
-                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
-
-        NamedCommands.registerCommand("Hood down",
-                new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
-                        .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
-                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
 
     }
+
 
     @Override
     public void robotPeriodic() {
@@ -193,58 +163,62 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopInit() {
-        String gameData = DriverStation.getGameSpecificMessage();
+        lastMatchSecond = (int) DriverStation.getMatchTime();
 
-        if (gameData.length() > 0) {
-            switch (gameData.charAt(0)) {
-                case 'B':
-                    canBlueScore = whoCanScore.red;
-                    break;
-                case 'R':
-                    canBlueScore = whoCanScore.blue;
-                    break;
-                default:
-                    canBlueScore = whoCanScore.error;
-                    break;
-            }
-        } else {
-            canBlueScore = whoCanScore.error;
-
-        }
     }
 
     @Override
     public void teleopPeriodic() {
-        // Turret.getInstance().setIronmansetpoint(turretSetpoint.getDouble(0));
-        if (canBlueScore == whoCanScore.error) {
-            shiftAlert.set(true);
-        }
+        shiftAlert.set(canBlueScore == whoCanScore.error);
+        String gameData = DriverStation.getGameSpecificMessage();
+        int gameTimeInt = (int) DriverStation.getMatchTime();
+        double gameTime = DriverStation.getMatchTime();
 
-        if (DriverStation.getMatchTime() < 110) {
+        if (gameTime < 30 || gameTime > 130) {
             canBlueScore = whoCanScore.both;
-        } else if (DriverStation.getMatchTime() % 25 == 0) {
-            if (canBlueScore == whoCanScore.blue) {
-                canBlueScore = whoCanScore.red;
+        } else if (gameTime < 130 && gameTime > 129) {
+            if (gameData.length() > 0) {
+                switch (gameData.charAt(0)) {
+                    case 'B':
+                        canBlueScore = whoCanScore.red;
+                        break;
+                    case 'R':
+                        canBlueScore = whoCanScore.blue;
+                        break;
+                    default:
+                        canBlueScore = whoCanScore.error;
+                        break;
+                }
             } else {
-                canBlueScore = whoCanScore.blue;
+                canBlueScore = whoCanScore.error;
+
             }
         }
 
+        else if ((gameTimeInt - 10) % 25 == 0) {
+            canBlueScore = (canBlueScore == whoCanScore.blue) ? whoCanScore.red : whoCanScore.blue;
+        } else {
+            int secondsSince10 = gameTimeInt - 10;
+            if (secondsSince10 >= 0 && secondsSince10 % 25 == 0) {
+                if (gameTimeInt != lastMatchSecond) {
+                    canBlueScore = (canBlueScore == whoCanScore.blue) ? whoCanScore.red : whoCanScore.blue;
+                }
+            }
+        }
+
+        lastMatchSecond = gameTimeInt;
+
         if (canBlueScore == whoCanScore.blue) {
             allianceScore = Constants.ElasticConstants.blue;
-        } 
-        else if (canBlueScore == whoCanScore.red) {
+        } else if (canBlueScore == whoCanScore.red) {
             allianceScore = Constants.ElasticConstants.red;
-        } 
-        else if(canBlueScore == whoCanScore.both){
+        } else if (canBlueScore == whoCanScore.both) {
             allianceScore = Constants.ElasticConstants.purple;
-        }
-        else{
+        } else {
             allianceScore = Constants.ElasticConstants.white;
         }
 
         SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
-
     }
 
     @Override
@@ -279,6 +253,48 @@ public class Robot extends TimedRobotstangs {
         }
 
     }
+
+        public void configureDisabledTab(){
+
+        disableTab = Shuffleboard.getTab("Disabled");
+
+        disableTab.add("Set Drivetrain motors to coast",
+                new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(true))
+                        .ignoringDisable(true));
+        disableTab.add("Set Drivetrain motors to brake",
+                new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(false))
+                        .ignoringDisable(true));
+
+        disableTab.add("RESET TO SUN TZUUUUUU",
+                new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
+                        .ignoringDisable(true));
+    }
+
+    public void configureTeleopTab(){
+        teleopTab = Shuffleboard.getTab("Teleop");
+
+
+        
+    }
+
+public void loadNamedCommands(){
+
+        NamedCommands.registerCommand("Shoot", new InstantCommand(() -> Turret.getInstance().trackHub()));
+
+        NamedCommands.registerCommand("Extend", new ExtendIntake());
+
+        NamedCommands.registerCommand("Retract", new RetractIntake());
+
+        NamedCommands.registerCommand("Dont shoot",
+                new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false))
+                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
+
+        NamedCommands.registerCommand("Hood down",
+                new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
+                        .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
+                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
+
+}
 
     private static final class GcStatsCollector {
 

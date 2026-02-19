@@ -1,4 +1,4 @@
-package frc.robot.commands.TurretCommands;
+package frc.robot.commands.TurretCommands.Flywheel;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Turret.Flywheel;

@@ -164,28 +164,70 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot",
+      "name": "Hooddown",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": 0.27162425397878,
-      "command": null
+      "endWaypointRelativePos": 0.7613457393899207,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Hooddown"
+        }
+      }
     },
     {
-      "name": "Intake",
-      "waypointRelativePos": 1.6618762433687004,
-      "endWaypointRelativePos": 2.6411016246684356,
-      "command": null
+      "name": "Dontshoot",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 4.973951425729441,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Dontshoot"
+        }
+      }
     },
     {
       "name": "Shoot",
-      "waypointRelativePos": 4.484229940318302,
-      "endWaypointRelativePos": 6.853634781167102,
-      "command": null
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Shoot"
+        }
+      }
     },
     {
-      "name": "Climb",
-      "waypointRelativePos": 6.92906581564987,
+      "name": "Extend",
+      "waypointRelativePos": 1.3947488395225465,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
+    },
+    {
+      "name": "Retract",
+      "waypointRelativePos": 2.9060531332891246,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract"
+        }
+      }
+    },
+    {
+      "name": "Hooddown",
+      "waypointRelativePos": 3.9982074767904483,
+      "endWaypointRelativePos": 4.890977287798406,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Hooddown"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -204,7 +246,7 @@
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 0.8375104754245732
   },
   "useDefaultConstraints": true
 }

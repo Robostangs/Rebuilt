@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.03785085174102,
-        "y": 7.507092978258821
+        "x": 4.064321249119812,
+        "y": 7.3580576783115
       },
       "isLocked": false,
       "linkedName": "DepotStart"
@@ -144,22 +144,60 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "Hooddown",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.8859623673740056,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Hooddown"
+        }
+      }
+    },
+    {
       "name": "Shoot",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "Intake",
-      "waypointRelativePos": 1.6618762433687004,
-      "endWaypointRelativePos": 2.6411016246684356,
+      "name": "Dontshoot",
+      "waypointRelativePos": 0.17904509283819636,
+      "endWaypointRelativePos": 4.954513428381956,
       "command": null
     },
     {
-      "name": "Shoot",
-      "waypointRelativePos": 4.484229940318302,
-      "endWaypointRelativePos": 6.853634781167102,
-      "command": null
+      "name": "Extend",
+      "waypointRelativePos": 1.349614555702917,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
+    },
+    {
+      "name": "Retract",
+      "waypointRelativePos": 2.7581026193633953,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract"
+        }
+      }
+    },
+    {
+      "name": "Hooddown",
+      "waypointRelativePos": 4.100443468169762,
+      "endWaypointRelativePos": 4.912052387267904,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Hooddown"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -178,7 +216,7 @@
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 0.8375104754245732
   },
   "useDefaultConstraints": true
 }

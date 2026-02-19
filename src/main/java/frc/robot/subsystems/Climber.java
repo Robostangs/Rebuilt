@@ -24,7 +24,7 @@ public class Climber extends SubsystemBase {
     public static Constants.ClimberConstants.climberStates climberState;
     
     
-
+    // region Initialize & Config
     public Climber() {
         climberMotor = new TalonFX(Constants.ClimberConstants.kClimberMotorID);
         climberControl = new PositionVoltage(climberMotor.getPosition().getValueAsDouble()).withSlot(0);
@@ -46,14 +46,6 @@ public class Climber extends SubsystemBase {
 
     }
 
-    public void setClimberState(Constants.ClimberConstants.climberStates state) {
-        climberState = state;
-    }
-
-    public void setClimberMechanismPosition(double pos){
-        climberMotor.setPosition(pos);
-    }
-
     public void configureClimberPiviot() {
         climberPiviotConfig = new TalonFXSConfiguration();
 
@@ -65,6 +57,16 @@ public class Climber extends SubsystemBase {
 
         climberPivot.getConfigurator().apply(climberPiviotConfig);
     }
+    //endregion
+    //region Control
+    public void setClimberState(Constants.ClimberConstants.climberStates state) {
+        climberState = state;
+    }
+
+    public void setClimberMechanismPosition(double pos){
+        climberMotor.setPosition(pos);
+    }
+    
 
     public void setClimberDutyCycle(double dc){
         climberMotor.set(dc);
@@ -84,7 +86,16 @@ public class Climber extends SubsystemBase {
         climberPivotControl.Position = rotations;
     }
 
+    public void setClimberControl(){
+        climberMotor.setControl(climberControl);
+    }
 
+    public void setClimberPivotControl(){
+        climberPivot.setControl(climberPivotControl);
+    }
+    
+    //endregion
+    // region Utils & Logging
     public static Climber getInstance() {
         if (mInstance == null) {
             mInstance = new Climber();
@@ -109,12 +120,7 @@ public class Climber extends SubsystemBase {
                 < Constants.ClimberConstants.kTargetThreshold;
     }
 
-    public void setClimberControl(){
-        climberMotor.setControl(climberControl);
-    }
-    public void setClimberPivotControl(){
-        climberPivot.setControl(climberPivotControl);
-    }
+    
 
     @Override
     public void periodic() {

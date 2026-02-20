@@ -18,22 +18,31 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.logging.NTEpilogueBackend;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
+import frc.robot.commands.TurretCommands.Hood.setHoodPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Kirby;
 import frc.robot.subsystems.Turret.Hood;
 import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.Turret.Flywheel;
@@ -53,14 +62,22 @@ public class Robot extends TimedRobotstangs {
 
     public static Constants.ElasticConstants.whoCanScore canBlueScore;
 
+    public CommandScheduler scheduler = CommandScheduler.getInstance();
+
     public Color allianceScore = Constants.ElasticConstants.purple;
 
     static NetworkTableEntry turretSetpoint;
 
+    public PowerDistribution pdh = new PowerDistribution(Constants.ElasticConstants.kPdhCanId, ModuleType.kRev);
+
+    // pit test choosers
+    SendableChooser<Command> hoodSetpointChooser= new SendableChooser<>();
+    SendableChooser<Command> intakePivotSetpointChooser= new SendableChooser<>();
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
             .withTimestampReplay()
             .withJoystickReplay();
+
 
     public Robot() {
         m_robotContainer = new RobotContainer();
@@ -124,10 +141,82 @@ public class Robot extends TimedRobotstangs {
 
 
     }
+    void setupPitTest(){
+        Alert alert = new Alert("Something went wrong", AlertType.kWarning);
+        SmartDashboard.putNumber("PitTest/HoodDC",0);
+        SmartDashboard.putNumber("PitTest/TurretPosition",0);
+        SmartDashboard.putNumber("PitTest/TurretDC",0);
+        SmartDashboard.putNumber("PitTest/IntakeWheelsDC",0);
+        SmartDashboard.putNumber("PitTest/FeederDC",0);
+        SmartDashboard.putNumber("PitTest/IntakePivotDC",0);
+        hoodSetpointChooser.addOption("Down", 
+            Hood.getInstance().runOnce(() -> {
+                Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos); 
+            }
+        ));
+        hoodSetpointChooser.addOption("Up", 
+            Hood.getInstance().runOnce(() -> {
+                Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodUpSetpoint); 
+            }
+        ));
+        SmartDashboard.putData("PitTest/HoodSetpoints", hoodSetpointChooser);
+        
+        intakePivotSetpointChooser.addOption("Extend", 
+            Kirby.getInstance().runOnce(() -> Kirby.getInstance().setExtenderPosition(Constants.KirbyConstants.kExtendSetpoint)));
+        intakePivotSetpointChooser.addOption("Retract", 
+            Kirby.getInstance().runOnce(() -> Kirby.getInstance().setExtenderPosition(Constants.KirbyConstants.kRetractSetpoint)));
+        SmartDashboard.putData("PitTest/IntakePivotSetpoints", intakePivotSetpointChooser);
+    }
+    void pitTestPeriodic(){
 
+
+
+        // read sliders and run commands
+        double hoodDC = SmartDashboard.getNumber("PitTest/HoodDC", 0);
+        double flywheelDC = SmartDashboard.getNumber("PitTest/FlywheelDC", 0);
+        double flywheelVelocity = SmartDashboard.getNumber("PitTest/FlywheelVelocity", 0);
+        double turretPosition = SmartDashboard.getNumber("PitTest/TurretPosition", 0);
+        double intakeWheelsDC = SmartDashboard.getNumber("PitTest/IntakeWheelsDC", 0);
+        double feederDC = SmartDashboard.getNumber("PitTest/FeederDC", 0);
+        double intakePivotDC = SmartDashboard.getNumber("PitTest/IntakePivotDC", 0);
+        double turretDC = SmartDashboard.getNumber("PitTest/TurretDC", 0);
+        
+
+       
+        
+        if(hoodDC!=0){
+            Hood.getInstance().setHoodDutyCycle(hoodDC);
+        }
+        if(intakeWheelsDC!=0){
+            Kirby.getInstance().setKirbyWheels(intakeWheelsDC);
+        }
+        if(turretDC!=0){
+            Turret.getInstance().runTurretDutyCycle(turretDC);
+        }
+        if(feederDC!=0){
+            Feeder.getInstance().setDutyCycle(feederDC);
+        }
+        if(intakePivotDC!=0){
+            Kirby.getInstance().setHopperExtenderDutyCycle(intakePivotDC);
+        }
+        if(turretPosition!=0){
+            Turret.setManualTarget(true);
+            Turret.getInstance().setTurretSetpointDoubleSupplier(() -> turretPosition);
+        }
+        if(flywheelDC!=0){
+            Flywheel.getInstance().setDutyCycle(flywheelDC);
+        }
+        if(flywheelVelocity!=0){
+            Flywheel.getInstance().setShooterRPS(flywheelVelocity);
+        }
+
+    }
 
     @Override
     public void robotPeriodic() {
+        SmartDashboard.putData("PDH", pdh);
+        SmartDashboard.putData("CommaxndScheduler", scheduler);
+
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
         updateEpilogue();
@@ -228,10 +317,12 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void testInit() {
         CommandScheduler.getInstance().cancelAll();
+        setupPitTest();
     }
 
     @Override
     public void testPeriodic() {
+        pitTestPeriodic();
     }
 
     @Override

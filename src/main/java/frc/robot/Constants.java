@@ -120,6 +120,7 @@ public final class Constants {
         public static final double kHoodMotorA = 0;
         public static final double kHoodMotionMagicCruiseVelocity = 0;
         public static final double kHoodMotionMagicAcceleration = 0;
+        public static final double kHoodUpSetpoint = 0;
     }
 
     public static class TurretConstants {
@@ -180,6 +181,7 @@ public final class Constants {
         public static final Color red = new Color("#FF0000");
         public static final Color purple = new Color("#800080");
         public static final Color white = new Color("#FFFFFF");
+        public static final int kPdhCanId = 1;
 
         public static enum whoCanScore {
             blue,

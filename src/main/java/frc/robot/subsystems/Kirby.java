@@ -68,7 +68,9 @@ public class Kirby extends SubsystemBase {
     public void setExtenderPosition(double pos) {
         extenderControl.Position = pos;
     }
-
+    public void setHopperExtenderDutyCycle(double dutyCycle) {
+        hopperExtenderMotor.set(dutyCycle);
+    }
     public void setIntakeExtenderMode(NeutralModeValue mode) {
         hopperExtenderMotor.setNeutralMode(mode);
     }

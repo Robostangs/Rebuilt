@@ -66,6 +66,9 @@ public class Flywheel extends SubsystemBase {
                          // velocity
 
     }
+    public void setDutyCycle(double dutyCycle) {
+        flyWheel.set(dutyCycle);
+    }
 
     public void setShooterRPS(double rps) {
         shooterTargetVelocity.Velocity = rps;

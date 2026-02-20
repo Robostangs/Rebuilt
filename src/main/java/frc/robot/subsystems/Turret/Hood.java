@@ -41,6 +41,8 @@ public class Hood extends SubsystemBase {
         hoodMotorConfig.Slot0.kV = Constants.HoodConstants.kHoodMotorV;
         hoodMotorConfig.Slot0.kA = Constants.HoodConstants.kHoodMotorA;
 
+        hoodMotorConfig.ExternalFeedback.SensorToMechanismRatio = Constants.HoodConstants.kHoodSensortoMechanism;
+
         hoodMotorConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.HoodConstants.kHoodMotionMagicCruiseVelocity;
         hoodMotorConfig.MotionMagic.MotionMagicAcceleration = Constants.HoodConstants.kHoodMotionMagicAcceleration;
         hoodMotor.getConfigurator().apply(hoodMotorConfig);

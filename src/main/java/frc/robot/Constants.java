@@ -120,6 +120,7 @@ public final class Constants {
         public static final double kHoodMotorA = 0;
         public static final double kHoodMotionMagicCruiseVelocity = 0;
         public static final double kHoodMotionMagicAcceleration = 0;
+        public static final double kHoodSensortoMechanism = 44;
     }
 
     public static class TurretConstants {
@@ -134,8 +135,10 @@ public final class Constants {
         public static final double TurretMotorSupplyCurrentLimit = 60;
         public static final double dumbThing = (((double) kTurretMotorTeeth * (double) kTurretCANcoderTeeth)
                 / (double) kTurretRingTeeth) / 2;
-        public static final double kIronmanToRobotCenterX = 0;
-        public static final double kIronmanToRobotCenterY = 0;
+
+        public static final double kIronmanToRobotCenterX = Units.inchesToMeters(4);
+        public static final double kIronmanToRobotCenterY = Units.inchesToMeters(8);
+
         public static final double IronmanMotionMagicKa = 0.8;
         public static final double IronmanMotionMagicKv = 6;
         public static final double IronmanMotionMagicKS = 0.242;

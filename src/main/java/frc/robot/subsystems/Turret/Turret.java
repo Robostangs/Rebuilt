@@ -243,9 +243,8 @@ private final MechanismLigament2d m_shooter = simDisplay.append(
         SmartDashboard.putString("Your a wizard harry", "Hagrid");
     }
     // endregion
-    //#region Turret Calculations
+    //#region Turret Calcs
     // get sensor to mechinasm ratio (19:200) and (21:200)
-    
     private double getTurretMotorSensorModPosition() {
         /* Convert mechanism position to sensor position */
         return mathMod1(turretMotor.getPosition().getValueAsDouble()
@@ -265,13 +264,7 @@ private final MechanismLigament2d m_shooter = simDisplay.append(
         SmartDashboard.putData("Turret Pivot", simMain);
     }
 
-    // this is pointless cuz the getposition is the sensor not the rotor
-    // public double getTurretMotorSensorModPositon() {
-    // /* because sensor phase is inverted */
-    // return mathMod1(1-(turretMotor.getRawPulseWidthPosition().getValueAsDouble()
-    // - turretMotorAbsoluteSensorOffset)); //TODO this offset only updates at rio
-    // boot
-    // }
+
 
     private double getTurretCANcoderModPosition() {
         /* Convert mechanism position to sensor position */
@@ -505,32 +498,32 @@ private final MechanismLigament2d m_shooter = simDisplay.append(
 
         SmartDashboard.putNumber("Ironman/Position", turretMotor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Ironman/Target", turretControl.Position);
+
+
+
+        SmartDashboard.putNumber("19Gear-offset, true absolute pos",
+                (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
     }
     
     @Override
     public void periodic() {
-        logTurretThings();
         updateIronManPose();
         updateTurretSim();
-
-        SmartDashboard.putNumber("19Gear-offset, true absolute pos",
-                (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
 
         if (!manualTarget && CommandSwerveDrivetrain.getInstance().getState().Pose != null) {
             targetHubPose();
         }
-
-        // controlThreeThousand.Position = aimingJohnsRotaions();
-
-        if (!manualTarget) {
-            turretControl.Position = aimingJohns().getRotations();
+        if(isHub){
+            trackHub();
         }
+
+
+   
         turretMotor.setControl(turretControl);
 
-        aimingJohns();
 
         Robot.teleopField.getObject("Turret").setPose(turretPose);
 
     }
-//endregion
-}
+    //endregion
+    }

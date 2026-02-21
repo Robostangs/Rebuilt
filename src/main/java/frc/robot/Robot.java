@@ -142,8 +142,9 @@ public class Robot extends TimedRobotstangs {
 
     }
     void setupPitTest(){
-        Alert alert = new Alert("Something went wrong", AlertType.kWarning);
         SmartDashboard.putNumber("PitTest/HoodDC",0);
+        SmartDashboard.putNumber("PitTest/FlywheelDC",0);
+        SmartDashboard.putNumber("PitTest/FlywheelVelocity",0);
         SmartDashboard.putNumber("PitTest/TurretPosition",0);
         SmartDashboard.putNumber("PitTest/TurretDC",0);
         SmartDashboard.putNumber("PitTest/IntakeWheelsDC",0);

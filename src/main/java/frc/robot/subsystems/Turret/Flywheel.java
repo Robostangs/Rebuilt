@@ -42,6 +42,7 @@ public class Flywheel extends SubsystemBase {
         flywheelConfig.Slot0.kA = Constants.TurretConstants.kShooterMotorA;
         flywheelConfig.Slot0.kV = Constants.TurretConstants.kShooterMotorV;
         flywheelConfig.Slot0.kS = Constants.TurretConstants.kShooterMotorS;
+        flywheelConfig.Voltage.PeakReverseVoltage = Constants.FlyWheelConstants.kPeakReverseOutput;
 
         flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.TurretConstants.kShooterMotorStatorCurrentLimit;
 

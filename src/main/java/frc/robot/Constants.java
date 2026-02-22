@@ -122,6 +122,12 @@ public final class Constants {
         public static final double kHoodMotionMagicAcceleration = 0;
         public static final double kHoodSensortoMechanism = 44;
     }
+    public static class FlyWheelConstants{
+
+        public static final double kPeakReverseOutput = 0;
+        public static final double kShootSpeed = 60;
+
+    }
 
     public static class TurretConstants {
         public static final int turretMotorID = 1;
@@ -150,12 +156,12 @@ public final class Constants {
         public static final double IronmanMotionMagicKaFF = .5;
         public static final double kHomePosition = 0;
         public static final int kFlywheelMotorID = 0;
-        public static final double kShooterMotorP = 0.1;
+        public static final double kShooterMotorP = 0.5;
         public static final double kShooterMotorI = 0.08;
         public static final double kShooterMotorD = 0;
         public static final double kShooterMotorG = 0;
-        public static final double kShooterMotorA = 0.5967;
-        public static final double kShooterMotorV = 0.2;
+        public static final double kShooterMotorA = 0;
+        public static final double kShooterMotorV = 0.122;
         public static final double kShooterMotorS = 0.29;
         public static final double shooterMotionMagicCruiseVelocity = 0.2;
         public static final double shooterMotionMagicAcceleration = 0;
@@ -165,7 +171,7 @@ public final class Constants {
         public static final double kReverseSoftLimit = 0;
         public static final double kSafeClimberPos = 0;
         public static final double kSafeClimberNeg = 0;
-        public static final double kShooterMotorStatorCurrentLimit = 50;
+        public static final double kShooterMotorStatorCurrentLimit = 100;
 
     }
 
@@ -258,20 +264,26 @@ public final class Constants {
         public static final String kLimelightThree = "limelight-agomoto";
         public static final double kVisionAngularThreshold = 22.5;
 
-        public static final String kPhotonCamNameFront = "OV9281";
-        public static final Transform3d kRobotToCamFront = new Transform3d(
-                Units.inchesToMeters(-11.6875),
-                Units.inchesToMeters(-12),
-                Units.inchesToMeters(8.375),
-                new Rotation3d(0, Units.degreesToRadians(42.36), Units.degreesToRadians(-90)));
+        public static final String kPhotonCamNameRight = "Daredevil";
+        public static final Transform3d kRobotToCamRight = new Transform3d(
+                Units.inchesToMeters(-8.895),
+                Units.inchesToMeters(13.16),
+                Units.inchesToMeters(11.796),
+                new Rotation3d( Units.degreesToRadians(180), Units.degreesToRadians(32.29), Units.degreesToRadians(-90)));
 
-        public static final String kPhotonCamNameBack = "DeadpoolX";
-        public static final Transform3d kRobotToCamBack = new Transform3d(new Transform2d());
+        public static final String kPhotonCamNameBack = "Kratos";
+        public static final Transform3d kRobotToCamBack = new Transform3d(
+                Units.inchesToMeters(-13.02),
+                Units.inchesToMeters(8.787),
+                Units.inchesToMeters(9.9),
+                new Rotation3d(0, Units.degreesToRadians(32.29), Units.degreesToRadians(180)));
+                
         public static final double kMTErrorThres = 0.05;
         public static final String kLimelightLeft = "Jarvis";
         public static final String kLimelightRight = "Ultron";
-        public static final String kPhotonCamNameRear = "Kratos";
         public static final Transform3d kRobotToCamRear = new Transform3d(new Transform2d());
+
+        public static final double kPhotonAmbiguityThres = 0.5;
     }
 
     public class ZiroTunerConstants {

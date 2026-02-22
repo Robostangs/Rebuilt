@@ -128,7 +128,7 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void robotPeriodic() {
-        m_timeAndJoystickReplay.update();
+        // m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
         updateEpilogue();
         gscollect.update();

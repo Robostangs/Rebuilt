@@ -13,10 +13,13 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Index;
 import frc.robot.commands.TurretCommands.setTurretDutyCycle;
+import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
 import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.Hood.setHoodDutyCycle;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Feeder;
 
 public class RobotContainer {
         public static boolean useVision = true;
@@ -37,7 +40,7 @@ public class RobotContainer {
         private final CommandXboxController xManip = new CommandXboxController(1);
         private final GenericHID xSim = new GenericHID(2);
 
-        public final CommandSwerveDrivetrain drivetrain = Constants.JabbaTunerConstants.createDrivetrain();
+        public final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
 
         public RobotContainer() {
                 configureDrivingBinding();
@@ -61,6 +64,8 @@ public class RobotContainer {
                                 drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+                xDrive.rightTrigger().whileTrue(new Index().alongWith(new ChargeUp(Constants.FlyWheelConstants.kShootSpeed)));
 
         }
 

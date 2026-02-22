@@ -61,10 +61,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
-    private VisionStangs photonVisionFront = new VisionStangs(Constants.VisionConstants.kPhotonCamNameFront,
-            Constants.VisionConstants.kRobotToCamFront);
+    private VisionStangs photonVisionRight = new VisionStangs(Constants.VisionConstants.kPhotonCamNameRight,
+            Constants.VisionConstants.kRobotToCamRight);
 
-    private VisionStangs limelightVisionLeft = new VisionStangs(Constants.VisionConstants.kLimelightLeft);
+    private VisionStangs photonVisionBack = new VisionStangs(Constants.VisionConstants.kPhotonCamNameBack,
+            Constants.VisionConstants.kRobotToCamBack);
 
     private ArrayList<VisionStangs> visionPoses = new ArrayList<>();
 
@@ -262,31 +263,37 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
 
-        limelightVisionLeft.periodic();
-        photonVisionFront.periodic();
+        photonVisionBack.periodic();
+        photonVisionRight.periodic();
 
-        visionPoses.add(limelightVisionLeft);
-        visionPoses.add(photonVisionFront);
+        visionPoses.add(photonVisionBack);
+        visionPoses.add(photonVisionRight);
 
-        double smallestAmbiuity = 100;
+        double smallestAmbiuity = 1;
         int index = -1;
-        for(int c = 0; c < visionPoses.size(); c++){
-            if(visionPoses.get(c).getAmbiguity() < smallestAmbiuity){
+        for (int c = 0; c < visionPoses.size(); c++) {
+            if(visionPoses.get(c) != null){
+            if (visionPoses.get(c).getAmbiguity() < smallestAmbiuity) {
                 smallestAmbiuity = visionPoses.get(c).getAmbiguity();
                 index = c;
-            }
+            }}
         }
 
-        if(visionPoses.get(index).getPose() != null){
-        SmartDashboard.putString("Vision/Camera with best Pose: ", "Best vision value is: "+ visionPoses.get(index).getName());
-        SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
-         visionPoses.get(index).getAmbiguity());
-
+        if (visionPoses.get(index).getPose() != null) {
+            SmartDashboard.putString("Vision/Camera with best Pose: ",
+                    "Best vision value is: " + visionPoses.get(index).getName());
+            SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
+                    visionPoses.get(index).getAmbiguity());
+                    SmartDashboard.putString("Vision/Pose Null error ",
+                    "Ts NOT null dude");
+                    SmartDashboard.putNumber("Vision/Vision Pose index ",
+                    index);
+            this.addVisionMeasurement(visionPoses.get(index).getPose(), visionPoses.get(index).getTimeStamp());
+        } else {
+            SmartDashboard.putString("Vision/Pose Null error ",
+                    "Ts null dude");
 
         }
-
-        int bestindex = -1;
-        double bestAmbiguity = 100;
 
         Robot.teleopField.setRobotPose(this.getState().Pose);
 

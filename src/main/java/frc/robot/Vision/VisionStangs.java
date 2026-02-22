@@ -21,11 +21,9 @@ import org.photonvision.targeting.PhotonPipelineResult;
 
 public class VisionStangs {
     private  PhotonCamera camera;
-    private  Transform3d robotToCam;
     PhotonPoseEstimator ppe;
-    private double ambiguity;
     private Pose2d currentPose;
-    private double highestAmbiguity;
+    private double bigAmbiuity;
     private boolean isLL;
     private double timestampSeconds;
 
@@ -33,46 +31,41 @@ public class VisionStangs {
 
     public VisionStangs(String LLname, Transform3d robotToCam) {
         camera = new PhotonCamera(LLname);
-        this.robotToCam = robotToCam;
         this.CameraName = LLname;
         ppe = new PhotonPoseEstimator(Constants.kAprilTagFieldLayout, robotToCam);
-        highestAmbiguity = -1;
+        bigAmbiuity = -1;
         isLL = false;
     }
 
 
     public VisionStangs(String LLname) {
         this.CameraName = LLname;
-        highestAmbiguity = -1;
+        bigAmbiuity = -1;
         isLL = true;
     }
 
 
     private void Photonperiodic() {
 
-        double bigAmbiuity = 0d;
+        
+        bigAmbiuity =0;
 
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
         for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
 
             visionEst = ppe.estimateCoprocMultiTagPose(result);
 
-            if (visionEst.isEmpty()) {
-                visionEst = ppe.estimateLowestAmbiguityPose(result);
-            }
 
             for (var target : result.targets) {
-
                 if (target.poseAmbiguity > bigAmbiuity) {
                     bigAmbiuity = target.poseAmbiguity;
                 }
             }
 
             SmartDashboard.putNumber(camera.getName() + " biggest ambiguity", bigAmbiuity);
-            ambiguity = bigAmbiuity;
         }
 
-        if (bigAmbiuity < 0.2) {
+        if (bigAmbiuity < Constants.VisionConstants.kPhotonAmbiguityThres) {
             // Only use the estimate if present and valid
             visionEst.ifPresent(est -> {
                 var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
@@ -80,6 +73,8 @@ public class VisionStangs {
                 if (pose2d != null) {
                     timestampSeconds = est.timestampSeconds;
                     Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
+                    currentPose = pose2d;
+                    // CommandSwerveDrivetrain.getInstance().addVisionMeasurement(pose2d, timestampSeconds);
                 }
             });
 
@@ -143,8 +138,8 @@ public class VisionStangs {
                 this.timestampSeconds = fourPoseEsti.timestampSeconds;
                 Robot.teleopField.getObject("Limelight Four Pose").setPose(fourPoseEsti.pose);
                 for(LimelightHelpers.RawFiducial fiducial:fourPoseEsti.rawFiducials){
-                    if(fiducial.ambiguity > highestAmbiguity){
-                        highestAmbiguity = fiducial.ambiguity;
+                    if(fiducial.ambiguity > bigAmbiuity){
+                        bigAmbiuity = fiducial.ambiguity;
                     }
                 }
                 
@@ -157,7 +152,7 @@ public class VisionStangs {
     }
 
     public double getAmbiguity(){
-        return highestAmbiguity;
+        return bigAmbiuity;
     }
     public Pose2d getPose(){
         return currentPose;

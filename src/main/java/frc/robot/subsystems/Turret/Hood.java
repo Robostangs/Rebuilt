@@ -1,9 +1,7 @@
 package frc.robot.subsystems.Turret;
 
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 
@@ -26,7 +24,7 @@ public class Hood extends SubsystemBase {
         hoodTargetPosition = new MotionMagicTorqueCurrentFOC(hoodMotor.getPosition().getValueAsDouble());
     }
 
-    public void configureHoodMotor() {
+    private void configureHoodMotor() {
         TalonFXSConfiguration hoodMotorConfig = new TalonFXSConfiguration();
 
         hoodMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
@@ -75,10 +73,16 @@ public class Hood extends SubsystemBase {
     public boolean getLimitSwitch() {
         return limitSwitch.get();
     }
+    
+    public void setMotionMagicTarget(
+double pos){
+        hoodTargetPosition.Position = pos;
+    }
 
+    @Override
     public void periodic() {
-        hoodTargetPosition.Position = SmartDashboard.getNumber("Hood setpoint", 0);
         hoodMotor.setControl(hoodTargetPosition);
+        SmartDashboard.putNumber("Hood/HoodTargetPosition", hoodTargetPosition.Position);
     }
 
 }

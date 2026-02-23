@@ -10,6 +10,8 @@ import java.lang.management.MemoryMXBean;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.HootAutoReplay;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -61,6 +63,7 @@ public class Robot extends TimedRobotstangs {
 
     public Robot() {
         m_robotContainer = new RobotContainer();
+
     }
 
     @Override
@@ -86,8 +89,8 @@ public class Robot extends TimedRobotstangs {
         gscollect.update();
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
 
-    }
 
+    }
     @Override
     public void disabledInit() {
     }
@@ -176,12 +179,20 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void testInit() {
         CommandScheduler.getInstance().cancelAll();
+                SmartDashboard.putNumber("Hood setpoint", 0);
+                SmartDashboard.putNumber("Flywheel velocity", 0);
+
     }
 
     @Override
     public void testPeriodic() {
-    }
 
+        double hoodSetpoint = SmartDashboard.getNumber("Hood setpoint", 0.0);
+        Hood.getInstance().setMotionMagicTarget(hoodSetpoint);
+
+        double flywheelVelocity = SmartDashboard.getNumber("Flywheel velocity", 0.0);
+        Flywheel.getInstance().setShooterRPS(flywheelVelocity);
+    }
     @Override
     public void testExit() {
     }

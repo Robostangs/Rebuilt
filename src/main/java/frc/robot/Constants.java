@@ -153,8 +153,8 @@ public final class Constants {
                 public static final double dumbThing = (((double) kTurretMotorTeeth * (double) kTurretCANcoderTeeth)
                                 / (double) kTurretRingTeeth) / 2;
 
-                public static final double kIronmanToRobotCenterX = Units.inchesToMeters(4);
-                public static final double kIronmanToRobotCenterY = Units.inchesToMeters(8);
+                public static final double kIronmanToRobotCenterX = Units.inchesToMeters(-4);
+                public static final double kIronmanToRobotCenterY = Units.inchesToMeters(-8);
 
                 public static final double IronmanMotionMagicKa = 0.8;
                 public static final double IronmanMotionMagicKv = 6;

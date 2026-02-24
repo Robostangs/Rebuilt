@@ -270,6 +270,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         setVisionPose(visionPoses);
 
         Robot.teleopField.setRobotPose(this.getState().Pose);
+        Robot.teleopField.getObject("Jabba").setPose(this.getState().Pose);
+
     }
 
     private void setVisionPose(ArrayList<VisionStangs> visionMeasurements) {

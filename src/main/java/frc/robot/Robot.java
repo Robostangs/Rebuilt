@@ -6,16 +6,28 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Seconds;
 
+import java.io.IOException;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.json.simple.parser.ParseException;
+
 import com.ctre.phoenix6.HootAutoReplay;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPoint;
+import com.pathplanner.lib.util.PathPlannerLogging;
+
 import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.logging.NTEpilogueBackend;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
@@ -25,8 +37,10 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
@@ -37,6 +51,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret.Hood;
 import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.Turret.Flywheel;
+
 @Logged
 public class Robot extends TimedRobotstangs {
     public static boolean isJaba;
@@ -54,6 +69,9 @@ public class Robot extends TimedRobotstangs {
     public static Constants.ElasticConstants.whoCanScore canBlueScore;
 
     public Color allianceScore = Constants.ElasticConstants.purple;
+
+    private SendableChooser<Command> autoChooser = new SendableChooser<>();
+    Command autoCommand;
 
     static NetworkTableEntry turretSetpoint;
 
@@ -120,28 +138,42 @@ public class Robot extends TimedRobotstangs {
         configureTeleopTab();
         loadNamedCommands();
 
-
-
-
     }
-
 
     @Override
     public void robotPeriodic() {
-        // m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
         updateEpilogue();
         gscollect.update();
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
-        
+
     }
 
     @Override
     public void disabledInit() {
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
     @Override
     public void disabledPeriodic() {
+
+        autoCommand = autoChooser.getSelected();
+        SmartDashboard.putString("Current Auto", autoCommand.getName());
+        List<Pose2d> poses = new ArrayList<>();
+        poses.clear();
+        try {
+            for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoCommand.getName())) {
+                for(Pose2d pose: path.getPathPoses()){
+                    poses.add(pose);
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        teleopField.getObject("auto").setPoses(poses);
+
     }
 
     @Override
@@ -150,6 +182,7 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void autonomousInit() {
+        CommandScheduler.getInstance().schedule(autoCommand);
 
     }
 
@@ -238,10 +271,6 @@ public class Robot extends TimedRobotstangs {
     public void testExit() {
     }
 
-    @Override
-    public void simulationPeriodic() {
-    }
-
     public static boolean isRed() {
         if (Robot.isSimulation()) {
             return false;
@@ -254,7 +283,7 @@ public class Robot extends TimedRobotstangs {
 
     }
 
-        public void configureDisabledTab(){
+    public void configureDisabledTab() {
 
         disableTab = Shuffleboard.getTab("Disabled");
 
@@ -270,20 +299,23 @@ public class Robot extends TimedRobotstangs {
                         .ignoringDisable(true));
     }
 
-    public void configureTeleopTab(){
-        teleopTab = Shuffleboard.getTab("Teleop");
+    public void logCurrentAuto() {
 
-
-        
     }
 
-public void loadNamedCommands(){
+    public void configureTeleopTab() {
+        teleopTab = Shuffleboard.getTab("Teleop");
 
-        NamedCommands.registerCommand("Shoot", new InstantCommand(() -> Turret.getInstance().trackHub()));
+    }
 
-        NamedCommands.registerCommand("Extend", new ExtendIntake());
+    public void loadNamedCommands() {
 
-        NamedCommands.registerCommand("Retract", new RetractIntake());
+        NamedCommands.registerCommand("Shoot",
+                new InstantCommand(() -> Turret.getInstance().trackHub()).withTimeout(0.5));
+
+        NamedCommands.registerCommand("Extend", new ExtendIntake().withTimeout(0.5));
+
+        NamedCommands.registerCommand("Retract", new RetractIntake().withTimeout(0.5));
 
         NamedCommands.registerCommand("Dont shoot",
                 new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false))
@@ -294,7 +326,7 @@ public void loadNamedCommands(){
                         .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
                         .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
 
-}
+    }
 
     private static final class GcStatsCollector {
 

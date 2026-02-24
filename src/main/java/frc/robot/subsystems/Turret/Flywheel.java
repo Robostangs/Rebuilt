@@ -36,15 +36,15 @@ public class Flywheel extends SubsystemBase {
     public void configureShooterMotor() {
         TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
 
-        flywheelConfig.Slot0.kP = Constants.TurretConstants.kShooterMotorP;
-        flywheelConfig.Slot0.kI = Constants.TurretConstants.kShooterMotorI;
-        flywheelConfig.Slot0.kD = Constants.TurretConstants.kShooterMotorD;
-        flywheelConfig.Slot0.kA = Constants.TurretConstants.kShooterMotorA;
-        flywheelConfig.Slot0.kV = Constants.TurretConstants.kShooterMotorV;
-        flywheelConfig.Slot0.kS = Constants.TurretConstants.kShooterMotorS;
-        flywheelConfig.Voltage.PeakReverseVoltage = Constants.FlyWheelConstants.kPeakReverseOutput;
+        flywheelConfig.Slot0.kP = Constants.FlywheelConstants.kShooterMotorP;
+        flywheelConfig.Slot0.kI = Constants.FlywheelConstants.kShooterMotorI;
+        flywheelConfig.Slot0.kD = Constants.FlywheelConstants.kShooterMotorD;
+        flywheelConfig.Slot0.kA = Constants.FlywheelConstants.kShooterMotorA;
+        flywheelConfig.Slot0.kV = Constants.FlywheelConstants.kShooterMotorV;
+        flywheelConfig.Slot0.kS = Constants.FlywheelConstants.kShooterMotorS;
+        flywheelConfig.Voltage.PeakReverseVoltage = Constants.FlywheelConstants.kPeakReverseOutput;
 
-        flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.TurretConstants.kShooterMotorStatorCurrentLimit;
+        flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterMotorStatorCurrentLimit;
 
         // Apply the PID configurations to the shooter motor
         flyWheel.getConfigurator().apply(flywheelConfig);

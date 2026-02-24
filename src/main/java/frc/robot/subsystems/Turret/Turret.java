@@ -68,9 +68,6 @@ public class Turret extends SubsystemBase {
     MechanismLigament2d simDisplay=simRoot.append(
     new MechanismLigament2d("TurretArm", 15, 90, 10, new Color8Bit(150, 150, 150))
 );
-private final MechanismLigament2d m_shooter = simDisplay.append(
-    new MechanismLigament2d("Shooter", 10, 0, 6, new Color8Bit(0, 200, 255))
-);
 
     private double turretMotorAbsoluteSensorOffset = 0.0;
 

@@ -16,13 +16,10 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -269,34 +266,40 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         visionPoses.add(photonVisionBack);
         visionPoses.add(photonVisionRight);
 
+        setVisionPose(visionPoses);
+
+        Robot.teleopField.setRobotPose(this.getState().Pose);
+    }
+
+    private void setVisionPose(ArrayList<VisionStangs> visionMeasurements) {
         double smallestAmbiuity = 1;
         int index = -1;
-        for (int c = 0; c < visionPoses.size(); c++) {
-            if(visionPoses.get(c) != null){
-            if (visionPoses.get(c).getAmbiguity() < smallestAmbiuity) {
-                smallestAmbiuity = visionPoses.get(c).getAmbiguity();
-                index = c;
-            }}
+        for (int c = 0; c < visionMeasurements.size(); c++) {
+            if (visionMeasurements.get(c) != null) {
+                if (visionMeasurements.get(c).getAmbiguity() < smallestAmbiuity) {
+                    smallestAmbiuity = visionMeasurements.get(c).getAmbiguity();
+                    index = c;
+                }
+            }
         }
 
-        if (visionPoses.get(index).getPose() != null) {
+        if (visionMeasurements.get(index).getPose() != null) {
             SmartDashboard.putString("Vision/Camera with best Pose: ",
-                    "Best vision value is: " + visionPoses.get(index).getName());
+                    "Best vision value is: " + visionMeasurements.get(index).getName());
             SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
-                    visionPoses.get(index).getAmbiguity());
-                    SmartDashboard.putString("Vision/Pose Null error ",
+                    visionMeasurements.get(index).getAmbiguity());
+            SmartDashboard.putString("Vision/Pose Null error ",
                     "Ts NOT null dude");
-                    SmartDashboard.putNumber("Vision/Vision Pose index ",
+            SmartDashboard.putNumber("Vision/Vision Pose index ",
                     index);
-            this.addVisionMeasurement(visionPoses.get(index).getPose(), visionPoses.get(index).getTimeStamp());
+
+            this.addVisionMeasurement(visionMeasurements.get(index).getPose(),
+                    visionMeasurements.get(index).getTimeStamp());
         } else {
             SmartDashboard.putString("Vision/Pose Null error ",
                     "Ts null dude");
 
         }
-
-        Robot.teleopField.setRobotPose(this.getState().Pose);
-
     }
 
     private void startSimThread() {

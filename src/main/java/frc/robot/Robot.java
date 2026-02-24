@@ -192,6 +192,8 @@ public class Robot extends TimedRobotstangs {
 
         double flywheelVelocity = SmartDashboard.getNumber("Flywheel velocity", 0.0);
         Flywheel.getInstance().setShooterRPS(flywheelVelocity);
+        Flywheel.getInstance().setMotionMagic();
+
     }
     @Override
     public void testExit() {

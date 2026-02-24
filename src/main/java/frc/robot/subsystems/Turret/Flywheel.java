@@ -28,7 +28,7 @@ public class Flywheel extends SubsystemBase{
         shouldShoot = false;
         flyWheel =new TalonFX(Constants.TurretConstants.shooterMotorID);
         shooterTargetVelocity = new VelocityVoltage(0);
-        
+
 
        
     }
@@ -66,6 +66,10 @@ public class Flywheel extends SubsystemBase{
     }
     public void setShooterRPS(double rps){
         shooterTargetVelocity.Velocity = rps;
+    }
+    public void setMotionMagic(){
+                flyWheel.setControl(shooterTargetVelocity);
+
     }
 
     @Override

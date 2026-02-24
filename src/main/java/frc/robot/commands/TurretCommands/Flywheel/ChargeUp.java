@@ -15,11 +15,12 @@ public class ChargeUp extends Command {
 
     @Override
     public void initialize() {
-        turretShooter.setShooterRPS(targetrps);
+        // turretShooter.setShooterRPS(targetrps);
     }
 
     @Override
     public void execute() {
+        turretShooter.setMotionMagic();
         turretShooter.postStatus("Charging to " + targetrps + " rps");
     }
 

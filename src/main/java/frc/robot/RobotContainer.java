@@ -10,7 +10,10 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import frc.robot.subsystems.Turret.*;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.TurretCommands.setTurretDutyCycle;
@@ -33,19 +36,27 @@ public class RobotContainer {
 
         private final Telemetry logger = new Telemetry(MaxSpeed);
 
-        private final CommandXboxController xDrive = new CommandXboxController(0);
-        private final CommandXboxController xManip = new CommandXboxController(1);
+        public final CommandXboxController xDrive = new CommandXboxController(0);
+        public final CommandXboxController xManip = new CommandXboxController(1);
         private final GenericHID xSim = new GenericHID(2);
 
         public final CommandSwerveDrivetrain drivetrain = Constants.JabbaTunerConstants.createDrivetrain();
-
+   
         public RobotContainer() {
                 configureDrivingBinding();
                 configureManipBindings();
                 drivetrain.registerTelemetry(logger::telemeterize);
                 logger.initSwerveLog();
         }
-
+        public static Command controllerHaptics(double secs, CommandXboxController controller){
+                return new StartEndCommand(() -> {
+                        controller.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
+                        controller.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
+                }, () -> {
+                        controller.setRumble(GenericHID.RumbleType.kRightRumble, 0);
+                        controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+                }).withDeadline(new WaitCommand(secs));
+        }
         private void configureDrivingBinding() {
                 setDrivetrain();
 
@@ -61,7 +72,8 @@ public class RobotContainer {
                                 drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-
+                
+                xDrive.leftBumper().onTrue(controllerHaptics(1,xDrive));
         }
 
         public void configureManipBindings() {

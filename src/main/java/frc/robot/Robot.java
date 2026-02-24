@@ -22,6 +22,7 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -50,7 +51,7 @@ import frc.robot.subsystems.Turret.Flywheel;
 public class Robot extends TimedRobotstangs {
     public static boolean isJaba;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
-    private final RobotContainer m_robotContainer;
+    public static RobotContainer m_robotContainer;
     public static ShuffleboardTab disableTab, teleopTab;
 
     public static Field2d teleopField = new Field2d();
@@ -253,8 +254,8 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopInit() {
-        lastMatchSecond = (int) DriverStation.getMatchTime();
-
+        lastMatchSecond = Robot.isSimulation()?(int)Timer.getFPGATimestamp():(int) DriverStation.getMatchTime();
+        
     }
 
     @Override
@@ -263,8 +264,18 @@ public class Robot extends TimedRobotstangs {
         String gameData = DriverStation.getGameSpecificMessage();
         int gameTimeInt = (int) DriverStation.getMatchTime();
         double gameTime = DriverStation.getMatchTime();
+        if(Robot.isSimulation()){
+            gameTimeInt = (int)(Timer.getFPGATimestamp()-lastMatchSecond);
+            gameTime = Timer.getFPGATimestamp()-lastMatchSecond;
+        }else{
+            gameTimeInt = (int) DriverStation.getMatchTime();
+            gameTime = DriverStation.getMatchTime();
+        }
 
         if (gameTime < 30 || gameTime > 130) {
+            if(gameTimeInt==29){
+                CommandScheduler.getInstance().schedule(RobotContainer.controllerHaptics(2,m_robotContainer.xDrive));
+            }
             canBlueScore = whoCanScore.both;
         } else if (gameTime < 130 && gameTime > 129) {
             if (gameData.length() > 0) {
@@ -287,6 +298,7 @@ public class Robot extends TimedRobotstangs {
 
         else if ((gameTimeInt - 10) % 25 == 0) {
             canBlueScore = (canBlueScore == whoCanScore.blue) ? whoCanScore.red : whoCanScore.blue;
+            CommandScheduler.getInstance().schedule(RobotContainer.controllerHaptics(1,m_robotContainer.xDrive));
         } else {
             int secondsSince10 = gameTimeInt - 10;
             if (secondsSince10 >= 0 && secondsSince10 % 25 == 0) {
@@ -308,7 +320,7 @@ public class Robot extends TimedRobotstangs {
             allianceScore = Constants.ElasticConstants.white;
         }
 
-        SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
+        SmartDashboard.putNumber("Match Time", gameTime);
     }
 
     @Override

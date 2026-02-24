@@ -65,20 +65,20 @@ public class Robot extends TimedRobotstangs {
 
     public static Alert gcAlert = new Alert("MEMORY TWEAKING LOOK INTO TS RN", AlertType.kError);
     public static Alert shiftAlert = new Alert("Alliance shift may not be accurate", AlertType.kWarning);
+    public static Alert autoAlert = new Alert("Auto couldnt load", AlertType.kError);
 
     public static Constants.ElasticConstants.whoCanScore canBlueScore;
 
     public Color allianceScore = Constants.ElasticConstants.purple;
 
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private SendableChooser<Command> autoChooserFav = new SendableChooser<>();
+
     Command autoCommand;
 
     static NetworkTableEntry turretSetpoint;
 
-    /* log and replay timestamp and joystick data */
-    private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
-            .withTimestampReplay()
-            .withJoystickReplay();
+ 
 
     public Robot() {
         m_robotContainer = new RobotContainer();
@@ -152,32 +152,29 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void disabledInit() {
         autoChooser = AutoBuilder.buildAutoChooser();
+        autoChooserFav = AutoBuilder.buildAutoChooserWithOptionsModifier(
+        (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
+        
         SmartDashboard.putData("Auto Chooser", autoChooser);
+        SmartDashboard.putData("Favorite Auto Chooser", autoChooserFav);
     }
 
     @Override
     public void disabledPeriodic() {
 
-        autoCommand = autoChooser.getSelected();
-        SmartDashboard.putString("Current Auto", autoCommand.getName());
-        List<Pose2d> poses = new ArrayList<>();
-        poses.clear();
-        try {
-            for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoCommand.getName())) {
-                for(Pose2d pose: path.getPathPoses()){
-                    poses.add(pose);
-                }
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        
+        if( autoChooser.getSelected() != null &&
+            !autoChooser.getSelected().getName().equals("none")){
+            autoCommand = autoChooser.getSelected();
+        } else {
+            autoCommand = autoChooserFav.getSelected();
         }
-        teleopField.getObject("auto").setPoses(poses);
-
+        drawCurrentAuto(autoCommand.getName());
     }
 
     @Override
     public void disabledExit() {
+        drawCurrentAuto(null);
     }
 
     @Override
@@ -326,6 +323,26 @@ public class Robot extends TimedRobotstangs {
                         .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
                         .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
 
+    }
+
+    public void drawCurrentAuto(String autoName) {
+        List<Pose2d> poses = new ArrayList<>();
+        poses.clear();
+        if(autoName != null){
+        try {
+            for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
+                for (Pose2d pose : path.getPathPoses()) {
+                    poses.add(pose);
+                }
+
+            }
+            autoAlert.set(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            autoAlert.set(true);
+        }}
+        
+        teleopField.getObject("auto").setPoses(poses);
     }
 
     private static final class GcStatsCollector {

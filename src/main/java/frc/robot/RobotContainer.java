@@ -37,7 +37,7 @@ public class RobotContainer {
         private final CommandXboxController xManip = new CommandXboxController(1);
         private final GenericHID xSim = new GenericHID(2);
 
-        public final CommandSwerveDrivetrain drivetrain = Constants.JabaTunerConstants.createDrivetrain();
+        public final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
 
         public RobotContainer() {
                 configureDrivingBinding();
@@ -61,6 +61,8 @@ public class RobotContainer {
                                 drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+                xDrive.a().onTrue(new InstantCommand(() ->Hood.getInstance().setHoodPosition(0)));
 
         }
 

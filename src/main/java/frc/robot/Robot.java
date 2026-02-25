@@ -68,8 +68,8 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void robotInit() {
-        isJaba = Paths.get("/home/lvuser/Ultron").toFile().exists();
 
+        isJaba = true;
         SmartDashboard.putData("Field", teleopField);
 
         configureDisabledTab();
@@ -189,6 +189,7 @@ public class Robot extends TimedRobotstangs {
 
         double hoodSetpoint = SmartDashboard.getNumber("Hood setpoint", 0.0);
         Hood.getInstance().setMotionMagicTarget(hoodSetpoint);
+        Hood.getInstance().setMotionMagic();
 
         double flywheelVelocity = SmartDashboard.getNumber("Flywheel velocity", 0.0);
         Flywheel.getInstance().setShooterRPS(flywheelVelocity);
@@ -225,6 +226,8 @@ public class Robot extends TimedRobotstangs {
         disableTab.add("Set Drivetrain motors to brake",
                 new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(false))
                         .ignoringDisable(true));
+
+        disableTab.add("Zero Hood", new InstantCommand(() ->Hood.getInstance().setHoodPosition(0)).ignoringDisable(true));
 
         disableTab.add("RESET TO SUN TZUUUUUU",
                 new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())

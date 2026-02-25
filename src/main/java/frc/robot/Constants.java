@@ -108,7 +108,7 @@ public final class Constants {
 
     public static class HoodConstants {
 
-        public static final int hoodMotorID = 5;
+        public static final int hoodMotorID = 25;
         public static final double kHoodDownPos = 0d;
         public static final int kLimitSwitchId = 0;
         public static final double kHoodHomeDutyCycle = -0.09;
@@ -116,7 +116,7 @@ public final class Constants {
         public static final double kHoodMotorI = 0;
         public static final double kHoodMotorD = 0;
         public static final double kHoodMotorS = 0;
-        public static final double kHoodMotorV = 0;
+        public static final double kHoodMotorV = 0.2;
         public static final double kHoodMotorA = 0;
         public static final double kHoodMotionMagicCruiseVelocity = 0;
         public static final double kHoodMotionMagicAcceleration = 0;
@@ -147,14 +147,14 @@ public final class Constants {
         public static final double IronmanMotionMagicKaFF = .5;
         public static final double kHomePosition = 0;
         public static final int kFlywheelMotorID = 0;
-        public static final double kShooterMotorP = 0.1;
-        public static final double kShooterMotorI = 0.08;
+        public static final double kShooterMotorP = 0.5;
+        public static final double kShooterMotorI = 0.0;
         public static final double kShooterMotorD = 0;
         public static final double kShooterMotorG = 0;
-        public static final double kShooterMotorA = 0.5967;
-        public static final double kShooterMotorV = 0.2;
+        public static final double kShooterMotorA = 0;
+        public static final double kShooterMotorV = 0.122;
         public static final double kShooterMotorS = 0.29;
-        public static final double shooterMotionMagicCruiseVelocity = 0.2;
+        public static final double shooterMotionMagicCruiseVelocity = 0.;
         public static final double shooterMotionMagicAcceleration = 0;
         public static final double shooterMotionMagicJerk = 0;
         public static final double kShooterVelocityTolerance = 0;
@@ -163,14 +163,15 @@ public final class Constants {
         public static final double kSafeClimberPos = 0;
         public static final double kSafeClimberNeg = 0;
         public static final double kShooterMotorStatorCurrentLimit = 50;
+        public static final double kShooterSupplyCurrentLimit = 60;
 
     }
 
     public static class FeederConstants {
 
         public static final int feederMotorID = 0;
-        public static final double feederSupplyLimit = 60;
-        public static final double kFeedDutyCycle = 0.5;
+        public static final double feederSupplyLimit = 10;
+        public static final double kFeedDutyCycle = 0.58;
         public static final int fuelSensorID = 1;
 
     }
@@ -653,7 +654,7 @@ public final class Constants {
         private static final int kFrontLeftDriveMotorId = 41;
         private static final int kFrontLeftSteerMotorId = 42;
         private static final int kFrontLeftEncoderId = 43;
-        private static final Angle kFrontLeftEncoderOffset = Rotations.of(0.056640625);
+        private static final Angle kFrontLeftEncoderOffset = Rotations.of(0.458740234375);
         private static final boolean kFrontLeftSteerMotorInverted = false;
         private static final boolean kFrontLeftEncoderInverted = false;
 
@@ -664,7 +665,7 @@ public final class Constants {
         private static final int kFrontRightDriveMotorId = 11;
         private static final int kFrontRightSteerMotorId = 12;
         private static final int kFrontRightEncoderId = 13;
-        private static final Angle kFrontRightEncoderOffset = Rotations.of(-0.470703125);
+        private static final Angle kFrontRightEncoderOffset = Rotations.of(-0.40869140625);
         private static final boolean kFrontRightSteerMotorInverted = false;
         private static final boolean kFrontRightEncoderInverted = false;
 
@@ -675,7 +676,7 @@ public final class Constants {
         private static final int kBackLeftDriveMotorId = 31;
         private static final int kBackLeftSteerMotorId = 32;
         private static final int kBackLeftEncoderId = 33;
-        private static final Angle kBackLeftEncoderOffset = Rotations.of(0.275390625);
+        private static final Angle kBackLeftEncoderOffset = Rotations.of(-0.3154296875);
         private static final boolean kBackLeftSteerMotorInverted = false;
         private static final boolean kBackLeftEncoderInverted = false;
 
@@ -686,7 +687,7 @@ public final class Constants {
         private static final int kBackRightDriveMotorId = 21;
         private static final int kBackRightSteerMotorId = 22;
         private static final int kBackRightEncoderId = 23;
-        private static final Angle kBackRightEncoderOffset = Rotations.of(-0.423095703125);
+        private static final Angle kBackRightEncoderOffset = Rotations.of(-0.301513671875);
         private static final boolean kBackRightSteerMotorInverted = false;
         private static final boolean kBackRightEncoderInverted = false;
 
@@ -969,7 +970,8 @@ public final class Constants {
         private static final int kBackRightDriveMotorId = 21;
         private static final int kBackRightSteerMotorId = 22;
         private static final int kBackRightEncoderId = 23;
-        private static final Angle kBackRightEncoderOffset = Robot.isJaba ? JabaTunerConstants.kBackRightEncoderOffset
+        private static final Angle kBackRightEncoderOffset = 
+        Robot.isJaba ? JabaTunerConstants.kBackRightEncoderOffset
                 : ZiroTunerConstants.kBackRightEncoderOffset;
 
         private static final boolean kBackRightSteerMotorInverted = false;

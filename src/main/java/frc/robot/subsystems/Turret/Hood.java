@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Turret;
 
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
@@ -15,21 +16,18 @@ public class Hood extends SubsystemBase {
     TalonFXS hoodMotor;
     public static Hood mInstance;
     DigitalInput limitSwitch;
-    MotionMagicTorqueCurrentFOC hoodTargetPosition;
+    MotionMagicExpoDutyCycle hoodTargetPosition;
 
     public Hood() {
         hoodMotor = new TalonFXS(Constants.HoodConstants.hoodMotorID);
         limitSwitch = new DigitalInput(Constants.HoodConstants.kLimitSwitchId);
-        configureHoodMotor();
-        hoodTargetPosition = new MotionMagicTorqueCurrentFOC(hoodMotor.getPosition().getValueAsDouble());
+        hoodTargetPosition = new MotionMagicExpoDutyCycle(hoodMotor.getPosition().getValueAsDouble());
+                configureHoodMotor();
+
     }
 
     private void configureHoodMotor() {
         TalonFXSConfiguration hoodMotorConfig = new TalonFXSConfiguration();
-
-        hoodMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
-
-        hoodMotor.getConfigurator().apply(hoodMotorConfig);
 
         hoodMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
 
@@ -42,6 +40,8 @@ public class Hood extends SubsystemBase {
 
         hoodMotorConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.HoodConstants.kHoodMotionMagicCruiseVelocity;
         hoodMotorConfig.MotionMagic.MotionMagicAcceleration = Constants.HoodConstants.kHoodMotionMagicAcceleration;
+
+        hoodMotorConfig.ExternalFeedback.SensorToMechanismRatio = 44;
         hoodMotor.getConfigurator().apply(hoodMotorConfig);
 
     }
@@ -74,15 +74,19 @@ public class Hood extends SubsystemBase {
         return limitSwitch.get();
     }
     
-    public void setMotionMagicTarget(
-double pos){
+    public void setMotionMagicTarget(double pos){
         hoodTargetPosition.Position = pos;
+    }
+    public void setMotionMagic(){
+        hoodMotor.setControl(hoodTargetPosition);
+
     }
 
     @Override
     public void periodic() {
-        hoodMotor.setControl(hoodTargetPosition);
+        // hoodMotor.setControl(hoodTargetPosition);
         SmartDashboard.putNumber("Hood/HoodTargetPosition", hoodTargetPosition.Position);
+        SmartDashboard.putNumber("Hood/Hood pos", hoodMotor.getPosition().getValueAsDouble());
     }
 
 }

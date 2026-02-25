@@ -28,6 +28,7 @@ public class Flywheel extends SubsystemBase{
         shouldShoot = false;
         flyWheel =new TalonFX(Constants.TurretConstants.shooterMotorID);
         shooterTargetVelocity = new VelocityVoltage(0);
+        configureShooterMotor();
 
 
        
@@ -43,7 +44,7 @@ public class Flywheel extends SubsystemBase{
         flywheelConfig.Slot0.kV = Constants.TurretConstants.kShooterMotorV;
         flywheelConfig.Slot0.kS = Constants.TurretConstants.kShooterMotorS;
         
-        flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.TurretConstants.kShooterMotorStatorCurrentLimit;
+        flywheelConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.kShooterSupplyCurrentLimit;
 
 
         // Apply the PID configurations to the shooter motor
@@ -74,8 +75,8 @@ public class Flywheel extends SubsystemBase{
 
     @Override
     public void periodic() {
-        shooterTargetVelocity.Velocity = SmartDashboard.getNumber("Flywheel RPM target", 0);
-        flyWheel.setControl(shooterTargetVelocity);
+        // shooterTargetVelocity.Velocity = SmartDashboard.getNumber("Flywheel RPM target", 0);
+        // flyWheel.setControl(shooterTargetVelocity);
         SmartDashboard.putNumber("Shooter/velocity",flyWheel.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Shooter/target",shooterTargetVelocity.Velocity);
     }

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Stable.ControllerStangs;
 import frc.robot.commands.TurretCommands.setTurretDutyCycle;
 import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.Hood.setHoodDutyCycle;
@@ -33,8 +34,8 @@ public class RobotContainer {
 
         private final Telemetry logger = new Telemetry(MaxSpeed);
 
-        private final CommandXboxController xDrive = new CommandXboxController(0);
-        private final CommandXboxController xManip = new CommandXboxController(1);
+        private final ControllerStangs xDrive = new ControllerStangs(0);
+        private final ControllerStangs xManip = new ControllerStangs(1);
         private final GenericHID xSim = new GenericHID(2);
 
         public final CommandSwerveDrivetrain drivetrain = Constants.JabbaTunerConstants.createDrivetrain();
@@ -80,6 +81,7 @@ public class RobotContainer {
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.1)
                                 .whileTrue(new setHoodDutyCycle(() -> xManip.getLeftY() / 2));
+
 
         }
 

@@ -28,6 +28,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -269,6 +270,8 @@ public final class Constants {
         public static final String kLimelightRight = "Ultron";
         public static final String kPhotonCamNameRear = "Kratos";
         public static final Transform3d kRobotToCamRear = new Transform3d(new Transform2d());
+        public static final PIDController m_steerController = new PIDController(0, 0, 0);
+        public static final PIDController m_driveController = new PIDController(0, 0, 0);
     }
 
     public class ZiroTunerConstants {

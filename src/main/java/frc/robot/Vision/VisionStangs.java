@@ -88,7 +88,7 @@ public class VisionStangs {
     }
 
 
-    public void LLperiodic() {
+    private void LLperiodic() {
 
         /*
          * Only seed ll4 with external yaw angle if not rotating fast, otherwise use
@@ -204,4 +204,5 @@ public class VisionStangs {
             Photonperiodic();
         }
     }
+
 }

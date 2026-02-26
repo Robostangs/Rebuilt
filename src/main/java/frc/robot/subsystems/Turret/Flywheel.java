@@ -79,6 +79,8 @@ public class Flywheel extends SubsystemBase{
         // flyWheel.setControl(shooterTargetVelocity);
         SmartDashboard.putNumber("Shooter/velocity",flyWheel.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Shooter/target",shooterTargetVelocity.Velocity);
+        //TODO: see whether to put ancillary or a diff temp
+        SmartDashboard.putNumber("Shoooter/temperature",flyWheel.getAncillaryDeviceTemp().getValueAsDouble());
     }
 
     public void postStatus(String status) {

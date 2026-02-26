@@ -146,7 +146,7 @@ public final class Constants {
         public static final double IronmanMotionMagicKvFF = 4;
         public static final double IronmanMotionMagicKaFF = .5;
         public static final double kHomePosition = 0;
-        public static final int kFlywheelMotorID = 0;
+        public static final int kFlywheelMotorID = 9;
         public static final double kShooterMotorP = 0.5;
         public static final double kShooterMotorI = 0.0;
         public static final double kShooterMotorD = 0;

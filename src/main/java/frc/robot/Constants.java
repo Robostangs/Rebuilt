@@ -130,7 +130,7 @@ public final class Constants {
         public static final double kTurretRingTeeth = 200;
         public static final double kTurretMotorSensorToMechanismRatio = Constants.TurretConstants.kTurretRingTeeth
                 / Constants.TurretConstants.kTurretMotorTeeth;
-        public static final int shooterMotorID = 11;
+        public static final int shooterMotorID = 9;
         public static final double TurretMotorSupplyCurrentLimit = 60;
         public static final double dumbThing = (((double) kTurretMotorTeeth * (double) kTurretCANcoderTeeth)
                 / (double) kTurretRingTeeth) / 2;

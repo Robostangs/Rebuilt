@@ -88,7 +88,7 @@ public class Robot extends TimedRobotstangs {
         CommandScheduler.getInstance().run();
         gscollect.update();
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
-
+        Flywheel.getInstance().checkIfMotorHot();
 
     }
     @Override
@@ -186,15 +186,15 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void testPeriodic() {
+        
+        // double hoodSetpoint = SmartDashboard.getNumber("Hood setpoint", 0.0);
+        // Hood.getInstance().setMotionMagicTarget(hoodSetpoint);
+        // Hood.getInstance().setMotionMagic();
 
-        double hoodSetpoint = SmartDashboard.getNumber("Hood setpoint", 0.0);
-        Hood.getInstance().setMotionMagicTarget(hoodSetpoint);
-        Hood.getInstance().setMotionMagic();
-
-        double flywheelVelocity = SmartDashboard.getNumber("Flywheel velocity", 0.0);
-        Flywheel.getInstance().setShooterRPS(flywheelVelocity);
-        Flywheel.getInstance().setMotionMagic();
-
+        // double flywheelVelocity = SmartDashboard.getNumber("Flywheel velocity", 0.0);
+        // Flywheel.getInstance().setShooterRPS(flywheelVelocity);
+        // Flywheel.getInstance().setMotionMagic();
+        
     }
     @Override
     public void testExit() {

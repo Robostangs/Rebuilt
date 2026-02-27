@@ -70,7 +70,12 @@ public final class Constants {
 
     public static final AprilTagFieldLayout kAprilTagFieldLayout = AprilTagFieldLayout
             .loadField(AprilTagFields.kDefaultField);
+    public static class HopperConstants {
 
+        public static final int kBackGoerID = 0;
+        public static final int kLeftRightID = 0;
+
+    }
     public static class KirbyConstants {
         public static final int kirbyWheelsID = 20;
         public static final double KirbyCurrentLimit = 60;

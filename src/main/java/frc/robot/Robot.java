@@ -33,6 +33,7 @@ import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
+import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Turret.Hood;
 import frc.robot.subsystems.Turret.Turret;
@@ -76,11 +77,7 @@ public class Robot extends TimedRobotstangs {
         configureTeleopTab();
         loadNamedCommands();
 
-
-
-
     }
-
 
     @Override
     public void robotPeriodic() {
@@ -91,6 +88,7 @@ public class Robot extends TimedRobotstangs {
         Flywheel.getInstance().checkIfMotorHot();
 
     }
+
     @Override
     public void disabledInit() {
     }
@@ -157,14 +155,11 @@ public class Robot extends TimedRobotstangs {
 
         if (canBlueScore == whoCanScore.blue) {
             allianceScore = Constants.ElasticConstants.blue;
-        } 
-        else if (canBlueScore == whoCanScore.red) {
+        } else if (canBlueScore == whoCanScore.red) {
             allianceScore = Constants.ElasticConstants.red;
-        } 
-        else if(canBlueScore == whoCanScore.both){
+        } else if (canBlueScore == whoCanScore.both) {
             allianceScore = Constants.ElasticConstants.purple;
-        }
-        else{
+        } else {
             allianceScore = Constants.ElasticConstants.white;
         }
 
@@ -179,14 +174,14 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void testInit() {
         CommandScheduler.getInstance().cancelAll();
-                SmartDashboard.putNumber("Hood setpoint", 0);
-                SmartDashboard.putNumber("Flywheel velocity", 0);
+        SmartDashboard.putNumber("Hood setpoint", 0);
+        SmartDashboard.putNumber("Flywheel velocity", 0);
 
     }
 
     @Override
     public void testPeriodic() {
-        
+
         // double hoodSetpoint = SmartDashboard.getNumber("Hood setpoint", 0.0);
         // Hood.getInstance().setMotionMagicTarget(hoodSetpoint);
         // Hood.getInstance().setMotionMagic();
@@ -194,8 +189,9 @@ public class Robot extends TimedRobotstangs {
         // double flywheelVelocity = SmartDashboard.getNumber("Flywheel velocity", 0.0);
         // Flywheel.getInstance().setShooterRPS(flywheelVelocity);
         // Flywheel.getInstance().setMotionMagic();
-        
+
     }
+
     @Override
     public void testExit() {
     }
@@ -216,7 +212,7 @@ public class Robot extends TimedRobotstangs {
 
     }
 
-        public void configureDisabledTab(){
+    public void configureDisabledTab() {
 
         disableTab = Shuffleboard.getTab("Disabled");
 
@@ -227,21 +223,22 @@ public class Robot extends TimedRobotstangs {
                 new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(false))
                         .ignoringDisable(true));
 
-        disableTab.add("Zero Hood", new InstantCommand(() ->Hood.getInstance().setHoodPosition(0)).ignoringDisable(true));
+        disableTab.add("Zero Hood",
+                new InstantCommand(() -> Hood.getInstance().setHoodPosition(0)).ignoringDisable(true));
+        disableTab.add("Home Hood",
+                new HomeHood());
 
         disableTab.add("RESET TO SUN TZUUUUUU",
                 new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
                         .ignoringDisable(true));
     }
 
-    public void configureTeleopTab(){
+    public void configureTeleopTab() {
         teleopTab = Shuffleboard.getTab("Teleop");
 
-
-        
     }
 
-public void loadNamedCommands(){
+    public void loadNamedCommands() {
 
         NamedCommands.registerCommand("Shoot", new InstantCommand(() -> Turret.getInstance().trackHub()));
 
@@ -258,7 +255,7 @@ public void loadNamedCommands(){
                         .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
                         .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
 
-}
+    }
 
     private static final class GcStatsCollector {
 

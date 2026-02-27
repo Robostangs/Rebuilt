@@ -120,6 +120,7 @@ public final class Constants {
         public static final double kHoodMotorA = 0;
         public static final double kHoodMotionMagicCruiseVelocity = 0;
         public static final double kHoodMotionMagicAcceleration = 0;
+        public static final double kHoodStatorCurrentLimit = 10;
     }
 
     public static class TurretConstants {

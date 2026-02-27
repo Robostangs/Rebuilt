@@ -23,6 +23,7 @@ public class HomeHood extends Command {
     public void initialize() {
         hood.postStatus("Hood homing");
         hood.setHoodDutyCycle(Constants.HoodConstants.kHoodHomeDutyCycle);
+        hood.setHoodStatorCurrentConfig();
 
     }
 
@@ -36,12 +37,13 @@ public class HomeHood extends Command {
         hood.setHoodDutyCycle(0);
         hood.setHoodPosition(Constants.TurretConstants.kHomePosition);
         hood.postStatus("Hood homed");
+        hood.configureHoodMotor();
 
     }
 
 
     @Override
     public boolean isFinished() {
-        return hood.getLimitSwitch();
+        return hood.getLimitSwitch() || hood.isAtHardStop();
     }
 }

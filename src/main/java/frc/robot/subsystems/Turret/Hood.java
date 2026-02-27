@@ -26,7 +26,7 @@ public class Hood extends SubsystemBase {
 
     }
 
-    private void configureHoodMotor() {
+    public void configureHoodMotor() {
         TalonFXSConfiguration hoodMotorConfig = new TalonFXSConfiguration();
 
         hoodMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
@@ -42,6 +42,14 @@ public class Hood extends SubsystemBase {
         hoodMotorConfig.MotionMagic.MotionMagicAcceleration = Constants.HoodConstants.kHoodMotionMagicAcceleration;
 
         hoodMotorConfig.ExternalFeedback.SensorToMechanismRatio = 44;
+        hoodMotor.getConfigurator().apply(hoodMotorConfig);
+
+    }
+
+    public void setHoodStatorCurrentConfig(){
+        TalonFXSConfiguration hoodMotorConfig = new TalonFXSConfiguration();
+        hoodMotorConfig.CurrentLimits.SupplyCurrentLimit = Constants.HoodConstants.kHoodStatorCurrentLimit;
+
         hoodMotor.getConfigurator().apply(hoodMotorConfig);
 
     }
@@ -68,6 +76,11 @@ public class Hood extends SubsystemBase {
 
     public void setHoodPosition(double pos) {
         hoodMotor.setPosition(pos);
+    }
+
+    public Boolean isAtHardStop(){
+        return hoodMotor.getFault_StatorCurrLimit().getValue();
+
     }
 
     public boolean getLimitSwitch() {

@@ -1,4 +1,5 @@
 package frc.robot.commands.TurretCommands.Hood;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Turret.Hood;
@@ -11,6 +12,7 @@ public class HomeHood extends Command {
      */
 
     Hood hood;
+    Timer timer = new Timer();
 
 
     public HomeHood() {
@@ -29,6 +31,13 @@ public class HomeHood extends Command {
 
     @Override
     public void execute() {
+        if(hood.CurrentLimitTripped().get()){
+            timer.start();
+        }
+        else{
+            timer.stop();
+            timer.reset();
+        }
     }
     
 
@@ -44,6 +53,6 @@ public class HomeHood extends Command {
 
     @Override
     public boolean isFinished() {
-        return hood.getLimitSwitch() || hood.isAtHardStop();
+        return hood.getLimitSwitch() || timer.hasElapsed(Constants.HoodConstants.kHoodHomeTimeout);
     }
 }

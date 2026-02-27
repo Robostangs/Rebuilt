@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Turret;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
@@ -78,8 +80,8 @@ public class Hood extends SubsystemBase {
         hoodMotor.setPosition(pos);
     }
 
-    public Boolean isAtHardStop(){
-        return hoodMotor.getFault_StatorCurrLimit().getValue();
+    public Supplier<Boolean> CurrentLimitTripped(){
+        return () ->hoodMotor.getFault_StatorCurrLimit().getValue();
 
     }
 

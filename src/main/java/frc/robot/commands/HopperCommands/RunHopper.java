@@ -3,29 +3,33 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Hopper;
 
-public class StartLeftRighter extends Command {
+public class RunHopper extends Command {
     
     Hopper hopper;
 
 
-    public StartLeftRighter() {
+    public RunHopper() {
         hopper = Hopper.getInstance();
         addRequirements(hopper);
     }
     
     @Override
     public void initialize() {
-        hopper.setLeftRighterDutyCycle(Constants.HopperConstants.kLeftRighterDC);
+
     }
 
     @Override
     public void execute(){
         hopper.postLeftRighterStatus("Going at DC "+Constants.HopperConstants.kLeftRighterDC);
+        hopper.setLeftRightDutyCycle(Constants.HopperConstants.kLeftRighterDC);
+        hopper.setBackGoerDutyCycle(Constants.HopperConstants.kBackGoerDC);
+
     }
 
     @Override
     public void end(boolean interrupted) {
-        hopper.setLeftRighterDutyCycle(0);
+        hopper.setLeftRightDutyCycle(0);
+        hopper.setBackGoerDutyCycle(0);
         hopper.postLeftRighterStatus("Stopped");
     }
 

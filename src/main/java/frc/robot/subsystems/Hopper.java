@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -11,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Hopper extends SubsystemBase {
-    public VictorSPX backGoer;
+    public TalonSRX backGoer;
     public VictorSPX leftRighter;
     public static Hopper mInstance;
 
@@ -20,15 +21,17 @@ public class Hopper extends SubsystemBase {
 
 
     public Hopper(){
-        backGoer = new VictorSPX(Constants.HopperConstants.kBackGoerID);
+        backGoer = new TalonSRX(Constants.HopperConstants.kBackGoerID);
         leftRighter= new VictorSPX(Constants.HopperConstants.kLeftRightID);    
     }
-    public void setBackGoerDutyCycle(double dc){
-        backGoer.set(ControlMode.PercentOutput, dc);
+
+ 
+    public void setLeftRightDutyCycle(double dutyCycle){
+        leftRighter.set(ControlMode.PercentOutput, dutyCycle);
     }
 
-    public void setLeftRighterDutyCycle(double dc){
-        leftRighter.set(ControlMode.PercentOutput, dc);
+    public void setBackGoerDutyCycle(double dutyCycle){
+        backGoer.set(ControlMode.PercentOutput, dutyCycle);
     }
 
     public void postLeftRighterStatus(String status) {
@@ -44,15 +47,15 @@ public class Hopper extends SubsystemBase {
         }
         return mInstance;
     }
-    public void checkIsHot(){
-        boolean leftRighterHot=leftRighter.getTemperature()>=40;
-        boolean backGoerHot=backGoer.getTemperature()>=40;
+    // public void checkIsHot(){
+    //     boolean leftRighterHot=leftRighter.getTemperature()>=40;
+    //     boolean backGoerHot=backGoer.getTemperature()>=40;
 
-        leftRightHotAlert.set(leftRighterHot);
-        backGoerHotAlert.set(backGoerHot);
-    }
+    //     leftRightHotAlert.set(leftRighterHot);
+    //     backGoerHotAlert.set(backGoerHot);
+    // }
     @Override
     public void periodic(){
-        checkIsHot();
+        // checkIsHot();
     }
 }

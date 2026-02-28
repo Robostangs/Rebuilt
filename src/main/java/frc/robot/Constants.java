@@ -75,8 +75,8 @@ public final class Constants {
 
         public static final int kBackGoerID = 1;
         public static final int kLeftRightID = 8;
-        public static final double kBackGoerDC = 0.5;
-        public static final double kLeftRighterDC = 0.5;
+        public static final double kBackGoerDC = 1;
+        public static final double kLeftRighterDC = 1;
 
     }
 
@@ -98,9 +98,9 @@ public final class Constants {
 
     public static class FeederConstants {
 
-        public static final int feederMotorID = 0;
+        public static final int feederMotorID = 45;
         public static final double feederSupplyLimit = 60;
-        public static final double kFeedDutyCycle = 0.5;
+        public static final double kFeedDutyCycle = 1;
         public static final int fuelSensorID = 1;
 
     }
@@ -338,7 +338,7 @@ public final class Constants {
                 public static final double kHoodMotionMagicAcceleration = 0;
                 public static final double kHoodSensortoMechanism = 44;
                 public static final double kHoodStatorCurrentLimit = -20;
-                public static final double kHoodHomeTimeout = 1;
+                public static final double kHoodHomeTimeout = .5;
         }
 
         public static class FlywheelConstants {
@@ -358,7 +358,7 @@ public final class Constants {
         }
 
         public static class TurretConstants {
-                public static final int turretMotorID = 1;
+                public static final int turretMotorID = 0;
                 public static final int turretCANcoderID = 2;
                 public static final double kTurretMotorTeeth = 19;
                 public static final double kTurretCANcoderTeeth = 21;

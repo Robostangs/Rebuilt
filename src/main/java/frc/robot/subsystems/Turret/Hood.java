@@ -45,7 +45,7 @@ public class Hood extends SubsystemBase {
         hoodMotorConfig.Slot0.kV = Constants.HoodConstants.kHoodMotorV;
         hoodMotorConfig.Slot0.kA = Constants.HoodConstants.kHoodMotorA;
 
-        hoodMotorConfig.CurrentLimits.StatorCurrentLimit = 20;
+        hoodMotorConfig.CurrentLimits.StatorCurrentLimit = 15;
 
         hoodMotorConfig.ExternalFeedback.SensorToMechanismRatio = Constants.HoodConstants.kHoodSensortoMechanism;
 
@@ -66,10 +66,10 @@ public class Hood extends SubsystemBase {
     }
 
     public double getHoodAngle(double MetersFromHub) {
-        double feetFromHub = Units.metersToFeet(MetersFromHub);
+        double feetFromHub = Units.metersToFeet(MetersFromHub)+2;
         SmartDashboard.putNumber(" feet from hub", feetFromHub);
 
-        return -0.644 + 0.462 * Math.log(feetFromHub);
+        return -0.522 + 0.429 * Math.log(feetFromHub);
     }
 
     public void setHoodDutyCycle(double dc) {

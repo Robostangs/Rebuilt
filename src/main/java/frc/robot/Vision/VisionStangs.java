@@ -126,11 +126,11 @@ public class VisionStangs {
                     .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
 
                 fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
+                        .getBotPoseEstimate_wpiBlue(CameraName);
 
             } else {
                 fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
+                        .getBotPoseEstimate_wpiBlue(CameraName);
 
             }
             if (isPosegoo(fourPoseEsti)) {

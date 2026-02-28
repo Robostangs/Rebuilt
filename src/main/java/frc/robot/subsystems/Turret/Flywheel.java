@@ -20,7 +20,7 @@ public class Flywheel extends SubsystemBase {
     public static Flywheel instance;
     public static boolean shouldShoot;
     Alert hotAlert = new Alert("Flywheel Motor is HOT", AlertType.kError);
-    public static Flywheel getInstance(){
+
 
     public static Flywheel getInstance() {
         if (instance == null) {
@@ -107,10 +107,7 @@ public class Flywheel extends SubsystemBase {
         
     }
 
-    public void postStatus(String status) {
-        SmartDashboard.putNumber("Shooter/velocity", flyWheel.getVelocity().getValueAsDouble());
-        SmartDashboard.putNumber("Shooter/target", shooterTargetVelocity.Velocity);
-    }
+ 
 
     public void postStatus(String status) {
 

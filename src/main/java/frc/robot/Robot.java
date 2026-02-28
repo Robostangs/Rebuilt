@@ -318,10 +318,6 @@ public class Robot extends TimedRobotstangs {
                         .ignoringDisable(true));
     }
 
-    public void configureTeleopTab() {
-        teleopTab = Shuffleboard.getTab("Teleop");
-
-    }
 
     public void logCurrentAuto() {
 

@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -70,29 +71,34 @@ public class Flywheel extends SubsystemBase{
     public void setShooterRPS(double rps){
         shooterTargetVelocity.Velocity = rps;
     }
-    public void setMotionMagic(){
-                flyWheel.setControl(shooterTargetVelocity);
-
+    public void setTargetVelocity(double targetRps){
+            shooterTargetVelocity.Velocity = targetRps;
     }
     public void checkIfMotorHot(){
         boolean isMotorHot = flyWheel.getAncillaryDeviceTemp().getValueAsDouble()>=45;
         hotAlert.set(isMotorHot);
         SmartDashboard.putBoolean("Shoooter/isMotorHot",isMotorHot);
     }
+
+    public double getTargetVelocity(double MetersFromHub){
+        double feetFromHub = Units.metersToFeet(MetersFromHub);
+        double targetVelocity =1.77*feetFromHub+54.3;
+        return targetVelocity;
+    }
+
+
     @Override
     public void periodic() {
         // shooterTargetVelocity.Velocity = SmartDashboard.getNumber("Flywheel RPM target", 0);
-        // flyWheel.setControl(shooterTargetVelocity);
+        flyWheel.setControl(shooterTargetVelocity);
         SmartDashboard.putNumber("Shooter/velocity",flyWheel.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Shooter/target",shooterTargetVelocity.Velocity);
-        //TODO: see whether to put ancillary or a diff temp
         SmartDashboard.putNumber("Shoooter/temperature",flyWheel.getAncillaryDeviceTemp().getValueAsDouble());
         
         
     }
 
     public void postStatus(String status) {
-        
         SmartDashboard.putString("TurretShooter/Status", status);
     }
     

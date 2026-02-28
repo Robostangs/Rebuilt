@@ -4,11 +4,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Turret.Flywheel;
 
 public class ChargeUp extends Command {
-    double targetrps;
     Flywheel turretShooter;
 
-    public ChargeUp(double targetrps) {
-        this.targetrps = targetrps;
+    public ChargeUp() {
         turretShooter = Flywheel.getInstance();
         addRequirements(turretShooter);
     }
@@ -20,7 +18,9 @@ public class ChargeUp extends Command {
 
     @Override
     public void execute() {
-        turretShooter.setMotionMagic();
+        double metersFromHub = 
+        double targetrps = turretShooter.getTargetVelocity();
+        turretShooter.setTargetVelocity();
         turretShooter.postStatus("Charging to " + targetrps + " rps");
     }
 

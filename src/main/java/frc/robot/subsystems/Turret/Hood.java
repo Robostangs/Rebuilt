@@ -4,12 +4,10 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 
 import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -59,9 +57,9 @@ public class Hood extends SubsystemBase {
 
     }
 
-    public double getHoodAngle(Pose2d currentPose) {
-        // TODO acc fill this out later
-        return currentPose.getX();
+    public double getHoodAngle(double MetersFromHub) {
+       
+        return -0.644 + 0.462 * Math.log(MetersFromHub);
     }
 
     public void setHoodDutyCycle(double dc) {
@@ -108,3 +106,4 @@ public class Hood extends SubsystemBase {
     }
 
 }
+

@@ -9,18 +9,12 @@ import static edu.wpi.first.units.Units.Seconds;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
-import com.ctre.phoenix6.HootAutoReplay;
-import com.pathplanner.lib.auto.NamedCommands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.epilogue.Epilogue;
@@ -43,7 +37,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.TimedRobotstangs;
@@ -54,7 +47,6 @@ import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Turret.Hood;
 import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.Turret.Flywheel;
@@ -84,8 +76,6 @@ public class Robot extends TimedRobotstangs {
     Command autoCommand;
 
     static NetworkTableEntry turretSetpoint;
-
- 
 
     public Robot() {
         m_robotContainer = new RobotContainer();
@@ -141,7 +131,6 @@ public class Robot extends TimedRobotstangs {
         isJaba = true;
         SmartDashboard.putData("Field", teleopField);
 
-        
         DataLogManager.start("");
         DataLogManager.log("Driverstation connected");
         DriverStation.startDataLog(DataLogManager.getLog());
@@ -152,7 +141,6 @@ public class Robot extends TimedRobotstangs {
                 .onCommandInterrupt((action) -> DataLogManager.log(action.getName() + " Command Interrupted"));
         CommandScheduler.getInstance()
                 .onCommandFinish((action) -> DataLogManager.log(action.getName() + " Command Finished"));
-  
 
         configureDisabledTab();
         configureTeleopTab();
@@ -168,36 +156,33 @@ public class Robot extends TimedRobotstangs {
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
         // Flywheel.getInstance().checkIfMotorHot();
 
-   
-
     }
 
     @Override
     public void disabledInit() {
-        // autoChooser = AutoBuilder.buildAutoChooser();
-        // autoChooserFav = AutoBuilder.buildAutoChooserWithOptionsModifier(
-        // (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
-        
-        // SmartDashboard.putData("Auto Chooser", autoChooser);
-        // SmartDashboard.putData("Favorite Auto Chooser", autoChooserFav);
+        autoChooser = AutoBuilder.buildAutoChooser();
+        autoChooserFav = AutoBuilder.buildAutoChooserWithOptionsModifier(
+                (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
+
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+        SmartDashboard.putData("Favorite Auto Chooser", autoChooserFav);
     }
 
     @Override
     public void disabledPeriodic() {
 
-        
-        // if( autoChooser.getSelected() != null &&
-        //     !autoChooser.getSelected().getName().equals("none")){
-        //     autoCommand = autoChooser.getSelected();
-        // } else {
-        //     autoCommand = autoChooserFav.getSelected();
-        // }
-        // drawCurrentAuto(autoCommand.getName());
+        if (autoChooser.getSelected() != null &&
+                !autoChooser.getSelected().getName().equals("none")) {
+            autoCommand = autoChooser.getSelected();
+        } else {
+            autoCommand = autoChooserFav.getSelected();
+        }
+        drawCurrentAuto(autoCommand.getName());
     }
 
     @Override
     public void disabledExit() {
-        // drawCurrentAuto(null);
+        drawCurrentAuto(null);
     }
 
     @Override
@@ -304,7 +289,8 @@ public class Robot extends TimedRobotstangs {
     }
 
     public static boolean isRed() {
-        if (Robot.isSimulation()) {
+
+        if (Robot.isSimulation() || DriverStation.getAlliance() == null) {
             return false;
         }
         if (DriverStation.getAlliance().get() == (Alliance.Red)) {
@@ -336,7 +322,6 @@ public class Robot extends TimedRobotstangs {
                         .ignoringDisable(true));
     }
 
-
     public void logCurrentAuto() {
 
     }
@@ -363,30 +348,30 @@ public class Robot extends TimedRobotstangs {
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
                         .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
                         .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
-        NamedCommands.registerCommand("Photoshoot", 
+        NamedCommands.registerCommand("Photoshoot",
                 (new ChargeUp().alongWith(new Index()))
-                .raceWith(new WaitUntilCommand(() -> Feeder.getInstance().getfuelSensor()))
-        );
+                        .raceWith(new WaitUntilCommand(() -> Feeder.getInstance().getfuelSensor())));
 
     }
 
     public void drawCurrentAuto(String autoName) {
         List<Pose2d> poses = new ArrayList<>();
         poses.clear();
-        if(autoName != null){
-        try {
-            for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
-                for (Pose2d pose : path.getPathPoses()) {
-                    poses.add(pose);
-                }
+        if (autoName != null) {
+            try {
+                for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
+                    for (Pose2d pose : path.getPathPoses()) {
+                        poses.add(pose);
+                    }
 
+                }
+                autoAlert.set(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+                autoAlert.set(true);
             }
-            autoAlert.set(false);
-        } catch (Exception e) {
-            e.printStackTrace();
-            autoAlert.set(true);
-        }}
-        
+        }
+
         teleopField.getObject("auto").setPoses(poses);
     }
 

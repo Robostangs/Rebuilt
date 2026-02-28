@@ -1,7 +1,5 @@
 package frc.robot.subsystems.Turret;
 
-import java.util.function.Supplier;
-
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFXS;

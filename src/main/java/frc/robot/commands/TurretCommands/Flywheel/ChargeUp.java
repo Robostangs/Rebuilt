@@ -1,5 +1,6 @@
 package frc.robot.commands.TurretCommands.Flywheel;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Turret.Flywheel;
@@ -15,19 +16,20 @@ public class ChargeUp extends Command {
 
     @Override
     public void initialize() {
-        // turretShooter.setShooterRPS(targetrps);
     }
 
     @Override
     public void execute() {
         double metersFromHub = Turret.getInstance().getTurretPose().getTranslation().getDistance(Constants.FieldConstants.HubPosition.getTranslation());
         double targetrps = turretShooter.getTargetVelocity(metersFromHub);
+        turretShooter.setShooterRPS(targetrps);
         turretShooter.postStatus("Charging to " + targetrps + " rps");
     }
 
     @Override
     public void end(boolean interrupted) {
         turretShooter.postStatus("Charged");
+        turretShooter.setShooterRPS(0);
     }
 
 }

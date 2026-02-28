@@ -11,6 +11,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 @Logged
 public class Flywheel extends SubsystemBase {
@@ -90,7 +91,7 @@ public class Flywheel extends SubsystemBase {
     }
 
     public double getTargetVelocity(double MetersFromHub){
-        double feetFromHub = Units.metersToFeet(MetersFromHub);
+        double feetFromHub = Units.feetToMeters(MetersFromHub);
         double targetVelocity =1.77*feetFromHub+54.3;
         return targetVelocity;
     }
@@ -98,9 +99,11 @@ public class Flywheel extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // shooterTargetVelocity.Velocity = SmartDashboard.getNumber("Flywheel RPM target", 0);
         
         flyWheel.setControl(shooterTargetVelocity);
+
+
+
         SmartDashboard.putNumber("Shooter/velocity",flyWheel.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Shooter/target",shooterTargetVelocity.Velocity);
         SmartDashboard.putNumber("Shoooter/temperature",flyWheel.getAncillaryDeviceTemp().getValueAsDouble());

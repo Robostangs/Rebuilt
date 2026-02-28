@@ -58,11 +58,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
-    private VisionStangs photonVisionRight = new VisionStangs(Constants.VisionConstants.kPhotonCamNameRight,
-            Constants.VisionConstants.kRobotToCamRight);
-
-    private VisionStangs photonVisionBack = new VisionStangs(Constants.VisionConstants.kPhotonCamNameBack,
-            Constants.VisionConstants.kRobotToCamBack);
+    private VisionStangs photonVisionBack = new VisionStangs(Constants.VisionConstants.kLimelightFour);
 
     private ArrayList<VisionStangs> visionPoses = new ArrayList<>();
 
@@ -262,10 +258,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         photonVisionBack.periodic();
-        photonVisionRight.periodic();
 
         visionPoses.add(photonVisionBack);
-        visionPoses.add(photonVisionRight);
 
         setVisionPose(visionPoses);
 

@@ -100,7 +100,7 @@ public class Hood extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // hoodMotor.setControl(hoodTargetPosition);
+        hoodMotor.setControl(hoodTargetPosition);
         SmartDashboard.putNumber("Hood/HoodTargetPosition", hoodTargetPosition.Position);
         SmartDashboard.putNumber("Hood/Hood pos", hoodMotor.getPosition().getValueAsDouble());
     }

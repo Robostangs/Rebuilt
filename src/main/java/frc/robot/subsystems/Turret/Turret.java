@@ -504,7 +504,6 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // updateIronManPose();
         updateTurretSim();
 
         if (!manualTarget && CommandSwerveDrivetrain.getInstance().getState().Pose != null) {

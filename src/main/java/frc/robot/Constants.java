@@ -291,7 +291,7 @@ public final class Constants {
 
         public static class HoodConstants {
 
-                public static final int hoodMotorID = 5;
+                public static final int hoodMotorID = 25;
                 public static final double kHoodDownPos = 0d;
                 public static final int kLimitSwitchId = 0;
                 public static final double kHoodHomeDutyCycle = -0.09;
@@ -332,7 +332,7 @@ public final class Constants {
                 public static final double kTurretRingTeeth = 200;
                 public static final double kTurretMotorSensorToMechanismRatio = Constants.TurretConstants.kTurretRingTeeth
                                 / Constants.TurretConstants.kTurretMotorTeeth;
-                public static final int shooterMotorID = 11;
+                public static final int shooterMotorID = 9;
                 public static final double TurretMotorSupplyCurrentLimit = 60;
                 public static final double dumbThing = (((double) kTurretMotorTeeth * (double) kTurretCANcoderTeeth)
                                 / (double) kTurretRingTeeth) / 2;

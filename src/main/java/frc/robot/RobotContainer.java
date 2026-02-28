@@ -14,10 +14,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Index;
+import frc.robot.commands.TurretCommands.TurretFactory;
 import frc.robot.commands.TurretCommands.setTurretDutyCycle;
 import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
 import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.Hood.setHoodDutyCycle;
+import frc.robot.commands.TurretCommands.Hood.setHoodPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
 
@@ -65,8 +67,10 @@ public class RobotContainer {
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-                xDrive.a().onTrue(new InstantCommand(() ->Hood.getInstance().setHoodPosition(0)));
-                xDrive.rightTrigger().whileTrue(new Index().alongWith(new ChargeUp()));
+                // xDrive.a().onTrue(new InstantCommand(() ->Hood.getInstance().setHoodPosition(0)));
+                xDrive.x().whileTrue(TurretFactory.Shoot());
+                xDrive.a().whileTrue(new ChargeUp());
+                xDrive.y().whileTrue(new setHoodPosition());
 
         }
 

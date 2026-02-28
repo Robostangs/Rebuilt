@@ -152,34 +152,39 @@ public class Robot extends TimedRobotstangs {
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
         Flywheel.getInstance().checkIfMotorHot();
 
+                double mfh = Turret.getInstance().getTurretPose().getTranslation().getDistance(Constants.FieldConstants.HubPosition.getTranslation());
+        SmartDashboard.putNumber("Hub pose", mfh);
+
+        teleopField.getObject("Hub Pose").setPose( Constants.FieldConstants.HubPosition);
+
     }
 
     @Override
     public void disabledInit() {
-        autoChooser = AutoBuilder.buildAutoChooser();
-        autoChooserFav = AutoBuilder.buildAutoChooserWithOptionsModifier(
-        (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
+        // autoChooser = AutoBuilder.buildAutoChooser();
+        // autoChooserFav = AutoBuilder.buildAutoChooserWithOptionsModifier(
+        // (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
         
-        SmartDashboard.putData("Auto Chooser", autoChooser);
-        SmartDashboard.putData("Favorite Auto Chooser", autoChooserFav);
+        // SmartDashboard.putData("Auto Chooser", autoChooser);
+        // SmartDashboard.putData("Favorite Auto Chooser", autoChooserFav);
     }
 
     @Override
     public void disabledPeriodic() {
 
         
-        if( autoChooser.getSelected() != null &&
-            !autoChooser.getSelected().getName().equals("none")){
-            autoCommand = autoChooser.getSelected();
-        } else {
-            autoCommand = autoChooserFav.getSelected();
-        }
-        drawCurrentAuto(autoCommand.getName());
+        // if( autoChooser.getSelected() != null &&
+        //     !autoChooser.getSelected().getName().equals("none")){
+        //     autoCommand = autoChooser.getSelected();
+        // } else {
+        //     autoCommand = autoChooserFav.getSelected();
+        // }
+        // drawCurrentAuto(autoCommand.getName());
     }
 
     @Override
     public void disabledExit() {
-        drawCurrentAuto(null);
+        // drawCurrentAuto(null);
     }
 
     @Override

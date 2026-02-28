@@ -77,25 +77,6 @@ public final class Constants {
         public static final int kLeftRightID = 0;
 
     }
-    public static class KirbyConstants {
-        public static final int kirbyWheelsID = 20;
-        public static final double KirbyCurrentLimit = 60;
-        public static final double HopperExtenderCurrentLimit = 60;
-        public static final int hopperExtenderID = 0;
-        public static final double kirbyIntakeSpeed = 0.5;
-        public static final double kirbyOuttakeSpeed = -0.5;
-        public static final double hopperExtenderKP = 0;
-        public static final double hopperExtenderKI = 0;
-        public static final double hopperExtenderKD = 0;
-        public static final double hopperExtenderKS = 0;
-        public static final double kExtenderMotionMagicAcceleration = 0;
-        public static final double kExtenderMotionMagicVelocity = 0;
-        public static final double extenderSensorToMechanismRatio = 0;
-        public static final double kExtendSetpoint = 0;
-        public static final double kRetractSetpoint = 0;
-        // TODO: find this john
-        public static final double kHopperExtensionTolerance = 0.01;
-    }
 
     public static class FieldConstants {
         public static final Pose2d HubPosition = Robot.isRed() ? new Pose2d(11.9, 4d, new Rotation2d())
@@ -112,65 +93,6 @@ public final class Constants {
 
     }
 
-    public static class HoodConstants {
-
-        public static final int hoodMotorID = 5;
-        public static final double kHoodDownPos = 0d;
-        public static final int kLimitSwitchId = 0;
-        public static final double kHoodHomeDutyCycle = -0.09;
-        public static final double kHoodMotorP = 0;
-        public static final double kHoodMotorI = 0;
-        public static final double kHoodMotorD = 0;
-        public static final double kHoodMotorS = 0;
-        public static final double kHoodMotorV = 0;
-        public static final double kHoodMotorA = 0;
-        public static final double kHoodMotionMagicCruiseVelocity = 0;
-        public static final double kHoodMotionMagicAcceleration = 0;
-    }
-
-    public static class TurretConstants {
-        public static final int turretMotorID = 1;
-        public static final int turretCANcoderID = 2;
-        public static final double kTurretMotorTeeth = 19;
-        public static final double kTurretCANcoderTeeth = 21;
-        public static final double kTurretRingTeeth = 200;
-        public static final double kTurretMotorSensorToMechanismRatio = Constants.TurretConstants.kTurretRingTeeth
-                / Constants.TurretConstants.kTurretMotorTeeth;
-        public static final int shooterMotorID = 11;
-        public static final double TurretMotorSupplyCurrentLimit = 60;
-        public static final double dumbThing = (((double) kTurretMotorTeeth * (double) kTurretCANcoderTeeth)
-                / (double) kTurretRingTeeth) / 2;
-        public static final double kIronmanToRobotCenterX = 0;
-        public static final double kIronmanToRobotCenterY = 0;
-        public static final double IronmanMotionMagicKa = 0.8;
-        public static final double IronmanMotionMagicKv = 6;
-        public static final double IronmanMotionMagicKS = 0.242;
-        public static final double IronmanMotionMagicKP = 40;
-        public static final double IronmanMotionMagicKI = 0;
-        public static final double IronmanMotionMagicKD = 5;
-        public static final double kTurretPlanetaryRatio = 9;
-        public static final double IronmanMotionMagicKvFF = 4;
-        public static final double IronmanMotionMagicKaFF = .5;
-        public static final double kHomePosition = 0;
-        public static final int kFlywheelMotorID = 0;
-        public static final double kShooterMotorP = 0.1;
-        public static final double kShooterMotorI = 0.08;
-        public static final double kShooterMotorD = 0;
-        public static final double kShooterMotorG = 0;
-        public static final double kShooterMotorA = 0.5967;
-        public static final double kShooterMotorV = 0.2;
-        public static final double kShooterMotorS = 0.29;
-        public static final double shooterMotionMagicCruiseVelocity = 0.2;
-        public static final double shooterMotionMagicAcceleration = 0;
-        public static final double shooterMotionMagicJerk = 0;
-        public static final double kShooterVelocityTolerance = 0;
-        public static final double kForwardSoftLimit = 0;
-        public static final double kReverseSoftLimit = 0;
-        public static final double kSafeClimberPos = 0;
-        public static final double kSafeClimberNeg = 0;
-        public static final double kShooterMotorStatorCurrentLimit = 50;
-
-    }
 
     public static class FeederConstants {
 
@@ -195,24 +117,6 @@ public final class Constants {
         }
     }
 
-    public static class ClimberConstants {
-
-        public static final int kClimberMotorID = 0;
-        public static final double kClimberCurrentLimit = 60;
-        public static final double kClimberKP = 0;
-        public static final double kClimberKI = 0;
-        public static final double kClimberKD = 0;
-        public static final MotorArrangementValue kClimberPivotExternalFeedbackSource = MotorArrangementValue.NEO550_JST;
-        public static final double kClimberPivotCurrentLimit = 60;
-        public static final int kDeployMotorID = 0;
-
-        public static enum climberStates {
-            L0, L1, L2, L3, stowed
-        }
-
-        public static final AprilTagFieldLayout kAprilTagFieldLayout = AprilTagFieldLayout
-                        .loadField(AprilTagFields.kDefaultField);
-
         public static class KirbyConstants {
                 public static final int kirbyWheelsID = 20;
                 public static final double KirbyCurrentLimit = 60;
@@ -232,20 +136,6 @@ public final class Constants {
                 // TODO: find this john
                 public static final double kHopperExtensionTolerance = 0.01;
         }
-
-        public static class FieldConstants {
-                public static final Pose2d HubPosition = Robot.isRed() ? new Pose2d(11.9, 4d, new Rotation2d())
-                                : new Pose2d(4.6, 4d, new Rotation2d());
-
-                // TODO find these johns
-                public static final Pose2d PassTarget = !Robot.isRed() ? new Pose2d(6.23, 2.59, new Rotation2d())
-                                : FlippingUtil.flipFieldPose(new Pose2d(6.23, 2.59, new Rotation2d()));
-
-                // TODO find john
-                public static final Pose2d resetPose = !Robot.isRed()
-                                ? new Pose2d(.47, .46, new Rotation2d(Units.degreesToRadians(180)))
-                                : FlippingUtil.flipFieldPose(
-                                                new Pose2d(.47, .46, new Rotation2d(Units.degreesToRadians(180))));}
 
     public class JabaTunerConstants {
         // Both sets of gains need to be tuned to your individual robot.
@@ -503,28 +393,9 @@ public final class Constants {
 
         }
 
-        public static class FeederConstants {
 
-                public static final int feederMotorID = 0;
-                public static final double feederSupplyLimit = 60;
-                public static final double kFeedDutyCycle = 0.5;
-                public static final int fuelSensorID = 1;
 
-        }
-
-        public static class ElasticConstants {
-                public static final Color blue = new Color("#0000FF");
-                public static final Color red = new Color("#FF0000");
-                public static final Color purple = new Color("#800080");
-                public static final Color white = new Color("#FFFFFF");
-
-                public static enum whoCanScore {
-                        blue,
-                        red,
-                        both,
-                        error
-                }
-        }
+ 
 
         public static class ClimberConstants {
 
@@ -1475,5 +1346,4 @@ public final class Constants {
                 }
 
         }
-}
 }

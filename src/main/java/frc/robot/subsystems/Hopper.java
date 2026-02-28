@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.Alert;
@@ -9,8 +11,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Hopper extends SubsystemBase {
-    public TalonFX backGoer;
-    public TalonFX leftRighter;
+    public VictorSPX backGoer;
+    public VictorSPX leftRighter;
     public static Hopper mInstance;
 
     Alert leftRightHotAlert = new Alert("Hopper LeftRighter Motor is HOT", AlertType.kError);
@@ -18,21 +20,22 @@ public class Hopper extends SubsystemBase {
 
 
     public Hopper(){
-        backGoer=new TalonFX(Constants.HopperConstants.kBackGoerID);
-        leftRighter= new TalonFX(Constants.HopperConstants.kLeftRightID);
-        backGoer.getAncillaryDeviceTemp().setUpdateFrequency(50);
-        leftRighter.getAncillaryDeviceTemp().setUpdateFrequency(50);
+        backGoer = new VictorSPX(Constants.HopperConstants.kBackGoerID);
+        leftRighter= new VictorSPX(Constants.HopperConstants.kLeftRightID);    
     }
     public void setBackGoerDutyCycle(double dc){
-        backGoer.set(dc);
+        backGoer.set(ControlMode.PercentOutput, dc);
     }
 
     public void setLeftRighterDutyCycle(double dc){
-        leftRighter.set(dc);
+        leftRighter.set(ControlMode.PercentOutput, dc);
     }
 
-    public void postStatus(String status) {
-        SmartDashboard.putString("Hopper/status", status);
+    public void postLeftRighterStatus(String status) {
+        SmartDashboard.putString("Hopper/leftRighterStatus", status);
+    }
+    public void postBackGoerStatus(String status) {
+        SmartDashboard.putString("Hopper/backGoerStatus", status);
     }
 
     public static Hopper getInstance(){
@@ -42,8 +45,8 @@ public class Hopper extends SubsystemBase {
         return mInstance;
     }
     public void checkIsHot(){
-        boolean leftRighterHot=leftRighter.getAncillaryDeviceTemp().getValueAsDouble()>=40;
-        boolean backGoerHot=backGoer.getAncillaryDeviceTemp().getValueAsDouble()>=40;
+        boolean leftRighterHot=leftRighter.getTemperature()>=40;
+        boolean backGoerHot=backGoer.getTemperature()>=40;
 
         leftRightHotAlert.set(leftRighterHot);
         backGoerHotAlert.set(backGoerHot);

@@ -73,8 +73,10 @@ public final class Constants {
             .loadField(AprilTagFields.kDefaultField);
     public static class HopperConstants {
 
-        public static final int kBackGoerID = 0;
-        public static final int kLeftRightID = 0;
+        public static final int kBackGoerID = 1;
+        public static final int kLeftRightID = 8;
+        public static final double kBackGoerDC = 0.5;
+        public static final double kLeftRighterDC = 0.5;
 
     }
 

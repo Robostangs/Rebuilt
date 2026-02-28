@@ -13,14 +13,17 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Index;
 import frc.robot.commands.TurretCommands.setTurretDutyCycle;
+import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
 import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.Hood.setHoodDutyCycle;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Feeder;
 
 public class RobotContainer {
         public static boolean useVision = true;
-        private double MaxSpeed = 1.0 * Constants.JabaTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+        private double MaxSpeed = 1.0 * Constants.JabbaTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
                                                                                           // second
                                                                                           // max angular velocity
@@ -63,6 +66,7 @@ public class RobotContainer {
                 xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
                 xDrive.a().onTrue(new InstantCommand(() ->Hood.getInstance().setHoodPosition(0)));
+                xDrive.rightTrigger().whileTrue(new Index().alongWith(new ChargeUp(Constants.FlywheelConstants.kShootSpeed)));
 
         }
 

@@ -5,10 +5,12 @@ import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.TalonFXS;
+
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
+@Logged
 public class Climber extends SubsystemBase {
     public boolean isStowed;
     private static Climber mInstance;
@@ -22,13 +24,14 @@ public class Climber extends SubsystemBase {
     public static Constants.ClimberConstants.climberStates climberState;
     
     
-
+    // region Initialize & Config
     public Climber() {
         climberMotor = new TalonFX(Constants.ClimberConstants.kClimberMotorID);
         climberControl = new PositionVoltage(climberMotor.getPosition().getValueAsDouble()).withSlot(0);
         climberPivot = new TalonFXS(Constants.ClimberConstants.kDeployMotorID);
         climberState = Constants.ClimberConstants.climberStates.stowed;
         isStowed = true;
+        climberPivotControl = new PositionVoltage(0);
     }
 
     public void configureClimber() {
@@ -43,14 +46,6 @@ public class Climber extends SubsystemBase {
 
     }
 
-    public void setClimberState(Constants.ClimberConstants.climberStates state) {
-        climberState = state;
-    }
-
-    public void setClimberMechanismPosition(double pos){
-        climberMotor.setPosition(pos);
-    }
-
     public void configureClimberPiviot() {
         climberPiviotConfig = new TalonFXSConfiguration();
 
@@ -62,6 +57,16 @@ public class Climber extends SubsystemBase {
 
         climberPivot.getConfigurator().apply(climberPiviotConfig);
     }
+    //endregion
+    //region Control
+    public void setClimberState(Constants.ClimberConstants.climberStates state) {
+        climberState = state;
+    }
+
+    public void setClimberMechanismPosition(double pos){
+        climberMotor.setPosition(pos);
+    }
+    
 
     public void setClimberDutyCycle(double dc){
         climberMotor.set(dc);
@@ -81,7 +86,16 @@ public class Climber extends SubsystemBase {
         climberPivotControl.Position = rotations;
     }
 
+    public void setClimberControl(){
+        climberMotor.setControl(climberControl);
+    }
 
+    public void setClimberPivotControl(){
+        climberPivot.setControl(climberPivotControl);
+    }
+    
+    //endregion
+    // region Utils & Logging
     public static Climber getInstance() {
         if (mInstance == null) {
             mInstance = new Climber();
@@ -106,12 +120,7 @@ public class Climber extends SubsystemBase {
                 < Constants.ClimberConstants.kTargetThreshold;
     }
 
-    public void setClimberControl(){
-        climberMotor.setControl(climberControl);
-    }
-    public void setClimberPivotControl(){
-        climberPivot.setControl(climberPivotControl);
-    }
+    
 
     @Override
     public void periodic() {

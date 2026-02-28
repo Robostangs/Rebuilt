@@ -99,6 +99,7 @@ public class Flywheel extends SubsystemBase {
     @Override
     public void periodic() {
         // shooterTargetVelocity.Velocity = SmartDashboard.getNumber("Flywheel RPM target", 0);
+        
         flyWheel.setControl(shooterTargetVelocity);
         SmartDashboard.putNumber("Shooter/velocity",flyWheel.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Shooter/target",shooterTargetVelocity.Velocity);

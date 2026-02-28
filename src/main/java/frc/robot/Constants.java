@@ -304,6 +304,8 @@ public final class Constants {
                 public static final double kHoodMotionMagicCruiseVelocity = 0;
                 public static final double kHoodMotionMagicAcceleration = 0;
                 public static final double kHoodSensortoMechanism = 44;
+                public static final double kHoodStatorCurrentLimit = 20;
+                public static final double kHoodHomeTimeout = 1;
         }
 
         public static class FlywheelConstants {
@@ -356,6 +358,7 @@ public final class Constants {
                 public static final double kReverseSoftLimit = 0;
                 public static final double kSafeClimberPos = 0;
                 public static final double kSafeClimberNeg = 0;
+                public static final double kShooterSupplyCurrentLimit = 10;
 
         }
 

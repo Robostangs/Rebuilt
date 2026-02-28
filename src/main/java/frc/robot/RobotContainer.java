@@ -66,7 +66,7 @@ public class RobotContainer {
                 xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
                 xDrive.a().onTrue(new InstantCommand(() ->Hood.getInstance().setHoodPosition(0)));
-                xDrive.rightTrigger().whileTrue(new Index().alongWith(new ChargeUp(Constants.FlywheelConstants.kShootSpeed)));
+                xDrive.rightTrigger().whileTrue(new Index().alongWith(new ChargeUp()));
 
         }
 

@@ -346,7 +346,7 @@ public class Robot extends TimedRobotstangs {
                         .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
                         .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
         NamedCommands.registerCommand("Photoshoot", 
-                (new ChargeUp(Constants.FlywheelConstants.kShootSpeed).alongWith(new Index()))
+                (new ChargeUp().alongWith(new Index()))
                 .raceWith(new WaitUntilCommand(() -> Feeder.getInstance().getfuelSensor()))
         );
 

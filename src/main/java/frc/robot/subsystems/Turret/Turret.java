@@ -263,6 +263,10 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putData("Turret Pivot Target", simMain);
     }
 
+    public Pose2d getTurretPose(){
+        return turretPose;
+    }
+
     private double getTurretCANcoderModPosition() {
         /* Convert mechanism position to sensor position */
         return mathMod1(turretCANcoder.getPosition().getValueAsDouble());
@@ -376,6 +380,7 @@ public class Turret extends SubsystemBase {
     private Rotation2d aimingJohns() {
         // get current robot pose
         Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
+        
 
         // calculate turret position in field space
         Translation2d turretOffset = new Translation2d(

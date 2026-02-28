@@ -295,8 +295,8 @@ public final class Constants {
                 public static final double kHoodDownPos = 0d;
                 public static final int kLimitSwitchId = 0;
                 public static final double kHoodHomeDutyCycle = -0.09;
-                public static final double kHoodMotorP = 0;
-                public static final double kHoodMotorI = 0;
+                public static final double kHoodMotorP = 8;
+                public static final double kHoodMotorI = 1;
                 public static final double kHoodMotorD = 0;
                 public static final double kHoodMotorS = 0;
                 public static final double kHoodMotorV = 0;
@@ -304,7 +304,7 @@ public final class Constants {
                 public static final double kHoodMotionMagicCruiseVelocity = 0;
                 public static final double kHoodMotionMagicAcceleration = 0;
                 public static final double kHoodSensortoMechanism = 44;
-                public static final double kHoodStatorCurrentLimit = 20;
+                public static final double kHoodStatorCurrentLimit = -20;
                 public static final double kHoodHomeTimeout = 1;
         }
 

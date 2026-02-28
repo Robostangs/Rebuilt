@@ -57,6 +57,8 @@ public class Turret extends SubsystemBase {
     static boolean manualTarget = false;
     private static Turret mInstance;
 
+    double metersFromHub;
+
     Mechanism2d turretSim;
 
     boolean isSafeNeg = false;
@@ -243,6 +245,15 @@ public class Turret extends SubsystemBase {
                 * Constants.TurretConstants.kTurretMotorSensorToMechanismRatio);
     }
 
+
+
+    public void updateMetersFromHub(Pose2d poseTurret){
+        metersFromHub =  poseTurret.getTranslation().getDistance(Constants.FieldConstants.HubPosition.getTranslation());
+    }
+    public double getMetersFromHub(){
+        return metersFromHub;
+    }
+
     private void updateTurretSim() {
 
         Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
@@ -258,6 +269,7 @@ public class Turret extends SubsystemBase {
                 .plus(turretOffsetFromRobotCenter.rotateBy(robotPose.getRotation()));
 
         Pose2d turretPose = new Pose2d(turretFieldPosition, angle);
+        updateMetersFromHub(turretPose);
 
         Robot.teleopField.getObject("Turret Pivot").setPose(turretPose);
         SmartDashboard.putData("Turret Pivot Target", simMain);
@@ -505,6 +517,7 @@ public class Turret extends SubsystemBase {
     @Override
     public void periodic() {
         updateTurretSim();
+        SmartDashboard.putNumber("Meters from Hub", getMetersFromHub());
 
         if (!manualTarget && CommandSwerveDrivetrain.getInstance().getState().Pose != null) {
             targetHubPose();

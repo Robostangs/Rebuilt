@@ -136,7 +136,7 @@ public class VisionStangs {
             if (isPosegoo(fourPoseEsti)) {
                 this.currentPose = fourPoseEsti.pose;   
                 this.timestampSeconds = fourPoseEsti.timestampSeconds;
-                Robot.teleopField.getObject("Limelight Four Pose").setPose(fourPoseEsti.pose);
+                Robot.teleopField.getObject(CameraName+ " Pose LL").setPose(fourPoseEsti.pose);
                 for(LimelightHelpers.RawFiducial fiducial:fourPoseEsti.rawFiducials){
                     if(fiducial.ambiguity > bigAmbiuity){
                         bigAmbiuity = fiducial.ambiguity;

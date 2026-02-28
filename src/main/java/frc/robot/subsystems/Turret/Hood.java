@@ -8,10 +8,14 @@ import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 
 import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.TurretCommands.Hood.HomeHood;
+
 @Logged
 public class Hood extends SubsystemBase {
     TalonFXS hoodMotor;
@@ -19,11 +23,13 @@ public class Hood extends SubsystemBase {
     DigitalInput limitSwitch;
     MotionMagicExpoDutyCycle hoodTargetPosition;
 
-    public Hood() {
+     boolean isHomed = false;
+
+    private Hood() {
         hoodMotor = new TalonFXS(Constants.HoodConstants.hoodMotorID);
         limitSwitch = new DigitalInput(Constants.HoodConstants.kLimitSwitchId);
         hoodTargetPosition = new MotionMagicExpoDutyCycle(hoodMotor.getPosition().getValueAsDouble());
-                configureHoodMotor();
+        configureHoodMotor();
 
     }
 
@@ -39,6 +45,8 @@ public class Hood extends SubsystemBase {
         hoodMotorConfig.Slot0.kV = Constants.HoodConstants.kHoodMotorV;
         hoodMotorConfig.Slot0.kA = Constants.HoodConstants.kHoodMotorA;
 
+        hoodMotorConfig.CurrentLimits.StatorCurrentLimit = 20;
+
         hoodMotorConfig.ExternalFeedback.SensorToMechanismRatio = Constants.HoodConstants.kHoodSensortoMechanism;
 
         hoodMotorConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.HoodConstants.kHoodMotionMagicCruiseVelocity;
@@ -49,7 +57,7 @@ public class Hood extends SubsystemBase {
 
     }
 
-    public void setHoodStatorCurrentConfig(){
+    public void setHoodStatorCurrentConfig() {
         TalonFXSConfiguration hoodMotorConfig = new TalonFXSConfiguration();
         hoodMotorConfig.CurrentLimits.SupplyCurrentLimit = Constants.HoodConstants.kHoodStatorCurrentLimit;
 
@@ -58,19 +66,28 @@ public class Hood extends SubsystemBase {
     }
 
     public double getHoodAngle(double MetersFromHub) {
-       
-        return -0.644 + 0.462 * Math.log(MetersFromHub);
+        double feetFromHub = Units.metersToFeet(MetersFromHub);
+        SmartDashboard.putNumber(" feet from hub", feetFromHub);
+
+        return -0.644 + 0.462 * Math.log(feetFromHub);
     }
 
     public void setHoodDutyCycle(double dc) {
         hoodMotor.set(dc);
     }
 
+    public boolean getIsHomed() {
+        return isHomed;
+    }
     public static Hood getInstance() {
         if (mInstance == null) {
             mInstance = new Hood();
         }
         return mInstance;
+    }
+
+    public void setIsHome(boolean ishome){
+        isHomed = ishome;
     }
 
     public void postStatus(String status) {
@@ -81,29 +98,38 @@ public class Hood extends SubsystemBase {
         hoodMotor.setPosition(pos);
     }
 
-    public Supplier<Boolean> CurrentLimitTripped(){
-        return () ->hoodMotor.getFault_StatorCurrLimit().getValue();
+    public double getStatorCurrent() {
+        return hoodMotor.getTorqueCurrent().getValueAsDouble();
 
     }
 
     public boolean getLimitSwitch() {
         return limitSwitch.get();
     }
-    
-    public void setMotionMagicTarget(double pos){
+
+    public void setMotionMagicTarget(double pos) {
         hoodTargetPosition.Position = pos;
     }
-    public void setMotionMagic(){
+
+    public void setMotionMagic() {
         hoodMotor.setControl(hoodTargetPosition);
 
     }
 
     @Override
     public void periodic() {
-        hoodMotor.setControl(hoodTargetPosition);
         SmartDashboard.putNumber("Hood/HoodTargetPosition", hoodTargetPosition.Position);
         SmartDashboard.putNumber("Hood/Hood pos", hoodMotor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Hood/Stator Current", getStatorCurrent());
+        if(hoodMotor.hasResetOccurred()){
+            isHomed = false;
+        }
+
+        if(!isHomed){
+            CommandScheduler.getInstance().schedule(new HomeHood().withTimeout(4));
+        }
+ 
+        
     }
 
 }
-

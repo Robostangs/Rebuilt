@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix6.HootAutoReplay;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -31,6 +32,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -138,6 +140,19 @@ public class Robot extends TimedRobotstangs {
         isJaba = true;
         SmartDashboard.putData("Field", teleopField);
 
+        
+        DataLogManager.start("");
+        DataLogManager.log("Driverstation connected");
+        DriverStation.startDataLog(DataLogManager.getLog());
+
+        CommandScheduler.getInstance()
+                .onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
+        CommandScheduler.getInstance()
+                .onCommandInterrupt((action) -> DataLogManager.log(action.getName() + " Command Interrupted"));
+        CommandScheduler.getInstance()
+                .onCommandFinish((action) -> DataLogManager.log(action.getName() + " Command Finished"));
+  
+
         configureDisabledTab();
         configureTeleopTab();
         loadNamedCommands();
@@ -150,12 +165,9 @@ public class Robot extends TimedRobotstangs {
         updateEpilogue();
         gscollect.update();
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
-        Flywheel.getInstance().checkIfMotorHot();
+        // Flywheel.getInstance().checkIfMotorHot();
 
-                double mfh = Turret.getInstance().getTurretPose().getTranslation().getDistance(Constants.FieldConstants.HubPosition.getTranslation());
-        SmartDashboard.putNumber("Hub pose", mfh);
-
-        teleopField.getObject("Hub Pose").setPose( Constants.FieldConstants.HubPosition);
+   
 
     }
 

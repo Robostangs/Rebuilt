@@ -71,6 +71,7 @@ public class RobotContainer {
                 xDrive.x().whileTrue(TurretFactory.Shoot());
                 xDrive.a().whileTrue(new ChargeUp());
                 xDrive.y().whileTrue(new setHoodPosition());
+                xDrive.b().whileTrue(new HomeHood());
 
         }
 

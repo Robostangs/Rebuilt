@@ -15,6 +15,7 @@ import com.ctre.phoenix6.signals.SensorPhaseValue;
 import com.ctre.phoenix6.sim.TalonFXSSimState;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -217,10 +218,7 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putString("Setpoint has gotten set", "New setpoint at " + rotations);
     }
 
-    public Runnable setMotionMagicPointThree = () -> {
-        turretControl.Position = 0.3;
-        // turretMotor.setControl(turretControl);
-    };
+
 
     public void setTurretSetpointDoubleSupplier(DoubleSupplier doubleSupplier) {
         setIronmansetpoint(doubleSupplier.getAsDouble());
@@ -403,7 +401,7 @@ public class Turret extends SubsystemBase {
                 .plus(turretOffset.rotateBy(robotPose.getRotation()));
 
         // the vector from turret to target
-        Translation2d targetVector = Constants.FieldConstants.HubPosition.getTranslation()
+        Translation2d targetVector = calculateTargetHubPose()
                 .minus(turretFieldPosition);
 
         // angle to target in world frame
@@ -417,27 +415,6 @@ public class Turret extends SubsystemBase {
         return turretRelativeAngle;
     }
 
-    private void updateIronManPose() {
-        // Get the robot's pose
-        Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
-
-        // turret's position robot relative
-        Translation2d turretOffsetFromRobotCenter = new Translation2d(
-                Constants.TurretConstants.kIronmanToRobotCenterX,
-                Constants.TurretConstants.kIronmanToRobotCenterY);
-
-        // the turret offset by the robot's rotation to get field relative pose
-        Translation2d turretFieldPosition = robotPose.getTranslation()
-                .plus(turretOffsetFromRobotCenter.rotateBy(robotPose.getRotation()));
-
-        // The turret's field relative rotation is the robot rotation + turret relative
-        // rotation
-        Rotation2d turretFieldRotation = robotPose.getRotation()
-                .plus(new Rotation2d(Units.rotationsToRadians(turretMotor.getPosition().getValueAsDouble())));
-
-        // Create the turret pose
-        turretPose = new Pose2d(turretFieldPosition, turretFieldRotation);
-    }
 
     public double getTurretPosition() {
         return turretMotor.getPosition().getValueAsDouble();
@@ -512,6 +489,28 @@ public class Turret extends SubsystemBase {
 
         SmartDashboard.putNumber("19Gear-offset, true absolute pos",
                 (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
+    }
+
+
+    //TODO time regression!!!!!!!!
+    private double timeToShoot(double MetersFromHub) {
+        return metersFromHub;
+
+    }
+
+    private Translation2d calculateTargetHubPose(){
+        ChassisSpeeds robotSpeeds = CommandSwerveDrivetrain.getInstance().getState().Speeds;
+        double timeToShoot = timeToShoot(getMetersFromHub());
+        Translation2d targetHubPose = Constants.FieldConstants.HubPosition.getTranslation().plus(
+                new Translation2d(
+                    robotSpeeds.vxMetersPerSecond * timeToShoot,
+                    robotSpeeds.vyMetersPerSecond * timeToShoot));
+
+    return targetHubPose;
+                
+
+
+
     }
 
     @Override

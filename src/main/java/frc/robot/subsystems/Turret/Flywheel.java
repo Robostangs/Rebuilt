@@ -4,6 +4,9 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,6 +19,8 @@ public class Flywheel extends SubsystemBase {
 
     public static Flywheel instance;
     public static boolean shouldShoot;
+    Alert hotAlert = new Alert("Flywheel Motor is HOT", AlertType.kError);
+
 
     public static Flywheel getInstance() {
         if (instance == null) {
@@ -27,23 +32,28 @@ public class Flywheel extends SubsystemBase {
     public Flywheel() {
 
         shouldShoot = false;
-        flyWheel = new TalonFX(Constants.TurretConstants.shooterMotorID);
+        flyWheel =new TalonFX(Constants.TurretConstants.shooterMotorID);
+        shooterTargetVelocity = new VelocityVoltage(0);
         configureShooterMotor();
-        shooterTargetVelocity = new VelocityVoltage(0).withSlot(0);
+
 
     }
 
     public void configureShooterMotor() {
         TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
 
-        flywheelConfig.Slot0.kP = Constants.TurretConstants.kShooterMotorP;
-        flywheelConfig.Slot0.kI = Constants.TurretConstants.kShooterMotorI;
-        flywheelConfig.Slot0.kD = Constants.TurretConstants.kShooterMotorD;
-        flywheelConfig.Slot0.kA = Constants.TurretConstants.kShooterMotorA;
-        flywheelConfig.Slot0.kV = Constants.TurretConstants.kShooterMotorV;
-        flywheelConfig.Slot0.kS = Constants.TurretConstants.kShooterMotorS;
 
-        flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.TurretConstants.kShooterMotorStatorCurrentLimit;
+        
+        flywheelConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.kShooterSupplyCurrentLimit;
+        flywheelConfig.Slot0.kP = Constants.FlywheelConstants.kShooterMotorP;
+        flywheelConfig.Slot0.kI = Constants.FlywheelConstants.kShooterMotorI;
+        flywheelConfig.Slot0.kD = Constants.FlywheelConstants.kShooterMotorD;
+        flywheelConfig.Slot0.kA = Constants.FlywheelConstants.kShooterMotorA;
+        flywheelConfig.Slot0.kV = Constants.FlywheelConstants.kShooterMotorV;
+        flywheelConfig.Slot0.kS = Constants.FlywheelConstants.kShooterMotorS;
+        flywheelConfig.Voltage.PeakReverseVoltage = Constants.FlywheelConstants.kPeakReverseOutput;
+
+        flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterMotorStatorCurrentLimit;
 
         // Apply the PID configurations to the shooter motor
         flyWheel.getConfigurator().apply(flywheelConfig);
@@ -70,14 +80,37 @@ public class Flywheel extends SubsystemBase {
     public void setShooterRPS(double rps) {
         shooterTargetVelocity.Velocity = rps;
     }
+    public void setTargetVelocity(double targetRps){
+            shooterTargetVelocity.Velocity = targetRps;
+    }
+    public void checkIfMotorHot(){
+        boolean isMotorHot = flyWheel.getAncillaryDeviceTemp().getValueAsDouble()>=45;
+        hotAlert.set(isMotorHot);
+        SmartDashboard.putBoolean("Shoooter/isMotorHot",isMotorHot);
+    }
+
+    public double getTargetVelocity(double MetersFromHub){
+        double feetFromHub = Units.metersToFeet(MetersFromHub)+2.3;
+        double targetVelocity =1.9*feetFromHub+54.7;
+        return targetVelocity;
+    }
+
 
     @Override
     public void periodic() {
-        shooterTargetVelocity.Velocity = SmartDashboard.getNumber("Flywheel RPM target", 0);
+        
         flyWheel.setControl(shooterTargetVelocity);
-        SmartDashboard.putNumber("Shooter/velocity", flyWheel.getVelocity().getValueAsDouble());
-        SmartDashboard.putNumber("Shooter/target", shooterTargetVelocity.Velocity);
+
+
+
+        SmartDashboard.putNumber("Shooter/velocity",flyWheel.getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Shooter/target",shooterTargetVelocity.Velocity);
+        SmartDashboard.putNumber("Shoooter/temperature",flyWheel.getAncillaryDeviceTemp().getValueAsDouble());
+        
+        
     }
+
+ 
 
     public void postStatus(String status) {
 

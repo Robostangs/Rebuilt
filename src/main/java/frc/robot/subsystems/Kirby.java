@@ -57,9 +57,14 @@ public class Kirby extends SubsystemBase {
         kirbyWheels.set(speed);
     }
 
+    public void setDC(double dutyCycle) {
+            hopperExtenderMotor.set(dutyCycle);
+    }
     public void setHopperExtender(double rots) {
         hopperExtenderMotor.setPosition(rots);
     }
+
+    
 
     public void postStatus(String status) {
         SmartDashboard.putString("Kirby/status", status);

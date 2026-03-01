@@ -21,7 +21,7 @@ public class Hood extends SubsystemBase {
     DigitalInput limitSwitch;
     MotionMagicExpoDutyCycle hoodTargetPosition;
 
-     boolean isHomed = false;
+    static boolean isHomed = false;
 
     private Hood() {
         hoodMotor = new TalonFXS(Constants.HoodConstants.hoodMotorID);

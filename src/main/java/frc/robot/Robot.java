@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.TimedRobotstangs;
@@ -160,24 +161,24 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void disabledInit() {
-        autoChooser = AutoBuilder.buildAutoChooser();
-        autoChooserFav = AutoBuilder.buildAutoChooserWithOptionsModifier(
-                (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
+        // autoChooser = AutoBuilder.buildAutoChooser();
+        // autoChooserFav = AutoBuilder.buildAutoChooserWithOptionsModifier(
+        //         (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
 
-        SmartDashboard.putData("Auto Chooser", autoChooser);
-        SmartDashboard.putData("Favorite Auto Chooser", autoChooserFav);
+        // SmartDashboard.putData("Auto Chooser", autoChooser);
+        // SmartDashboard.putData("Favorite Auto Chooser", autoChooserFav);
     }
 
     @Override
     public void disabledPeriodic() {
 
-        if (autoChooser.getSelected() != null &&
-                !autoChooser.getSelected().getName().equals("none")) {
-            autoCommand = autoChooser.getSelected();
-        } else {
-            autoCommand = autoChooserFav.getSelected();
-        }
-        drawCurrentAuto(autoCommand.getName());
+        // if (autoChooser.getSelected() != null &&
+        //         !autoChooser.getSelected().getName().equals("none")) {
+        //     autoCommand = autoChooser.getSelected();
+        // } else {
+        //     autoCommand = autoChooserFav.getSelected();
+        // }
+        // drawCurrentAuto(autoCommand.getName());
     }
 
     @Override
@@ -352,27 +353,31 @@ public class Robot extends TimedRobotstangs {
                 (new ChargeUp().alongWith(new Index()))
                         .raceWith(new WaitUntilCommand(() -> Feeder.getInstance().getfuelSensor())));
 
+        NamedCommands.registerCommand("Climb",
+                new PrintCommand("Hi!"));
+
     }
 
     public void drawCurrentAuto(String autoName) {
-        List<Pose2d> poses = new ArrayList<>();
-        poses.clear();
-        if (autoName != null) {
-            try {
-                for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
-                    for (Pose2d pose : path.getPathPoses()) {
-                        poses.add(pose);
-                    }
+        // List<Pose2d> poses = new ArrayList<>();
+        // poses.clear();
+        // if (autoName != null && !autoName.equals("")) {
+        //     try {
+        //         for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
+        //             for (Pose2d pose : path.getPathPoses()) {
+        //                 poses.add(pose);
+        //             }
 
-                }
-                autoAlert.set(false);
-            } catch (Exception e) {
-                e.printStackTrace();
-                autoAlert.set(true);
-            }
-        }
+        //         }
+        //         autoAlert.set(false);
+        //     } catch (Exception e) {
+        //         e.printStackTrace();
+        //         autoAlert.set(true);
+        //     }
+        //     teleopField.getObject("auto").setPoses(poses);
 
-        teleopField.getObject("auto").setPoses(poses);
+        // }
+
     }
 
     private static final class GcStatsCollector {

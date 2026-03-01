@@ -62,7 +62,7 @@ public class VisionStangs {
                 }
             }
 
-            SmartDashboard.putNumber(camera.getName() + " biggest ambiguity", bigAmbiuity);
+            SmartDashboard.putNumber("Vision/" + camera.getName() + " biggest ambiguity", bigAmbiuity);
         }
 
         if (bigAmbiuity < Constants.VisionConstants.kPhotonAmbiguityThres) {

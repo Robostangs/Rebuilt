@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.HopperCommands.RunHopper;
+import frc.robot.commands.IntakeCommands.MovePivot;
 import frc.robot.commands.TurretCommands.TurretFactory;
 import frc.robot.commands.TurretCommands.setTurretDutyCycle;
 import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
@@ -56,22 +57,25 @@ public class RobotContainer {
                 // xDrive.y().whileTrue(new Index());
 
                 // xDrive.rightStick().toggleOnTrue(new ExtendIntake())
-                //                 .onFalse(new RetractIntake());
+                // .onFalse(new RetractIntake());
 
                 // xDrive.povRight().onTrue(new InstantCommand(
-                //                 (() -> useVision = !useVision)));
+                // (() -> useVision = !useVision)));
 
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-                // xDrive.a().onTrue(new InstantCommand(() ->Hood.getInstance().setHoodPosition(0)));
+                // xDrive.a().onTrue(new InstantCommand(()
+                // ->Hood.getInstance().setHoodPosition(0)));
                 xDrive.x().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()));
-                xDrive.rightBumper().whileTrue(new RunHopper());
+                // xDrive.rightBumper().whileTrue(new RunHopper());
                 xDrive.a().whileTrue(new ChargeUp());
                 xDrive.y().whileTrue(new setHoodPosition());
                 xDrive.b().whileTrue(new HomeHood());
+
+
 
         }
 
@@ -85,9 +89,8 @@ public class RobotContainer {
                 xManip.rightBumper().whileTrue(new setTurretDutyCycle(0.3));
                 xManip.leftBumper().whileTrue(new setTurretDutyCycle(-0.3));
 
-                new Trigger(() -> Math.abs(xManip.getRightX()) > 0.1)
-                                .whileTrue(new InstantCommand(() -> Turret.getInstance()
-                                                .setIronmansetpoint(xManip.getRightX() / 10)));
+                new Trigger(() -> Math.abs(xManip.getRightY()) > 0.1)
+                                .whileTrue(new MovePivot(() -> xManip.getRightY()));
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.1)
                                 .whileTrue(new setHoodDutyCycle(() -> xManip.getLeftY() / 2));
@@ -95,8 +98,8 @@ public class RobotContainer {
         }
 
         private void setDrivetrain() {
-                double leftTrigger =  ((xDrive.getLeftTriggerAxis() > 0.2) ? 0.25
-                                                                                        : 1);
+                double leftTrigger = ((xDrive.getLeftTriggerAxis() > 0.2) ? 0.25
+                                : 1);
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(() -> drive.withVelocityX((-xSim.getRawAxis(0))
@@ -107,31 +110,31 @@ public class RobotContainer {
                                                                         * MaxAngularRate)));
                 } else {
 
-         
-                                drivetrain.setDefaultCommand(
-                                                // Drivetrain will execute this command periodically
-                                                drivetrain.applyRequest(() -> drive
-                                                                .withVelocityX(-xDrive.getLeftY() * MaxSpeed*leftTrigger) // Drive
-                                                                                                              // forward
-                                                                                                              // with
-                                                                                                              // negative
-                                                                                                              // Y
-                                                                                                              // (forward)
-                                                                .withVelocityY(-xDrive.getLeftX() * MaxSpeed*leftTrigger) // Drive
-                                                                                                              // left
-                                                                                                              // with
-                                                                                                              // negative
-                                                                                                              // X
-                                                                                                              // (left)
-                                                                .withRotationalRate(
-                                                                                -xDrive.getRightX() * MaxAngularRate*leftTrigger) // Drive
-                                                                                                                      // counterclockwise
-                                                                                                                      // with
-                                                                                                                      // negative
-                                                                                                                      // X
-                                                                                                                      // (left)
-                                                ));
-                       
+                        drivetrain.setDefaultCommand(
+                                        // Drivetrain will execute this command periodically
+                                        drivetrain.applyRequest(() -> drive
+                                                        .withVelocityX(-xDrive.getLeftY() * MaxSpeed * leftTrigger) // Drive
+                                                        // forward
+                                                        // with
+                                                        // negative
+                                                        // Y
+                                                        // (forward)
+                                                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed * leftTrigger) // Drive
+                                                        // left
+                                                        // with
+                                                        // negative
+                                                        // X
+                                                        // (left)
+                                                        .withRotationalRate(
+                                                                        -xDrive.getRightX() * MaxAngularRate
+                                                                                        * leftTrigger) // Drive
+                                        // counterclockwise
+                                        // with
+                                        // negative
+                                        // X
+                                        // (left)
+                                        ));
+
                 }
         }
 }

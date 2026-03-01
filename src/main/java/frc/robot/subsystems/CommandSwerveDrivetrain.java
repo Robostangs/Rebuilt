@@ -59,6 +59,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
     private VisionStangs photonVisionBack = new VisionStangs(Constants.VisionConstants.kLimelightFour);
+    private VisionStangs photonVisionRight = new VisionStangs(Constants.VisionConstants.kPhotonCamNameRight, Constants.VisionConstants.kRobotToCamRight);
 
     private ArrayList<VisionStangs> visionPoses = new ArrayList<>();
 
@@ -258,13 +259,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         photonVisionBack.periodic();
+        // photonVisionRight.periodic();
 
         visionPoses.add(photonVisionBack);
+        // visionPoses.add(photonVisionRight);
 
         setVisionPose(visionPoses);
 
         Robot.teleopField.setRobotPose(this.getState().Pose);
-        Robot.teleopField.getObject("Jabba").setPose(this.getState().Pose);
 
     }
 
@@ -273,7 +275,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         int index = -1;
         for (int c = 0; c < visionMeasurements.size(); c++) {
             if (visionMeasurements.get(c) != null) {
-                if (visionMeasurements.get(c).getAmbiguity() < smallestAmbiuity) {
+                if (visionMeasurements.get(c).getAmbiguity() < smallestAmbiuity &&  smallestAmbiuity > -0.1) {
                     smallestAmbiuity = visionMeasurements.get(c).getAmbiguity();
                     index = c;
                 }

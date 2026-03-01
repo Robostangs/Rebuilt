@@ -16,6 +16,8 @@ public class Kirby extends SubsystemBase {
     public Kirby() {
 
         kirbyWheels = new TalonFX(Constants.KirbyConstants.kirbyWheelsID);
+        setIntakePivotConfig();
+        
 
     }
 
@@ -26,7 +28,8 @@ public class Kirby extends SubsystemBase {
         return mInstance;
     }
 
-    public void setIntakePivotConfig(){
+    public void setIntakePivotConfig()
+    {
         kirbyConfig = new TalonFXConfiguration();
         kirbyConfig.CurrentLimits.SupplyCurrentLimit = Constants.KirbyConstants.IntakeWheelCurrentLimit;
     }

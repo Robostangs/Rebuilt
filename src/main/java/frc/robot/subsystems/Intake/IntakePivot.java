@@ -19,22 +19,23 @@ public class IntakePivot extends SubsystemBase {
 
     Alert hopperExtenderAlert = new Alert("Hopper Extender Motor is HOT", AlertType.kError);
 
-     public IntakePivot() {
+    public IntakePivot() {
         extenderControl = new MotionMagicTorqueCurrentFOC(hopperExtenderMotor.getPosition().getValueAsDouble());
+        setIntakePivotConfig();
 
-     }
+    }
 
-     public static IntakePivot getInstance(){
-                if (mInstance == null) {
+    public static IntakePivot getInstance() {
+        if (mInstance == null) {
             mInstance = new IntakePivot();
         }
         return mInstance;
-     }
+    }
 
-     public void setIntakePivotConfig(){
+    public void setIntakePivotConfig() {
         hopperExtenderMotor = new TalonFX(Constants.KirbyConstants.hopperExtenderID);
         hopperExtenderConfig = new TalonFXConfiguration();
-        
+
         // TODO: Find this john
         hopperExtenderConfig.Feedback.SensorToMechanismRatio = Constants.KirbyConstants.extenderSensorToMechanismRatio;
         hopperExtenderConfig.CurrentLimits.SupplyCurrentLimit = Constants.KirbyConstants.HopperExtenderCurrentLimit;
@@ -45,7 +46,6 @@ public class IntakePivot extends SubsystemBase {
         hopperExtenderConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.KirbyConstants.kExtenderMotionMagicVelocity;
         hopperExtenderConfig.MotionMagic.MotionMagicAcceleration = Constants.KirbyConstants.kExtenderMotionMagicAcceleration;
 
-
         hopperExtenderMotor.getConfigurator().apply(hopperExtenderConfig);
     }
 
@@ -53,11 +53,11 @@ public class IntakePivot extends SubsystemBase {
         hopperExtenderMotor.set(dutyCycle);
     }
 
-    public void setHopperExtender(double rots){
+    public void setHopperExtender(double rots) {
         hopperExtenderMotor.setPosition(rots);
     }
 
-    public void postStatus(String status){
+    public void postStatus(String status) {
         SmartDashboard.putString("Intake Pivot/Status", status);
     }
 
@@ -69,14 +69,14 @@ public class IntakePivot extends SubsystemBase {
         hopperExtenderMotor.setNeutralMode(mode);
     }
 
-    public void checkIfMotorHot(){
-        boolean isMotorHot = hopperExtenderMotor.getAncillaryDeviceTemp().getValueAsDouble()>=45;
+    public void checkIfMotorHot() {
+        boolean isMotorHot = hopperExtenderMotor.getAncillaryDeviceTemp().getValueAsDouble() >= 45;
         hopperExtenderAlert.set(isMotorHot);
-        SmartDashboard.putBoolean("Intake Pivot/isMotorHot",isMotorHot);
+        SmartDashboard.putBoolean("Intake Pivot/isMotorHot", isMotorHot);
     }
 
     @Override
-    public void periodic(){
+    public void periodic() {
         hopperExtenderMotor.setControl(extenderControl);
         checkIfMotorHot();
     }

@@ -16,13 +16,10 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -61,10 +58,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
-    private VisionStangs photonVisionFront = new VisionStangs(Constants.VisionConstants.kPhotonCamNameFront,
-            Constants.VisionConstants.kRobotToCamFront);
-
-    private VisionStangs limelightVisionLeft = new VisionStangs(Constants.VisionConstants.kLimelightLeft);
+    private VisionStangs photonVisionBack = new VisionStangs(Constants.VisionConstants.kLimelightFour);
+    private VisionStangs photonVisionRight = new VisionStangs(Constants.VisionConstants.kPhotonCamNameRight, Constants.VisionConstants.kRobotToCamRight);
 
     private ArrayList<VisionStangs> visionPoses = new ArrayList<>();
 
@@ -146,6 +141,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
         this.setVisionMeasurementStdDevs(Constants.AutoConstants.kErrorInMyVisionReg);
+        configurePathPlanner();
 
         if (Utils.isSimulation()) {
             startSimThread();
@@ -262,34 +258,47 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
 
-        limelightVisionLeft.periodic();
-        photonVisionFront.periodic();
+        photonVisionBack.periodic();
+        // photonVisionRight.periodic();
 
-        visionPoses.add(limelightVisionLeft);
-        visionPoses.add(photonVisionFront);
+        visionPoses.add(photonVisionBack);
+        // visionPoses.add(photonVisionRight);
 
-        double smallestAmbiuity = 100;
-        int index = -1;
-        for(int c = 0; c < visionPoses.size(); c++){
-            if(visionPoses.get(c).getAmbiguity() < smallestAmbiuity){
-                smallestAmbiuity = visionPoses.get(c).getAmbiguity();
-                index = c;
-            }
-        }
-
-        if(visionPoses.get(index).getPose() != null){
-        SmartDashboard.putString("Vision/Camera with best Pose: ", "Best vision value is: "+ visionPoses.get(index).getName());
-        SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
-         visionPoses.get(index).getAmbiguity());
-
-
-        }
-
-        int bestindex = -1;
-        double bestAmbiguity = 100;
+        setVisionPose(visionPoses);
 
         Robot.teleopField.setRobotPose(this.getState().Pose);
 
+    }
+
+    private void setVisionPose(ArrayList<VisionStangs> visionMeasurements) {
+        double smallestAmbiuity = 1;
+        int index = -1;
+        for (int c = 0; c < visionMeasurements.size(); c++) {
+            if (visionMeasurements.get(c) != null) {
+                if (visionMeasurements.get(c).getAmbiguity() < smallestAmbiuity &&  smallestAmbiuity > -0.1) {
+                    smallestAmbiuity = visionMeasurements.get(c).getAmbiguity();
+                    index = c;
+                }
+            }
+        }
+
+        if (visionMeasurements.get(index).getPose() != null) {
+            SmartDashboard.putString("Vision/Camera with best Pose: ",
+                    "Best vision value is: " + visionMeasurements.get(index).getName());
+            SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
+                    visionMeasurements.get(index).getAmbiguity());
+            SmartDashboard.putString("Vision/Pose Null error ",
+                    "Ts NOT null dude");
+            SmartDashboard.putNumber("Vision/Vision Pose index ",
+                    index);
+
+            this.addVisionMeasurement(visionMeasurements.get(index).getPose(),
+                    visionMeasurements.get(index).getTimeStamp());
+        } else {
+            SmartDashboard.putString("Vision/Pose Null error ",
+                    "Ts null dude");
+
+        }
     }
 
     private void startSimThread() {

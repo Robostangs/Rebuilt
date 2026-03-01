@@ -28,6 +28,6 @@ public class Index extends Command {
 
     @Override
     public boolean isFinished() {
-        return feeder.getfuelSensor(); 
+        return false;
     }
 }

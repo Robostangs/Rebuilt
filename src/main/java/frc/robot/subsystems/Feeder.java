@@ -27,6 +27,7 @@ public class Feeder extends SubsystemBase {
         feedConfigurator = new TalonFXConfiguration();
         feedConfigurator.CurrentLimits.SupplyCurrentLimit = Constants.FeederConstants.feederSupplyLimit;
         
+        
         feederMotor.getConfigurator().apply(feedConfigurator);
     }
 

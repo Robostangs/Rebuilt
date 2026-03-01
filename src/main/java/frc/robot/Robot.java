@@ -117,7 +117,7 @@ public class Robot extends TimedRobotstangs {
                     cfg.errorHandler);
             edu.wpi.first.epilogue.Epilogue.kirbyLogger.tryUpdate(
                     rootBackend.getNested("Kirby"),
-                    frc.robot.subsystems.Kirby.getInstance(),
+                    frc.robot.subsystems.Intake.Kirby.getInstance(),
                     cfg.errorHandler);
             edu.wpi.first.epilogue.Epilogue.flywheelLogger.tryUpdate(
                     rootBackend.getNested("Flywheel"),

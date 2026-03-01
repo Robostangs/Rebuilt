@@ -136,6 +136,7 @@ public final class Constants {
                 public static final double kRetractSetpoint = 0;
                 // TODO: find this john
                 public static final double kHopperExtensionTolerance = 0.01;
+                public static final double IntakeWheelCurrentLimit = 0;
         }
 
     public class JabaTunerConstants {

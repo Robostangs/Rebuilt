@@ -3,13 +3,15 @@ package frc.robot.commands.IntakeCommands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Kirby;
+import frc.robot.subsystems.Intake.IntakePivot;
+import frc.robot.subsystems.Intake.Kirby;
 
 /**
  * Spins the Kirby intake wheels at a given duty cycle while scheduled.
  */
 public class MovePivot extends Command {
     private final Kirby kirby;
+    private final IntakePivot pivot;
     private final DoubleSupplier dutyCycle;
 
     /**
@@ -17,7 +19,8 @@ public class MovePivot extends Command {
      * cycle.
      */
     public MovePivot(DoubleSupplier dutyCycle) {
-        this.kirby = Kirby.getInstance();
+        kirby = Kirby.getInstance();
+        pivot = IntakePivot.getInstance();
         this.dutyCycle = dutyCycle;
         addRequirements(kirby);
     }
@@ -29,7 +32,7 @@ public class MovePivot extends Command {
 
     @Override
     public void execute() {
-        kirby.setDC(dutyCycle.getAsDouble());
+        pivot.setDC(dutyCycle.getAsDouble());
 
     }
 

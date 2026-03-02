@@ -33,6 +33,13 @@ public class IntakePivot extends SubsystemBase {
         }
         return mInstance;
     }
+    public double getStatorCurrent() {
+        return hopperExtenderMotor.getStatorCurrent().getValueAsDouble();
+    }
+    public void setPosition (double position) {
+        hopperExtenderMotor.setPosition(position);
+    }
+    
 
     public void setIntakePivotConfig() {
         hopperExtenderMotor = new TalonFX(Constants.KirbyConstants.hopperExtenderID);
@@ -78,9 +85,13 @@ public class IntakePivot extends SubsystemBase {
         SmartDashboard.putBoolean("Intake Pivot/isMotorHot", isMotorHot);
     }
 
+    public void setTargetPosition(){
+        hopperExtenderMotor.setControl(extenderControl);
+
+    }
+
     @Override
     public void periodic() {
-        hopperExtenderMotor.setControl(extenderControl);
         checkIfMotorHot();
     }
 }

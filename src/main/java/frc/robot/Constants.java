@@ -68,6 +68,7 @@ public final class Constants {
         public static final int kDriverControllerPort = 0;
     }
 
+
     public static final AprilTagFieldLayout kAprilTagFieldLayout = AprilTagFieldLayout
             .loadField(AprilTagFields.kDefaultField);
     public static class HopperConstants {
@@ -136,6 +137,8 @@ public final class Constants {
                 public static final double kHopperExtensionTolerance = 0.01;
                 public static final double IntakeWheelCurrentLimit = 20;
                 public static final double hopperExtenderKG = 40;
+                public static final double kHomeDutyCycle = 0.1;
+                public static final double kHomePosition = 0.27;
         }
 
     public class JabaTunerConstants {
@@ -326,7 +329,7 @@ public final class Constants {
                 public static final int hoodMotorID = 25;
                 public static final double kHoodDownPos = 0d;
                 public static final int kLimitSwitchId = 0;
-                public static final double kHoodHomeDutyCycle = -0.09;
+                public static final double kHoodHomeDutyCycle = -0.1;
                 public static final double kHoodMotorP = 8;
                 public static final double kHoodMotorI = 1;
                 public static final double kHoodMotorD = 0;

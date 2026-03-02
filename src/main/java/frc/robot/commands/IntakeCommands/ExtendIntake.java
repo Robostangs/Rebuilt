@@ -22,6 +22,10 @@ public class ExtendIntake extends Command {
         kirby.setKirbyWheels(Constants.KirbyConstants.kirbyIntakeSpeed);
     }
 
+    public void execute() {
+        pivot.setTargetPosition();
+    }
+
 
     @Override
     public void end(boolean interrupted) {

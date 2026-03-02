@@ -17,6 +17,7 @@ import frc.robot.Stable.ControllerStangs;
 import frc.robot.commands.Index;
 import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
+import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.MovePivot;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
@@ -84,8 +85,8 @@ public class RobotContainer {
 
                 xDrive.leftTrigger().whileTrue(new StartIntake());
 
-                xDrive.rightStick().toggleOnTrue(new ExtendIntake());
-                xDrive.leftStick().toggleOnTrue(new RetractIntake());
+                xDrive.rightStick().toggleOnTrue(new ExtendIntake()).onFalse(new RetractIntake());
+                xDrive.leftStick().toggleOnTrue(new HomeIntake());
 
         }
 

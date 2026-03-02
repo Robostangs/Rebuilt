@@ -12,9 +12,10 @@ import java.lang.management.MemoryMXBean;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ctre.phoenix6.HootAutoReplay;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-
+import frc.robot.subsystems.Intake.*;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.epilogue.Epilogue;
@@ -47,6 +48,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.Index;
+import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
@@ -54,7 +56,6 @@ import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.Hood.setHoodPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Kirby;
 import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -110,7 +111,9 @@ public class Robot extends TimedRobotstangs {
             config.minimumImportance = Logged.Importance.DEBUG;
         });
     }
-
+    void postPitTestStatus(String status){
+        SmartDashboard.putString("Pit Test Status", status);
+    }
     void updateEpilogue() {
         var cfg = edu.wpi.first.epilogue.Epilogue.getConfig();
         if (cfg.backend != null && cfg.root != null) {
@@ -187,21 +190,38 @@ public class Robot extends TimedRobotstangs {
         ));
         hoodSetpointChooser.addOption("Up", 
             Hood.getInstance().runOnce(() -> {
-                Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodUpSetpoint); 
+                Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodUpPos); 
             }
         ));
         SmartDashboard.putData("PitTest/HoodSetpoints", hoodSetpointChooser);
         
         intakePivotSetpointChooser.addOption("Extend", 
-            Kirby.getInstance().runOnce(() -> Kirby.getInstance().setExtenderPosition(Constants.KirbyConstants.kExtendSetpoint)));
+            new ExtendIntake());
         intakePivotSetpointChooser.addOption("Retract", 
-            Kirby.getInstance().runOnce(() -> Kirby.getInstance().setExtenderPosition(Constants.KirbyConstants.kRetractSetpoint)));
+            new RetractIntake());
         SmartDashboard.putData("PitTest/IntakePivotSetpoints", intakePivotSetpointChooser);
         // actual pit test automated
-        Command pitTestCommand = new HomeHood()
+        Command pitTestCommand = 
+            
+            new InstantCommand(() -> postPitTestStatus("Starting Pit Test. Homing Hood"))
+            .andThen(new HomeHood())
+            .andThen(new InstantCommand(() -> postPitTestStatus("Extending Intake")))
             .andThen(new ExtendIntake())
-            .andThen(new StartIntake().withTimeout(5));
-        SmartDashboard.putData("Run Auto pit test", pitTestCommand);
+            .andThen(new InstantCommand(() -> postPitTestStatus("Starting Intake Wheels")))
+            .andThen(new StartIntake().withTimeout(5))
+            .andThen(new InstantCommand(() -> postPitTestStatus("Running Hopper")))
+            .andThen(new RunHopper().withTimeout(5))
+            .andThen(new InstantCommand(() -> postPitTestStatus("Retracting Intake")))
+            .andThen(new RetractIntake())
+            .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
+            .andThen(new ChargeUp().withTimeout(5))
+            .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
+            .andThen(new Index().withTimeout(5))
+            .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
+            .andThen(new setHoodPosition().withTimeout(3));
+            
+            
+        SmartDashboard.putData("Run Auto pit test (Intake must be up)", pitTestCommand);
     }
     void pitTestPeriodic(){
 
@@ -233,7 +253,7 @@ public class Robot extends TimedRobotstangs {
             Feeder.getInstance().setDutyCycle(feederDC);
         }
         if(intakePivotDC!=0){
-            Kirby.getInstance().setHopperExtenderDutyCycle(intakePivotDC);
+            IntakePivot.getInstance().setDC(intakePivotDC);
         }
         if(turretPosition!=0){
             Turret.setManualTarget(true);
@@ -325,7 +345,8 @@ public class Robot extends TimedRobotstangs {
 
         if (gameTime < 30 || gameTime > 130) {
             if(gameTimeInt==29){
-                CommandScheduler.getInstance().schedule(RobotContainer.controllerHaptics(2,m_robotContainer.xDrive));
+                CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(2));
+                CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(2));
             }
             canBlueScore = whoCanScore.both;
         } else if (gameTime < 130 && gameTime > 129) {
@@ -349,7 +370,8 @@ public class Robot extends TimedRobotstangs {
 
         else if ((gameTimeInt - 10) % 25 == 0) {
             canBlueScore = (canBlueScore == whoCanScore.blue) ? whoCanScore.red : whoCanScore.blue;
-            CommandScheduler.getInstance().schedule(RobotContainer.controllerHaptics(1,m_robotContainer.xDrive));
+            CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(1));
+            CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(1));
         } else {
             int secondsSince10 = gameTimeInt - 10;
             if (secondsSince10 >= 0 && secondsSince10 % 25 == 0) {

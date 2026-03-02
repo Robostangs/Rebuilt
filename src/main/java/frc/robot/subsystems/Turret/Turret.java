@@ -62,8 +62,6 @@ public class Turret extends SubsystemBase {
 
     Mechanism2d turretSim;
 
-
-
     boolean isSafeNeg = false;
     Mechanism2d simMain = new Mechanism2d(60, 60);
     MechanismRoot2d simRoot = simMain.getRoot("TurretBase", 30, 30);

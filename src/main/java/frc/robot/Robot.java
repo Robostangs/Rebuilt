@@ -49,6 +49,8 @@ import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.Index;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
+import frc.robot.commands.IntakeCommands.StartIntake;
+import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.Hood.setHoodPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
@@ -195,6 +197,11 @@ public class Robot extends TimedRobotstangs {
         intakePivotSetpointChooser.addOption("Retract", 
             Kirby.getInstance().runOnce(() -> Kirby.getInstance().setExtenderPosition(Constants.KirbyConstants.kRetractSetpoint)));
         SmartDashboard.putData("PitTest/IntakePivotSetpoints", intakePivotSetpointChooser);
+        // actual pit test automated
+        Command pitTestCommand = new HomeHood()
+            .andThen(new ExtendIntake())
+            .andThen(new StartIntake().withTimeout(5));
+        SmartDashboard.putData("Run Auto pit test", pitTestCommand);
     }
     void pitTestPeriodic(){
 

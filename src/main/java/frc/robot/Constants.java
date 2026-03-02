@@ -348,7 +348,7 @@ public final class Constants {
                 public static final double kPeakReverseOutput = 0;
                 public static final double kShootSpeed = 60;
                 public static final int kFlywheelMotorID = 0;
-                public static final double kShooterMotorP = 4;
+                public static final double kShooterMotorP = 3.5;
                 public static final double kShooterMotorI = 0.08;
                 public static final double kShooterMotorD = 0;
                 public static final double kShooterMotorG = 0;

@@ -29,7 +29,8 @@ public class ExtendIntake extends Command {
 
     @Override
     public void end(boolean interrupted) {
-
+        kirby.setKirbyWheels(0);
+        
     }
 
 

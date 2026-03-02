@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import frc.robot.subsystems.Turret.*;
@@ -60,13 +62,7 @@ public class RobotContainer {
         private void configureDrivingBinding() {
                 setDrivetrain();
 
-                // xDrive.y().whileTrue(new Index());
-
-                // xDrive.rightStick().toggleOnTrue(new ExtendIntake())
-                // .onFalse(new RetractIntake());
-
-                // xDrive.povRight().onTrue(new InstantCommand(
-                // (() -> useVision = !useVision)));
+           
 
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
@@ -75,18 +71,20 @@ public class RobotContainer {
 
                 xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()));
 
+                xDrive.rightStick().whileTrue(new ExtendIntake());
+                xDrive.leftStick().whileTrue(new RetractIntake());
+
+                
+                
+                
+                xDrive.rm().whileTrue(new ChargeUp());
+                
+                xDrive.z().whileTrue(new HomeIntake(true));
+                xDrive.c().whileTrue(new HomeIntake(false));
+
                 xDrive.x().whileTrue(new RunHopper());
-
-                xDrive.rightBumper().whileTrue(new MovePivot(() -> 0.3));
-                xDrive.leftBumper().whileTrue(new MovePivot(() -> -0.1));
-
                 xDrive.y().onTrue(new HomeHood());
                 
-
-                xDrive.leftTrigger().whileTrue(new StartIntake());
-
-                xDrive.rightStick().toggleOnTrue(new ExtendIntake()).onFalse(new RetractIntake());
-                xDrive.leftStick().toggleOnTrue(new HomeIntake());
 
         }
 
@@ -109,8 +107,7 @@ public class RobotContainer {
         }
 
         private void setDrivetrain() {
-                double leftTrigger = ((xDrive.getLeftTriggerAxis() > 0.2) ? 0.25
-                                : 1);
+                DoubleSupplier leftTrigger = () -> (xDrive.getLeftTriggerAxis() > 0.2) ? 0.25 : 1;
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(() -> drive.withVelocityX((-xSim.getRawAxis(0))
@@ -124,13 +121,13 @@ public class RobotContainer {
                         drivetrain.setDefaultCommand(
                                         // Drivetrain will execute this command periodically
                                         drivetrain.applyRequest(() -> drive
-                                                        .withVelocityX(-xDrive.getLeftY() * MaxSpeed * leftTrigger) // Drive
+                                                        .withVelocityX(-xDrive.getLeftY() * MaxSpeed * leftTrigger.getAsDouble()) // Drive
                                                         // forward
                                                         // with
                                                         // negative
                                                         // Y
                                                         // (forward)
-                                                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed * leftTrigger) // Drive
+                                                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed * leftTrigger.getAsDouble()) // Drive
                                                         // left
                                                         // with
                                                         // negative
@@ -138,7 +135,7 @@ public class RobotContainer {
                                                         // (left)
                                                         .withRotationalRate(
                                                                         -xDrive.getRightX() * MaxAngularRate
-                                                                                        * leftTrigger) // Drive
+                                                                                        * leftTrigger.getAsDouble()) // Drive
                                         // counterclockwise
                                         // with
                                         // negative

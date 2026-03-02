@@ -9,13 +9,18 @@ import static edu.wpi.first.units.Units.Seconds;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
-import com.ctre.phoenix6.HootAutoReplay;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.logging.NTEpilogueBackend;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.Sendable;
@@ -25,6 +30,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -36,17 +42,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.TimedRobotstangs;
+import frc.robot.commands.Index;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.TurretCommands.Hood.setHoodPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Kirby;
+import frc.robot.commands.TurretCommands.Hood.HomeHood;
+import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Turret.Hood;
 import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.Turret.Flywheel;
+
 @Logged
 public class Robot extends TimedRobotstangs {
     public static boolean isJaba;
@@ -60,6 +74,7 @@ public class Robot extends TimedRobotstangs {
 
     public static Alert gcAlert = new Alert("MEMORY TWEAKING LOOK INTO TS RN", AlertType.kError);
     public static Alert shiftAlert = new Alert("Alliance shift may not be accurate", AlertType.kWarning);
+    public static Alert autoAlert = new Alert("Auto couldnt load", AlertType.kError);
 
     public static Constants.ElasticConstants.whoCanScore canBlueScore;
 
@@ -67,7 +82,8 @@ public class Robot extends TimedRobotstangs {
 
     public Color allianceScore = Constants.ElasticConstants.purple;
 
-    static NetworkTableEntry turretSetpoint;
+    private SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private SendableChooser<Command> autoChooserFav = new SendableChooser<>();
 
     public PowerDistribution pdh = new PowerDistribution(Constants.ElasticConstants.kPdhCanId, ModuleType.kRev);
 
@@ -78,6 +94,9 @@ public class Robot extends TimedRobotstangs {
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
             .withTimestampReplay()
             .withJoystickReplay();
+    Command autoCommand;
+
+    static NetworkTableEntry turretSetpoint;
 
 
     public Robot() {
@@ -119,7 +138,7 @@ public class Robot extends TimedRobotstangs {
                     cfg.errorHandler);
             edu.wpi.first.epilogue.Epilogue.kirbyLogger.tryUpdate(
                     rootBackend.getNested("Kirby"),
-                    frc.robot.subsystems.Kirby.getInstance(),
+                    frc.robot.subsystems.Intake.Kirby.getInstance(),
                     cfg.errorHandler);
             edu.wpi.first.epilogue.Epilogue.flywheelLogger.tryUpdate(
                     rootBackend.getNested("Flywheel"),
@@ -130,16 +149,24 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void robotInit() {
-        isJaba = Paths.get("/home/lvuser/Ultron").toFile().exists();
 
+        isJaba = true;
         SmartDashboard.putData("Field", teleopField);
+
+        DataLogManager.start("");
+        DataLogManager.log("Driverstation connected");
+        DriverStation.startDataLog(DataLogManager.getLog());
+
+        CommandScheduler.getInstance()
+                .onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
+        CommandScheduler.getInstance()
+                .onCommandInterrupt((action) -> DataLogManager.log(action.getName() + " Command Interrupted"));
+        CommandScheduler.getInstance()
+                .onCommandFinish((action) -> DataLogManager.log(action.getName() + " Command Finished"));
 
         configureDisabledTab();
         configureTeleopTab();
         loadNamedCommands();
-
-
-
 
     }
     void setupPitTest(){
@@ -224,23 +251,40 @@ public class Robot extends TimedRobotstangs {
         updateEpilogue();
         gscollect.update();
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
-        
+        // Flywheel.getInstance().checkIfMotorHot();
+
     }
 
     @Override
     public void disabledInit() {
+        // autoChooser = AutoBuilder.buildAutoChooser();
+        // autoChooserFav = AutoBuilder.buildAutoChooserWithOptionsModifier(
+        //         (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
+
+        // SmartDashboard.putData("Auto Chooser", autoChooser);
+        // SmartDashboard.putData("Favorite Auto Chooser", autoChooserFav);
     }
 
     @Override
     public void disabledPeriodic() {
+
+        // if (autoChooser.getSelected() != null &&
+        //         !autoChooser.getSelected().getName().equals("none")) {
+        //     autoCommand = autoChooser.getSelected();
+        // } else {
+        //     autoCommand = autoChooserFav.getSelected();
+        // }
+        // drawCurrentAuto(autoCommand.getName());
     }
 
     @Override
     public void disabledExit() {
+        drawCurrentAuto(null);
     }
 
     @Override
     public void autonomousInit() {
+        CommandScheduler.getInstance().schedule(autoCommand);
 
     }
 
@@ -331,23 +375,32 @@ public class Robot extends TimedRobotstangs {
     public void testInit() {
         CommandScheduler.getInstance().cancelAll();
         setupPitTest();
+        SmartDashboard.putNumber("Hood setpoint", 0);
+        SmartDashboard.putNumber("Flywheel velocity", 0);
+
     }
 
     @Override
     public void testPeriodic() {
         pitTestPeriodic();
+
+        // double hoodSetpoint = SmartDashboard.getNumber("Hood setpoint", 0.0);
+        // Hood.getInstance().setMotionMagicTarget(hoodSetpoint);
+        // Hood.getInstance().setMotionMagic();
+
+        // double flywheelVelocity = SmartDashboard.getNumber("Flywheel velocity", 0.0);
+        // Flywheel.getInstance().setShooterRPS(flywheelVelocity);
+        // Flywheel.getInstance().setMotionMagic();
+
     }
 
     @Override
     public void testExit() {
     }
 
-    @Override
-    public void simulationPeriodic() {
-    }
-
     public static boolean isRed() {
-        if (Robot.isSimulation()) {
+
+        if (Robot.isSimulation() || DriverStation.getAlliance() == null) {
             return false;
         }
         if (DriverStation.getAlliance().get() == (Alliance.Red)) {
@@ -358,7 +411,7 @@ public class Robot extends TimedRobotstangs {
 
     }
 
-        public void configureDisabledTab(){
+    public void configureDisabledTab() {
 
         disableTab = Shuffleboard.getTab("Disabled");
 
@@ -369,25 +422,33 @@ public class Robot extends TimedRobotstangs {
                 new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().setCoastMode(false))
                         .ignoringDisable(true));
 
+        disableTab.add("Zero Hood",
+                new InstantCommand(() -> Hood.getInstance().setHoodPosition(0)).ignoringDisable(true));
+        disableTab.add("Home Hood",
+                new HomeHood());
+
         disableTab.add("RESET TO SUN TZUUUUUU",
                 new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
                         .ignoringDisable(true));
     }
 
-    public void configureTeleopTab(){
-        teleopTab = Shuffleboard.getTab("Teleop");
+    public void logCurrentAuto() {
 
-
-        
     }
 
-public void loadNamedCommands(){
+    public void configureTeleopTab() {
+        teleopTab = Shuffleboard.getTab("Teleop");
 
-        NamedCommands.registerCommand("Shoot", new InstantCommand(() -> Turret.getInstance().trackHub()));
+    }
 
-        NamedCommands.registerCommand("Extend", new ExtendIntake());
+    public void loadNamedCommands() {
 
-        NamedCommands.registerCommand("Retract", new RetractIntake());
+        NamedCommands.registerCommand("Shoot",
+                new InstantCommand(() -> Turret.getInstance().trackHub()).withTimeout(0.5));
+
+        NamedCommands.registerCommand("Extend", new ExtendIntake().withTimeout(0.5));
+
+        NamedCommands.registerCommand("Retract", new RetractIntake().withTimeout(0.5));
 
         NamedCommands.registerCommand("Dont shoot",
                 new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false))
@@ -397,8 +458,36 @@ public void loadNamedCommands(){
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
                         .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
                         .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
+        NamedCommands.registerCommand("Photoshoot",
+                (new ChargeUp().alongWith(new Index()))
+                        .raceWith(new WaitUntilCommand(() -> Feeder.getInstance().getfuelSensor())));
 
-}
+        NamedCommands.registerCommand("Climb",
+                new PrintCommand("Hi!"));
+
+    }
+
+    public void drawCurrentAuto(String autoName) {
+        // List<Pose2d> poses = new ArrayList<>();
+        // poses.clear();
+        // if (autoName != null && !autoName.equals("")) {
+        //     try {
+        //         for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
+        //             for (Pose2d pose : path.getPathPoses()) {
+        //                 poses.add(pose);
+        //             }
+
+        //         }
+        //         autoAlert.set(false);
+        //     } catch (Exception e) {
+        //         e.printStackTrace();
+        //         autoAlert.set(true);
+        //     }
+        //     teleopField.getObject("auto").setPoses(poses);
+
+        // }
+
+    }
 
     private static final class GcStatsCollector {
 

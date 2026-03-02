@@ -1,40 +1,43 @@
-package frc.robot.commands;
+package frc.robot.commands.IntakeCommands;
+
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Kirby;
+import frc.robot.subsystems.Intake.IntakePivot;
+import frc.robot.subsystems.Intake.Kirby;
 
 /**
  * Spins the Kirby intake wheels at a given duty cycle while scheduled.
  */
-public class Swallow extends Command {
+public class MovePivot extends Command {
     private final Kirby kirby;
-    private final double dutyCycle;
+    private final IntakePivot pivot;
+    private final DoubleSupplier dutyCycle;
 
     /**
      * Create a new Swallow command that runs the Kirby wheels at the given duty
      * cycle.
      */
-    public Swallow(double dutyCycle) {
-        this.kirby = Kirby.getInstance();
+    public MovePivot(DoubleSupplier dutyCycle) {
+        kirby = Kirby.getInstance();
+        pivot = IntakePivot.getInstance();
         this.dutyCycle = dutyCycle;
-        // Declare subsystem dependency so scheduler won't run conflicting commands.
         addRequirements(kirby);
     }
 
     @Override
     public void initialize() {
-        kirby.setKirbyWheels(dutyCycle);
 
     }
 
     @Override
     public void execute() {
-        // Set motor output to the provided duty cycle.
+        pivot.setDC(dutyCycle.getAsDouble());
+
     }
 
     @Override
     public void end(boolean interrupted) {
-        // Stop the wheels when the command ends or is interrupted.
         kirby.setKirbyWheels(0.0);
     }
 

@@ -62,6 +62,8 @@ public class Turret extends SubsystemBase {
 
     Mechanism2d turretSim;
 
+
+
     boolean isSafeNeg = false;
     Mechanism2d simMain = new Mechanism2d(60, 60);
     MechanismRoot2d simRoot = simMain.getRoot("TurretBase", 30, 30);
@@ -226,12 +228,11 @@ public class Turret extends SubsystemBase {
     }
 
     public void trackHub() {
-        turretControl.Position = aimingJohns().getRotations();
+        turretControl.Position = aimingJohns(calculateTargetHubTranslation()).getRotations();
     }
 
-    public void setMotionMagic() {
-        // turretMotor.setControl(controlThreeThousand);
-        SmartDashboard.putString("Your a wizard harry", "Hagrid");
+    public void trackPass() {
+        turretControl.Position = aimingJohns(Constants.FieldConstants.PassTarget.getTranslation()).getRotations();
     }
 
     // endregion
@@ -255,7 +256,7 @@ public class Turret extends SubsystemBase {
     private void updateTurretSim() {
 
         Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
-        Rotation2d angle = robotPose.getRotation().plus(aimingJohns());
+        Rotation2d angle = robotPose.getRotation().plus(aimingJohns(calculateTargetHubTranslation()));
         simDisplay.setAngle(angle.getDegrees());
 
         Translation2d turretOffsetFromRobotCenter = new Translation2d(
@@ -387,7 +388,7 @@ public class Turret extends SubsystemBase {
         isHub = hub;
     }
 
-    private Rotation2d aimingJohns() {
+    private Rotation2d aimingJohns(Translation2d TargetTranslation) {
         // get current robot pose
         Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
         
@@ -401,7 +402,7 @@ public class Turret extends SubsystemBase {
                 .plus(turretOffset.rotateBy(robotPose.getRotation()));
 
         // the vector from turret to target
-        Translation2d targetVector = calculateTargetHubPose()
+        Translation2d targetVector = TargetTranslation
                 .minus(turretFieldPosition);
 
         // angle to target in world frame
@@ -411,6 +412,8 @@ public class Turret extends SubsystemBase {
         Rotation2d turretRelativeAngle = targetAngle.minus(robotPose.getRotation());
 
         SmartDashboard.putNumber("Ironman/TargetAngleRotation", turretRelativeAngle.getRotations());
+        Robot.teleopField.getObject("Turret Target").setPose(new Pose2d(TargetTranslation, new Rotation2d()));
+
 
         return turretRelativeAngle;
     }
@@ -494,17 +497,18 @@ public class Turret extends SubsystemBase {
 
     //TODO time regression!!!!!!!!
     private double timeToShoot(double MetersFromHub) {
-        return metersFromHub;
+        return .1;
 
     }
 
-    private Translation2d calculateTargetHubPose(){
+    private Translation2d calculateTargetHubTranslation(){
         ChassisSpeeds robotSpeeds = CommandSwerveDrivetrain.getInstance().getState().Speeds;
         double timeToShoot = timeToShoot(getMetersFromHub());
         Translation2d targetHubPose = Constants.FieldConstants.HubPosition.getTranslation().plus(
                 new Translation2d(
                     robotSpeeds.vxMetersPerSecond * timeToShoot,
                     robotSpeeds.vyMetersPerSecond * timeToShoot));
+    
 
     return targetHubPose;
                 
@@ -516,7 +520,8 @@ public class Turret extends SubsystemBase {
     @Override
     public void periodic() {
         updateTurretSim();
-        SmartDashboard.putNumber("Meters from Hub", getMetersFromHub());
+        SmartDashboard.putNumber("Turret/Meters from Hub", getMetersFromHub());
+
 
         if (!manualTarget && CommandSwerveDrivetrain.getInstance().getState().Pose != null) {
             targetHubPose();
@@ -524,8 +529,13 @@ public class Turret extends SubsystemBase {
         if (isHub) {
             trackHub();
         }
+        else{
+            trackPass();
+        }
 
         turretMotor.setControl(turretControl);
+
+        SmartDashboard.putBoolean("Turret/IsHub", isHub);
 
     }
     // endregion

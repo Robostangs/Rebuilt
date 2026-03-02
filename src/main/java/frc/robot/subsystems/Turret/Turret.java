@@ -502,9 +502,9 @@ public class Turret extends SubsystemBase {
     }
 
     private Translation2d calculateTargetHubTranslation(){
-        ChassisSpeeds robotSpeeds = CommandSwerveDrivetrain.getInstance().getState().Speeds;
+        ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(CommandSwerveDrivetrain.getInstance().getState().Speeds, CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation());
         double timeToShoot = timeToShoot(getMetersFromHub());
-        Translation2d targetHubPose = Constants.FieldConstants.HubPosition.getTranslation().plus(
+        Translation2d targetHubPose = Constants.FieldConstants.HubPosition.getTranslation().minus(
                 new Translation2d(
                     robotSpeeds.vxMetersPerSecond * timeToShoot,
                     robotSpeeds.vyMetersPerSecond * timeToShoot));

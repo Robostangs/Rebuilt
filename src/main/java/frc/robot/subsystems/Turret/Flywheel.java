@@ -82,9 +82,7 @@ public class Flywheel extends SubsystemBase {
     public void setShooterRPS(double rps) {
         shooterTargetVelocity.Velocity = rps;
     }
-    public void setTargetVelocity(double targetRps){
-            shooterTargetVelocity.Velocity = targetRps;
-    }
+
     public void checkIfMotorHot(){
         boolean isMotorHot = flyWheel.getAncillaryDeviceTemp().getValueAsDouble()>=45;
         hotAlert.set(isMotorHot);
@@ -97,11 +95,14 @@ public class Flywheel extends SubsystemBase {
         return targetVelocity;
     }
 
+    public void setMotionMagic(){
+                flyWheel.setControl(shooterTargetVelocity);
+
+    }
 
     @Override
     public void periodic() {
         
-        flyWheel.setControl(shooterTargetVelocity);
 
 
                 SmartDashboard.putBoolean("Flywheel/at target ", shooterAtTargetVelocity());

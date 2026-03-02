@@ -94,67 +94,6 @@ public final class Constants {
 
     }
 
-    public static class HoodConstants {
-
-        public static final int hoodMotorID = 5;
-        public static final double kHoodDownPos = 0d;
-        public static final int kLimitSwitchId = 0;
-        public static final double kHoodHomeDutyCycle = -0.09;
-        public static final double kHoodMotorP = 0;
-        public static final double kHoodMotorI = 0;
-        public static final double kHoodMotorD = 0;
-        public static final double kHoodMotorS = 0;
-        public static final double kHoodMotorV = 0;
-        public static final double kHoodMotorA = 0;
-        public static final double kHoodMotionMagicCruiseVelocity = 0;
-        public static final double kHoodMotionMagicAcceleration = 0;
-        public static final double kHoodUpSetpoint = 0;
-    }
-
-    public static class TurretConstants {
-        public static final int turretMotorID = 1;
-        public static final int turretCANcoderID = 2;
-        public static final double kTurretMotorTeeth = 19;
-        public static final double kTurretCANcoderTeeth = 21;
-        public static final double kTurretRingTeeth = 200;
-        public static final double kTurretMotorSensorToMechanismRatio = Constants.TurretConstants.kTurretRingTeeth
-                / Constants.TurretConstants.kTurretMotorTeeth;
-        public static final int shooterMotorID = 11;
-        public static final double TurretMotorSupplyCurrentLimit = 60;
-        public static final double dumbThing = (((double) kTurretMotorTeeth * (double) kTurretCANcoderTeeth)
-                / (double) kTurretRingTeeth) / 2;
-        public static final double kIronmanToRobotCenterX = 0;
-        public static final double kIronmanToRobotCenterY = 0;
-        public static final double IronmanMotionMagicKa = 0.8;
-        public static final double IronmanMotionMagicKv = 6;
-        public static final double IronmanMotionMagicKS = 0.242;
-        public static final double IronmanMotionMagicKP = 40;
-        public static final double IronmanMotionMagicKI = 0;
-        public static final double IronmanMotionMagicKD = 5;
-        public static final double kTurretPlanetaryRatio = 9;
-        public static final double IronmanMotionMagicKvFF = 4;
-        public static final double IronmanMotionMagicKaFF = .5;
-        public static final double kHomePosition = 0;
-        public static final int kFlywheelMotorID = 0;
-        public static final double kShooterMotorP = 0.1;
-        public static final double kShooterMotorI = 0.08;
-        public static final double kShooterMotorD = 0;
-        public static final double kShooterMotorG = 0;
-        public static final double kShooterMotorA = 0.5967;
-        public static final double kShooterMotorV = 0.2;
-        public static final double kShooterMotorS = 0.29;
-        public static final double shooterMotionMagicCruiseVelocity = 0.2;
-        public static final double shooterMotionMagicAcceleration = 0;
-        public static final double shooterMotionMagicJerk = 0;
-        public static final double kShooterVelocityTolerance = 0;
-        public static final double kForwardSoftLimit = 0;
-        public static final double kReverseSoftLimit = 0;
-        public static final double kSafeClimberPos = 0;
-        public static final double kSafeClimberNeg = 0;
-        public static final double kShooterMotorStatorCurrentLimit = 50;
-
-    }
-
     public static class FeederConstants {
 
         public static final int feederMotorID = 45;
@@ -400,6 +339,7 @@ public final class Constants {
                 public static final double kHoodSensortoMechanism = 44;
                 public static final double kHoodStatorCurrentLimit = -20;
                 public static final double kHoodHomeTimeout = .5;
+                public static final double kHoodUpPos = 0.8;
         }
 
         public static class FlywheelConstants {

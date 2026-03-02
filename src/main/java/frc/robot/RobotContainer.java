@@ -14,8 +14,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Stable.ControllerStangs;
+import frc.robot.commands.Index;
 import frc.robot.commands.HopperCommands.RunHopper;
+import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.MovePivot;
+import frc.robot.commands.IntakeCommands.RetractIntake;
+import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.commands.TurretCommands.TurretFactory;
 import frc.robot.commands.TurretCommands.setTurretDutyCycle;
 import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
@@ -68,15 +72,20 @@ public class RobotContainer {
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-                // xDrive.a().onTrue(new InstantCommand(()
-                // ->Hood.getInstance().setHoodPosition(0)));
-                xDrive.x().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()));
-                // xDrive.rightBumper().whileTrue(new RunHopper());
-                xDrive.a().whileTrue(new ChargeUp());
-                xDrive.y().whileTrue(new setHoodPosition());
-                xDrive.b().whileTrue(new HomeHood());
+                xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()));
 
+                xDrive.x().whileTrue(new RunHopper());
 
+                xDrive.rightBumper().whileTrue(new MovePivot(() -> 0.3));
+                xDrive.leftBumper().whileTrue(new MovePivot(() -> -0.1));
+
+                xDrive.y().onTrue(new HomeHood());
+                
+
+                xDrive.leftTrigger().whileTrue(new StartIntake());
+
+                xDrive.rightStick().toggleOnTrue(new ExtendIntake());
+                xDrive.leftStick().toggleOnTrue(new RetractIntake());
 
         }
 
@@ -95,7 +104,6 @@ public class RobotContainer {
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.1)
                                 .whileTrue(new setHoodDutyCycle(() -> xManip.getLeftY() / 2));
-
 
         }
 

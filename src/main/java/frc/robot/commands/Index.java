@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Turret.Flywheel;
 
 public class Index extends Command {
     Feeder feeder;
@@ -14,9 +15,15 @@ public class Index extends Command {
 
     @Override
     public void initialize() {
-        feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
 
         feeder.postStatus("Index started: " + Constants.FeederConstants.kFeedDutyCycle);
+    }
+
+    public void execute() {
+        if(Flywheel.getInstance().shooterAtTargetVelocity() ){
+        feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
+
+        }
     }
 
  

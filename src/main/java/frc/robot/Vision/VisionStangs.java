@@ -130,7 +130,7 @@ public class VisionStangs {
 
             } else {
                 fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue(CameraName);
+                        .getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
 
             }
             if (isPosegoo(fourPoseEsti)) {

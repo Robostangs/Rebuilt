@@ -3,6 +3,7 @@ package frc.robot.subsystems.Turret;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
@@ -51,7 +52,11 @@ public class Flywheel extends SubsystemBase {
         flywheelConfig.Slot0.kA = Constants.FlywheelConstants.kShooterMotorA;
         flywheelConfig.Slot0.kV = Constants.FlywheelConstants.kShooterMotorV;
         flywheelConfig.Slot0.kS = Constants.FlywheelConstants.kShooterMotorS;
+
+
         flywheelConfig.Voltage.PeakReverseVoltage = Constants.FlywheelConstants.kPeakReverseOutput;
+
+        shooterTargetVelocity.EnableFOC = false;
 
         flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterMotorStatorCurrentLimit;
 
@@ -61,19 +66,16 @@ public class Flywheel extends SubsystemBase {
     }
 
     public double currentShooterVelocity() {
-        // Get the current velocity of the shooter motor
-        return flyWheel.get(); // Returns the current velocity of the shooter motor
-    }
+        return flyWheel.getVelocity().getValueAsDouble(); }
 
     public void setShouldShoot(boolean shoot) {
         shouldShoot = shoot;
     }
 
     public boolean shooterAtTargetVelocity() {
-        boolean atTarget = Math.abs(currentShooterVelocity()
-                - shooterTargetVelocity.Velocity) < Constants.TurretConstants.kShooterVelocityTolerance;
-        return atTarget; // Check if the current velocity is within a small threshold of the target
-                         // velocity
+        boolean atTarget = currentShooterVelocity()
+                - shooterTargetVelocity.Velocity > Constants.TurretConstants.kShooterVelocityTolerance;
+        return atTarget; 
 
     }
 
@@ -90,8 +92,8 @@ public class Flywheel extends SubsystemBase {
     }
 
     public double getTargetVelocity(double MetersFromHub){
-        double feetFromHub = Units.metersToFeet(MetersFromHub)+2.3;
-        double targetVelocity =1.9*feetFromHub+54.7;
+        double feetFromHub = Units.metersToFeet(MetersFromHub)+2;
+        double targetVelocity =1.85*feetFromHub+55;
         return targetVelocity;
     }
 
@@ -102,10 +104,12 @@ public class Flywheel extends SubsystemBase {
         flyWheel.setControl(shooterTargetVelocity);
 
 
+                SmartDashboard.putBoolean("Flywheel/at target ", shooterAtTargetVelocity());
 
-        SmartDashboard.putNumber("Shooter/velocity",flyWheel.getVelocity().getValueAsDouble());
-        SmartDashboard.putNumber("Shooter/target",shooterTargetVelocity.Velocity);
-        SmartDashboard.putNumber("Shoooter/temperature",flyWheel.getAncillaryDeviceTemp().getValueAsDouble());
+
+        SmartDashboard.putNumber("Flywheel/velocity",flyWheel.getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Flywheel/target",shooterTargetVelocity.Velocity);
+        SmartDashboard.putNumber("Flywheel/temperature",flyWheel.getAncillaryDeviceTemp().getValueAsDouble());
         
         
     }
@@ -114,7 +118,7 @@ public class Flywheel extends SubsystemBase {
 
     public void postStatus(String status) {
 
-        SmartDashboard.putString("TurretShooter/Status", status);
+        SmartDashboard.putString("Flywheel/Status", status);
     }
 
 }

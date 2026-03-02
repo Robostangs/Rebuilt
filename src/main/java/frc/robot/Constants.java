@@ -84,8 +84,8 @@ public final class Constants {
                 : new Pose2d(4.6, 4d, new Rotation2d());
 
         // TODO find these johns
-        public static final Pose2d PassTarget = !Robot.isRed() ? new Pose2d(6.23, 2.59, new Rotation2d())
-                : FlippingUtil.flipFieldPose(new Pose2d(6.23, 2.59, new Rotation2d()));
+        public static final Pose2d PassTarget = !Robot.isRed() ? new Pose2d(1.5, 3.8, new Rotation2d())
+                : FlippingUtil.flipFieldPose(new Pose2d(1.5, 3.8, new Rotation2d()));
 
         // TODO find john
         public static final Pose2d resetPose = !Robot.isRed()

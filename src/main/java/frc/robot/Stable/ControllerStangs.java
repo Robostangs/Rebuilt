@@ -21,9 +21,9 @@ public class ControllerStangs extends CommandXboxController {
         return this.rightStick();
     }
     public Trigger lm(){
-        return this.start();
+        return this.back();
     }
     public Trigger rm(){
-        return this.back();
+        return this.start();
     }
 }

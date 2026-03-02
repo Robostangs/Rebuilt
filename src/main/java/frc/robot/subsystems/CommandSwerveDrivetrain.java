@@ -259,10 +259,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         photonVisionBack.periodic();
-        // photonVisionRight.periodic();
+        photonVisionRight.periodic();
 
         visionPoses.add(photonVisionBack);
-        // visionPoses.add(photonVisionRight);
+        visionPoses.add(photonVisionRight);
 
         setVisionPose(visionPoses);
 
@@ -275,16 +275,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         int index = -1;
         for (int c = 0; c < visionMeasurements.size(); c++) {
             if (visionMeasurements.get(c) != null) {
-                if (visionMeasurements.get(c).getAmbiguity() < smallestAmbiuity &&  smallestAmbiuity > -0.1) {
+                if (visionMeasurements.get(c).getAmbiguity() < smallestAmbiuity &&  
+                visionMeasurements.get(c).getAmbiguity()  > 0
+                &&  visionMeasurements.get(c).getAmbiguity() < 0.5 ) {
                     smallestAmbiuity = visionMeasurements.get(c).getAmbiguity();
                     index = c;
                 }
             }
         }
 
-        if (visionMeasurements.get(index).getPose() != null) {
-            SmartDashboard.putString("Vision/Camera with best Pose: ",
-                    "Best vision value is: " + visionMeasurements.get(index).getName());
+        if (index != -1 && visionMeasurements.get(index).getPose() != null) {
+            SmartDashboard.putString("Vision/Best pose ",
+                   visionMeasurements.get(index).getName());
             SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
                     visionMeasurements.get(index).getAmbiguity());
             SmartDashboard.putString("Vision/Pose Null error ",

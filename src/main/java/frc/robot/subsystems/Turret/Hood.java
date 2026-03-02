@@ -64,7 +64,7 @@ public class Hood extends SubsystemBase {
     }
 
     public double getHoodAngle(double MetersFromHub) {
-        double feetFromHub = Units.metersToFeet(MetersFromHub)+2;
+        double feetFromHub = Units.metersToFeet(MetersFromHub);
         SmartDashboard.putNumber(" feet from hub", feetFromHub);
 
         return -0.522 + 0.429 * Math.log(feetFromHub);

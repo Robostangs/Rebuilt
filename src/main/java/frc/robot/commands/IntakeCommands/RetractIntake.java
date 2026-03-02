@@ -24,8 +24,13 @@ public class RetractIntake extends Command {
         kirby.setKirbyWheels(0);
     }
 
+    public void execute() {
+        pivot.setTargetPosition();
+    }
+
     @Override
     public void end(boolean interrupted) {
+        
     }
 
 }

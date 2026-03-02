@@ -22,6 +22,7 @@ public class ChargeUp extends Command {
         double meterfromHub = Turret.getInstance().getMetersFromHub();
         double targetrps = turretShooter.getTargetVelocity(meterfromHub);
         turretShooter.setShooterRPS(targetrps);
+        // turretShooter.setMotionMagic();
 
         SmartDashboard.putNumber("Hood MFH", meterfromHub);
 

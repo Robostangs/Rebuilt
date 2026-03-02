@@ -68,6 +68,7 @@ public final class Constants {
         public static final int kDriverControllerPort = 0;
     }
 
+
     public static final AprilTagFieldLayout kAprilTagFieldLayout = AprilTagFieldLayout
             .loadField(AprilTagFields.kDefaultField);
     public static class HopperConstants {
@@ -123,20 +124,21 @@ public final class Constants {
                 public static final double KirbyCurrentLimit = 60;
                 public static final double HopperExtenderCurrentLimit = 60;
                 public static final int hopperExtenderID = 59;
-                public static final double kirbyIntakeSpeed = 0.5;
-                public static final double kirbyOuttakeSpeed = -0.5;
-                public static final double hopperExtenderKP = 0;
-                public static final double hopperExtenderKI = 0;
-                public static final double hopperExtenderKD = 0;
-                public static final double hopperExtenderKS = 0;
-                public static final double kExtenderMotionMagicAcceleration = 0;
-                public static final double kExtenderMotionMagicVelocity = 0;
+                public static final double kirbyIntakeSpeed = -0.9;
+                public static final double kirbyOuttakeSpeed = 0.5;
+                public static final double hopperExtenderKP = 1000;
+                public static final double hopperExtenderKI = 100;
+                public static final double hopperExtenderKD = 100;
+                public static final double hopperExtenderKS = 15;
                 public static final double extenderSensorToMechanismRatio = 34.9;
                 public static final double kExtendSetpoint = 0;
-                public static final double kRetractSetpoint = 0;
+                public static final double kRetractSetpoint = 0.26;
                 // TODO: find this john
                 public static final double kHopperExtensionTolerance = 0.01;
                 public static final double IntakeWheelCurrentLimit = 20;
+                public static final double hopperExtenderKG = 40;
+                public static final double kHomeDutyCycle = 0.1;
+                public static final double kHomePosition = 0.27;
         }
 
     public class JabaTunerConstants {
@@ -327,7 +329,7 @@ public final class Constants {
                 public static final int hoodMotorID = 25;
                 public static final double kHoodDownPos = 0d;
                 public static final int kLimitSwitchId = 0;
-                public static final double kHoodHomeDutyCycle = -0.09;
+                public static final double kHoodHomeDutyCycle = -0.1;
                 public static final double kHoodMotorP = 8;
                 public static final double kHoodMotorI = 1;
                 public static final double kHoodMotorD = 0;
@@ -347,7 +349,7 @@ public final class Constants {
                 public static final double kPeakReverseOutput = 0;
                 public static final double kShootSpeed = 60;
                 public static final int kFlywheelMotorID = 0;
-                public static final double kShooterMotorP = 0.5;
+                public static final double kShooterMotorP = 3.5;
                 public static final double kShooterMotorI = 0.08;
                 public static final double kShooterMotorD = 0;
                 public static final double kShooterMotorG = 0;
@@ -387,12 +389,12 @@ public final class Constants {
                 public static final double shooterMotionMagicCruiseVelocity = 0.2;
                 public static final double shooterMotionMagicAcceleration = 0;
                 public static final double shooterMotionMagicJerk = 0;
-                public static final double kShooterVelocityTolerance = 0;
+                public static final double kShooterVelocityTolerance = -5;
                 public static final double kForwardSoftLimit = 0;
                 public static final double kReverseSoftLimit = 0;
                 public static final double kSafeClimberPos = 0;
                 public static final double kSafeClimberNeg = 0;
-                public static final double kShooterSupplyCurrentLimit = 10;
+                public static final double kShooterSupplyCurrentLimit = 20;
 
         }
 

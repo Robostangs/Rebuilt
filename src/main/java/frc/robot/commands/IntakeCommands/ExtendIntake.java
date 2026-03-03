@@ -32,7 +32,10 @@ public class ExtendIntake extends Command {
         kirby.setKirbyWheels(0);
         
     }
-
+    @Override
+    public boolean isFinished() {
+        return pivot.atTargetPosition();
+    }
 
 
 }

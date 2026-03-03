@@ -139,6 +139,7 @@ public final class Constants {
                 public static final double hopperExtenderKG = 40;
                 public static final double kHomeDutyCycle = 0.1;
                 public static final double kHomePosition = 0.27;
+                public static final double extenderPositionTolerance = 0.03;
         }
 
     public class JabaTunerConstants {

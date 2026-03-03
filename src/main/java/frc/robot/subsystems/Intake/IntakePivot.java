@@ -89,6 +89,11 @@ public class IntakePivot extends SubsystemBase {
         hopperExtenderMotor.setControl(extenderControl);
 
     }
+    public boolean atTargetPosition() {
+        double currentPosition = hopperExtenderMotor.getPosition().getValueAsDouble();
+        double targetPosition = extenderControl.Position;
+        return Math.abs(currentPosition - targetPosition) <= Constants.KirbyConstants.extenderPositionTolerance;
+    }
 
     @Override
     public void periodic() {

@@ -50,6 +50,7 @@ import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.Index;
 import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
+import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.commands.TurretCommands.Hood.HomeHood;
@@ -112,7 +113,7 @@ public class Robot extends TimedRobotstangs {
         });
     }
     void postPitTestStatus(String status){
-        SmartDashboard.putString("Pit Test Status", status);
+        SmartDashboard.putString("PitTest/Pit Test Status", status);
     }
     void updateEpilogue() {
         var cfg = edu.wpi.first.epilogue.Epilogue.getConfig();
@@ -202,10 +203,7 @@ public class Robot extends TimedRobotstangs {
         SmartDashboard.putData("PitTest/IntakePivotSetpoints", intakePivotSetpointChooser);
         // actual pit test automated
         Command pitTestCommand = 
-            
-            new InstantCommand(() -> postPitTestStatus("Starting Pit Test. Homing Hood"))
-            .andThen(new HomeHood())
-            .andThen(new InstantCommand(() -> postPitTestStatus("Extending Intake")))
+            new InstantCommand(() -> postPitTestStatus("Extending Intake"))
             .andThen(new ExtendIntake())
             .andThen(new InstantCommand(() -> postPitTestStatus("Starting Intake Wheels")))
             .andThen(new StartIntake().withTimeout(5))
@@ -218,7 +216,8 @@ public class Robot extends TimedRobotstangs {
             .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
             .andThen(new Index().withTimeout(5))
             .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
-            .andThen(new setHoodPosition().withTimeout(3));
+            .andThen(new setHoodPosition().withTimeout(3))
+            .andThen(new InstantCommand(() -> postPitTestStatus("Finished Pit Test")));
             
             
         SmartDashboard.putData("Run Auto pit test (Intake must be up)", pitTestCommand);

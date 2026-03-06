@@ -1,0 +1,195 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.563963905567686,
+        "y": 0.6801777997634644
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.8543323370422984,
+        "y": 0.690797328756313
+      },
+      "isLocked": false,
+      "linkedName": "OutpostStart"
+    },
+    {
+      "anchor": {
+        "x": 5.8337158696338385,
+        "y": 0.6801777997634644
+      },
+      "prevControl": {
+        "x": 5.261926835299908,
+        "y": 0.5286028450243389
+      },
+      "nextControl": {
+        "x": 9.854940047765641,
+        "y": 1.7461598949014467
+      },
+      "isLocked": false,
+      "linkedName": "OutpostTrenchOut"
+    },
+    {
+      "anchor": {
+        "x": 7.5209996448863645,
+        "y": 3.3848801491477265
+      },
+      "prevControl": {
+        "x": 7.782670183207776,
+        "y": 3.2050661546551864
+      },
+      "nextControl": {
+        "x": 6.784857700896832,
+        "y": 3.8907400151891696
+      },
+      "isLocked": false,
+      "linkedName": "OutpostFuelEdge"
+    },
+    {
+      "anchor": {
+        "x": 5.8337158696338385,
+        "y": 2.4805517578125
+      },
+      "prevControl": {
+        "x": 6.191195660718256,
+        "y": 2.5277299381163223
+      },
+      "nextControl": {
+        "x": 5.211971176609849,
+        "y": 2.398497376104798
+      },
+      "isLocked": false,
+      "linkedName": "OutpostBumpOut"
+    },
+    {
+      "anchor": {
+        "x": 3.1305495383522732,
+        "y": 2.4805517578125
+      },
+      "prevControl": {
+        "x": 3.9938291114267677,
+        "y": 2.4390703914141407
+      },
+      "nextControl": {
+        "x": 2.67792507677215,
+        "y": 2.502300773678586
+      },
+      "isLocked": false,
+      "linkedName": "OutpostBumpIn"
+    },
+    {
+      "anchor": {
+        "x": 2.7587307814774378,
+        "y": 2.3535747020560405
+      },
+      "prevControl": {
+        "x": 2.9406863394144676,
+        "y": 2.562504081690847
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "OutpostShoot"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9878529331140344,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.252115885416667,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 3.044284432114881,
+      "rotationDegrees": -129.0726421991227
+    },
+    {
+      "waypointRelativePos": 3.9213324652777763,
+      "rotationDegrees": -133.9739812594665
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.3444856598143233,
+      "maxWaypointRelativePos": 2.2,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 5.0,
+        "y": 5.5
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 1.6165707236842106,
+      "maxWaypointRelativePos": 2.15,
+      "name": "Point Towards Zone"
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "Extend",
+      "waypointRelativePos": 1.3494176889920422,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
+    },
+    {
+      "name": "Retract",
+      "waypointRelativePos": 2.1,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract"
+        }
+      }
+    },
+    {
+      "name": "Hooddown",
+      "waypointRelativePos": 3.0,
+      "endWaypointRelativePos": 4.800482765780729,
+      "command": null
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 3.7958181366047743,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.12,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "OutpostBump",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

@@ -1,0 +1,207 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.563963905567686,
+        "y": 0.6801777997634644
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.1772992246496905,
+        "y": 0.6801777997634644
+      },
+      "isLocked": false,
+      "linkedName": "OutpostStart"
+    },
+    {
+      "anchor": {
+        "x": 5.255788302951389,
+        "y": 0.6801777997634644
+      },
+      "prevControl": {
+        "x": 4.549042993781353,
+        "y": 0.6540279421301469
+      },
+      "nextControl": {
+        "x": 9.081173761658386,
+        "y": 0.8217185837486087
+      },
+      "isLocked": false,
+      "linkedName": "OutpostTrenchOut"
+    },
+    {
+      "anchor": {
+        "x": 7.71625187421086,
+        "y": 3.599380770596591
+      },
+      "prevControl": {
+        "x": 7.966399254920707,
+        "y": 3.454105049345709
+      },
+      "nextControl": {
+        "x": 7.1354868389991015,
+        "y": 3.9366661706206125
+      },
+      "isLocked": false,
+      "linkedName": "OutpostFuelEdge"
+    },
+    {
+      "anchor": {
+        "x": 6.262457583648991,
+        "y": 2.5984158365174665
+      },
+      "prevControl": {
+        "x": 6.259587064996177,
+        "y": 2.848399356219594
+      },
+      "nextControl": {
+        "x": 6.278192687720586,
+        "y": 1.2281001638286622
+      },
+      "isLocked": false,
+      "linkedName": "OutpostFuelCollect"
+    },
+    {
+      "anchor": {
+        "x": 5.255788302951389,
+        "y": 0.6801777997634644
+      },
+      "prevControl": {
+        "x": 5.793258063431306,
+        "y": 0.8309993002935743
+      },
+      "nextControl": {
+        "x": 5.015085705642726,
+        "y": 0.612633298515298
+      },
+      "isLocked": false,
+      "linkedName": "OutpostTrenchOut"
+    },
+    {
+      "anchor": {
+        "x": 3.298075432054924,
+        "y": 0.6801777997634644
+      },
+      "prevControl": {
+        "x": 3.5435217813313047,
+        "y": 0.6326794879313895
+      },
+      "nextControl": {
+        "x": 2.35624190657009,
+        "y": 0.8624396366955231
+      },
+      "isLocked": false,
+      "linkedName": "OutpostTrenchIn"
+    },
+    {
+      "anchor": {
+        "x": 2.7587307814774378,
+        "y": 2.3535747020560405
+      },
+      "prevControl": {
+        "x": 2.7391078225160252,
+        "y": 1.960603152544071
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "OutpostShoot"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9878529331140344,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.252115885416667,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 4.044284432114881,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.3444856598143233,
+      "maxWaypointRelativePos": 2.3955881133952257,
+      "constraints": {
+        "maxVelocity": 2.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 5.0,
+        "y": 5.5
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 1.6165707236842106,
+      "maxWaypointRelativePos": 2.2758275082236863,
+      "name": "Point Towards Zone"
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "Extend",
+      "waypointRelativePos": 1.3494176889920422,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
+    },
+    {
+      "name": "Retract",
+      "waypointRelativePos": 2.1995291095890415,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract"
+        }
+      }
+    },
+    {
+      "name": "Hooddown",
+      "waypointRelativePos": 3.973473837209302,
+      "endWaypointRelativePos": 4.800482765780729,
+      "command": null
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 4.795818136604774,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.12,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "OutpostTrench",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

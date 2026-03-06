@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -37.69324439805763
   },
   "reversed": false,
-  "folder": "Outpost",
+  "folder": "OutpostTrench",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 7.5209996448863645,
-        "y": 3.3848801491477265
+        "x": 7.484510706018519,
+        "y": 2.7469996383101853
       },
       "prevControl": {
-        "x": 7.778149512705177,
-        "y": 3.0750891729797973
+        "x": 7.697988100028434,
+        "y": 2.405643657432382
       },
       "nextControl": {
-        "x": 6.867087403257834,
-        "y": 4.17265466126607
+        "x": 7.318834628840489,
+        "y": 3.01192005339857
       },
       "isLocked": false,
       "linkedName": "OutpostFuelEdge"
@@ -118,6 +118,19 @@
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 2.980494705149503,
+      "maxWaypointRelativePos": 4.06658793604651,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,

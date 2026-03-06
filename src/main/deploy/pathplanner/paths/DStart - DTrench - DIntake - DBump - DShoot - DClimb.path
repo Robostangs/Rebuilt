@@ -32,32 +32,32 @@
     },
     {
       "anchor": {
-        "x": 7.64787413573508,
-        "y": 5.172139965429404
+        "x": 7.661199869791666,
+        "y": 5.355
       },
       "prevControl": {
-        "x": 8.241569867873327,
-        "y": 5.502122256084995
+        "x": 8.219381098009533,
+        "y": 5.7420357231195505
       },
       "nextControl": {
-        "x": 6.887071449690685,
-        "y": 4.749277883915575
+        "x": 7.416341362847223,
+        "y": 5.185218243634259
       },
       "isLocked": false,
       "linkedName": "DepotFuelEdge"
     },
     {
       "anchor": {
-        "x": 5.394886906386463,
-        "y": 5.590414392285299
+        "x": 5.452027633101852,
+        "y": 5.355
       },
       "prevControl": {
-        "x": 5.7136297351818115,
-        "y": 5.590414392285299
+        "x": 5.7707704618972,
+        "y": 5.355
       },
       "nextControl": {
-        "x": 4.307684262528003,
-        "y": 5.590414392285299
+        "x": 4.364824989243392,
+        "y": 5.355
       },
       "isLocked": false,
       "linkedName": "DepotBumpOut"
@@ -65,15 +65,15 @@
     {
       "anchor": {
         "x": 3.6315320801491993,
-        "y": 5.590414392285299
+        "y": 5.355
       },
       "prevControl": {
         "x": 4.214639909670323,
-        "y": 5.590414392285299
+        "y": 5.355
       },
       "nextControl": {
         "x": 3.048424250628076,
-        "y": 5.590414392285299
+        "y": 5.355
       },
       "isLocked": false,
       "linkedName": "DepotBumpIn"
@@ -103,11 +103,11 @@
     },
     {
       "waypointRelativePos": 2.605194627192983,
-      "rotationDegrees": 133.1993838128102
+      "rotationDegrees": 135.0
     },
     {
       "waypointRelativePos": 3.9460834703947363,
-      "rotationDegrees": -45.0
+      "rotationDegrees": 135.0
     }
   ],
   "constraintZones": [
@@ -129,7 +129,7 @@
       "minWaypointRelativePos": 2.1447073938992043,
       "maxWaypointRelativePos": 4.63092672413793,
       "constraints": {
-        "maxVelocity": 4.0,
+        "maxVelocity": 3.0,
         "maxAcceleration": 1.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,

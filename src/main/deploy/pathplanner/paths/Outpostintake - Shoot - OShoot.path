@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.481116043584582,
-        "y": 0.6109147263897354
+        "x": 2.0894137373065087,
+        "y": 1.986376681393499
       },
       "isLocked": false,
       "linkedName": "OutpostIntake"
     },
     {
       "anchor": {
-        "x": 1.3626376569323144,
-        "y": 3.183242073780932
+        "x": 2.6616773003472223,
+        "y": 2.4805517578125
       },
       "prevControl": {
-        "x": 2.558552684294871,
-        "y": 3.3605868139022435
+        "x": 2.849778207644134,
+        "y": 2.645227343963206
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "OutpostClimb"
+      "linkedName": "OutpostShoot"
     }
   ],
   "rotationTargets": [],
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -37.69324439805763
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "OutpostBump",
+  "folder": "OutpostTrench",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

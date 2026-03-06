@@ -80,16 +80,16 @@
     },
     {
       "anchor": {
-        "x": 3.298075432054924,
+        "x": 3.563963905567686,
         "y": 0.6801777997634644
       },
       "prevControl": {
-        "x": 4.015993520209944,
+        "x": 4.281881993722706,
         "y": 0.6781831673034935
       },
       "nextControl": {
-        "x": 2.4506233318383206,
-        "y": 0.6825323239010395
+        "x": 2.7165118053510824,
+        "y": 0.6825323239010394
       },
       "isLocked": false,
       "linkedName": "OutpostTrenchIn"
@@ -213,7 +213,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -37.69324439805763
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "OutpostTrench",

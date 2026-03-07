@@ -221,22 +221,23 @@ public class Robot extends TimedRobotstangs {
             .andThen(new InstantCommand(() -> postPitTestStatus("Extending Intake")))
             .andThen(new ExtendIntake())
             .andThen(new InstantCommand(() -> postPitTestStatus("Starting Intake Wheels")))
-            .andThen(new StartIntake().withTimeout(5))
+            .andThen(new StartIntake().withTimeout(7))
             .andThen(new InstantCommand(() -> postPitTestStatus("Running Hopper")))
-            .andThen(new RunHopper().withTimeout(5))
+            .andThen(new RunHopper().withTimeout(7))
+            .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
+            .andThen(new ChargeUp().withTimeout(7))
+            .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
+            .andThen(new Index().withTimeout(7))
+            .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
+            .andThen(new setHoodPosition().withTimeout(7))
             .andThen(new InstantCommand(() -> postPitTestStatus("Retracting Intake")))
             .andThen(new RetractIntake())
-            .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
-            .andThen(new ChargeUp().withTimeout(5))
-            .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
-            .andThen(new Index().withTimeout(5))
-            .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
-            .andThen(new setHoodPosition().withTimeout(3))
             .andThen(new InstantCommand(() -> postPitTestStatus("Driving Forward")))
-            .andThen(() -> driveForwardCommand.withTimeout(3))
+            .andThen(() -> driveForwardCommand.withTimeout(7))
             .andThen(new InstantCommand(() -> postPitTestStatus("Driving Left")))
-            .andThen(() -> driveLeftCommand.withTimeout(3))
+            .andThen(() -> driveLeftCommand.withTimeout(7))
             .andThen(new InstantCommand(() -> postPitTestStatus("Finished Pit Test")));
+            
             
         
         SmartDashboard.putData("Run Auto pit test (Intake must be up)", pitTestCommand);

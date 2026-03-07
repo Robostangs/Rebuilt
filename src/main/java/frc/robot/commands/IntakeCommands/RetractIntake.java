@@ -30,7 +30,7 @@ public class RetractIntake extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        
+        kirby.setKirbyWheels(0);
     }
     @Override
     public boolean isFinished() {

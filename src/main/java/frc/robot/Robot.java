@@ -12,6 +12,7 @@ import java.lang.management.MemoryMXBean;
 import java.util.List;
 
 import com.ctre.phoenix6.HootAutoReplay;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.subsystems.Intake.*;
@@ -45,6 +46,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandStadiaController;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.Index;
@@ -176,6 +178,8 @@ public class Robot extends TimedRobotstangs {
 
     }
     void setupPitTest(){
+        CommandSwerveDrivetrain.getInstance().runOnce(() -> CommandSwerveDrivetrain.getInstance().seedFieldCentric());
+        postPitTestStatus("Pit Test Ready");
         SmartDashboard.putNumber("PitTest/HoodDC",0);
         SmartDashboard.putNumber("PitTest/FlywheelDC",0);
         SmartDashboard.putNumber("PitTest/FlywheelVelocity",0);
@@ -201,9 +205,20 @@ public class Robot extends TimedRobotstangs {
         intakePivotSetpointChooser.addOption("Retract", 
             new RetractIntake());
         SmartDashboard.putData("PitTest/IntakePivotSetpoints", intakePivotSetpointChooser);
+
+        SwerveRequest forwardRequest=new SwerveRequest.FieldCentric().withVelocityX(0.25);
+        Command driveForwardCommand= new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().applyRequest(() ->forwardRequest));
+        SwerveRequest backRequest=new SwerveRequest.FieldCentric().withVelocityX(-0.25);
+        Command driveBackCommand= new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().applyRequest(() ->forwardRequest));
+         SwerveRequest leftRequest=new SwerveRequest.FieldCentric().withVelocityY(0.25);
+        Command driveLeftCommand= new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().applyRequest(() ->forwardRequest));
+         SwerveRequest rightRequest=new SwerveRequest.FieldCentric().withVelocityY(-0.25);
+        Command driveRightCommand= new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().applyRequest(() ->forwardRequest));
+        
         // actual pit test automated
         Command pitTestCommand = 
-            new InstantCommand(() -> postPitTestStatus("Extending Intake"))
+            CommandSwerveDrivetrain.getInstance().runOnce(() -> CommandSwerveDrivetrain.getInstance().seedFieldCentric())
+            .andThen(new InstantCommand(() -> postPitTestStatus("Extending Intake")))
             .andThen(new ExtendIntake())
             .andThen(new InstantCommand(() -> postPitTestStatus("Starting Intake Wheels")))
             .andThen(new StartIntake().withTimeout(5))
@@ -217,10 +232,19 @@ public class Robot extends TimedRobotstangs {
             .andThen(new Index().withTimeout(5))
             .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
             .andThen(new setHoodPosition().withTimeout(3))
+            .andThen(new InstantCommand(() -> postPitTestStatus("Driving Forward")))
+            .andThen(() -> driveForwardCommand.withTimeout(3))
+            .andThen(new InstantCommand(() -> postPitTestStatus("Driving Left")))
+            .andThen(() -> driveLeftCommand.withTimeout(3))
             .andThen(new InstantCommand(() -> postPitTestStatus("Finished Pit Test")));
             
-            
+        
         SmartDashboard.putData("Run Auto pit test (Intake must be up)", pitTestCommand);
+        
+        SmartDashboard.putData("PitTest/Drive Forward", driveForwardCommand.withTimeout(5));
+        SmartDashboard.putData("PitTest/Drive Left", driveLeftCommand.withTimeout(5));
+        SmartDashboard.putData("PitTest/Drive Back", driveBackCommand.withTimeout(5));
+        SmartDashboard.putData("PitTest/Drive Right", driveRightCommand.withTimeout(5));
     }
     void pitTestPeriodic(){
 

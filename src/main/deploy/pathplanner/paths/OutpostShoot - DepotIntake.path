@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.6616773003472223,
+        "y": 2.4805517578125
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.6806079061993517,
+        "y": 4.152429029072123
+      },
+      "isLocked": false,
+      "linkedName": "OutpostShoot"
+    },
+    {
+      "anchor": {
+        "x": 1.084835221069869,
+        "y": 5.958374215338429
+      },
+      "prevControl": {
+        "x": 2.0581479183549436,
+        "y": 5.992131343699352
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "DepotIntake"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Extend",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.12,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "OutpostTrench",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 135.0
+  },
+  "useDefaultConstraints": true
+}

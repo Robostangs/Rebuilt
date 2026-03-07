@@ -145,6 +145,17 @@
           "name": "BumpIntake"
         }
       }
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 3.632705479452055,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Shoot"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -157,7 +168,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 135.0
   },
   "reversed": false,
   "folder": "OutpostBump",

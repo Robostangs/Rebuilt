@@ -3,7 +3,7 @@
   "grid_size": 128,
   "tabs": [
     {
-      "name": "Teleoperated",
+      "name": "Test",
       "grid_layout": {
         "layouts": [],
         "containers": [
@@ -67,7 +67,7 @@
           },
           {
             "title": "Intake Wheel Duty Cycle",
-            "x": 640.0,
+            "x": 256.0,
             "y": 512.0,
             "width": 256.0,
             "height": 128.0,
@@ -192,64 +192,8 @@
             }
           },
           {
-            "title": "Drive Forward",
-            "x": 640.0,
-            "y": 256.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Drive Forward",
-              "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
-            }
-          },
-          {
-            "title": "Drive Left",
-            "x": 640.0,
-            "y": 128.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Drive Left",
-              "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
-            }
-          },
-          {
-            "title": "Drive Right",
-            "x": 640.0,
-            "y": 0.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Drive Right",
-              "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
-            }
-          },
-          {
-            "title": "Drive Back",
-            "x": 640.0,
-            "y": 384.0,
-            "width": 256.0,
-            "height": 128.0,
-            "type": "Command",
-            "properties": {
-              "topic": "/SmartDashboard/Drive Back",
-              "period": 0.06,
-              "show_type": true,
-              "maximize_button_space": false
-            }
-          },
-          {
             "title": "Run Auto pit test (Intake must be up)",
-            "x": 256.0,
+            "x": 512.0,
             "y": 512.0,
             "width": 384.0,
             "height": 128.0,
@@ -266,7 +210,7 @@
             "x": 896.0,
             "y": 0.0,
             "width": 384.0,
-            "height": 640.0,
+            "height": 512.0,
             "type": "SwerveDrive",
             "properties": {
               "topic": "/SmartDashboard/Swerve Drive",
@@ -274,12 +218,81 @@
               "show_robot_rotation": true,
               "rotation_unit": "Radians"
             }
+          },
+          {
+            "title": "Pit Test Status",
+            "x": 896.0,
+            "y": 512.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/PitTest/Pit Test Status",
+              "period": 0.06,
+              "data_type": "string"
+            }
+          },
+          {
+            "title": "Drive Back",
+            "x": 640.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/PitTest/Drive Back",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Drive Forward",
+            "x": 640.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/PitTest/Drive Forward",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Drive Left",
+            "x": 640.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/PitTest/Drive Left",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "Drive Right",
+            "x": 640.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/PitTest/Drive Right",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
           }
         ]
       }
     },
     {
-      "name": "Autonomous",
+      "name": "Tab 2",
       "grid_layout": {
         "layouts": [],
         "containers": []

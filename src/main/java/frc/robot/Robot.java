@@ -206,14 +206,14 @@ public class Robot extends TimedRobotstangs {
             new RetractIntake());
         SmartDashboard.putData("PitTest/IntakePivotSetpoints", intakePivotSetpointChooser);
 
-        SwerveRequest forwardRequest=new SwerveRequest.FieldCentric().withVelocityX(0.25);
-        Command driveForwardCommand= new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().applyRequest(() ->forwardRequest));
-        SwerveRequest backRequest=new SwerveRequest.FieldCentric().withVelocityX(-0.25);
-        Command driveBackCommand= new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().applyRequest(() ->forwardRequest));
-         SwerveRequest leftRequest=new SwerveRequest.FieldCentric().withVelocityY(0.25);
-        Command driveLeftCommand= new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().applyRequest(() ->forwardRequest));
-         SwerveRequest rightRequest=new SwerveRequest.FieldCentric().withVelocityY(-0.25);
-        Command driveRightCommand= new InstantCommand(() -> CommandSwerveDrivetrain.getInstance().applyRequest(() ->forwardRequest));
+        SwerveRequest forwardRequest=new SwerveRequest.FieldCentric().withVelocityX(-0.25);
+        Command driveForwardCommand= CommandSwerveDrivetrain.getInstance().applyRequest(() ->forwardRequest);
+        SwerveRequest backRequest=new SwerveRequest.FieldCentric().withVelocityX(0.25);
+        Command driveBackCommand= CommandSwerveDrivetrain.getInstance().applyRequest(() ->backRequest);
+         SwerveRequest leftRequest=new SwerveRequest.FieldCentric().withVelocityY(-0.25);
+        Command driveLeftCommand= CommandSwerveDrivetrain.getInstance().applyRequest(() ->leftRequest);
+         SwerveRequest rightRequest=new SwerveRequest.FieldCentric().withVelocityY(0.25);
+        Command driveRightCommand= CommandSwerveDrivetrain.getInstance().applyRequest(() ->rightRequest);
         
         // actual pit test automated
         Command pitTestCommand = 
@@ -242,10 +242,10 @@ public class Robot extends TimedRobotstangs {
         
         SmartDashboard.putData("Run Auto pit test (Intake must be up)", pitTestCommand);
         
-        SmartDashboard.putData("PitTest/Drive Forward", driveForwardCommand.withTimeout(5));
-        SmartDashboard.putData("PitTest/Drive Left", driveLeftCommand.withTimeout(5));
-        SmartDashboard.putData("PitTest/Drive Back", driveBackCommand.withTimeout(5));
-        SmartDashboard.putData("PitTest/Drive Right", driveRightCommand.withTimeout(5));
+        SmartDashboard.putData("PitTest/Drive Forward", driveForwardCommand);
+        SmartDashboard.putData("PitTest/Drive Left", driveLeftCommand);
+        SmartDashboard.putData("PitTest/Drive Back", driveBackCommand);
+        SmartDashboard.putData("PitTest/Drive Right", driveRightCommand);
     }
     void pitTestPeriodic(){
 

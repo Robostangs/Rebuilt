@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.AdvancedHallSupportValue;
@@ -48,7 +49,7 @@ public class Turret extends SubsystemBase {
 
     TalonFXSSimState turretMotorSim;
 
-    MotionMagicExpoVoltage turretControl;
+    PositionVoltage turretControl;
 
     CANcoder turretCANcoder;
     TalonFXConfiguration pepperConfig;
@@ -87,7 +88,7 @@ public class Turret extends SubsystemBase {
                                 Constants.TurretConstants.kIronmanToRobotCenterY),
                         new Rotation2d()));
 
-        turretControl = new MotionMagicExpoVoltage(0);
+        turretControl = new PositionVoltage(0);
 
         pepperConfig = new TalonFXConfiguration();
 
@@ -407,8 +408,9 @@ public class Turret extends SubsystemBase {
 
         // Convert to turret relative angle
         Rotation2d turretRelativeAngle = targetAngle
-                .minus(CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation()).plus][\
-                ( Rotation2d.k180deg);
+                .minus(CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation()).plus
+                ( Rotation2d.k180deg)
+                .unaryMinus();
 
         SmartDashboard.putNumber("Ironman/TargetAngleRotation", turretRelativeAngle.getRotations());
         Robot.teleopField.getObject("Turret Target").setPose(new Pose2d(TargetTranslation, new Rotation2d()));
@@ -527,7 +529,7 @@ public class Turret extends SubsystemBase {
         // trackPass();
         // }
 
-        turretMotor.setControl(turretControl);
+        // turretMotor.setControl(turretControl);
 
         SmartDashboard.putBoolean("Turret/IsHub", isHub);
 

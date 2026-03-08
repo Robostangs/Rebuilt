@@ -377,12 +377,12 @@ public final class Constants {
                 public static final double kIronmanToRobotCenterX = Units.inchesToMeters(-4);
                 public static final double kIronmanToRobotCenterY = Units.inchesToMeters(-8);
 
-                public static final double IronmanMotionMagicKa = 0.8;
-                public static final double IronmanMotionMagicKv = 6;
-                public static final double IronmanMotionMagicKS = 0.242;
+                public static final double IronmanMotionMagicKa = 0.5;
+                public static final double IronmanMotionMagicKv = 4;
+                public static final double IronmanMotionMagicKS = .48;
                 public static final double IronmanMotionMagicKP = 40;
-                public static final double IronmanMotionMagicKI = 0;
-                public static final double IronmanMotionMagicKD = 5;
+                public static final double IronmanMotionMagicKI = 7;
+                public static final double IronmanMotionMagicKD = 0;
                 public static final double kTurretPlanetaryRatio = 9;
                 public static final double IronmanMotionMagicKvFF = 4;
                 public static final double IronmanMotionMagicKaFF = .5;

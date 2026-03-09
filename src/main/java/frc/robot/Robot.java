@@ -45,6 +45,7 @@ import frc.robot.commands.Index;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.TurretCommands.Hood.HomeHood;
+import frc.robot.commands.TurretCommands.TurretFactory;
 import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
@@ -163,7 +164,7 @@ public class Robot extends TimedRobotstangs {
     public void disabledInit() {
         // autoChooser = AutoBuilder.buildAutoChooser();
         // autoChooserFav = AutoBuilder.buildAutoChooserWithOptionsModifier(
-        //         (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
+        // (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
 
         // SmartDashboard.putData("Auto Chooser", autoChooser);
         // SmartDashboard.putData("Favorite Auto Chooser", autoChooserFav);
@@ -173,10 +174,10 @@ public class Robot extends TimedRobotstangs {
     public void disabledPeriodic() {
 
         // if (autoChooser.getSelected() != null &&
-        //         !autoChooser.getSelected().getName().equals("none")) {
-        //     autoCommand = autoChooser.getSelected();
+        // !autoChooser.getSelected().getName().equals("none")) {
+        // autoCommand = autoChooser.getSelected();
         // } else {
-        //     autoCommand = autoChooserFav.getSelected();
+        // autoCommand = autoChooserFav.getSelected();
         // }
         // drawCurrentAuto(autoCommand.getName());
     }
@@ -335,7 +336,7 @@ public class Robot extends TimedRobotstangs {
     public void loadNamedCommands() {
 
         NamedCommands.registerCommand("Shoot",
-                new InstantCommand(() -> Turret.getInstance().trackHub()).withTimeout(0.5));
+                new PrintCommand("your supposed to shoot bruh"));
 
         NamedCommands.registerCommand("Extend", new ExtendIntake().withTimeout(0.5));
 
@@ -349,9 +350,10 @@ public class Robot extends TimedRobotstangs {
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
                         .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
                         .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
+
         NamedCommands.registerCommand("Photoshoot",
-                (new ChargeUp().alongWith(new Index()))
-                        .raceWith(new WaitUntilCommand(() -> Feeder.getInstance().getfuelSensor())));
+                new WaitUntilCommand(() -> Feeder.getInstance().getfuelSensor()).raceWith(
+                        (TurretFactory.Shoot())));
 
         NamedCommands.registerCommand("Climb",
                 new PrintCommand("Hi!"));
@@ -362,19 +364,20 @@ public class Robot extends TimedRobotstangs {
         // List<Pose2d> poses = new ArrayList<>();
         // poses.clear();
         // if (autoName != null && !autoName.equals("")) {
-        //     try {
-        //         for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
-        //             for (Pose2d pose : path.getPathPoses()) {
-        //                 poses.add(pose);
-        //             }
+        // try {
+        // for (PathPlannerPath path :
+        // PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
+        // for (Pose2d pose : path.getPathPoses()) {
+        // poses.add(pose);
+        // }
 
-        //         }
-        //         autoAlert.set(false);
-        //     } catch (Exception e) {
-        //         e.printStackTrace();
-        //         autoAlert.set(true);
-        //     }
-        //     teleopField.getObject("auto").setPoses(poses);
+        // }
+        // autoAlert.set(false);
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // autoAlert.set(true);
+        // }
+        // teleopField.getObject("auto").setPoses(poses);
 
         // }
 

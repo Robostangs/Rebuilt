@@ -48,7 +48,7 @@ public class VisionStangs {
     private void Photonperiodic() {
 
         
-        bigAmbiuity =0;
+        bigAmbiuity = 0;
 
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
         for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
@@ -84,6 +84,8 @@ public class VisionStangs {
 
 
     private void LLperiodic() {
+
+        bigAmbiuity = 0;
 
         /*
          * Only seed ll4 with external yaw angle if not rotating fast, otherwise use
@@ -130,7 +132,7 @@ public class VisionStangs {
 
             } else {
                 fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue(CameraName);
+                        .getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
 
             }
             if (isPosegoo(fourPoseEsti)) {
@@ -142,6 +144,7 @@ public class VisionStangs {
                         bigAmbiuity = fiducial.ambiguity;
                     }
                 }
+                SmartDashboard.putNumber("Vision/" + CameraName + " biggest ambiguity", bigAmbiuity);
                 
             }
         }
@@ -178,7 +181,7 @@ public class VisionStangs {
             SmartDashboard.putString("Vision/LL4_RejectReason", "Pose null");
             return false;
         }
-        if (yoPoseEsti.tagCount < 1) {
+        if (yoPoseEsti.tagCount < 0) {
             SmartDashboard.putString("Vision/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
             return false;
         }

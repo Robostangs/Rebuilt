@@ -6,12 +6,14 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.AdvancedHallSupportValue;
 import com.ctre.phoenix6.signals.ExternalFeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 import com.ctre.phoenix6.signals.SensorPhaseValue;
+import com.ctre.phoenix6.signals.TempSensorRequiredValue;
 import com.ctre.phoenix6.sim.TalonFXSSimState;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -47,7 +49,7 @@ public class Turret extends SubsystemBase {
 
     TalonFXSSimState turretMotorSim;
 
-    MotionMagicExpoVoltage turretControl;
+    PositionVoltage turretControl;
 
     CANcoder turretCANcoder;
     TalonFXConfiguration pepperConfig;
@@ -86,7 +88,7 @@ public class Turret extends SubsystemBase {
                                 Constants.TurretConstants.kIronmanToRobotCenterY),
                         new Rotation2d()));
 
-        turretControl = new MotionMagicExpoVoltage(0);
+        turretControl = new PositionVoltage(0);
 
         pepperConfig = new TalonFXConfiguration();
 
@@ -158,7 +160,18 @@ public class Turret extends SubsystemBase {
         turretMotorConfig.MotionMagic.MotionMagicExpo_kV = Constants.TurretConstants.IronmanMotionMagicKv;
         turretMotorConfig.MotionMagic.MotionMagicExpo_kA = Constants.TurretConstants.IronmanMotionMagicKa;
 
+        turretMotorConfig.ExternalTemp.TempSensorRequired = TempSensorRequiredValue.Not_Required;
+                turretMotorConfig.ExternalTemp.ThermistorMaxTemperature = 100;
+
+                        turretMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Constants.TurretConstants.kForwardSoftLimit;
+        turretMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        turretMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Constants.TurretConstants.kReverseSoftLimit;
+        turretMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+
+
         turretMotor.getRawPulseWidthPosition().setUpdateFrequency(50);
+        turretMotor.getClosedLoopReference().setUpdateFrequency(50);
+
 
         turretMotor.getConfigurator().apply(turretMotorConfig);
     }
@@ -218,14 +231,13 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putString("Setpoint has gotten set", "New setpoint at " + rotations);
     }
 
-
-
     public void setTurretSetpointDoubleSupplier(DoubleSupplier doubleSupplier) {
         setIronmansetpoint(doubleSupplier.getAsDouble());
 
     }
 
     public void trackHub() {
+        SmartDashboard.putNumber("Turret/Target to Hub", aimingJohns(calculateTargetHubTranslation()).getRotations());
         turretControl.Position = aimingJohns(calculateTargetHubTranslation()).getRotations();
     }
 
@@ -242,20 +254,17 @@ public class Turret extends SubsystemBase {
                 * Constants.TurretConstants.kTurretMotorSensorToMechanismRatio);
     }
 
-
-
-    public void updateMetersFromHub(Pose2d poseTurret){
-        metersFromHub =  poseTurret.getTranslation().getDistance(Constants.FieldConstants.HubPosition.getTranslation());
+    public void updateMetersFromHub(Pose2d poseTurret) {
+        metersFromHub = poseTurret.getTranslation().getDistance(Constants.FieldConstants.HubPosition.getTranslation());
     }
-    public double getMetersFromHub(){
+
+    public double getMetersFromHub() {
         return metersFromHub;
     }
 
     private void updateTurretSim() {
 
         Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
-        Rotation2d angle = robotPose.getRotation().plus(aimingJohns(calculateTargetHubTranslation()));
-        simDisplay.setAngle(angle.getDegrees());
 
         Translation2d turretOffsetFromRobotCenter = new Translation2d(
                 Constants.TurretConstants.kIronmanToRobotCenterX,
@@ -265,14 +274,19 @@ public class Turret extends SubsystemBase {
         Translation2d turretFieldPosition = robotPose.getTranslation()
                 .plus(turretOffsetFromRobotCenter.rotateBy(robotPose.getRotation()));
 
-        Pose2d turretPose = new Pose2d(turretFieldPosition, angle);
+        Rotation2d angle = robotPose.getRotation().plus(new Rotation2d(Units.rotationsToRadians( turretControl.Position)));
+        simDisplay.setAngle(angle.getDegrees());
+
+        turretPose = new Pose2d(turretFieldPosition, angle);
         updateMetersFromHub(turretPose);
 
         Robot.teleopField.getObject("Turret Pivot").setPose(turretPose);
         SmartDashboard.putData("Turret Pivot Target", simMain);
     }
 
-    public Pose2d getTurretPose(){
+
+
+    public Pose2d getTurretPose() {
         return turretPose;
     }
 
@@ -387,35 +401,28 @@ public class Turret extends SubsystemBase {
     }
 
     private Rotation2d aimingJohns(Translation2d TargetTranslation) {
-        // get current robot pose
-        Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
-        
-
-        // calculate turret position in field space
-        Translation2d turretOffset = new Translation2d(
-                Constants.TurretConstants.kIronmanToRobotCenterX,
-                Constants.TurretConstants.kIronmanToRobotCenterY);
-
-        Translation2d turretFieldPosition = robotPose.getTranslation()
-                .plus(turretOffset.rotateBy(robotPose.getRotation()));
 
         // the vector from turret to target
-        Translation2d targetVector = TargetTranslation
-                .minus(turretFieldPosition);
+        Translation2d targetVector = 
+        
+        
+        TargetTranslation
+                .minus(turretPose.getTranslation());
 
         // angle to target in world frame
         Rotation2d targetAngle = targetVector.getAngle();
 
         // Convert to turret relative angle
-        Rotation2d turretRelativeAngle = targetAngle.minus(robotPose.getRotation());
+        Rotation2d turretRelativeAngle = targetAngle
+                .minus(CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation()).plus
+                ( Rotation2d.k180deg)
+                .unaryMinus();
 
         SmartDashboard.putNumber("Ironman/TargetAngleRotation", turretRelativeAngle.getRotations());
         Robot.teleopField.getObject("Turret Target").setPose(new Pose2d(TargetTranslation, new Rotation2d()));
 
-
         return turretRelativeAngle;
     }
-
 
     public double getTurretPosition() {
         return turretMotor.getPosition().getValueAsDouble();
@@ -492,26 +499,23 @@ public class Turret extends SubsystemBase {
                 (turretMotor.getRawPulseWidthPosition().getValueAsDouble() - 0.33740234375));
     }
 
-
-    //TODO time regression!!!!!!!!
+    // TODO time regression!!!!!!!!
     private double timeToShoot(double MetersFromHub) {
         return .1;
 
     }
 
-    private Translation2d calculateTargetHubTranslation(){
-        ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(CommandSwerveDrivetrain.getInstance().getState().Speeds, CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation());
+    private Translation2d calculateTargetHubTranslation() {
+        ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+                CommandSwerveDrivetrain.getInstance().getState().Speeds,
+                CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation());
         double timeToShoot = timeToShoot(getMetersFromHub());
         Translation2d targetHubPose = Constants.FieldConstants.HubPosition.getTranslation().minus(
                 new Translation2d(
-                    robotSpeeds.vxMetersPerSecond * timeToShoot,
-                    robotSpeeds.vyMetersPerSecond * timeToShoot));
-    
+                        robotSpeeds.vxMetersPerSecond * timeToShoot,
+                        robotSpeeds.vyMetersPerSecond * timeToShoot));
 
-    return targetHubPose;
-                
-
-
+        return targetHubPose;
 
     }
 
@@ -520,20 +524,26 @@ public class Turret extends SubsystemBase {
         updateTurretSim();
         SmartDashboard.putNumber("Turret/Meters from Hub", getMetersFromHub());
 
+        // if (!manualTarget && CommandSwerveDrivetrain.getInstance().getState().Pose !=
+        // null) {
+        // targetHubPose();
+        // }
+        // if (isHub) {
+        trackHub();
+        // }
+        // else{
+        // trackPass();
+        // }
+                turretControl.FeedForward = CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond * 0.2;
 
-        if (!manualTarget && CommandSwerveDrivetrain.getInstance().getState().Pose != null) {
-            targetHubPose();
-        }
-        if (isHub) {
-            trackHub();
-        }
-        else{
-            trackPass();
-        }
 
         turretMotor.setControl(turretControl);
 
         SmartDashboard.putBoolean("Turret/IsHub", isHub);
+
+        SmartDashboard.putNumber("Turret/SunTzuPosition", getBigGearPosition());
+
+        SmartDashboard.putNumber("Turret/pos", turretMotor.getPosition().getValueAsDouble());
 
     }
     // endregion

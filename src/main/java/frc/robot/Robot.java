@@ -165,7 +165,11 @@ public class Robot extends TimedRobotstangs {
         CommandScheduler.getInstance()
                 .onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
         CommandScheduler.getInstance()
-                .onCommandInterrupt((action) -> DataLogManager.log(action.getName() + " Command Interrupted"));
+                .onCommandInterrupt((action, cause) -> {
+                    String reason = cause.map(c -> c.getName()).orElse("no cause");
+                    DataLogManager.log(action.getName() + " Command Interrupted by: " + reason);
+                    SmartDashboard.putString("Auto/LastInterrupt", action.getName() + " <- " + reason);
+                });
         CommandScheduler.getInstance()
                 .onCommandFinish((action) -> DataLogManager.log(action.getName() + " Command Finished"));
 
@@ -298,33 +302,13 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void disabledInit() {
-        // autoChooser = AutoBuilder.buildAutoChooser();
-        // autoChooserFav = AutoBuilder.buildAutoChooserWithOptionsModifier(
-        // (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
-
-        // SmartDashboard.putData("Auto Chooser", autoChooser);
-
-        // autoname = autoChooser.getSelected().getName();
-
     }
 
     @Override
     public void disabledPeriodic() {
-
-        // autoname = autoChooser.getSelected().getName();
-
-        // autoCommand = autoChooser.getSelected();
-
-        // SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
         if (!oldAutoname.equals(autoname)) {
             // drawCurrentAuto(autoCommand.getName());
         }
-
-        // oldAutoname = autoChooser.getSelected().getName();
-
-                autoCommand = new PathPlannerAuto("PID");
-
-
     }
 
     @Override
@@ -339,18 +323,20 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void autonomousInit() {
 
-        if(autoCommand != null){
-        CommandScheduler.getInstance().schedule(
-                // new InstantCommand(() ->
-                // Turret.getInstance().resetPositionWithSunTzu()).andThen(
-                // new InstantCommand(() ->
-                // IntakePivot.getInstance().setHopperExtender(0)).andThen(
-                autoCommand);}
-
+        try {
+            autoCommand = new PathPlannerAuto("PID");
+            CommandScheduler.getInstance().schedule(autoCommand);
+            SmartDashboard.putString("Auto/Status", "Scheduled: " + autoCommand.getName());
+        } catch (Exception e) {
+            SmartDashboard.putString("Auto/Status", "ERROR: " + e.getMessage());
+            autoAlert.set(true);
+        }
     }
 
     @Override
     public void autonomousPeriodic() {
+        SmartDashboard.putBoolean("Auto/CommandRunning",
+                autoCommand != null && CommandScheduler.getInstance().isScheduled(autoCommand));
     }
 
     @Override

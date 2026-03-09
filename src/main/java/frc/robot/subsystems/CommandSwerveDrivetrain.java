@@ -265,6 +265,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         photonVisionBack.periodic();
         photonVisionRight.periodic();
 
+        visionPoses.clear();
         visionPoses.add(photonVisionBack);
         visionPoses.add(photonVisionRight);
 
@@ -372,11 +373,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         AutoBuilder.configure(() -> this.getState().Pose,
                 (pose) -> this.resetPose(pose),
                 () -> this.getState().Speeds,
-                (speed, feedforward) -> new SwerveRequest.ApplyRobotSpeeds()
-                        .withSpeeds(speed)
-                        .withDriveRequestType(DriveRequestType.Velocity)
-                        .withWheelForceFeedforwardsX(feedforward.robotRelativeForcesX())
-                        .withWheelForceFeedforwardsY(feedforward.robotRelativeForcesY()),
+                (speed, feedforward) -> this.setControl(
+                        new SwerveRequest.ApplyRobotSpeeds()
+                                .withSpeeds(speed)
+                                // .withDriveRequestType(DriveRequestType.Velocity)
+                                .withWheelForceFeedforwardsX(feedforward.robotRelativeForcesX())
+                                .withWheelForceFeedforwardsY(feedforward.robotRelativeForcesY())),
                 new PPHolonomicDriveController((Constants.AutoConstants.rotationPID),
                         (Constants.AutoConstants.translationPID)),
                 Constants.AutoConstants.RobotConfig,

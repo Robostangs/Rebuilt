@@ -435,7 +435,7 @@ public final class Constants {
                 public static final PIDConstants rotationPID = new PIDConstants(10, 0, 0);
                 private final static MomentOfInertia kRobotMomentOfInertia = KilogramSquareMeters.of(0.01);
                 private final static double robotWeight = 54.4;
-                private final static double wheelCOF = 0d;
+                private final static double wheelCOF = 1.2; // typical carpet COF for colson/nitrile wheels
                 private final static ModuleConfig kModuleConfig = new ModuleConfig(
                                 Constants.JabbaTunerConstants.kWheelRadius,
                                 Constants.JabbaTunerConstants.kSpeedAt12Volts,

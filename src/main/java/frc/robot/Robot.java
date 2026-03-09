@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ctre.phoenix6.HootAutoReplay;
@@ -18,14 +19,12 @@ import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.subsystems.Intake.*;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.logging.NTEpilogueBackend;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -42,28 +41,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandStadiaController;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.Index;
 import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
-import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.Hood.setHoodPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
-import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.TurretFactory;
 import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Turret.Hood;
 import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.Turret.Flywheel;
@@ -85,18 +78,20 @@ public class Robot extends TimedRobotstangs {
 
     public static Constants.ElasticConstants.whoCanScore canBlueScore;
 
+    String autoname = "";
+    String oldAutoname = "";
+
     public CommandScheduler scheduler = CommandScheduler.getInstance();
 
     public Color allianceScore = Constants.ElasticConstants.purple;
 
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
-    private SendableChooser<Command> autoChooserFav = new SendableChooser<>();
 
     public PowerDistribution pdh = new PowerDistribution(Constants.ElasticConstants.kPdhCanId, ModuleType.kRev);
 
     // pit test choosers
-    SendableChooser<Command> hoodSetpointChooser= new SendableChooser<>();
-    SendableChooser<Command> intakePivotSetpointChooser= new SendableChooser<>();
+    SendableChooser<Command> hoodSetpointChooser = new SendableChooser<>();
+    SendableChooser<Command> intakePivotSetpointChooser = new SendableChooser<>();
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
             .withTimestampReplay()
@@ -104,7 +99,6 @@ public class Robot extends TimedRobotstangs {
     Command autoCommand;
 
     static NetworkTableEntry turretSetpoint;
-
 
     public Robot() {
         m_robotContainer = new RobotContainer();
@@ -115,9 +109,11 @@ public class Robot extends TimedRobotstangs {
             config.minimumImportance = Logged.Importance.DEBUG;
         });
     }
-    void postPitTestStatus(String status){
+
+    void postPitTestStatus(String status) {
         SmartDashboard.putString("PitTest/Pit Test Status", status);
     }
+
     void updateEpilogue() {
         var cfg = edu.wpi.first.epilogue.Epilogue.getConfig();
         if (cfg.backend != null && cfg.root != null) {
@@ -178,79 +174,75 @@ public class Robot extends TimedRobotstangs {
         loadNamedCommands();
 
     }
-    void setupPitTest(){
+
+    void setupPitTest() {
         CommandSwerveDrivetrain.getInstance().runOnce(() -> CommandSwerveDrivetrain.getInstance().seedFieldCentric());
         postPitTestStatus("Pit Test Ready");
-        SmartDashboard.putNumber("PitTest/HoodDC",0);
-        SmartDashboard.putNumber("PitTest/FlywheelDC",0);
-        SmartDashboard.putNumber("PitTest/FlywheelVelocity",0);
-        SmartDashboard.putNumber("PitTest/TurretPosition",0);
-        SmartDashboard.putNumber("PitTest/TurretDC",0);
-        SmartDashboard.putNumber("PitTest/IntakeWheelsDC",0);
-        SmartDashboard.putNumber("PitTest/FeederDC",0);
-        SmartDashboard.putNumber("PitTest/IntakePivotDC",0);
-        hoodSetpointChooser.addOption("Down", 
-            Hood.getInstance().runOnce(() -> {
-                Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos); 
-            }
-        ));
-        hoodSetpointChooser.addOption("Up", 
-            Hood.getInstance().runOnce(() -> {
-                Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodUpPos); 
-            }
-        ));
+        SmartDashboard.putNumber("PitTest/HoodDC", 0);
+        SmartDashboard.putNumber("PitTest/FlywheelDC", 0);
+        SmartDashboard.putNumber("PitTest/FlywheelVelocity", 0);
+        SmartDashboard.putNumber("PitTest/TurretPosition", 0);
+        SmartDashboard.putNumber("PitTest/TurretDC", 0);
+        SmartDashboard.putNumber("PitTest/IntakeWheelsDC", 0);
+        SmartDashboard.putNumber("PitTest/FeederDC", 0);
+        SmartDashboard.putNumber("PitTest/IntakePivotDC", 0);
+        hoodSetpointChooser.addOption("Down",
+                Hood.getInstance().runOnce(() -> {
+                    Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos);
+                }));
+        hoodSetpointChooser.addOption("Up",
+                Hood.getInstance().runOnce(() -> {
+                    Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodUpPos);
+                }));
         SmartDashboard.putData("PitTest/HoodSetpoints", hoodSetpointChooser);
-        
-        intakePivotSetpointChooser.addOption("Extend", 
-            new ExtendIntake());
-        intakePivotSetpointChooser.addOption("Retract", 
-            new RetractIntake());
+
+        intakePivotSetpointChooser.addOption("Extend",
+                new ExtendIntake(false));
+        intakePivotSetpointChooser.addOption("Retract",
+                new RetractIntake());
         SmartDashboard.putData("PitTest/IntakePivotSetpoints", intakePivotSetpointChooser);
 
-        SwerveRequest forwardRequest=new SwerveRequest.FieldCentric().withVelocityX(-0.25);
-        Command driveForwardCommand= CommandSwerveDrivetrain.getInstance().applyRequest(() ->forwardRequest);
-        SwerveRequest backRequest=new SwerveRequest.FieldCentric().withVelocityX(0.25);
-        Command driveBackCommand= CommandSwerveDrivetrain.getInstance().applyRequest(() ->backRequest);
-         SwerveRequest leftRequest=new SwerveRequest.FieldCentric().withVelocityY(-0.25);
-        Command driveLeftCommand= CommandSwerveDrivetrain.getInstance().applyRequest(() ->leftRequest);
-         SwerveRequest rightRequest=new SwerveRequest.FieldCentric().withVelocityY(0.25);
-        Command driveRightCommand= CommandSwerveDrivetrain.getInstance().applyRequest(() ->rightRequest);
-        
+        SwerveRequest forwardRequest = new SwerveRequest.FieldCentric().withVelocityX(-0.25);
+        Command driveForwardCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> forwardRequest);
+        SwerveRequest backRequest = new SwerveRequest.FieldCentric().withVelocityX(0.25);
+        Command driveBackCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> backRequest);
+        SwerveRequest leftRequest = new SwerveRequest.FieldCentric().withVelocityY(-0.25);
+        Command driveLeftCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> leftRequest);
+        SwerveRequest rightRequest = new SwerveRequest.FieldCentric().withVelocityY(0.25);
+        Command driveRightCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> rightRequest);
+
         // actual pit test automated
-        Command pitTestCommand = 
-            CommandSwerveDrivetrain.getInstance().runOnce(() -> CommandSwerveDrivetrain.getInstance().seedFieldCentric())
-            .andThen(new InstantCommand(() -> postPitTestStatus("Extending Intake")))
-            .andThen(new ExtendIntake())
-            .andThen(new InstantCommand(() -> postPitTestStatus("Starting Intake Wheels")))
-            .andThen(new StartIntake().withTimeout(7))
-            .andThen(new InstantCommand(() -> postPitTestStatus("Running Hopper")))
-            .andThen(new RunHopper().withTimeout(7))
-            .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
-            .andThen(new ChargeUp().withTimeout(7))
-            .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
-            .andThen(new Index().withTimeout(7))
-            .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
-            .andThen(new setHoodPosition().withTimeout(7))
-            .andThen(new InstantCommand(() -> postPitTestStatus("Retracting Intake")))
-            .andThen(new RetractIntake())
-            .andThen(new InstantCommand(() -> postPitTestStatus("Driving Forward")))
-            .andThen(() -> driveForwardCommand.withTimeout(7))
-            .andThen(new InstantCommand(() -> postPitTestStatus("Driving Left")))
-            .andThen(() -> driveLeftCommand.withTimeout(7))
-            .andThen(new InstantCommand(() -> postPitTestStatus("Finished Pit Test")));
-            
-            
-        
+        Command pitTestCommand = CommandSwerveDrivetrain.getInstance()
+                .runOnce(() -> CommandSwerveDrivetrain.getInstance().seedFieldCentric())
+                .andThen(new InstantCommand(() -> postPitTestStatus("Extending Intake")))
+                .andThen(new ExtendIntake(false))
+                .andThen(new InstantCommand(() -> postPitTestStatus("Starting Intake Wheels")))
+                .andThen(new StartIntake().withTimeout(7))
+                .andThen(new InstantCommand(() -> postPitTestStatus("Running Hopper")))
+                .andThen(new RunHopper().withTimeout(7))
+                .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
+                .andThen(new ChargeUp().withTimeout(7))
+                .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
+                .andThen(new Index().withTimeout(7))
+                .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
+                .andThen(new setHoodPosition().withTimeout(7))
+                .andThen(new InstantCommand(() -> postPitTestStatus("Retracting Intake")))
+                .andThen(new RetractIntake())
+                .andThen(new InstantCommand(() -> postPitTestStatus("Driving Forward")))
+                .andThen(() -> driveForwardCommand.withTimeout(7))
+                .andThen(new InstantCommand(() -> postPitTestStatus("Driving Left")))
+                .andThen(() -> driveLeftCommand.withTimeout(7))
+                .andThen(new InstantCommand(() -> postPitTestStatus("Finished Pit Test")));
+
         SmartDashboard.putData("Run Auto pit test (Intake must be up)", pitTestCommand);
-        
+
         SmartDashboard.putData("PitTest/Drive Forward", driveForwardCommand);
         SmartDashboard.putData("PitTest/Drive Left", driveLeftCommand);
         SmartDashboard.putData("PitTest/Drive Back", driveBackCommand);
         SmartDashboard.putData("PitTest/Drive Right", driveRightCommand);
     }
-    void pitTestPeriodic(){
 
-
+    void pitTestPeriodic() {
 
         // read sliders and run commands
         double hoodDC = SmartDashboard.getNumber("PitTest/HoodDC", 0);
@@ -261,33 +253,30 @@ public class Robot extends TimedRobotstangs {
         double feederDC = SmartDashboard.getNumber("PitTest/FeederDC", 0);
         double intakePivotDC = SmartDashboard.getNumber("PitTest/IntakePivotDC", 0);
         double turretDC = SmartDashboard.getNumber("PitTest/TurretDC", 0);
-        
 
-       
-        
-        if(hoodDC!=0){
+        if (hoodDC != 0) {
             Hood.getInstance().setHoodDutyCycle(hoodDC);
         }
-        if(intakeWheelsDC!=0){
+        if (intakeWheelsDC != 0) {
             Kirby.getInstance().setKirbyWheels(intakeWheelsDC);
         }
-        if(turretDC!=0){
+        if (turretDC != 0) {
             Turret.getInstance().runTurretDutyCycle(turretDC);
         }
-        if(feederDC!=0){
+        if (feederDC != 0) {
             Feeder.getInstance().setDutyCycle(feederDC);
         }
-        if(intakePivotDC!=0){
+        if (intakePivotDC != 0) {
             IntakePivot.getInstance().setDC(intakePivotDC);
         }
-        if(turretPosition!=0){
+        if (turretPosition != 0) {
             Turret.setManualTarget(true);
             Turret.getInstance().setTurretSetpointDoubleSupplier(() -> turretPosition);
         }
-        if(flywheelDC!=0){
+        if (flywheelDC != 0) {
             Flywheel.getInstance().setDutyCycle(flywheelDC);
         }
-        if(flywheelVelocity!=0){
+        if (flywheelVelocity != 0) {
             Flywheel.getInstance().setShooterRPS(flywheelVelocity);
         }
 
@@ -314,29 +303,49 @@ public class Robot extends TimedRobotstangs {
         // (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
 
         // SmartDashboard.putData("Auto Chooser", autoChooser);
-        // SmartDashboard.putData("Favorite Auto Chooser", autoChooserFav);
+
+        // autoname = autoChooser.getSelected().getName();
+
     }
 
     @Override
     public void disabledPeriodic() {
 
-        // if (autoChooser.getSelected() != null &&
-        // !autoChooser.getSelected().getName().equals("none")) {
+        // autoname = autoChooser.getSelected().getName();
+
         // autoCommand = autoChooser.getSelected();
-        // } else {
-        // autoCommand = autoChooserFav.getSelected();
-        // }
-        // drawCurrentAuto(autoCommand.getName());
+
+        // SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
+        if (!oldAutoname.equals(autoname)) {
+            // drawCurrentAuto(autoCommand.getName());
+        }
+
+        // oldAutoname = autoChooser.getSelected().getName();
+
+                autoCommand = new PathPlannerAuto("PID");
+
+
     }
 
     @Override
     public void disabledExit() {
         drawCurrentAuto(null);
+
+        // CommandScheduler.getInstance().schedule(
+        //         new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)));
+
     }
 
     @Override
     public void autonomousInit() {
-        CommandScheduler.getInstance().schedule(autoCommand);
+
+        if(autoCommand != null){
+        CommandScheduler.getInstance().schedule(
+                // new InstantCommand(() ->
+                // Turret.getInstance().resetPositionWithSunTzu()).andThen(
+                // new InstantCommand(() ->
+                // IntakePivot.getInstance().setHopperExtender(0)).andThen(
+                autoCommand);}
 
     }
 
@@ -350,8 +359,8 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopInit() {
-        lastMatchSecond = Robot.isSimulation()?(int)Timer.getFPGATimestamp():(int) DriverStation.getMatchTime();
-        
+        lastMatchSecond = Robot.isSimulation() ? (int) Timer.getFPGATimestamp() : (int) DriverStation.getMatchTime();
+
     }
 
     @Override
@@ -360,16 +369,16 @@ public class Robot extends TimedRobotstangs {
         String gameData = DriverStation.getGameSpecificMessage();
         int gameTimeInt = (int) DriverStation.getMatchTime();
         double gameTime = DriverStation.getMatchTime();
-        if(Robot.isSimulation()){
-            gameTimeInt = (int)(Timer.getFPGATimestamp()-lastMatchSecond);
-            gameTime = Timer.getFPGATimestamp()-lastMatchSecond;
-        }else{
+        if (Robot.isSimulation()) {
+            gameTimeInt = (int) (Timer.getFPGATimestamp() - lastMatchSecond);
+            gameTime = Timer.getFPGATimestamp() - lastMatchSecond;
+        } else {
             gameTimeInt = (int) DriverStation.getMatchTime();
             gameTime = DriverStation.getMatchTime();
         }
 
         if (gameTime < 30 || gameTime > 130) {
-            if(gameTimeInt==29){
+            if (gameTimeInt == 29) {
                 CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(2));
                 CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(2));
             }
@@ -499,23 +508,31 @@ public class Robot extends TimedRobotstangs {
 
         NamedCommands.registerCommand("Shoot",
                 new PrintCommand("your supposed to shoot bruh"));
+        NamedCommands.registerCommand("Pass",
+                new PrintCommand("your supposed to pass bruh"));
 
-        NamedCommands.registerCommand("Extend", new ExtendIntake().withTimeout(0.5));
+        NamedCommands.registerCommand("Extend", new StartIntake());
+
+        // new ExtendIntake(false).withTimeout(0.5));
 
         NamedCommands.registerCommand("Retract", new RetractIntake().withTimeout(0.5));
 
-        NamedCommands.registerCommand("Dont shoot",
+        NamedCommands.registerCommand("Dontshoot",
                 new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false))
                         .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
 
-        NamedCommands.registerCommand("Hood down",
+        NamedCommands.registerCommand("Hooddown",
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
                         .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
                         .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
 
         NamedCommands.registerCommand("Photoshoot",
-                new WaitUntilCommand(() -> Feeder.getInstance().getfuelSensor()).raceWith(
-                        (TurretFactory.Shoot())));
+                TurretFactory.Shoot()
+        // new WaitUntilCommand(() -> Feeder.getInstance().getfuelSensor()).raceWith(
+        // (TurretFactory.Shoot()))
+        );
+
+        NamedCommands.registerCommand("Bumpintake", new ExtendIntake(true));
 
         NamedCommands.registerCommand("Climb",
                 new PrintCommand("Hi!"));
@@ -523,25 +540,24 @@ public class Robot extends TimedRobotstangs {
     }
 
     public void drawCurrentAuto(String autoName) {
-        // List<Pose2d> poses = new ArrayList<>();
-        // poses.clear();
-        // if (autoName != null && !autoName.equals("")) {
-        // try {
-        // for (PathPlannerPath path :
-        // PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
-        // for (Pose2d pose : path.getPathPoses()) {
-        // poses.add(pose);
-        // }
+        List<Pose2d> poses = new ArrayList<>();
+        poses.clear();
+        if (autoName != null && !autoName.equals("")) {
+            try {
+                for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
+                    for (Pose2d pose : path.getPathPoses()) {
+                        poses.add(pose);
+                    }
 
-        // }
-        // autoAlert.set(false);
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // autoAlert.set(true);
-        // }
-        // teleopField.getObject("auto").setPoses(poses);
+                }
+                autoAlert.set(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+                autoAlert.set(true);
+            }
+            teleopField.getObject("auto").setPoses(poses);
 
-        // }
+        }
 
     }
 

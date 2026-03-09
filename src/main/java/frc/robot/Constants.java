@@ -90,8 +90,8 @@ public final class Constants {
 
         // TODO find john
         public static final Pose2d resetPose = !Robot.isRed()
-                ? new Pose2d(.47, .46, new Rotation2d(Units.degreesToRadians(180)))
-                : FlippingUtil.flipFieldPose(new Pose2d(.47, .46, new Rotation2d(Units.degreesToRadians(180))));
+                ? new Pose2d(3.5, 4, new Rotation2d(Units.degreesToRadians(180)))
+                : FlippingUtil.flipFieldPose(new Pose2d(3.5, 4, new Rotation2d(Units.degreesToRadians(180))));
 
     }
 
@@ -329,7 +329,7 @@ public final class Constants {
 
                 public static final int hoodMotorID = 25;
                 public static final double kHoodDownPos = 0d;
-                public static final int kLimitSwitchId = 0;
+                // public static final int kLimitSwitchId = 0;
                 public static final double kHoodHomeDutyCycle = -0.1;
                 public static final double kHoodMotorP = 8;
                 public static final double kHoodMotorI = 1;
@@ -349,7 +349,7 @@ public final class Constants {
 
                 public static final double kPeakReverseOutput = 0;
                 public static final double kShootSpeed = 60;
-                public static final int kFlywheelMotorID = 0;
+                // public static final int kFlywheelMotorID = 0;
                 public static final double kShooterMotorP = 3.5;
                 public static final double kShooterMotorI = 0.08;
                 public static final double kShooterMotorD = 0;
@@ -431,10 +431,10 @@ public final class Constants {
         }
 
         public class AutoConstants {
-                public static final PIDConstants translationPID = new PIDConstants(0, 0, 0);
-                public static final PIDConstants rotationPID = new PIDConstants(0, 0, 0);
+                public static final PIDConstants translationPID = new PIDConstants(10, 0, 0);
+                public static final PIDConstants rotationPID = new PIDConstants(10, 0, 0);
                 private final static MomentOfInertia kRobotMomentOfInertia = KilogramSquareMeters.of(0.01);
-                private final static double robotWeight = 0d;
+                private final static double robotWeight = 54.4;
                 private final static double wheelCOF = 0d;
                 private final static ModuleConfig kModuleConfig = new ModuleConfig(
                                 Constants.JabbaTunerConstants.kWheelRadius,

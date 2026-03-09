@@ -18,14 +18,14 @@ import frc.robot.commands.TurretCommands.Hood.HomeHood;
 public class Hood extends SubsystemBase {
     TalonFXS hoodMotor;
     public static Hood mInstance;
-    DigitalInput limitSwitch;
+    // DigitalInput limitSwitch;
     MotionMagicExpoDutyCycle hoodTargetPosition;
 
     static boolean isHomed = false;
 
     private Hood() {
         hoodMotor = new TalonFXS(Constants.HoodConstants.hoodMotorID);
-        limitSwitch = new DigitalInput(Constants.HoodConstants.kLimitSwitchId);
+        // limitSwitch = new DigitalInput(Constants.HoodConstants.kLimitSwitchId);
         hoodTargetPosition = new MotionMagicExpoDutyCycle(hoodMotor.getPosition().getValueAsDouble());
         configureHoodMotor();
 
@@ -96,14 +96,19 @@ public class Hood extends SubsystemBase {
         hoodMotor.setPosition(pos);
     }
 
+    
+    public void setHoodPositionAuto(double pos) {
+        hoodMotor.setPosition(pos);
+        isHomed = true;
+    }
     public double getStatorCurrent() {
         return hoodMotor.getTorqueCurrent().getValueAsDouble();
 
     }
 
-    public boolean getLimitSwitch() {
-        return limitSwitch.get();
-    }
+    // public boolean getLimitSwitch() {
+    //     return limitSwitch.get();
+    // }
 
     public void setMotionMagicTarget(double pos) {
         hoodTargetPosition.Position = pos;

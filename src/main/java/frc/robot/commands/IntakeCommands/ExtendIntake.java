@@ -10,15 +10,23 @@ public class ExtendIntake extends Command {
     
     Kirby kirby;
     IntakePivot pivot;
+    boolean isBump;
 
-    public ExtendIntake() {
+    public ExtendIntake(boolean isBump) {
         kirby = Kirby.getInstance();
         pivot = IntakePivot.getInstance();
+        this.isBump = isBump;
         addRequirements(kirby);
     }
     @Override
     public void initialize() {
+        if(isBump){
+            pivot.setExtenderPosition(0.05);
+        }
+        else{
+            
         pivot.setExtenderPosition(Constants.KirbyConstants.kExtendSetpoint);
+    }
         kirby.setKirbyWheels(Constants.KirbyConstants.kirbyIntakeSpeed);
     }
 

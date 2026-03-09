@@ -34,7 +34,7 @@ public class RetractIntake extends Command {
     }
     @Override
     public boolean isFinished() {
-        return pivot.atTargetPosition();
+        return false;
     }
 
 }

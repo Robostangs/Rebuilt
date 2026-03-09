@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 1.084835221069869,
-        "y": 5.958374215338429
+        "x": 1.0172450805008941,
+        "y": 6.00638640429338
       },
       "prevControl": {
-        "x": 1.1082499619289083,
-        "y": 6.207275299929284
+        "x": 1.0406598213599334,
+        "y": 6.255287488884235
       },
       "nextControl": {
-        "x": 1.003543050824901,
-        "y": 5.094230150515014
+        "x": 0.9359529102559261,
+        "y": 5.1422423394699655
       },
       "isLocked": false,
       "linkedName": "DepotIntake"
@@ -69,23 +69,12 @@
   "eventMarkers": [
     {
       "name": "Extend",
-      "waypointRelativePos": 0.5787881299734747,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
           "name": "Extend"
-        }
-      }
-    },
-    {
-      "name": "Retract",
-      "waypointRelativePos": 1.5840931697612732,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Retract"
         }
       }
     }

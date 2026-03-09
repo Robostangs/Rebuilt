@@ -57,19 +57,22 @@ public class RobotContainer {
         private final GenericHID xSim = new GenericHID(2);
         private static RobotContainer mInstance;
         public final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
+
         public static RobotContainer getInstance() {
                 if (mInstance == null) {
                         mInstance = new RobotContainer();
                 }
                 return mInstance;
         }
+
         public RobotContainer() {
                 configureDrivingBinding();
                 configureManipBindings();
                 drivetrain.registerTelemetry(logger::telemeterize);
                 logger.initSwerveLog();
         }
-        public Command controllerHaptics(double secs, CommandXboxController controller){
+
+        public Command controllerHaptics(double secs, CommandXboxController controller) {
                 return new StartEndCommand(() -> {
                         controller.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
                         controller.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
@@ -79,41 +82,34 @@ public class RobotContainer {
                 }).withDeadline(new WaitCommand(secs));
         }
 
-        public static Command rumbleDriveController(double secs){
+        public static Command rumbleDriveController(double secs) {
                 return RobotContainer.getInstance().controllerHaptics(secs, RobotContainer.getInstance().xDrive);
         }
-    
-        public static Command rumbleManipController(double secs){
+
+        public static Command rumbleManipController(double secs) {
                 return RobotContainer.getInstance().controllerHaptics(secs, RobotContainer.getInstance().xManip);
         }
-        
+
         private void configureDrivingBinding() {
                 setDrivetrain();
-
-           
+                xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()));
 
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-                xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()));
-
-                xDrive.rightStick().whileTrue(new ExtendIntake());
+                xDrive.rightStick().whileTrue(new ExtendIntake(false));
                 xDrive.leftStick().whileTrue(new RetractIntake());
 
-                
-                
-                
-                xDrive.rm().whileTrue(new ChargeUp());
-                
+                xDrive.lm().whileTrue(new ExtendIntake(true));
+
                 xDrive.z().whileTrue(new HomeIntake(true));
                 xDrive.c().whileTrue(new HomeIntake(false));
 
                 xDrive.b().whileTrue(new OutTake().alongWith(new spitHopper()).alongWith(new Undex()));
                 xDrive.x().whileTrue(new RunHopper());
                 xDrive.y().onTrue(new HomeHood());
-                
 
         }
 
@@ -150,13 +146,15 @@ public class RobotContainer {
                         drivetrain.setDefaultCommand(
                                         // Drivetrain will execute this command periodically
                                         drivetrain.applyRequest(() -> drive
-                                                        .withVelocityX(-xDrive.getLeftY() * MaxSpeed * leftTrigger.getAsDouble()) // Drive
+                                                        .withVelocityX(-xDrive.getLeftY() * MaxSpeed
+                                                                        * leftTrigger.getAsDouble()) // Drive
                                                         // forward
                                                         // with
                                                         // negative
                                                         // Y
                                                         // (forward)
-                                                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed * leftTrigger.getAsDouble()) // Drive
+                                                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed
+                                                                        * leftTrigger.getAsDouble()) // Drive
                                                         // left
                                                         // with
                                                         // negative
@@ -164,7 +162,8 @@ public class RobotContainer {
                                                         // (left)
                                                         .withRotationalRate(
                                                                         -xDrive.getRightX() * MaxAngularRate
-                                                                                        * (leftTrigger.getAsDouble()+.25)) // Drive
+                                                                                        * (leftTrigger.getAsDouble()
+                                                                                                        + .25)) // Drive
                                         // counterclockwise
                                         // with
                                         // negative

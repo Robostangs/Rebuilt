@@ -12,6 +12,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
@@ -140,8 +141,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SwerveDrivetrainConstants drivetrainConstants,
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
+                                configurePathPlanner();
+
         this.setVisionMeasurementStdDevs(Constants.AutoConstants.kErrorInMyVisionReg);
-        configurePathPlanner();
 
         if (Utils.isSimulation()) {
             startSimThread();
@@ -208,6 +210,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation,
                 modules);
+
+
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -370,6 +374,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 () -> this.getState().Speeds,
                 (speed, feedforward) -> new SwerveRequest.ApplyRobotSpeeds()
                         .withSpeeds(speed)
+                        .withDriveRequestType(DriveRequestType.Velocity)
                         .withWheelForceFeedforwardsX(feedforward.robotRelativeForcesX())
                         .withWheelForceFeedforwardsY(feedforward.robotRelativeForcesY()),
                 new PPHolonomicDriveController((Constants.AutoConstants.rotationPID),

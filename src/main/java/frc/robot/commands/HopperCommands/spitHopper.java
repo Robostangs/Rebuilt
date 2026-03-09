@@ -20,7 +20,7 @@ public class spitHopper extends Command {
 
     @Override
     public void execute(){
-        hopper.setBackGoerDutyCycle(Constants.HopperConstants.kBackGoerDC);
+        hopper.setBackGoerDutyCycle(-Constants.HopperConstants.kBackGoerDC);
 
     }
 

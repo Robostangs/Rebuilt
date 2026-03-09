@@ -163,9 +163,15 @@ public class Turret extends SubsystemBase {
         turretMotorConfig.ExternalTemp.TempSensorRequired = TempSensorRequiredValue.Not_Required;
                 turretMotorConfig.ExternalTemp.ThermistorMaxTemperature = 100;
 
+                        turretMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Constants.TurretConstants.kForwardSoftLimit;
+        turretMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        turretMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Constants.TurretConstants.kReverseSoftLimit;
+        turretMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+
 
         turretMotor.getRawPulseWidthPosition().setUpdateFrequency(50);
         turretMotor.getClosedLoopReference().setUpdateFrequency(50);
+
 
         turretMotor.getConfigurator().apply(turretMotorConfig);
     }
@@ -528,8 +534,10 @@ public class Turret extends SubsystemBase {
         // else{
         // trackPass();
         // }
+                turretControl.FeedForward = CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond * 0.2;
 
-        // turretMotor.setControl(turretControl);
+
+        turretMotor.setControl(turretControl);
 
         SmartDashboard.putBoolean("Turret/IsHub", isHub);
 

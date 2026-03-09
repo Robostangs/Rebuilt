@@ -124,7 +124,7 @@ public final class Constants {
                 public static final double KirbyCurrentLimit = 60;
                 public static final double HopperExtenderCurrentLimit = 60;
                 public static final int hopperExtenderID = 59;
-                public static final double kirbyIntakeSpeed = -0.9;
+                public static final double kirbyIntakeSpeed = -0.6;
                 public static final double kirbyOuttakeSpeed = 0.5;
                 public static final double hopperExtenderKP = 1000;
                 public static final double hopperExtenderKI = 100;
@@ -391,8 +391,8 @@ public final class Constants {
                 public static final double shooterMotionMagicAcceleration = 0;
                 public static final double shooterMotionMagicJerk = 0;
                 public static final double kShooterVelocityTolerance = -5;
-                public static final double kForwardSoftLimit = 0;
-                public static final double kReverseSoftLimit = 0;
+                public static final double kForwardSoftLimit = 0.45;
+                public static final double kReverseSoftLimit = -.45;
                 public static final double kSafeClimberPos = 0;
                 public static final double kSafeClimberNeg = 0;
                 public static final double kShooterSupplyCurrentLimit = 20;

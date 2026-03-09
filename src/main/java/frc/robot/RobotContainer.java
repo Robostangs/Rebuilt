@@ -20,10 +20,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Stable.ControllerStangs;
 import frc.robot.commands.Index;
+import frc.robot.commands.Undex;
 import frc.robot.commands.HopperCommands.RunHopper;
+import frc.robot.commands.HopperCommands.spitHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.MovePivot;
+import frc.robot.commands.IntakeCommands.OutTake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.commands.TurretCommands.TurretFactory;
@@ -107,6 +110,7 @@ public class RobotContainer {
                 xDrive.z().whileTrue(new HomeIntake(true));
                 xDrive.c().whileTrue(new HomeIntake(false));
 
+                xDrive.b().whileTrue(new OutTake().alongWith(new spitHopper()).alongWith(new Undex()));
                 xDrive.x().whileTrue(new RunHopper());
                 xDrive.y().onTrue(new HomeHood());
                 
@@ -160,7 +164,7 @@ public class RobotContainer {
                                                         // (left)
                                                         .withRotationalRate(
                                                                         -xDrive.getRightX() * MaxAngularRate
-                                                                                        * leftTrigger.getAsDouble()) // Drive
+                                                                                        * (leftTrigger.getAsDouble()+.25)) // Drive
                                         // counterclockwise
                                         // with
                                         // negative

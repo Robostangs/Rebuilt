@@ -34,7 +34,7 @@ public class ExtendIntake extends Command {
     }
     @Override
     public boolean isFinished() {
-        return pivot.atTargetPosition();
+        return false;
     }
 
 

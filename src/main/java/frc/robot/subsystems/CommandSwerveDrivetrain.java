@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Constants.JabbaTunerConstants.TunerSwerveDrivetrain;
+import frc.robot.Constants.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Vision.VisionStangs;
 
 /**
@@ -60,7 +60,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
     private VisionStangs photonVisionBack = new VisionStangs(Constants.VisionConstants.kLimelightFour);
-    private VisionStangs photonVisionRight = new VisionStangs(Constants.VisionConstants.kPhotonCamNameRight, Constants.VisionConstants.kRobotToCamRight);
+    private VisionStangs photonVisionRight = new VisionStangs(Constants.VisionConstants.kPhotonCamNameRight,
+            Constants.VisionConstants.kRobotToCamRight);
 
     private ArrayList<VisionStangs> visionPoses = new ArrayList<>();
 
@@ -141,7 +142,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SwerveDrivetrainConstants drivetrainConstants,
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
-                                configurePathPlanner();
+        configurePathPlanner();
 
         this.setVisionMeasurementStdDevs(Constants.AutoConstants.kErrorInMyVisionReg);
 
@@ -211,7 +212,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation,
                 modules);
 
-
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -280,9 +280,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         int index = -1;
         for (int c = 0; c < visionMeasurements.size(); c++) {
             if (visionMeasurements.get(c) != null) {
-                if (visionMeasurements.get(c).getAmbiguity() < smallestAmbiuity &&  
-                visionMeasurements.get(c).getAmbiguity()  > 0
-                &&  visionMeasurements.get(c).getAmbiguity() < 0.5 ) {
+                if (visionMeasurements.get(c).getAmbiguity() < smallestAmbiuity &&
+                        visionMeasurements.get(c).getAmbiguity() > 0
+                        && visionMeasurements.get(c).getAmbiguity() < 0.5) {
                     smallestAmbiuity = visionMeasurements.get(c).getAmbiguity();
                     index = c;
                 }
@@ -291,7 +291,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         if (index != -1 && visionMeasurements.get(index).getPose() != null) {
             SmartDashboard.putString("Vision/Best pose ",
-                   visionMeasurements.get(index).getName());
+                    visionMeasurements.get(index).getName());
             SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
                     visionMeasurements.get(index).getAmbiguity());
             SmartDashboard.putString("Vision/Pose Null error ",
@@ -370,17 +370,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public void configurePathPlanner() {
-        AutoBuilder.configure(() -> this.getState().Pose,
-                (pose) -> this.resetPose(pose),
+        AutoBuilder.configure(
+                () -> this.getState().Pose,
+                this::resetPose,
                 () -> this.getState().Speeds,
                 (speed, feedforward) -> this.setControl(
                         new SwerveRequest.ApplyRobotSpeeds()
                                 .withSpeeds(speed)
-                                // .withDriveRequestType(DriveRequestType.Velocity)
                                 .withWheelForceFeedforwardsX(feedforward.robotRelativeForcesX())
                                 .withWheelForceFeedforwardsY(feedforward.robotRelativeForcesY())),
-                new PPHolonomicDriveController((Constants.AutoConstants.rotationPID),
-                        (Constants.AutoConstants.translationPID)),
+                new PPHolonomicDriveController((Constants.AutoConstants.translationPID),
+                        (Constants.AutoConstants.rotationPID)),
                 Constants.AutoConstants.RobotConfig,
                 () -> Robot.isRed());
     }
@@ -401,10 +401,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public static CommandSwerveDrivetrain getInstance() {
         if (mDrivetrain == null) {
-            mDrivetrain = new CommandSwerveDrivetrain(Constants.JabbaTunerConstants.DrivetrainConstants,
-                    Constants.JabbaTunerConstants.FrontLeft,
-                    Constants.JabbaTunerConstants.FrontRight, Constants.JabbaTunerConstants.BackLeft,
-                    Constants.JabbaTunerConstants.BackRight);
+            mDrivetrain = new CommandSwerveDrivetrain(Constants.TunerConstants.DrivetrainConstants,
+                    Constants.TunerConstants.FrontLeft,
+                    Constants.TunerConstants.FrontRight, Constants.TunerConstants.BackLeft,
+                    Constants.TunerConstants.BackRight);
         }
         return mDrivetrain;
     }

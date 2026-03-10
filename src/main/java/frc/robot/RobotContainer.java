@@ -39,7 +39,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class RobotContainer {
         public static boolean useVision = true;
-        private double MaxSpeed = 1.0 * Constants.JabbaTunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+        private double MaxSpeed = 1.0 * Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
                                                                                           // second
                                                                                           // max angular velocity

@@ -315,6 +315,8 @@ public class Robot extends TimedRobotstangs {
     public void disabledExit() {
         drawCurrentAuto(null);
 
+        autoCommand = new PathPlannerAuto("PID");
+
         // CommandScheduler.getInstance().schedule(
         //         new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)));
 
@@ -323,14 +325,9 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void autonomousInit() {
 
-        try {
-            autoCommand = new PathPlannerAuto("PID");
-            CommandScheduler.getInstance().schedule(autoCommand);
-            SmartDashboard.putString("Auto/Status", "Scheduled: " + autoCommand.getName());
-        } catch (Exception e) {
-            SmartDashboard.putString("Auto/Status", "ERROR: " + e.getMessage());
-            autoAlert.set(true);
-        }
+        CommandScheduler.getInstance().cancelAll();
+
+        autoCommand.schedule();
     }
 
     @Override

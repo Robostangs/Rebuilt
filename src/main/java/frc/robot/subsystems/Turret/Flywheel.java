@@ -91,7 +91,7 @@ public class Flywheel extends SubsystemBase {
 
     public double getTargetVelocity(double MetersFromHub) {
         double feetFromHub = Units.metersToFeet(MetersFromHub) + 2;
-        double targetVelocity = 3 * feetFromHub + 52;
+        double targetVelocity = 2.5 * feetFromHub + 52;
         return targetVelocity;
     }
 

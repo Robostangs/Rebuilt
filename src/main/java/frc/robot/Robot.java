@@ -43,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.TimedRobotstangs;
@@ -96,7 +97,7 @@ public class Robot extends TimedRobotstangs {
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
             .withTimestampReplay()
             .withJoystickReplay();
-    Command autoCommand;
+    Command autoCommand, autoGroup;
 
     static NetworkTableEntry turretSetpoint;
 
@@ -315,25 +316,29 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void disabledPeriodic() {
 
-          autoname = autoChooser.getSelected().getName();
+        autoname = autoChooser.getSelected().getName();
 
         autoCommand = autoChooser.getSelected();
 
         SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
 
         if (!oldAutoname.equals(autoname)) {
-            // drawCurrentAuto(autoCommand.getName());
+            drawCurrentAuto(autoCommand.getName());
         }
 
-           oldAutoname = autoChooser.getSelected().getName();
+        oldAutoname = autoChooser.getSelected().getName();
     }
 
     @Override
     public void disabledExit() {
         drawCurrentAuto(null);
 
-        // autoCommand = AutoBuilder.buildAuto("PID");
+        autoGroup = new SequentialCommandGroup(
+                // new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu()),
+                new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
+                new InstantCommand(() -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
 
+                autoCommand);
 
     }
 
@@ -342,11 +347,8 @@ public class Robot extends TimedRobotstangs {
 
         CommandScheduler.getInstance().cancelAll();
 
-        
         CommandScheduler.getInstance().schedule(
-                new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)).andThen(
-                    autoCommand
-                ));
+                autoGroup);
     }
 
     @Override
@@ -442,20 +444,16 @@ public class Robot extends TimedRobotstangs {
         setupPitTest();
         SmartDashboard.putNumber("Hood setpoint", 0);
         SmartDashboard.putNumber("Flywheel velocity", 0);
+        SwerveRequest rightRequest = new SwerveRequest.RobotCentric().withVelocityY(-0.5);
+        Command driveRightCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> rightRequest);
+
+        SmartDashboard.putData("Do the wheel john", driveRightCommand);
 
     }
 
     @Override
     public void testPeriodic() {
-        pitTestPeriodic();
-
-        // double hoodSetpoint = SmartDashboard.getNumber("Hood setpoint", 0.0);
-        // Hood.getInstance().setMotionMagicTarget(hoodSetpoint);
-        // Hood.getInstance().setMotionMagic();
-
-        // double flywheelVelocity = SmartDashboard.getNumber("Flywheel velocity", 0.0);
-        // Flywheel.getInstance().setShooterRPS(flywheelVelocity);
-        // Flywheel.getInstance().setMotionMagic();
+        // pitTestPeriodic();
 
     }
 
@@ -529,10 +527,7 @@ public class Robot extends TimedRobotstangs {
                         .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
 
         NamedCommands.registerCommand("Photoshoot",
-                TurretFactory.Shoot().alongWith(new RunHopper())
-        // new WaitUntilCommand(() -> Feeder.getInstance().getfuelSensor()).raceWith(
-        // (TurretFactory.Shoot()))
-        );
+                (TurretFactory.Shoot().alongWith(new RunHopper())).until(() -> Feeder.getInstance().getfuelSensor()));
 
         NamedCommands.registerCommand("BumpIntake", new ExtendIntake(true));
 

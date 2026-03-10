@@ -17,6 +17,7 @@ public class Flywheel extends SubsystemBase {
     private TalonFX flyWheel;
     private VelocityVoltage shooterTargetVelocity;
 
+
     public static Flywheel instance;
     public static boolean shouldShoot;
     Alert hotAlert = new Alert("Flywheel Motor is HOT", AlertType.kError);

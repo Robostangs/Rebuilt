@@ -537,7 +537,7 @@ public class Turret extends SubsystemBase {
                 turretControl.FeedForward = CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond * 0.2;
 
 
-        turretMotor.setControl(turretControl);
+       // turretMotor.setControl(turretControl);
 
         SmartDashboard.putBoolean("Turret/IsHub", isHub);
 

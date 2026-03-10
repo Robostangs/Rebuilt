@@ -12,36 +12,36 @@
         "y": 5.8599127979767625
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CenterStartDepot"
     },
     {
       "anchor": {
-        "x": 0.8078070175438596,
-        "y": 5.996710526315789
+        "x": 0.6738749999999998,
+        "y": 5.982988636363636
       },
       "prevControl": {
-        "x": 0.8312217584028989,
-        "y": 6.245611610906645
+        "x": 0.697289740859039,
+        "y": 6.2318897209544915
       },
       "nextControl": {
-        "x": 0.7265148472988916,
-        "y": 5.132566461492375
+        "x": 0.5925828297550317,
+        "y": 5.1188445715402215
       },
       "isLocked": false,
       "linkedName": "DepotIntake"
     },
     {
       "anchor": {
-        "x": 2.343946961426492,
-        "y": 5.012768831877729
+        "x": 2.4672613636363634,
+        "y": 4.766784090909091
       },
       "prevControl": {
-        "x": 2.1171748192645152,
-        "y": 5.118003785858182
+        "x": 2.2404892214743866,
+        "y": 4.872019044889544
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CenterShootDepot"
     }
   ],
   "rotationTargets": [
@@ -53,11 +53,11 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7193410773026321,
-      "maxWaypointRelativePos": 1.2878502155172415,
+      "minWaypointRelativePos": 0.6042780748663101,
+      "maxWaypointRelativePos": 1.2326203208556148,
       "constraints": {
-        "maxVelocity": 2.5,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 1.0,
+        "maxAcceleration": 1.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -89,7 +89,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 144.2896914450127
+    "rotation": 141.03203192079437
   },
   "reversed": false,
   "folder": "Center",

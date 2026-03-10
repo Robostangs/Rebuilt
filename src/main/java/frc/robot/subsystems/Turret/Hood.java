@@ -7,7 +7,6 @@ import com.ctre.phoenix6.signals.MotorArrangementValue;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,14 +17,12 @@ import frc.robot.commands.TurretCommands.Hood.HomeHood;
 public class Hood extends SubsystemBase {
     TalonFXS hoodMotor;
     public static Hood mInstance;
-    // DigitalInput limitSwitch;
     MotionMagicExpoDutyCycle hoodTargetPosition;
 
     static boolean isHomed = false;
 
     private Hood() {
         hoodMotor = new TalonFXS(Constants.HoodConstants.hoodMotorID);
-        // limitSwitch = new DigitalInput(Constants.HoodConstants.kLimitSwitchId);
         hoodTargetPosition = new MotionMagicExpoDutyCycle(hoodMotor.getPosition().getValueAsDouble());
         configureHoodMotor();
 

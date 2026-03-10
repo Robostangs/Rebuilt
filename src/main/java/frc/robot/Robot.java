@@ -302,23 +302,38 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void disabledInit() {
+
+        autoChooser = AutoBuilder.buildAutoChooser();
+        // autoChooserFav = AutoBuilder.buildAutoChooserWithOptionsModifier(
+        // (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
+
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+
+        autoname = autoChooser.getSelected().getName();
     }
 
     @Override
     public void disabledPeriodic() {
+
+          autoname = autoChooser.getSelected().getName();
+
+        autoCommand = autoChooser.getSelected();
+
+        SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
+
         if (!oldAutoname.equals(autoname)) {
             // drawCurrentAuto(autoCommand.getName());
         }
+
+           oldAutoname = autoChooser.getSelected().getName();
     }
 
     @Override
     public void disabledExit() {
         drawCurrentAuto(null);
 
-        autoCommand = new PathPlannerAuto("PID");
+        // autoCommand = AutoBuilder.buildAuto("PID");
 
-        // CommandScheduler.getInstance().schedule(
-        //         new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)));
 
     }
 
@@ -327,7 +342,11 @@ public class Robot extends TimedRobotstangs {
 
         CommandScheduler.getInstance().cancelAll();
 
-        autoCommand.schedule();
+        
+        CommandScheduler.getInstance().schedule(
+                new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)).andThen(
+                    autoCommand
+                ));
     }
 
     @Override
@@ -510,12 +529,12 @@ public class Robot extends TimedRobotstangs {
                         .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
 
         NamedCommands.registerCommand("Photoshoot",
-                TurretFactory.Shoot()
+                TurretFactory.Shoot().alongWith(new RunHopper())
         // new WaitUntilCommand(() -> Feeder.getInstance().getfuelSensor()).raceWith(
         // (TurretFactory.Shoot()))
         );
 
-        NamedCommands.registerCommand("Bumpintake", new ExtendIntake(true));
+        NamedCommands.registerCommand("BumpIntake", new ExtendIntake(true));
 
         NamedCommands.registerCommand("Climb",
                 new PrintCommand("Hi!"));

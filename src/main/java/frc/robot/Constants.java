@@ -431,8 +431,8 @@ public final class Constants {
         }
 
         public class AutoConstants {
-                public static final PIDConstants translationPID = new PIDConstants(100, 0, 0);
-                public static final PIDConstants rotationPID = new PIDConstants(50, 0, 0);
+                public static final PIDConstants translationPID = new PIDConstants(0, 0, 0);
+                public static final PIDConstants rotationPID = new PIDConstants(0, 0, 0);
                 private final static MomentOfInertia kRobotMomentOfInertia = KilogramSquareMeters.of(0.01);
                 private final static double robotWeight = 69;
                 private final static double wheelCOF = 0.2; // typical carpet COF for colson/nitrile wheels
@@ -475,7 +475,7 @@ public final class Constants {
                                 Units.inchesToMeters(-8.895),
                                 Units.inchesToMeters(13.16),
                                 Units.inchesToMeters(11.796),
-                                new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(32.29),
+                                new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(32.29+90),
                                                 Units.degreesToRadians(-90)));
 
                 public static final String kPhotonCamNameBack = "Kratos";

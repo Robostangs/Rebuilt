@@ -65,6 +65,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private ArrayList<VisionStangs> visionPoses = new ArrayList<>();
 
+    private final SwerveRequest.ApplyRobotSpeeds AutoDrive = new SwerveRequest.ApplyRobotSpeeds();
+
     /*
      * SysId routine for characterizing translation. This is used to find PID gains
      * for the drive motors.
@@ -375,14 +377,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 this::resetPose,
                 () -> this.getState().Speeds,
                 (speed, feedforward) -> this.setControl(
-                        new SwerveRequest.ApplyRobotSpeeds()
+                       AutoDrive
                                 .withSpeeds(speed)
                                 .withWheelForceFeedforwardsX(feedforward.robotRelativeForcesX())
                                 .withWheelForceFeedforwardsY(feedforward.robotRelativeForcesY())),
                 new PPHolonomicDriveController((Constants.AutoConstants.translationPID),
                         (Constants.AutoConstants.rotationPID)),
                 Constants.AutoConstants.RobotConfig,
-                () -> Robot.isRed());
+                () -> Robot.isRed(),this);
     }
 
     /**

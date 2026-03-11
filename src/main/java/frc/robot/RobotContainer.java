@@ -27,6 +27,7 @@ import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.HopperCommands.spitHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.HomeIntake;
+import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.MovePivot;
 import frc.robot.commands.IntakeCommands.OutTake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
@@ -94,27 +95,31 @@ public class RobotContainer {
 
         private void configureDrivingBinding() {
                 setDrivetrain();
-                xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper())).
-                onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0)));
+                xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()))
+                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0)));
 
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));
 
-                xDrive.rightStick().whileTrue(new ExtendIntake(false));
-                xDrive.leftStick().whileTrue(new RetractIntake());
+                xDrive.rightPaddle().whileTrue(new ExtendIntake(false));
+                xDrive.leftPaddle().whileTrue(new RetractIntake());
 
-                xDrive.lm().whileTrue(new ExtendIntake(true));
+                xDrive.rightBumper().whileTrue(IntakeFactory.TrueSpit());
+                xDrive.leftBumper().whileTrue(IntakeFactory.ballStuck());
+
+                xDrive.rm().onTrue(new InstantCommand(() ->Hood.getInstance().setMotionMagicTarget(0)));
 
                 xDrive.z().whileTrue(new HomeIntake(true));
                 xDrive.c().whileTrue(new HomeIntake(false));
 
-                xDrive.b().whileTrue(new OutTake().alongWith(new spitHopper()).alongWith(new Undex()));
+                xDrive.b().whileTrue(new ExtendIntake(true));
                 xDrive.x().whileTrue(new RunHopper());
                 xDrive.y().onTrue(new HomeHood());
+                xDrive.a().onTrue(new InstantCommand(
+                                (() -> useVision = !useVision)));
 
-                xDrive.rightBumper().onTrue(new InstantCommand(() ->Hood.getInstance().setMotionMagicTarget(0)));
 
         }
 

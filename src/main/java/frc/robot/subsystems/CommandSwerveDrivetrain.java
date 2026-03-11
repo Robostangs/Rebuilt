@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Vision.VisionStangs;
 
@@ -305,6 +306,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SmartDashboard.putNumber("Vision/Vision Pose index ",
                     index);
 
+            if(RobotContainer.useVision)
             this.addVisionMeasurement(visionMeasurements.get(index).getPose(),
                     visionMeasurements.get(index).getTimeStamp());
         } else {

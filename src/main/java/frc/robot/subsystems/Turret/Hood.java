@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.TurretCommands.Hood.HomeHood;
 
-@Logged
+// @Logged
 public class Hood extends SubsystemBase {
     TalonFXS hoodMotor;
     public static Hood mInstance;
@@ -115,6 +115,7 @@ public class Hood extends SubsystemBase {
         hoodMotor.setControl(hoodTargetPosition);
 
     }
+
 
     @Override
     public void periodic() {

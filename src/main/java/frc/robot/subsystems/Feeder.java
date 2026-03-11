@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
-@Logged
+// @Logged
 public class Feeder extends SubsystemBase {
     TalonFX feederMotor;
     TalonFXConfiguration feedConfigurator;

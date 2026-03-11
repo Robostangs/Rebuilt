@@ -11,6 +11,8 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import frc.robot.subsystems.Turret.*;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -92,12 +94,13 @@ public class RobotContainer {
 
         private void configureDrivingBinding() {
                 setDrivetrain();
-                xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()));
+                xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper())).
+                onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0)));
 
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
 
-                xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+                xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));
 
                 xDrive.rightStick().whileTrue(new ExtendIntake(false));
                 xDrive.leftStick().whileTrue(new RetractIntake());
@@ -111,6 +114,8 @@ public class RobotContainer {
                 xDrive.x().whileTrue(new RunHopper());
                 xDrive.y().onTrue(new HomeHood());
 
+                xDrive.rightBumper().onTrue(new InstantCommand(() ->Hood.getInstance().setMotionMagicTarget(0)));
+
         }
 
         public void configureManipBindings() {
@@ -123,11 +128,8 @@ public class RobotContainer {
                 xManip.rightBumper().whileTrue(new setTurretDutyCycle(0.3));
                 xManip.leftBumper().whileTrue(new setTurretDutyCycle(-0.3));
 
-                new Trigger(() -> Math.abs(xManip.getRightY()) > 0.1)
-                                .whileTrue(new MovePivot(() -> xManip.getRightY()));
+                xManip.a().onTrue(new InstantCommand(() -> Turret.getInstance().setMM()));
 
-                new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.1)
-                                .whileTrue(new setHoodDutyCycle(() -> xManip.getLeftY() / 2));
 
         }
 

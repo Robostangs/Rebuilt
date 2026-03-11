@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
-@Logged
+// @Logged
 public class Flywheel extends SubsystemBase {
     private TalonFX flyWheel;
     private VelocityVoltage shooterTargetVelocity;
@@ -92,7 +92,7 @@ public class Flywheel extends SubsystemBase {
 
     public double getTargetVelocity(double MetersFromHub) {
         double feetFromHub = Units.metersToFeet(MetersFromHub) + 2;
-        double targetVelocity = 2.5 * feetFromHub + 52;
+        double targetVelocity = 2.2 * feetFromHub + 52;
         return targetVelocity;
     }
 

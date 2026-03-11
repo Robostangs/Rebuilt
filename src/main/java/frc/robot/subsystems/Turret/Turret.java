@@ -37,7 +37,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
  * The turret
  */
 
-@Logged
+
 public class Turret extends SubsystemBase {
 
     // Shooter motor has its own subsystem
@@ -55,6 +55,8 @@ public class Turret extends SubsystemBase {
     TalonFXConfiguration pepperConfig;
 
     Pose2d turretPose;
+
+    boolean ShouldMM; 
 
     static boolean isHub = true;
     static boolean manualTarget = false;
@@ -519,6 +521,10 @@ public class Turret extends SubsystemBase {
 
     }
 
+    public void setMM(){
+        ShouldMM = (!ShouldMM);
+    }
+
     @Override
     public void periodic() {
         updateTurretSim();
@@ -537,7 +543,8 @@ public class Turret extends SubsystemBase {
                 turretControl.FeedForward = CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond * 0.2;
 
 
-       // turretMotor.setControl(turretControl);
+                if(ShouldMM){
+       turretMotor.setControl(turretControl);}
 
         SmartDashboard.putBoolean("Turret/IsHub", isHub);
 

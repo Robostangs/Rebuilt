@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MountPoseConfigs;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -467,6 +468,8 @@ public final class Constants {
         public class VisionConstants {
                 public static final double kLL4SeedMaxWz = 1;
                 public static final String kLimelightFour = "limelight-jarvis";
+                public static final String kLimelightFourR = "limelight-ultron";
+
                 public static final String kLimelightThree = "limelight-agomoto";
                 public static final double kVisionAngularThreshold = 22.5;
 

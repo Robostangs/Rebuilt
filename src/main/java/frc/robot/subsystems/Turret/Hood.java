@@ -99,12 +99,9 @@ public class Hood extends SubsystemBase {
         isHomed = true;
     }
 
-
-    
-    public void setMM( ){
+    public void setMM() {
         ShouldMM = (!ShouldMM);
     }
-
 
     public double getStatorCurrent() {
         return hoodMotor.getTorqueCurrent().getValueAsDouble();
@@ -121,14 +118,15 @@ public class Hood extends SubsystemBase {
 
     public void setMotionMagic() {
 
+        if (ShouldMM) {
 
-            if(ShouldMM){
+            if (Math.abs(hoodMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.02) {
+                hoodMotor.set(0);
+            } else {
+                hoodMotor.setControl(hoodTargetPosition);
 
-
-            hoodMotor.setControl(hoodTargetPosition);
+            }
         }
-
-        
 
     }
 
@@ -144,10 +142,7 @@ public class Hood extends SubsystemBase {
         if (!isHomed) {
             CommandScheduler.getInstance().schedule(new HomeHood().withTimeout(4));
         }
-   
-        }
-
 
     }
 
-
+}

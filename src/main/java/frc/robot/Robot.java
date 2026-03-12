@@ -489,6 +489,14 @@ public class Robot extends TimedRobotstangs {
         disableTab.add("RESET TO SUN TZUUUUUU",
                 new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
                         .ignoringDisable(true));
+
+
+        disableTab.add("ZeroTurret",
+        new InstantCommand(() -> Turret.getInstance().zeroTurret())
+                                .ignoringDisable(true));
+
+    
+    
     }
 
     public void logCurrentAuto() {

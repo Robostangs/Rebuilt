@@ -4,9 +4,6 @@ import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -126,7 +123,10 @@ public class Hood extends SubsystemBase {
 
 
             if(ShouldMM){
-            hoodMotor.setControl(hoodTargetPosition);}
+
+
+            hoodMotor.setControl(hoodTargetPosition);
+        }
 
         
 
@@ -144,9 +144,7 @@ public class Hood extends SubsystemBase {
         if (!isHomed) {
             CommandScheduler.getInstance().schedule(new HomeHood().withTimeout(4));
         }
-        {
-                        hoodMotor.setControl(hoodTargetPosition);}
-
+   
         }
 
 

@@ -111,10 +111,7 @@ public class Turret extends SubsystemBase {
 
     public void configureTurretMotorSoftLimit() {
         TalonFXSConfiguration turretMotorConfig = new TalonFXSConfiguration();
-        turretMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Constants.TurretConstants.kForwardSoftLimit;
-        turretMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-        turretMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Constants.TurretConstants.kReverseSoftLimit;
-        turretMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+
         turretMotor.getConfigurator().apply(turretMotorConfig);
     }
 
@@ -510,10 +507,7 @@ public class Turret extends SubsystemBase {
     }
 
     public void zeroTurret(){
-        TalonFXSConfiguration turretMotorConfig = new TalonFXSConfiguration();
-
-        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset = (turretMotor.getPosition().getValueAsDouble()%1d);
-
+        turretMotor.setPosition(0);
 
     }
 
@@ -540,7 +534,8 @@ public class Turret extends SubsystemBase {
         updateTurretSim();
         SmartDashboard.putNumber("Turret/Meters from Hub", getMetersFromHub());
 
-        SmartDashboard.putNumber("Turret/ModSensorPos",  (turretMotor.getPosition().getValueAsDouble()%1d));
+        SmartDashboard.putNumber("Turret/ModSensorPos",  (turretMotor.getPosition().getValueAsDouble()*(200/19)%1d));
+        SmartDashboard.putNumber("Turret/AccSensorPos",  (turretMotor.getPosition().getValueAsDouble()*(200/19)));
 
 
         // if (!manualTarget && CommandSwerveDrivetrain.getInstance().getState().Pose !=

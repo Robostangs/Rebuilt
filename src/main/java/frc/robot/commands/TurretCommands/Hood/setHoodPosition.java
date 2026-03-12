@@ -25,6 +25,8 @@ public class setHoodPosition extends Command {
 
         hood.setMotionMagicTarget(hoodpos);
 
+        hood.setMotionMagic();
+
 
         hood.postStatus("Setting hood position to: " + hoodpos);
 

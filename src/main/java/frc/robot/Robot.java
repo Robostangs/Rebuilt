@@ -317,16 +317,16 @@ public class Robot extends TimedRobotstangs {
 
         SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
 
-        if (!oldAutoname.equals(autoname)) {
-            drawCurrentAuto(autoCommand.getName());
-        }
+        // if (!oldAutoname.equals(autoname)) {
+            // drawCurrentAuto(autoCommand.getName());
+        // }
 
         oldAutoname = autoChooser.getSelected().getName();
     }
 
     @Override
     public void disabledExit() {
-        drawCurrentAuto(null);
+        // drawCurrentAuto(null);
 
         autoGroup = new SequentialCommandGroup(
                 // new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu()),

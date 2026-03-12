@@ -136,7 +136,7 @@ public class Turret extends SubsystemBase {
         turretMotorConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.TurretMotorSupplyCurrentLimit;
 
         turretMotorConfig.ExternalFeedback.AbsoluteSensorDiscontinuityPoint = 1;
-        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset = 0.56494140625;
+        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset =  oldConfigs.ExternalFeedback.AbsoluteSensorOffset;
         /*
          * When offset is set in tuner, it may cause the sensor position to be 1.00 not
          * 0.00 that is fine
@@ -189,8 +189,7 @@ public class Turret extends SubsystemBase {
         turretCANcoder.getConfigurator().refresh(oldConfigs);
 
         turretCANcoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
-        turretCANcoderConfig.MagnetSensor.MagnetOffset = -0.913330078125;
-
+        turretCANcoderConfig.MagnetSensor.MagnetOffset = oldConfigs.MagnetSensor.MagnetOffset;
         turretCANcoder.getConfigurator().apply(turretCANcoderConfig);
     }
     // endregion
@@ -506,20 +505,19 @@ public class Turret extends SubsystemBase {
 
     }
 
-    public void zeroTurret(){
-        turretMotor.setPosition(0);
 
-    }
 
     private Translation2d calculateTargetHubTranslation() {
         ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
                 CommandSwerveDrivetrain.getInstance().getState().Speeds,
                 CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation());
         double timeToShoot = timeToShoot(getMetersFromHub());
-        Translation2d targetHubPose = Constants.FieldConstants.HubPosition.getTranslation().minus(
-                new Translation2d(
-                        robotSpeeds.vxMetersPerSecond * timeToShoot,
-                        robotSpeeds.vyMetersPerSecond * timeToShoot));
+        Translation2d targetHubPose = Constants.FieldConstants.HubPosition.getTranslation()
+        // .minus(
+        //         new Translation2d(
+        //                 robotSpeeds.vxMetersPerSecond * timeToShoot,
+        //                 robotSpeeds.vyMetersPerSecond * timeToShoot))
+                        ;
 
         return targetHubPose;
 
@@ -527,6 +525,10 @@ public class Turret extends SubsystemBase {
 
     public void setMM( ){
         ShouldMM = (!ShouldMM);
+    }
+
+    public void zeroTurret(){
+        turretMotor.setPosition(0);
     }
 
     @Override

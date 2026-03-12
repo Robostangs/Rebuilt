@@ -120,7 +120,7 @@ public class Hood extends SubsystemBase {
 
         if (ShouldMM) {
 
-            if (Math.abs(hoodMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.02) {
+            if (Math.abs(hoodMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.04) {
                 hoodMotor.set(0);
             } else {
                 hoodMotor.setControl(hoodTargetPosition);

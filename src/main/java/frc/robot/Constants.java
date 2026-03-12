@@ -457,7 +457,7 @@ public final class Constants {
                                 kRobotMomentOfInertia.baseUnitMagnitude(), kModuleConfig, kModulePositions);
 
                 // TODO: find this john
-                public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.1, 0.1,
+                public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.15, 0.15,
                                 Units.degreesToRadians(100));
 
                 // TODO: find this john
@@ -494,7 +494,7 @@ public final class Constants {
                 public static final Transform3d kRobotToCamRear = new Transform3d(new Transform2d());
 
                 public static final double kPhotonAmbiguityThres = 0.5;
-                public static final double kLLDisThres = 30;
+                public static final double kLLDisThres = 3;
         }
 
      public class TunerConstants {

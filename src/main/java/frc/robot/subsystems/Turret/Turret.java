@@ -5,7 +5,6 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFXS;
@@ -19,7 +18,6 @@ import com.ctre.phoenix6.sim.TalonFXSSimState;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -529,6 +527,80 @@ public class Turret extends SubsystemBase {
 
     public void zeroTurret(){
         turretMotor.setPosition(0);
+    }
+
+    public void completeZeroTurret(){
+        double previousOffset = 0;
+              TalonFXSConfiguration turretMotorConfig = new TalonFXSConfiguration();
+
+        TalonFXSConfiguration oldConfigs = new TalonFXSConfiguration();
+        turretMotor.getConfigurator().refresh(oldConfigs);
+        previousOffset = oldConfigs.ExternalFeedback.AbsoluteSensorOffset;
+
+        double newoffset = 0;
+        if(Math.abs(previousOffset)> 1){
+            newoffset = 1- previousOffset;
+        }
+        else{
+            newoffset = 0;
+        }
+
+        turretMotorConfig.Commutation.AdvancedHallSupport = AdvancedHallSupportValue.Enabled;
+        turretMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
+
+        turretMotorConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.TurretMotorSupplyCurrentLimit;
+
+        turretMotorConfig.ExternalFeedback.AbsoluteSensorDiscontinuityPoint = 1;
+        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset =  newoffset;
+        /*
+         * When offset is set in tuner, it may cause the sensor position to be 1.00 not
+         * 0.00 that is fine
+         *
+         */
+        turretMotorConfig.ExternalFeedback.ExternalFeedbackSensorSource = ExternalFeedbackSensorSourceValue.PulseWidth;
+        turretMotorConfig.ExternalFeedback.RotorToSensorRatio = Constants.TurretConstants.kTurretPlanetaryRatio;
+        turretMotorConfig.ExternalFeedback.SensorToMechanismRatio = Constants.TurretConstants.kTurretRingTeeth
+                / Constants.TurretConstants.kTurretMotorTeeth;
+        turretMotorConfig.ExternalFeedback.SensorPhase = SensorPhaseValue.Opposed;
+
+        var ironmanMM = turretMotorConfig.Slot0;
+
+        ironmanMM.kV = Constants.TurretConstants.IronmanMotionMagicKvFF;
+        ironmanMM.kA = Constants.TurretConstants.IronmanMotionMagicKaFF;
+        ironmanMM.kS = Constants.TurretConstants.IronmanMotionMagicKS;
+
+        ironmanMM.kP = Constants.TurretConstants.IronmanMotionMagicKP;
+        ironmanMM.kI = Constants.TurretConstants.IronmanMotionMagicKI;
+        ironmanMM.kD = Constants.TurretConstants.IronmanMotionMagicKD;
+
+        turretMotorConfig.MotionMagic.MotionMagicExpo_kV = Constants.TurretConstants.IronmanMotionMagicKv;
+        turretMotorConfig.MotionMagic.MotionMagicExpo_kA = Constants.TurretConstants.IronmanMotionMagicKa;
+
+        turretMotorConfig.ExternalTemp.TempSensorRequired = TempSensorRequiredValue.Not_Required;
+                turretMotorConfig.ExternalTemp.ThermistorMaxTemperature = 100;
+
+                        turretMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Constants.TurretConstants.kForwardSoftLimit;
+        turretMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+        turretMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Constants.TurretConstants.kReverseSoftLimit;
+        turretMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+
+
+
+        turretMotor.getConfigurator().apply(turretMotorConfig);
+
+
+
+        
+        CANcoderConfiguration turretCANcoderConfig = new CANcoderConfiguration();
+
+        CANcoderConfiguration oldConfigsCAN = new CANcoderConfiguration();
+        turretCANcoder.getConfigurator().refresh(oldConfigsCAN);
+
+        turretCANcoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
+        turretCANcoderConfig.MagnetSensor.MagnetOffset = oldConfigsCAN.MagnetSensor.MagnetOffset+turretCANcoder.getPosition().getValueAsDouble();
+        turretCANcoder.getConfigurator().apply(turretCANcoderConfig);
+    
+
     }
 
     @Override

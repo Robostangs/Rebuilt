@@ -191,7 +191,7 @@ public class VisionStangs {
             return false;
         }
         if (yoPoseEsti.avgTagDist > Constants.VisionConstants.kLLDisThres) {
-
+            return false;
         }
 
         SmartDashboard.putNumber("Vision/AvgLLDistance"+ CameraName, yoPoseEsti.avgTagDist);

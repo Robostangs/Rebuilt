@@ -60,6 +60,7 @@ public class Hood extends SubsystemBase {
 
     }
 
+
     public double getHoodAngle(double MetersFromHub) {
         double feetFromHub = Units.metersToFeet(MetersFromHub);
         SmartDashboard.putNumber(" feet from hub", feetFromHub);
@@ -101,6 +102,10 @@ public class Hood extends SubsystemBase {
 
     public void setMM() {
         ShouldMM = (!ShouldMM);
+    }
+
+        public void setMM(boolean MM) {
+        ShouldMM = MM;
     }
 
     public double getStatorCurrent() {

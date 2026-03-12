@@ -24,6 +24,8 @@ public class Flywheel extends SubsystemBase {
     public static boolean shouldShoot;
     Alert hotAlert = new Alert("Flywheel Motor is HOT", AlertType.kError);
 
+    double flyAdjust=0;
+
     public static Flywheel getInstance() {
         if (instance == null) {
             instance = new Flywheel();
@@ -87,7 +89,8 @@ public class Flywheel extends SubsystemBase {
     }
     
     public void adjustRPM(DoubleSupplier adjustVal){
-        adjustRPMVal=adjustVal.getAsDouble();
+        flyAdjust=adjustVal.getAsDouble();
+
     }
     public void checkIfMotorHot() {
         boolean isMotorHot = flyWheel.getAncillaryDeviceTemp().getValueAsDouble() >= 45;
@@ -113,6 +116,7 @@ public class Flywheel extends SubsystemBase {
                 flyWheel.set(0);
         }
         else{
+            shooterTargetVelocity.Velocity  = shooterTargetVelocity.Velocity + flyAdjust;
                 flyWheel.setControl(shooterTargetVelocity);
 
         }

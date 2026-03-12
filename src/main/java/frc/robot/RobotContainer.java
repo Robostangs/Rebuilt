@@ -97,12 +97,12 @@ public class RobotContainer {
                 setDrivetrain();
                 xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()))
                                 .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0))
-                                        .alongWith(new InstantCommand(
-                                                () -> Hood.getInstance().setMotionMagic()))
-                                                               )
-                                                               ;
+                                                .alongWith(new InstantCommand(
+                                                                () -> Hood.getInstance().setMotionMagic())
+                                                                .andThen(new InstantCommand(
+                                                                () -> Hood.getInstance().setHoodDutyCycle(0)))));
                 xDrive.povDown().onTrue(
-                        
+
                                 drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(
@@ -131,21 +131,26 @@ public class RobotContainer {
 
                 // xManip.b().onTrue(new InstantCommand(() -> Turret.setManipTarget(false)));
 
-
                 xManip.rightBumper().whileTrue(new setTurretDutyCycle(0.2));
                 xManip.leftBumper().whileTrue(new setTurretDutyCycle(-0.2));
 
+                xManip.povUp().whileTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
+
                 xManip.a().onTrue(new InstantCommand(() -> Turret.getInstance().setMM()));
 
-                xManip.b().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
+                xManip.b().onTrue(new InstantCommand(() -> Turret.getInstance().completeZeroTurret()));
 
-                xManip.rightTrigger().whileTrue( new setHoodDutyCycle(() -> 0.3));
-                                xManip.leftTrigger().whileTrue( new setHoodDutyCycle(() -> -0.3));
+                xManip.x().onTrue(new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu()));
 
+                xManip.y().onTrue(new InstantCommand(() -> Turret.getInstance().zeroTurret()));
 
-                new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.1)
+                xManip.rightTrigger().whileTrue(new setHoodDutyCycle(() -> 0.3));
+                xManip.leftTrigger().whileTrue(new setHoodDutyCycle(() -> -0.3));
+
+                new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
                                 .whileTrue(new InstantCommand(
-                                                () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * 20)));
+                                                () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * -
+                                                20)));
         }
 
         private void setDrivetrain() {

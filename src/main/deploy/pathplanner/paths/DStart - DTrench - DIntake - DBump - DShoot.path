@@ -161,17 +161,6 @@
           "name": "BumpIntake"
         }
       }
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 4.249090325342467,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Shoot"
-        }
-      }
     }
   ],
   "globalConstraints": {

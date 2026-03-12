@@ -20,7 +20,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 public class VisionStangs {
-    private  PhotonCamera camera;
+    private PhotonCamera camera;
     PhotonPoseEstimator ppe;
     private Pose2d currentPose;
     private double bigAmbiuity;
@@ -37,24 +37,20 @@ public class VisionStangs {
         isLL = false;
     }
 
-
     public VisionStangs(String LLname) {
         this.CameraName = LLname;
         bigAmbiuity = -1;
         isLL = true;
     }
 
-
     private void Photonperiodic() {
 
-        
         bigAmbiuity = 0;
 
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
         for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
 
             visionEst = ppe.estimateCoprocMultiTagPose(result);
-
 
             for (var target : result.targets) {
                 if (target.poseAmbiguity > bigAmbiuity) {
@@ -74,14 +70,12 @@ public class VisionStangs {
                     timestampSeconds = est.timestampSeconds;
                     Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
                     currentPose = pose2d;
-                    // CommandSwerveDrivetrain.getInstance().addVisionMeasurement(pose2d, timestampSeconds);
                 }
             });
 
         }
 
     }
-
 
     private void LLperiodic() {
 
@@ -123,54 +117,65 @@ public class VisionStangs {
             if (DriverStation.isDisabled()) {
 
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
+                SmartDashboard.putString("Vision/" + CameraName + "MT 1 or 2", "1 BC DISAB:ED");
 
-            } else if (CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityZWorld()
-                    .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
+            }
+            // else if
+            // (CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityZWorld()
+            // .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
 
-                fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue(CameraName);
+            // fourPoseEsti = LimelightHelpers
+            // .getBotPoseEstimate_wpiBlue(CameraName);
 
-            } else {
+            // SmartDashboard.putString("Vision/"+CameraName+"MT 1 or 2", "1");
+
+            // }
+            else {
                 fourPoseEsti = LimelightHelpers
                         .getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
+                SmartDashboard.putString("Vision/" + CameraName + "MT 1 or 2", "2 BC NOT DISABELED");
 
             }
             if (isPosegoo(fourPoseEsti)) {
-                this.currentPose = fourPoseEsti.pose;   
+                this.currentPose = fourPoseEsti.pose;
                 this.timestampSeconds = fourPoseEsti.timestampSeconds;
-                Robot.teleopField.getObject(CameraName+ " Pose LL").setPose(fourPoseEsti.pose);
-                for(LimelightHelpers.RawFiducial fiducial:fourPoseEsti.rawFiducials){
-                    if(fiducial.ambiguity > bigAmbiuity){
+                Robot.teleopField.getObject(CameraName + " Pose LL").setPose(fourPoseEsti.pose);
+                for (LimelightHelpers.RawFiducial fiducial : fourPoseEsti.rawFiducials) {
+                    if (fiducial.ambiguity > bigAmbiuity) {
                         bigAmbiuity = fiducial.ambiguity;
                     }
                 }
                 SmartDashboard.putNumber("Vision/" + CameraName + " biggest ambiguity", bigAmbiuity);
-                
+
             }
         }
     }
 
-    public double getTimeStamp(){
+    public double getTimeStamp() {
         return timestampSeconds;
     }
 
-    public double getAmbiguity(){
+    public double getAmbiguity() {
         return bigAmbiuity;
     }
-    public Pose2d getPose(){
+
+    public Pose2d getPose() {
         return currentPose;
     }
-    public String getName(){
+
+    public String getName() {
         return CameraName;
     }
-    //TODO plot stds and make standard deviations based on this input
-    public double[] getLLstds(){
-        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("stddevs").getDoubleArray(new double[12]);
-    }
-    public boolean isLL(){
-        return isLL;
+
+    // TODO plot stds and make standard deviations based on this input
+    public double[] getLLstds() {
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("stddevs")
+                .getDoubleArray(new double[12]);
     }
 
+    public boolean isLL() {
+        return isLL;
+    }
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
         if (Robot.isSimulation()) {
@@ -185,6 +190,11 @@ public class VisionStangs {
             SmartDashboard.putString("Vision/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
             return false;
         }
+        if (yoPoseEsti.avgTagDist > Constants.VisionConstants.kLLDisThres) {
+
+        }
+
+        SmartDashboard.putNumber("Vision/AvgLLDistance"+ CameraName, yoPoseEsti.avgTagDist);
 
         if (!RobotContainer.useVision) {
             SmartDashboard.putString("Vision/LL4_RejectReason", "useVision disabled");

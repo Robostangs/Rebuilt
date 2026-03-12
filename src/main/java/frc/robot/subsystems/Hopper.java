@@ -2,7 +2,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,7 +12,7 @@ import frc.robot.Constants;
 
 public class Hopper extends SubsystemBase {
     public TalonSRX backGoer;
-    public VictorSPX leftRighter;
+    public TalonFX leftRighter;
     public static Hopper mInstance;
 
     Alert leftRightHotAlert = new Alert("Hopper LeftRighter Motor is HOT", AlertType.kError);
@@ -20,12 +21,12 @@ public class Hopper extends SubsystemBase {
 
     public Hopper(){
         backGoer = new TalonSRX(Constants.HopperConstants.kBackGoerID);
-        leftRighter= new VictorSPX(Constants.HopperConstants.kLeftRightID);    
+        leftRighter= new TalonFX(Constants.HopperConstants.kLeftRightID);    
     }
 
  
     public void setLeftRightDutyCycle(double dutyCycle){
-        leftRighter.set(ControlMode.PercentOutput, dutyCycle);
+        leftRighter.set(dutyCycle);
     }
 
     public void setBackGoerDutyCycle(double dutyCycle){

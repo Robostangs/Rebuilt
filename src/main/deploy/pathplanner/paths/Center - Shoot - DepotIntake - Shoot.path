@@ -3,32 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5986184144631403,
-        "y": 5.8599127979767625
+        "x": 3.580858676207513,
+        "y": 6.055062611806798
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.28208755756219,
-        "y": 5.8599127979767625
+        "x": 2.3137429451075207,
+        "y": 6.639622085744168
       },
       "isLocked": false,
       "linkedName": "CenterStartDepot"
     },
     {
       "anchor": {
-        "x": 0.6738749999999998,
-        "y": 5.982988636363636
+        "x": 0.6278354203935594,
+        "y": 5.8599127979767625
       },
       "prevControl": {
-        "x": 0.697289740859039,
-        "y": 6.2318897209544915
+        "x": 0.5791592128801424,
+        "y": 6.460252690642237
       },
       "nextControl": {
-        "x": 0.5925828297550317,
-        "y": 5.1188445715402215
+        "x": 0.6672608414619984,
+        "y": 5.373665938132684
       },
       "isLocked": false,
-      "linkedName": "DepotIntake"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -36,8 +36,8 @@
         "y": 4.766784090909091
       },
       "prevControl": {
-        "x": 2.2404892214743866,
-        "y": 4.872019044889544
+        "x": 1.8586170232683359,
+        "y": 4.876420638963588
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,18 +46,18 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0114874588815785,
-      "rotationDegrees": 180.0
+      "waypointRelativePos": 0.9458917835671348,
+      "rotationDegrees": -162.4891307357811
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6042780748663101,
-      "maxWaypointRelativePos": 1.2326203208556148,
+      "minWaypointRelativePos": 0.55,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.0,
-        "maxAcceleration": 1.0,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,

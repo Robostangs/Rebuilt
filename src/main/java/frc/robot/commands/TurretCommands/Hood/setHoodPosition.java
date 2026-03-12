@@ -25,9 +25,6 @@ public class setHoodPosition extends Command {
 
         hood.setMotionMagicTarget(hoodpos);
 
-        if(hood.getIsHomed()){
-            hood.setMotionMagic();
-        }
 
         hood.postStatus("Setting hood position to: " + hoodpos);
 

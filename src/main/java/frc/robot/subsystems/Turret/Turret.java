@@ -45,6 +45,7 @@ public class Turret extends SubsystemBase {
     /**
      * Pivot control
      */
+
     TalonFXS turretMotor;
 
     TalonFXSSimState turretMotorSim;
@@ -56,7 +57,7 @@ public class Turret extends SubsystemBase {
 
     Pose2d turretPose;
 
-    boolean ShouldMM; 
+    boolean ShouldMM = true; 
 
     static boolean isHub = true;
     static boolean manualTarget = false;
@@ -73,6 +74,7 @@ public class Turret extends SubsystemBase {
             new MechanismLigament2d("TurretArm", 15, 90, 10, new Color8Bit(150, 150, 150)));
 
     private double turretMotorAbsoluteSensorOffset = 0.0;
+    DoubleSupplier doubleManip;
 
     /**
      * The Turret
@@ -137,7 +139,7 @@ public class Turret extends SubsystemBase {
         turretMotorConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.TurretMotorSupplyCurrentLimit;
 
         turretMotorConfig.ExternalFeedback.AbsoluteSensorDiscontinuityPoint = 1;
-        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset = oldConfigs.ExternalFeedback.AbsoluteSensorOffset;
+        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset = 0.56494140625;
         /*
          * When offset is set in tuner, it may cause the sensor position to be 1.00 not
          * 0.00 that is fine
@@ -190,7 +192,7 @@ public class Turret extends SubsystemBase {
         turretCANcoder.getConfigurator().refresh(oldConfigs);
 
         turretCANcoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
-        turretCANcoderConfig.MagnetSensor.MagnetOffset = oldConfigs.MagnetSensor.MagnetOffset;
+        turretCANcoderConfig.MagnetSensor.MagnetOffset = -0.913330078125;
 
         turretCANcoder.getConfigurator().apply(turretCANcoderConfig);
     }
@@ -507,6 +509,14 @@ public class Turret extends SubsystemBase {
 
     }
 
+    public void zeroTurret(){
+        TalonFXSConfiguration turretMotorConfig = new TalonFXSConfiguration();
+
+        turretMotorConfig.ExternalFeedback.AbsoluteSensorOffset = (turretMotor.getPosition().getValueAsDouble()%1d);
+
+
+    }
+
     private Translation2d calculateTargetHubTranslation() {
         ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
                 CommandSwerveDrivetrain.getInstance().getState().Speeds,
@@ -521,7 +531,7 @@ public class Turret extends SubsystemBase {
 
     }
 
-    public void setMM(){
+    public void setMM( ){
         ShouldMM = (!ShouldMM);
     }
 
@@ -529,6 +539,9 @@ public class Turret extends SubsystemBase {
     public void periodic() {
         updateTurretSim();
         SmartDashboard.putNumber("Turret/Meters from Hub", getMetersFromHub());
+
+        SmartDashboard.putNumber("Turret/ModSensorPos",  (turretMotor.getPosition().getValueAsDouble()%1d));
+
 
         // if (!manualTarget && CommandSwerveDrivetrain.getInstance().getState().Pose !=
         // null) {
@@ -544,7 +557,8 @@ public class Turret extends SubsystemBase {
 
 
                 if(ShouldMM){
-       turretMotor.setControl(turretControl);}
+       turretMotor.setControl(turretControl);
+    }
 
         SmartDashboard.putBoolean("Turret/IsHub", isHub);
 

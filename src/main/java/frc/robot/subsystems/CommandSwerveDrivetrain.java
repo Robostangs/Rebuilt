@@ -267,6 +267,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
 
+        SmartDashboard.putNumber("Angular john", CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityZWorld()
+                    .getValueAsDouble());
+
+
         photonVisionBack.periodic();
         photonVisionRight.periodic();
         photonVisionLeft.periodic();

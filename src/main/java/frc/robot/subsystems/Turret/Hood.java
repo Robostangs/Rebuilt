@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.util.Units;
@@ -20,6 +21,8 @@ public class Hood extends SubsystemBase {
     MotionMagicExpoDutyCycle hoodTargetPosition;
 
     static boolean isHomed = false;
+
+    boolean ShouldMM = true;
 
     private Hood() {
         hoodMotor = new TalonFXS(Constants.HoodConstants.hoodMotorID);
@@ -74,6 +77,7 @@ public class Hood extends SubsystemBase {
     public boolean getIsHomed() {
         return isHomed;
     }
+
     public static Hood getInstance() {
         if (mInstance == null) {
             mInstance = new Hood();
@@ -81,7 +85,7 @@ public class Hood extends SubsystemBase {
         return mInstance;
     }
 
-    public void setIsHome(boolean ishome){
+    public void setIsHome(boolean ishome) {
         isHomed = ishome;
     }
 
@@ -93,18 +97,25 @@ public class Hood extends SubsystemBase {
         hoodMotor.setPosition(pos);
     }
 
-    
     public void setHoodPositionAuto(double pos) {
         hoodMotor.setPosition(pos);
         isHomed = true;
     }
+
+
+    
+    public void setMM( ){
+        ShouldMM = (!ShouldMM);
+    }
+
+
     public double getStatorCurrent() {
         return hoodMotor.getTorqueCurrent().getValueAsDouble();
 
     }
 
     // public boolean getLimitSwitch() {
-    //     return limitSwitch.get();
+    // return limitSwitch.get();
     // }
 
     public void setMotionMagicTarget(double pos) {
@@ -112,25 +123,33 @@ public class Hood extends SubsystemBase {
     }
 
     public void setMotionMagic() {
-        hoodMotor.setControl(hoodTargetPosition);
+
+
+            if(ShouldMM){
+            hoodMotor.setControl(hoodTargetPosition);}
+
+        
 
     }
-
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Hood/HoodTargetPosition", hoodTargetPosition.Position);
         SmartDashboard.putNumber("Hood/Hood pos", hoodMotor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Hood/Stator Current", getStatorCurrent());
-        if(hoodMotor.hasResetOccurred()){
+        if (hoodMotor.hasResetOccurred()) {
             isHomed = false;
         }
 
-        if(!isHomed){
+        if (!isHomed) {
             CommandScheduler.getInstance().schedule(new HomeHood().withTimeout(4));
         }
- 
-        
+        {
+                        hoodMotor.setControl(hoodTargetPosition);}
+
+        }
+
+
     }
 
-}
+

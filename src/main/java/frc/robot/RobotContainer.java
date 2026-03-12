@@ -96,20 +96,23 @@ public class RobotContainer {
         private void configureDrivingBinding() {
                 setDrivetrain();
                 xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()))
-                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0)));
-
+                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0))
+                                        .alongWith(new InstantCommand(
+                                                () -> Hood.getInstance().setMotionMagic()))
+                                                               )
+                                                               ;
                 xDrive.povDown().onTrue(
+                        
                                 drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
 
-                xDrive.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));
+                xDrive.povUp().onTrue(drivetrain.runOnce(
+                                () -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));
 
                 xDrive.rightPaddle().whileTrue(new ExtendIntake(false));
                 xDrive.leftPaddle().whileTrue(new RetractIntake());
 
                 xDrive.rightBumper().whileTrue(IntakeFactory.TrueSpit());
                 xDrive.leftBumper().whileTrue(IntakeFactory.ballStuck());
-
-                xDrive.rm().onTrue(new InstantCommand(() ->Hood.getInstance().setMotionMagicTarget(0)));
 
                 xDrive.z().whileTrue(new HomeIntake(true));
                 xDrive.c().whileTrue(new HomeIntake(false));
@@ -120,30 +123,38 @@ public class RobotContainer {
                 xDrive.a().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-
         }
 
         public void configureManipBindings() {
-                xManip.y().onTrue(new InstantCommand(() -> Turret.setManipTarget(true)));
+                DoubleSupplier leftStick = () -> (xManip.getLeftY() > 0.2) ? xManip.getLeftY() * 20 : 1;
+                // xManip.y().onTrue(new InstantCommand(() -> Turret.setManipTarget(true)));
 
-                xManip.b().onTrue(new InstantCommand(() -> Turret.setManipTarget(false)));
+                // xManip.b().onTrue(new InstantCommand(() -> Turret.setManipTarget(false)));
 
-                xManip.x().toggleOnTrue(new HomeHood());
 
-                xManip.rightBumper().whileTrue(new setTurretDutyCycle(0.3));
-                xManip.leftBumper().whileTrue(new setTurretDutyCycle(-0.3));
+                xManip.rightBumper().whileTrue(new setTurretDutyCycle(0.2));
+                xManip.leftBumper().whileTrue(new setTurretDutyCycle(-0.2));
 
                 xManip.a().onTrue(new InstantCommand(() -> Turret.getInstance().setMM()));
 
+                xManip.b().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
 
+                xManip.rightTrigger().whileTrue( new setHoodDutyCycle(() -> 0.3));
+                                xManip.leftTrigger().whileTrue( new setHoodDutyCycle(() -> -0.3));
+
+
+                new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.1)
+                                .whileTrue(new InstantCommand(
+                                                () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * 20)));
         }
 
         private void setDrivetrain() {
                 DoubleSupplier leftTrigger = () -> (xDrive.getLeftTriggerAxis() > 0.2) ? 0.25 : 1;
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
-                                        drivetrain.applyRequest(() -> drive.withVelocityX((-xSim.getRawAxis(0))
-                                                        * MaxSpeed)
+                                        drivetrain.applyRequest(() -> drive
+                                                        .withVelocityX((-xSim.getRawAxis(0))
+                                                                        * MaxSpeed)
                                                         .withVelocityY((xSim.getRawAxis(1))
                                                                         * MaxSpeed)
                                                         .withRotationalRate((-xSim.getRawAxis(2))

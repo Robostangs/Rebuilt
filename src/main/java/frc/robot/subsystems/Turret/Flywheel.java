@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Turret;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -17,7 +19,7 @@ public class Flywheel extends SubsystemBase {
     private TalonFX flyWheel;
     private VelocityVoltage shooterTargetVelocity;
 
-
+    private double adjustRPMVal;
     public static Flywheel instance;
     public static boolean shouldShoot;
     Alert hotAlert = new Alert("Flywheel Motor is HOT", AlertType.kError);
@@ -81,9 +83,12 @@ public class Flywheel extends SubsystemBase {
     }
 
     public void setShooterRPS(double rps) {
-        shooterTargetVelocity.Velocity = rps;
+        shooterTargetVelocity.Velocity = rps+adjustRPMVal;
     }
-
+    
+    public void adjustRPM(DoubleSupplier adjustVal){
+        adjustRPMVal=adjustVal.getAsDouble();
+    }
     public void checkIfMotorHot() {
         boolean isMotorHot = flyWheel.getAncillaryDeviceTemp().getValueAsDouble() >= 45;
         hotAlert.set(isMotorHot);

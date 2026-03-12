@@ -289,12 +289,8 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void robotPeriodic() {
-        SmartDashboard.putData("PDH", pdh);
-        SmartDashboard.putData("CommaxndScheduler", scheduler);
 
-        m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
-        // updateEpilogue();
         gscollect.update();
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
 
@@ -488,8 +484,7 @@ public class Robot extends TimedRobotstangs {
 
         disableTab.add("Zero Hood",
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(0)).ignoringDisable(true));
-        disableTab.add("Home Hood",
-                new HomeHood());
+ 
 
         disableTab.add("RESET TO SUN TZUUUUUU",
                 new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
@@ -528,7 +523,9 @@ public class Robot extends TimedRobotstangs {
                         .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
 
         NamedCommands.registerCommand("Photoshoot",
-                (TurretFactory.Shoot().alongWith(new RunHopper())).until(() -> Feeder.getInstance().getfuelSensor()));
+                (TurretFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()))
+                // .until(() -> Feeder.getInstance().getfuelSensor())
+                );
 
         NamedCommands.registerCommand("BumpIntake", new ExtendIntake(true));
 

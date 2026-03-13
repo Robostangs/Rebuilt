@@ -380,10 +380,10 @@ public class Robot extends TimedRobotstangs {
         }
 
         if (gameTime < 30 || gameTime > 130) {
-            if (gameTimeInt == 29) {
-                CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(2));
-                CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(2));
-            }
+            // if (gameTime < 29&& gameTime > 27) {
+            //     CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(2));
+            //     CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(2));
+            // }
             canBlueScore = whoCanScore.both;
         } else if (gameTime < 130 && gameTime > 129) {
             if (gameData.length() > 0) {

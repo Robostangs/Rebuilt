@@ -27,7 +27,9 @@ public class ExtendIntake extends Command {
         pivot.setExtenderPosition(Constants.KirbyConstants.kExtendSetpoint);
     }
         kirby.setKirbyWheels(Constants.KirbyConstants.kirbyIntakeSpeed);
-        pivot.postStatus("Extended");
+        kirby.postStatus("Wheels going at: "+Constants.KirbyConstants.kirbyIntakeSpeed );
+                pivot.postStatus("Extended");
+
     }
 
     public void execute() {

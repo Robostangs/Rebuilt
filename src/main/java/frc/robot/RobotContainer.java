@@ -14,7 +14,9 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import frc.robot.subsystems.Turret.*;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -97,6 +99,11 @@ public class RobotContainer {
 
         private void configureDrivingBinding() {
                 setDrivetrain();
+
+                new Trigger(() -> (DriverStation.getMatchTime() < 30)).onTrue(
+                        new InstantCommand(() ->xDrive.setRumble(RumbleType.kBothRumble, 1))
+                );
+
                 xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()))
                                 .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
                                                 .andThen(new InstantCommand(
@@ -118,7 +125,6 @@ public class RobotContainer {
                                 () -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));
 
                 xDrive.rightPaddle().whileTrue(new ExtendIntake(false));
-                xDrive.rightPaddle().and(xDrive.x()).whileTrue(new StartIntake());
                 xDrive.leftPaddle().whileTrue(new RetractIntake());
 
                 xDrive.rightBumper().whileTrue(IntakeFactory.TrueSpit());

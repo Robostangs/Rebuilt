@@ -123,7 +123,7 @@ public final class Constants {
         public static final double KirbyCurrentLimit = 60;
         public static final double HopperExtenderCurrentLimit = 60;
         public static final int hopperExtenderID = 59;
-        public static final double kirbyIntakeSpeed = -1;
+        public static final double kirbyIntakeSpeed = -0.7;
         public static final double kirbyOuttakeSpeed = 0.5;
         public static final double hopperExtenderKP = 1000;
         public static final double hopperExtenderKI = 100;

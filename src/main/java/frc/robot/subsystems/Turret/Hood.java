@@ -60,7 +60,6 @@ public class Hood extends SubsystemBase {
 
     }
 
-
     public double getHoodAngle(double MetersFromHub) {
         double feetFromHub = Units.metersToFeet(MetersFromHub);
         SmartDashboard.putNumber(" feet from hub", feetFromHub);
@@ -104,7 +103,7 @@ public class Hood extends SubsystemBase {
         ShouldMM = (!ShouldMM);
     }
 
-        public void setMM(boolean MM) {
+    public void setMM(boolean MM) {
         ShouldMM = MM;
     }
 
@@ -128,6 +127,12 @@ public class Hood extends SubsystemBase {
             if (Math.abs(hoodMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.04) {
                 hoodMotor.set(0);
             } else {
+                if (hoodTargetPosition.Position > 0.8) {
+                    hoodTargetPosition.Position = .8;
+                } else if (hoodTargetPosition.Position < 0) {
+                    hoodTargetPosition.Position = 0;
+
+                }
                 hoodMotor.setControl(hoodTargetPosition);
 
             }

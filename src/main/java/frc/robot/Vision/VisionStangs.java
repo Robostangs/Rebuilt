@@ -186,7 +186,7 @@ public class VisionStangs {
             SmartDashboard.putString("Vision/LL4_RejectReason", "Pose null");
             return false;
         }
-        if (yoPoseEsti.tagCount < 0) {
+        if (yoPoseEsti.tagCount < 1) {
             SmartDashboard.putString("Vision/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
             return false;
         }

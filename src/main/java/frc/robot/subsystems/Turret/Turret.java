@@ -415,9 +415,9 @@ public class Turret extends SubsystemBase {
         Rotation2d turretRelativeAngle = (targetAngle
                 .minus(CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation()).plus(Rotation2d.k180deg));
 
-        if (!Robot.isRed()) {
-            turretRelativeAngle = turretRelativeAngle.unaryMinus();
-        }
+        // if (Robot.isRed()) {
+           turretRelativeAngle = turretRelativeAngle.unaryMinus();
+        // }
 
         SmartDashboard.putNumber("Ironman/TargetAngleRotation", turretRelativeAngle.getRotations());
         Robot.teleopField.getObject("Turret Target").setPose(new Pose2d(TargetTranslation, new Rotation2d()));
@@ -511,7 +511,9 @@ public class Turret extends SubsystemBase {
                 CommandSwerveDrivetrain.getInstance().getState().Speeds,
                 CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation());
         double timeToShoot = timeToShoot(getMetersFromHub());
-        Translation2d targetHubPose = !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
+        Translation2d targetHubPose =
+        
+        !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
                 : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation())
         // .minus(
         // new Translation2d(

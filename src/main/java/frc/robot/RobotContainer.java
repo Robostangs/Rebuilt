@@ -98,15 +98,15 @@ public class RobotContainer {
         private void configureDrivingBinding() {
                 setDrivetrain();
                 xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0))
-                                                .alongWith(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic()
+                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
+                                                .andThen(new InstantCommand(
+                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
                                                               )));
 
                 xDrive.b().whileTrue(TurretFactory.dumbShoot().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0))
-                                                .alongWith(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic()
+                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
+                                                .andThen(new InstantCommand(
+                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
                                                               )));
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(

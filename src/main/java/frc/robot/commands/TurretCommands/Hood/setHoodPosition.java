@@ -26,7 +26,7 @@ public class setHoodPosition extends Command {
         double meterfromHub =  Turret.getInstance().getMetersFromHub();
         double hoodpos = 0;
         if(isDumb){
-            hoodpos = .25;
+            hoodpos = .4;
         }
         else{
         hoodpos = hood.getHoodAngle(meterfromHub);

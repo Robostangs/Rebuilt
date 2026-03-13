@@ -27,7 +27,7 @@ public class ChargeUp extends Command {
         if(!isDumb){
          targetrps = turretShooter.getTargetVelocity(meterfromHub);}
         else{
-            targetrps =  64.9;
+            targetrps =  75;
         }
 
         turretShooter.setShooterRPS(targetrps);

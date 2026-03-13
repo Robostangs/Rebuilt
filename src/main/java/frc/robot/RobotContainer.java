@@ -40,6 +40,7 @@ import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.Hood.setHoodDutyCycle;
 import frc.robot.commands.TurretCommands.Hood.setHoodPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Feeder;
 
 public class RobotContainer {
         public static boolean useVision = true;
@@ -99,11 +100,15 @@ public class RobotContainer {
                 xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()))
                                 .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0))
                                                 .alongWith(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic())
-                                                                .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setHoodDutyCycle(0)))));
-                xDrive.povDown().onTrue(
+                                                                () -> Hood.getInstance().setMotionMagic()
+                                                              )));
 
+                xDrive.b().whileTrue(TurretFactory.dumbShoot().alongWith(new RunHopper()))
+                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0))
+                                                .alongWith(new InstantCommand(
+                                                                () -> Hood.getInstance().setMotionMagic()
+                                                              )));
+                xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(
                                         !Robot.isRed() ? Constants.FieldConstants.resetPose : 
                                         FlippingUtil.flipFieldPose( Constants.FieldConstants.resetPose)
@@ -113,6 +118,7 @@ public class RobotContainer {
                                 () -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));
 
                 xDrive.rightPaddle().whileTrue(new ExtendIntake(false));
+                xDrive.rightPaddle().and(xDrive.x()).whileTrue(new StartIntake());
                 xDrive.leftPaddle().whileTrue(new RetractIntake());
 
                 xDrive.rightBumper().whileTrue(IntakeFactory.TrueSpit());
@@ -121,7 +127,6 @@ public class RobotContainer {
                 xDrive.z().whileTrue(new HomeIntake(true));
                 xDrive.c().whileTrue(new HomeIntake(false));
 
-                xDrive.b().whileTrue(new ExtendIntake(true));
                 xDrive.x().whileTrue(new RunHopper());
                 xDrive.y().onTrue(new HomeHood());
                 xDrive.a().onTrue(new InstantCommand(
@@ -140,16 +145,19 @@ public class RobotContainer {
 
                 xManip.povUp().whileTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
 
+
                 xManip.a().onTrue(new InstantCommand(() -> Turret.getInstance().setMM()));
 
-                xManip.b().onTrue(new InstantCommand(() -> Turret.getInstance().completeZeroTurret()));
+                xManip.x().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
 
-                xManip.x().onTrue(new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu()));
+                xManip.b().onTrue(new InstantCommand(() -> Feeder.getInstance().forceTog()));
+
 
                 xManip.y().onTrue(new InstantCommand(() -> Turret.getInstance().zeroTurret()));
 
                 xManip.rightTrigger().whileTrue(new setHoodDutyCycle(() -> 0.3));
                 xManip.leftTrigger().whileTrue(new setHoodDutyCycle(() -> -0.3));
+
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
                                 .whileTrue(new InstantCommand(

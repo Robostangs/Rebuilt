@@ -124,6 +124,8 @@ public class Flywheel extends SubsystemBase {
 
         SmartDashboard.putBoolean("Flywheel/at target ", shooterAtTargetVelocity());
 
+        SmartDashboard.putBoolean("Flywheel", shouldShoot);
+
          
         SmartDashboard.putNumber("Flywheel/velocity ",flyWheel.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Flywheel/target",shooterTargetVelocity.Velocity);

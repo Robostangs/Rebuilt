@@ -7,9 +7,12 @@ import frc.robot.subsystems.Turret.Turret;
 
 public class setHoodPosition extends Command {
     Hood hood;
+    boolean isDumb;
 
-    public setHoodPosition() {
+    public setHoodPosition( boolean isDumb) {
         hood = Hood.getInstance();
+                this.isDumb = isDumb;
+
         addRequirements(hood);
     }
 
@@ -21,7 +24,14 @@ public class setHoodPosition extends Command {
     @Override
     public void execute() {
         double meterfromHub =  Turret.getInstance().getMetersFromHub();
-        double hoodpos = hood.getHoodAngle(meterfromHub);
+        double hoodpos = 0;
+        if(isDumb){
+            hoodpos = .25;
+        }
+        else{
+        hoodpos = hood.getHoodAngle(meterfromHub);
+
+        }
 
         hood.setMotionMagicTarget(hoodpos);
 

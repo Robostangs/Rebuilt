@@ -7,10 +7,13 @@ import frc.robot.subsystems.Turret.Turret;
 
 public class ChargeUp extends Command {
     Flywheel turretShooter;
+    boolean isDumb;
 
-    public ChargeUp() {
+    public ChargeUp(boolean isDumb) {
         turretShooter = Flywheel.getInstance();
+        this.isDumb = isDumb;
         addRequirements(turretShooter);
+
     }
 
     @Override
@@ -20,7 +23,13 @@ public class ChargeUp extends Command {
     @Override
     public void execute() {
         double meterfromHub = Turret.getInstance().getMetersFromHub();
-        double targetrps = turretShooter.getTargetVelocity(meterfromHub);
+            double targetrps = 0;
+        if(!isDumb){
+         targetrps = turretShooter.getTargetVelocity(meterfromHub);}
+        else{
+            targetrps =  64.9;
+        }
+
         turretShooter.setShooterRPS(targetrps);
         // turretShooter.setMotionMagic();
 

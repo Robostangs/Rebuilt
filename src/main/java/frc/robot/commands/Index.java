@@ -7,10 +7,12 @@ import frc.robot.subsystems.Turret.Flywheel;
 
 public class Index extends Command {
     Feeder feeder;
+    boolean isDumb;
 
-    public Index() {
+    public Index(boolean isDumb) {
         feeder = Feeder.getInstance();
         addRequirements(feeder);
+        this.isDumb = isDumb;
     }
 
     @Override
@@ -20,13 +22,19 @@ public class Index extends Command {
     }
 
     public void execute() {
-        if(Flywheel.getInstance().shooterAtTargetVelocity() ){
-        feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
 
+        if (isDumb) {
+            feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
+
+        } else {
+
+            if (Flywheel.getInstance().shooterAtTargetVelocity() || Feeder.force) {
+                feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
+
+            }
         }
     }
 
- 
     @Override
     public void end(boolean interrupted) {
         feeder.setDutyCycle(0.0);

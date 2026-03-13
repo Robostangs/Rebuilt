@@ -13,6 +13,7 @@ public class Feeder extends SubsystemBase {
     TalonFX feederMotor;
     TalonFXConfiguration feedConfigurator;
     DigitalInput fuelSensor;
+    public static boolean force = false;
 
 
     private static Feeder instance;
@@ -35,6 +36,9 @@ public class Feeder extends SubsystemBase {
         feederMotor.set(dutyCycle);
     }
 
+    public void forceTog(){
+        force = !force;
+    }
     public boolean getfuelSensor(){
         return fuelSensor.get();
     }

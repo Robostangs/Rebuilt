@@ -10,6 +10,10 @@ import frc.robot.subsystems.Turret.Turret;
 public class TurretFactory {
     public static Command Shoot(){
         return 
-            new ChargeUp().alongWith(new setHoodPosition()).alongWith(new Index());
+            new ChargeUp(false).alongWith(new setHoodPosition(false)).alongWith(new Index(false));
+    }
+
+    public static Command dumbShoot(){
+        return new ChargeUp(true).alongWith(new setHoodPosition(true)).alongWith(new Index(true));
     }
 }

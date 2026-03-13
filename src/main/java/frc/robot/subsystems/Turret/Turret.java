@@ -22,6 +22,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
@@ -252,8 +253,10 @@ public class Turret extends SubsystemBase {
 
     public void updateMetersFromHub(Pose2d poseTurret) {
         metersFromHub = poseTurret.getTranslation().getDistance(
-                Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
-                        : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation()));
+                !Robot.isRed() ?
+                 Constants.FieldConstants.HubPosition.getTranslation()
+                        : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation())
+                        );
     }
 
     public double getMetersFromHub() {
@@ -409,9 +412,12 @@ public class Turret extends SubsystemBase {
         Rotation2d targetAngle = targetVector.getAngle();
 
         // Convert to turret relative angle
-        Rotation2d turretRelativeAngle = targetAngle
-                .minus(CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation()).plus(Rotation2d.k180deg)
-                .unaryMinus();
+        Rotation2d turretRelativeAngle = (targetAngle
+                .minus(CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation()).plus(Rotation2d.k180deg));
+
+        if (!Robot.isRed()) {
+            turretRelativeAngle = turretRelativeAngle.unaryMinus();
+        }
 
         SmartDashboard.putNumber("Ironman/TargetAngleRotation", turretRelativeAngle.getRotations());
         Robot.teleopField.getObject("Turret Target").setPose(new Pose2d(TargetTranslation, new Rotation2d()));
@@ -615,10 +621,17 @@ public class Turret extends SubsystemBase {
         turretControl.FeedForward = CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond * 0.2;
 
         if (ShouldMM) {
-            turretMotor.setControl(turretControl);
+            if (DriverStation.isDSAttached()) {
+                if (DriverStation.isTeleop()) {
+                    turretMotor.setControl(turretControl);
+
+                }
+            }
         }
 
-        SmartDashboard.putBoolean("Turret/IsHub", isHub);
+        SmartDashboard.putBoolean("Turret/isRed",   Robot.isRed() );
+
+        SmartDashboard.getBoolean("Turret/Manual", ShouldMM);
 
         SmartDashboard.putNumber("Turret/SunTzuPosition", getBigGearPosition());
 

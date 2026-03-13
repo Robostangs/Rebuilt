@@ -140,6 +140,7 @@ public class Hood extends SubsystemBase {
         SmartDashboard.putNumber("Hood/HoodTargetPosition", hoodTargetPosition.Position);
         SmartDashboard.putNumber("Hood/Hood pos", hoodMotor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Hood/Stator Current", getStatorCurrent());
+        SmartDashboard.putBoolean("Hood/manual", ShouldMM);
         if (hoodMotor.hasResetOccurred()) {
             isHomed = false;
         }

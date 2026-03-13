@@ -123,13 +123,13 @@ public final class Constants {
         public static final double KirbyCurrentLimit = 60;
         public static final double HopperExtenderCurrentLimit = 60;
         public static final int hopperExtenderID = 59;
-        public static final double kirbyIntakeSpeed = -0.6;
+        public static final double kirbyIntakeSpeed = -1;
         public static final double kirbyOuttakeSpeed = 0.5;
         public static final double hopperExtenderKP = 1000;
         public static final double hopperExtenderKI = 100;
         public static final double hopperExtenderKD = 100;
         public static final double hopperExtenderKS = 15;
-        public static final double extenderSensorToMechanismRatio = 34.9;
+        public static final double extenderSensorToMechanismRatio = 4.0*4*48/16;
         public static final double kExtendSetpoint = 0;
         public static final double kRetractSetpoint = 0.26;
         // TODO: find this john
@@ -137,7 +137,7 @@ public final class Constants {
         public static final double IntakeWheelCurrentLimit = 20;
         public static final double hopperExtenderKG = 40;
         public static final double kHomeDutyCycle = 0.1;
-        public static final double kHomePosition = 0.27;
+        public static final double kHomePosition = 0.29;
         public static final double extenderPositionTolerance = 0.03;
     }
 
@@ -391,8 +391,8 @@ public final class Constants {
         public static final double shooterMotionMagicAcceleration = 0;
         public static final double shooterMotionMagicJerk = 0;
         public static final double kShooterVelocityTolerance = -5;
-        public static final double kForwardSoftLimit = 0.45;
-        public static final double kReverseSoftLimit = -.45;
+        public static final double kForwardSoftLimit = 0.4;
+        public static final double kReverseSoftLimit = -.4;
         public static final double kSafeClimberPos = 0;
         public static final double kSafeClimberNeg = 0;
         public static final double kShooterSupplyCurrentLimit = 20;

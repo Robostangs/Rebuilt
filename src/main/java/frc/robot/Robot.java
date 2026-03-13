@@ -226,11 +226,11 @@ public class Robot extends TimedRobotstangs {
                 .andThen(new InstantCommand(() -> postPitTestStatus("Running Hopper")))
                 .andThen(new RunHopper().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
-                .andThen(new ChargeUp().withTimeout(7))
+                .andThen(new ChargeUp(false).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
-                .andThen(new Index().withTimeout(7))
+                .andThen(new Index(false).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
-                .andThen(new setHoodPosition().withTimeout(7))
+                .andThen(new setHoodPosition(false).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Retracting Intake")))
                 .andThen(new RetractIntake())
                 .andThen(new InstantCommand(() -> postPitTestStatus("Driving Forward")))
@@ -331,7 +331,7 @@ public class Robot extends TimedRobotstangs {
         autoGroup = new SequentialCommandGroup(
                 // new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu()),
                 new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
-                // new InstantCommand(() -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition))
+                new InstantCommand(() -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
                 new InstantCommand(() -> Turret.getInstance().zeroTurret()),
 
                 autoCommand);
@@ -462,12 +462,19 @@ public class Robot extends TimedRobotstangs {
     public static boolean isRed() {
 
       
+        // if(!DriverStation.isDSAttached()){
+        //     return false;
+        // }
+        try{
              if (DriverStation.getAlliance().get() == null) {
             return false;
         }
         if (DriverStation.getAlliance().get() == (Alliance.Red)) {
             return true;
         } else {
+            return false;
+        }}
+        catch(Exception e){
             return false;
         }
 

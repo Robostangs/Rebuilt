@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.util.FlippingUtil;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import frc.robot.subsystems.Turret.*;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -103,7 +104,10 @@ public class RobotContainer {
                                                                 () -> Hood.getInstance().setHoodDutyCycle(0)))));
                 xDrive.povDown().onTrue(
 
-                                drivetrain.runOnce(() -> drivetrain.resetPose(Constants.FieldConstants.resetPose)));
+                                drivetrain.runOnce(() -> drivetrain.resetPose(
+                                        !Robot.isRed() ? Constants.FieldConstants.resetPose : 
+                                        FlippingUtil.flipFieldPose( Constants.FieldConstants.resetPose)
+                                        )));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(
                                 () -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));

@@ -68,7 +68,7 @@ public class IntakePivot extends SubsystemBase {
     }
 
     public void postStatus(String status) {
-        SmartDashboard.putString("Intake Pivot/Status", status);
+        SmartDashboard.putString("IntakePivot/Status", status);
     }
 
     public void setExtenderPosition(double pos) {
@@ -82,7 +82,7 @@ public class IntakePivot extends SubsystemBase {
     public void checkIfMotorHot() {
         boolean isMotorHot = hopperExtenderMotor.getAncillaryDeviceTemp().getValueAsDouble() >= 45;
         hopperExtenderAlert.set(isMotorHot);
-        SmartDashboard.putBoolean("Intake Pivot/isMotorHot", isMotorHot);
+        SmartDashboard.putBoolean("IntakePivot/isMotorHot", isMotorHot);
     }
 
     public void setTargetPosition() {
@@ -97,8 +97,8 @@ public class IntakePivot extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Intake Pivot/position", hopperExtenderMotor.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Intake Pivot/setpoint", extenderControl.Position);
+        SmartDashboard.putNumber("IntakePivot/position", hopperExtenderMotor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("IntakePivot/setpoint", extenderControl.Position);
 
         checkIfMotorHot();
     }

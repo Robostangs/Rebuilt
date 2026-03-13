@@ -24,10 +24,10 @@ public class ExtendIntake extends Command {
             pivot.setExtenderPosition(0.05);
         }
         else{
-            
         pivot.setExtenderPosition(Constants.KirbyConstants.kExtendSetpoint);
     }
         kirby.setKirbyWheels(Constants.KirbyConstants.kirbyIntakeSpeed);
+        pivot.postStatus("Extended");
     }
 
     public void execute() {
@@ -38,6 +38,8 @@ public class ExtendIntake extends Command {
     @Override
     public void end(boolean interrupted) {
         kirby.setKirbyWheels(0);
+                pivot.postStatus("Extended End");
+
         
     }
     @Override

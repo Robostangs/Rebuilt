@@ -461,7 +461,8 @@ public class Robot extends TimedRobotstangs {
 
     public static boolean isRed() {
 
-        if (Robot.isSimulation() || DriverStation.getAlliance() == null) {
+      
+             if (DriverStation.getAlliance().get() == null) {
             return false;
         }
         if (DriverStation.getAlliance().get() == (Alliance.Red)) {
@@ -516,7 +517,7 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Pass",
                 new PrintCommand("your supposed to pass bruh"));
 
-        NamedCommands.registerCommand("Extend", new StartIntake());
+        NamedCommands.registerCommand("Extend",new ExtendIntake(false));
 
         // new ExtendIntake(false).withTimeout(0.5));
 

@@ -76,8 +76,8 @@ public final class Constants {
 
         public static final int kBackGoerID = 1;
         public static final int kLeftRightID = 8;
-        public static final double kBackGoerDC = 0.75;
-        public static final double kLeftRighterDC = 0.75;
+        public static final double kBackGoerDC = 1;
+        public static final double kLeftRighterDC = 1;
 
     }
 

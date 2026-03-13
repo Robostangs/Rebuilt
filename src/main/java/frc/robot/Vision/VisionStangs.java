@@ -191,7 +191,7 @@ public class VisionStangs {
             return false;
         }
         if (yoPoseEsti.avgTagDist > Constants.VisionConstants.kLLDisThres) {
-                        SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Too far ");
+                        SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Too far, Dis is: "+ yoPoseEsti.avgTagDist);
 
             return false;
         }

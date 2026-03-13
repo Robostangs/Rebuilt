@@ -21,7 +21,7 @@ public class ExtendIntake extends Command {
     @Override
     public void initialize() {
         if(isBump){
-            pivot.setExtenderPosition(0.05);
+            pivot.setExtenderPosition(0.15);
         }
         else{
         pivot.setExtenderPosition(Constants.KirbyConstants.kExtendSetpoint);

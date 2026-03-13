@@ -86,7 +86,7 @@ public class Robot extends TimedRobotstangs {
 
     public Color allianceScore = Constants.ElasticConstants.purple;
 
-    private SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private SendableChooser<String> autoChooser = new SendableChooser<>();
 
     public PowerDistribution pdh = new PowerDistribution(Constants.ElasticConstants.kPdhCanId, ModuleType.kRev);
 
@@ -299,29 +299,46 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void disabledInit() {
 
-        autoChooser = AutoBuilder.buildAutoChooser();
+        autoChooser.addOption("FavNormal", "favCenter - Shoot - DepotIntake - Shoot");
+        autoChooser.addOption("Just pre loads", "shoot");
+
         // autoChooserFav = AutoBuilder.buildAutoChooserWithOptionsModifier(
         // (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
-        autoname = autoChooser.getSelected().getName();
+        autoname = autoChooser.getSelected();
     }
 
     @Override
     public void disabledPeriodic() {
 
-        autoname = autoChooser.getSelected().getName();
+        autoname = autoChooser.getSelected();
 
-        autoCommand = autoChooser.getSelected();
+        if(autoname != null){
+        if(autoname.equals("favCenter - Shoot - DepotIntake - Shoot")){
+            autoCommand = new PathPlannerAuto(autoname);
+        }else if(autoname.equals("shoot")){
+            autoCommand =                 (TurretFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()));
 
+
+        }
+        else{
+        autoCommand = new PrintCommand("Auto not Autoing....");
+
+        }
+    }
+    else{
+                autoCommand = new PrintCommand("Auto not Autoing....");
+
+    }
         SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
 
         // if (!oldAutoname.equals(autoname)) {
             // drawCurrentAuto(autoCommand.getName());
         // }
 
-        oldAutoname = autoChooser.getSelected().getName();
+        oldAutoname =" autoChooser.getSelected().getName();";
     }
 
     @Override

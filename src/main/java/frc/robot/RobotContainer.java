@@ -152,14 +152,14 @@ public class RobotContainer {
                 xManip.povUp().whileTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
 
 
-                xManip.a().onTrue(new InstantCommand(() -> Turret.getInstance().setMM()));
 
-                xManip.x().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
+                xManip.a().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
 
                 xManip.b().onTrue(new InstantCommand(() -> Feeder.getInstance().forceTog()));
 
+                xManip.y().whileTrue(new ExtendIntake(false));
+                xManip.x().whileTrue(new ExtendIntake(true));
 
-                xManip.y().onTrue(new InstantCommand(() -> Turret.getInstance().zeroTurret()));
 
                 xManip.rightTrigger().whileTrue(new setHoodDutyCycle(() -> 0.3));
                 xManip.leftTrigger().whileTrue(new setHoodDutyCycle(() -> -0.3));

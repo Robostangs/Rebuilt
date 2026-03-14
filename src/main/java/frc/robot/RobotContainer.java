@@ -124,13 +124,14 @@ public class RobotContainer {
 
                 xDrive.rightPaddle().whileTrue(new ExtendIntake(false));
                 
+
                 xDrive.leftPaddle().whileTrue(new RetractIntake());
 
                 xDrive.rightBumper().whileTrue(IntakeFactory.TrueSpit());
                 xDrive.leftBumper().whileTrue(IntakeFactory.ballStuck());
 
-                xDrive.z().whileTrue(new HomeIntake(true));
-                xDrive.c().whileTrue(new HomeIntake(false));
+                xDrive.povRight().whileTrue(new HomeIntake(true));
+                xDrive.povLeft().whileTrue(new HomeIntake(false));
 
                 xDrive.x().whileTrue(new StartIntake());
                 xDrive.y().onTrue(new HomeHood());
@@ -166,7 +167,7 @@ public class RobotContainer {
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
                                 .whileTrue(new InstantCommand(
                                                 () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * -
-                                                20)));
+                                                45)));
         }
 
         private void setDrivetrain() {

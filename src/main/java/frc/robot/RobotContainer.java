@@ -167,7 +167,7 @@ public class RobotContainer {
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
                                 .whileTrue(new InstantCommand(
                                                 () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * -
-                                                45)));
+                                                30)));
         }
 
         private void setDrivetrain() {

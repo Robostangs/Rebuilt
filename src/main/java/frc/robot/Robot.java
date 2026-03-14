@@ -46,6 +46,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
+import frc.robot.Stable.LimelightHelpers;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.Index;
 import frc.robot.commands.HopperCommands.RunHopper;
@@ -104,10 +105,10 @@ public class Robot extends TimedRobotstangs {
     public Robot() {
         m_robotContainer = new RobotContainer();
         // Epilogue.configure(config -> {
-        //     config.root = "JohnLogs";
-        //     config.loggingPeriod = Seconds.of(0.02);
-        //     config.backend = new NTEpilogueBackend(NetworkTableInstance.getDefault());
-        //     config.minimumImportance = Logged.Importance.DEBUG;
+        // config.root = "JohnLogs";
+        // config.loggingPeriod = Seconds.of(0.02);
+        // config.backend = new NTEpilogueBackend(NetworkTableInstance.getDefault());
+        // config.minimumImportance = Logged.Importance.DEBUG;
         // });
     }
 
@@ -118,38 +119,38 @@ public class Robot extends TimedRobotstangs {
     void updateEpilogue() {
         // var cfg = edu.wpi.first.epilogue.Epilogue.getConfig();
         // if (cfg.backend != null && cfg.root != null) {
-        //     // base: JohnLogs
-        //     var rootBackend = cfg.backend.getNested(cfg.root);
+        // // base: JohnLogs
+        // var rootBackend = cfg.backend.getNested(cfg.root);
 
-        //     edu.wpi.first.epilogue.Epilogue.robotLogger.tryUpdate(
-        //             rootBackend.getNested("Robot"),
-        //             this,
-        //             cfg.errorHandler);
-        //     // call the generated turret logger with that nested backend
-        //     edu.wpi.first.epilogue.Epilogue.turretLogger.tryUpdate(
-        //             rootBackend.getNested("Turret"),
-        //             frc.robot.subsystems.Turret.Turret.getInstance(),
-        //             cfg.errorHandler);
-        //     edu.wpi.first.epilogue.Epilogue.climberLogger.tryUpdate(
-        //             rootBackend.getNested("Climber"),
-        //             frc.robot.subsystems.Climber.getInstance(),
-        //             cfg.errorHandler);
-        //     edu.wpi.first.epilogue.Epilogue.hoodLogger.tryUpdate(
-        //             rootBackend.getNested("Hood"),
-        //             frc.robot.subsystems.Turret.Hood.getInstance(),
-        //             cfg.errorHandler);
-        //     edu.wpi.first.epilogue.Epilogue.feederLogger.tryUpdate(
-        //             rootBackend.getNested("Feeder"),
-        //             frc.robot.subsystems.Feeder.getInstance(),
-        //             cfg.errorHandler);
-        //     edu.wpi.first.epilogue.Epilogue.kirbyLogger.tryUpdate(
-        //             rootBackend.getNested("Kirby"),
-        //             frc.robot.subsystems.Intake.Kirby.getInstance(),
-        //             cfg.errorHandler);
-        //     edu.wpi.first.epilogue.Epilogue.flywheelLogger.tryUpdate(
-        //             rootBackend.getNested("Flywheel"),
-        //             frc.robot.subsystems.Turret.Flywheel.getInstance(),
-        //             cfg.errorHandler);
+        // edu.wpi.first.epilogue.Epilogue.robotLogger.tryUpdate(
+        // rootBackend.getNested("Robot"),
+        // this,
+        // cfg.errorHandler);
+        // // call the generated turret logger with that nested backend
+        // edu.wpi.first.epilogue.Epilogue.turretLogger.tryUpdate(
+        // rootBackend.getNested("Turret"),
+        // frc.robot.subsystems.Turret.Turret.getInstance(),
+        // cfg.errorHandler);
+        // edu.wpi.first.epilogue.Epilogue.climberLogger.tryUpdate(
+        // rootBackend.getNested("Climber"),
+        // frc.robot.subsystems.Climber.getInstance(),
+        // cfg.errorHandler);
+        // edu.wpi.first.epilogue.Epilogue.hoodLogger.tryUpdate(
+        // rootBackend.getNested("Hood"),
+        // frc.robot.subsystems.Turret.Hood.getInstance(),
+        // cfg.errorHandler);
+        // edu.wpi.first.epilogue.Epilogue.feederLogger.tryUpdate(
+        // rootBackend.getNested("Feeder"),
+        // frc.robot.subsystems.Feeder.getInstance(),
+        // cfg.errorHandler);
+        // edu.wpi.first.epilogue.Epilogue.kirbyLogger.tryUpdate(
+        // rootBackend.getNested("Kirby"),
+        // frc.robot.subsystems.Intake.Kirby.getInstance(),
+        // cfg.errorHandler);
+        // edu.wpi.first.epilogue.Epilogue.flywheelLogger.tryUpdate(
+        // rootBackend.getNested("Flywheel"),
+        // frc.robot.subsystems.Turret.Flywheel.getInstance(),
+        // cfg.errorHandler);
         // }
     }
 
@@ -315,30 +316,27 @@ public class Robot extends TimedRobotstangs {
 
         autoname = autoChooser.getSelected();
 
-        if(autoname != null){
-        if(autoname.equals("favCenter - Shoot - DepotIntake - Shoot")){
-            autoCommand = new PathPlannerAuto(autoname);
-        }else if(autoname.equals("shoot")){
-            autoCommand =                 (TurretFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()));
+        if (autoname != null) {
+            if (autoname.equals("favCenter - Shoot - DepotIntake - Shoot")) {
+                autoCommand = new PathPlannerAuto(autoname);
+            } else if (autoname.equals("shoot")) {
+                autoCommand = (TurretFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()));
 
-
-        }
-        else{
-        autoCommand = new PrintCommand("Auto not Autoing....");
-
-        }
-    }
-    else{
+            } else {
                 autoCommand = new PrintCommand("Auto not Autoing....");
 
-    }
+            }
+        } else {
+            autoCommand = new PrintCommand("Auto not Autoing....");
+
+        }
         SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
 
         // if (!oldAutoname.equals(autoname)) {
-            // drawCurrentAuto(autoCommand.getName());
+        // drawCurrentAuto(autoCommand.getName());
         // }
 
-        oldAutoname =" autoChooser.getSelected().getName();";
+        oldAutoname = " autoChooser.getSelected().getName();";
     }
 
     @Override
@@ -355,8 +353,7 @@ public class Robot extends TimedRobotstangs {
 
     }
 
-
-    //TODO driver cam
+    // TODO driver cam
     @Override
     public void autonomousInit() {
 
@@ -397,10 +394,10 @@ public class Robot extends TimedRobotstangs {
         }
 
         if (gameTime < 30 || gameTime > 130) {
-            // if (gameTime < 29&& gameTime > 27) {
-            //     CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(2));
-            //     CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(2));
-            // }
+            if (gameTime < 31) {
+            CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(40));
+            CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(40));
+            }
             canBlueScore = whoCanScore.both;
         } else if (gameTime < 130 && gameTime > 129) {
             if (gameData.length() > 0) {
@@ -451,6 +448,9 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopExit() {
+        LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFour, 150);
+        LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourR, 150);
+
     }
 
     @Override
@@ -478,20 +478,19 @@ public class Robot extends TimedRobotstangs {
 
     public static boolean isRed() {
 
-      
         // if(!DriverStation.isDSAttached()){
-        //     return false;
+        // return false;
         // }
-        try{
-             if (DriverStation.getAlliance().get() == null) {
-            return false;
-        }
-        if (DriverStation.getAlliance().get() == (Alliance.Red)) {
-            return true;
-        } else {
-            return false;
-        }}
-        catch(Exception e){
+        try {
+            if (DriverStation.getAlliance().get() == null) {
+                return false;
+            }
+            if (DriverStation.getAlliance().get() == (Alliance.Red)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
             return false;
         }
 
@@ -510,19 +509,15 @@ public class Robot extends TimedRobotstangs {
 
         disableTab.add("Zero Hood",
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(0)).ignoringDisable(true));
- 
 
         disableTab.add("RESET TO SUN TZUUUUUU",
                 new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
                         .ignoringDisable(true));
 
-
         disableTab.add("ZeroTurret",
-        new InstantCommand(() -> Turret.getInstance().zeroTurret())
-                                .ignoringDisable(true));
+                new InstantCommand(() -> Turret.getInstance().zeroTurret())
+                        .ignoringDisable(true));
 
-    
-    
     }
 
     public void logCurrentAuto() {
@@ -541,7 +536,7 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Pass",
                 new PrintCommand("your supposed to pass bruh"));
 
-        NamedCommands.registerCommand("Extend",new ExtendIntake(false));
+        NamedCommands.registerCommand("Extend", new ExtendIntake(false));
 
         // new ExtendIntake(false).withTimeout(0.5));
 
@@ -558,8 +553,8 @@ public class Robot extends TimedRobotstangs {
 
         NamedCommands.registerCommand("Photoshoot",
                 (TurretFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()))
-                // .until(() -> Feeder.getInstance().getfuelSensor())
-                );
+        // .until(() -> Feeder.getInstance().getfuelSensor())
+        );
 
         NamedCommands.registerCommand("BumpIntake", new ExtendIntake(true));
 

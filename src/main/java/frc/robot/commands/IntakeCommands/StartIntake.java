@@ -15,7 +15,7 @@ public class StartIntake extends Command {
 
     @Override
     public void initialize() {
-        kirby.setKirbyWheels(Constants.KirbyConstants.kirbyIntakeSpeed);
+        kirby.setKirbyWheels(-1);
     }
 
 

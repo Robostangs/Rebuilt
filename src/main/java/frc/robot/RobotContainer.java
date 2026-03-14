@@ -100,9 +100,7 @@ public class RobotContainer {
         private void configureDrivingBinding() {
                 setDrivetrain();
 
-                new Trigger(() -> (DriverStation.getMatchTime() < 30)).onTrue(
-                        new InstantCommand(() ->xDrive.setRumble(RumbleType.kBothRumble, 1))
-                );
+          
 
                 xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()))
                                 .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
@@ -125,6 +123,7 @@ public class RobotContainer {
                                 () -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));
 
                 xDrive.rightPaddle().whileTrue(new ExtendIntake(false));
+                
                 xDrive.leftPaddle().whileTrue(new RetractIntake());
 
                 xDrive.rightBumper().whileTrue(IntakeFactory.TrueSpit());
@@ -133,7 +132,7 @@ public class RobotContainer {
                 xDrive.z().whileTrue(new HomeIntake(true));
                 xDrive.c().whileTrue(new HomeIntake(false));
 
-                xDrive.x().whileTrue(new RunHopper());
+                xDrive.x().whileTrue(new StartIntake());
                 xDrive.y().onTrue(new HomeHood());
                 xDrive.a().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
@@ -149,13 +148,12 @@ public class RobotContainer {
                 xManip.rightBumper().whileTrue(new setTurretDutyCycle(0.2));
                 xManip.leftBumper().whileTrue(new setTurretDutyCycle(-0.2));
 
-                xManip.povUp().whileTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
 
 
 
                 xManip.a().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
 
-                xManip.b().onTrue(new InstantCommand(() -> Feeder.getInstance().forceTog()));
+                // xManip.b().onTrue(new InstantCommand(() -> Feeder.getInstance().forceTog()));
 
                 xManip.y().whileTrue(new ExtendIntake(false));
                 xManip.x().whileTrue(new ExtendIntake(true));

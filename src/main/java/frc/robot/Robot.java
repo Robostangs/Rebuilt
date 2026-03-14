@@ -395,8 +395,8 @@ public class Robot extends TimedRobotstangs {
 
         if (gameTime < 30 || gameTime > 130) {
             if (gameTime < 31) {
-            CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(40));
-            CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(40));
+                CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(40));
+                CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(40));
             }
             canBlueScore = whoCanScore.both;
         } else if (gameTime < 130 && gameTime > 129) {
@@ -448,9 +448,11 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopExit() {
-        LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFour, 150);
-        LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourR, 150);
 
+        if (DriverStation.isFMSAttached()) {
+            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFour, 150);
+            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourR, 150);
+        }
     }
 
     @Override

@@ -129,7 +129,7 @@ public class RobotContainer {
                                 () -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));
 
                 xDrive.rightPaddle().whileTrue(new ExtendIntake(false));
-                
+                        
 
                 xDrive.leftPaddle().whileTrue(new RetractIntake());
 

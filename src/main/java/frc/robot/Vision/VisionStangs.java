@@ -120,19 +120,19 @@ public class VisionStangs {
                 SmartDashboard.putString("Vision/" + CameraName + "MT 1 or 2", "1 BC DISAB:ED");
 
             }
-            // else if
-            // (CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityZWorld()
-            // .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
+            else if
+            (CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityZWorld()
+            .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
 
-            // fourPoseEsti = LimelightHelpe
-            // .getBotPoseEstimate_wpiBlue(CameraName);
+            fourPoseEsti = LimelightHelpers
+            .getBotPoseEstimate_wpiBlue(CameraName);
 
-            // SmartDashboard.putString("Vision/"+CameraName+"MT 1 or 2", "1");
+            SmartDashboard.putString("Vision/"+CameraName+"MT 1 or 2", "1");
 
-            // }
+            }
             else {
                 fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
+                        .getBotPoseEstimate_wpiBlue(CameraName);
                 SmartDashboard.putString("Vision/" + CameraName + "MT 1 or 2", "2 BC NOT DISABELED");
 
             }
@@ -178,34 +178,33 @@ public class VisionStangs {
     }
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
-        return false;
-        // if (Robot.isSimulation()) {
-        //     SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Simulation mode");
-        //     return false;
-        // }
-        // if (yoPoseEsti == null) {
-        //     SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Pose null");
-        //     return false;
-        // }
-        // if (yoPoseEsti.tagCount < 1) {
-        //     SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
-        //     return false;
-        // }
-        // if (yoPoseEsti.avgTagDist > Constants.VisionConstants.kLLDisThres) {
-        //                 SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Too far, Dis is: "+ yoPoseEsti.avgTagDist);
+        if (Robot.isSimulation()) {
+            SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Simulation mode");
+            return false;
+        }
+        if (yoPoseEsti == null) {
+            SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Pose null");
+            return false;
+        }
+        if (yoPoseEsti.tagCount < 2) {
+            SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
+            return false;
+        }
+        if (yoPoseEsti.avgTagDist > Constants.VisionConstants.kLLDisThres) {
+                        SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Too far, Dis is: "+ yoPoseEsti.avgTagDist);
 
-        //     return false;
-        // }
+            return false;
+        }
 
-        // SmartDashboard.putNumber("Vision"+CameraName+"/LL4_RejectReason"+ CameraName, yoPoseEsti.avgTagDist);
+        SmartDashboard.putNumber("Vision"+CameraName+"/Avg Dis"+ CameraName, yoPoseEsti.avgTagDist);
 
-        // if (!RobotContainer.useVision) {
-        //     SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason"+CameraName, "useVision disabled");
-        // } else {
-        //     SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Accepted");
-        // }
+        if (!RobotContainer.useVision) {
+            SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason"+CameraName, "useVision disabled");
+        } else {
+            SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Accepted");
+        }
 
-        // return RobotContainer.useVision;
+        return RobotContainer.useVision;
     }
 
     public void periodic() {

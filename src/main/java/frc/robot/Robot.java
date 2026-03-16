@@ -397,7 +397,7 @@ public class Robot extends TimedRobotstangs {
         }
 
         if (gameTime < 30 || gameTime > 130) {
-            if (gameTime < 31) {
+            if (gameTime < 31&& DriverStation.isFMSAttached()) {
                 CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(40));
                 CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(40));
             }

@@ -466,7 +466,7 @@ public final class Constants {
         public static final String kLimelightFourR = "limelight-ultron";
 
         public static final String kLimelightThree = "limelight-agomoto";
-        public static final double kVisionAngularThreshold = 22.5;
+        public static final double kVisionAngularThreshold = 100;
 
         public static final String kPhotonCamNameRight = "Daredevil";
         public static final Transform3d kRobotToCamRight = new Transform3d(

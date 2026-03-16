@@ -14,16 +14,16 @@ public class ControllerStangs extends CommandXboxController {
     public Trigger z(){
         return this.povRight();
     }
-    public Trigger m1(){
+    public Trigger leftPaddle(){
         return this.leftStick();
     }
-    public Trigger m2(){
+    public Trigger rightPaddle(){
         return this.rightStick();
     }
     public Trigger lm(){
-        return this.start();
+        return this.back();
     }
     public Trigger rm(){
-        return this.back();
+        return this.start();
     }
 }

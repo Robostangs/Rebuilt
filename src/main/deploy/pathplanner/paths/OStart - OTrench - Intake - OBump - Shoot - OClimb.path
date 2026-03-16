@@ -1,0 +1,219 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.563963905567686,
+        "y": 0.6801777997634644
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.1772992246496905,
+        "y": 0.6801777997634644
+      },
+      "isLocked": false,
+      "linkedName": "OutpostStart"
+    },
+    {
+      "anchor": {
+        "x": 5.8337158696338385,
+        "y": 0.6801777997634644
+      },
+      "prevControl": {
+        "x": 5.1269705604638025,
+        "y": 0.6540279421301468
+      },
+      "nextControl": {
+        "x": 9.659101328340835,
+        "y": 0.8217185837486087
+      },
+      "isLocked": false,
+      "linkedName": "OutpostTrenchOut"
+    },
+    {
+      "anchor": {
+        "x": 7.484510706018519,
+        "y": 2.7469996383101853
+      },
+      "prevControl": {
+        "x": 7.697988100028434,
+        "y": 2.405643657432382
+      },
+      "nextControl": {
+        "x": 7.318834628840489,
+        "y": 3.01192005339857
+      },
+      "isLocked": false,
+      "linkedName": "OutpostFuelEdge"
+    },
+    {
+      "anchor": {
+        "x": 5.8337158696338385,
+        "y": 2.4805517578125
+      },
+      "prevControl": {
+        "x": 6.3711856301137555,
+        "y": 2.6313732583426095
+      },
+      "nextControl": {
+        "x": 5.593013272325175,
+        "y": 2.4130072565643337
+      },
+      "isLocked": false,
+      "linkedName": "OutpostBumpOut"
+    },
+    {
+      "anchor": {
+        "x": 3.1305495383522732,
+        "y": 2.4805517578125
+      },
+      "prevControl": {
+        "x": 3.379947623632967,
+        "y": 2.4632140803923934
+      },
+      "nextControl": {
+        "x": 1.6147710996685611,
+        "y": 2.585925772936447
+      },
+      "isLocked": false,
+      "linkedName": "OutpostBumpIn"
+    },
+    {
+      "anchor": {
+        "x": 1.3626376569323144,
+        "y": 3.183242073780932
+      },
+      "prevControl": {
+        "x": 2.010336371527778,
+        "y": 2.7299590139678025
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "OutpostClimb"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.252115885416667,
+      "rotationDegrees": 86.1382183921115
+    },
+    {
+      "waypointRelativePos": 3.044284432114881,
+      "rotationDegrees": -137.659
+    },
+    {
+      "waypointRelativePos": 3.96,
+      "rotationDegrees": -137.659
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.3444856598143233,
+      "maxWaypointRelativePos": 1.9867645065075918,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 2.980494705149503,
+      "maxWaypointRelativePos": 4.06658793604651,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [
+    {
+      "fieldPosition": {
+        "x": 5.0,
+        "y": 5.5
+      },
+      "rotationOffset": 0.0,
+      "minWaypointRelativePos": 1.3840496203904564,
+      "maxWaypointRelativePos": 2.15,
+      "name": "Point Towards Zone"
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "Hooddown",
+      "waypointRelativePos": 0.35,
+      "endWaypointRelativePos": 0.8747752568493151,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Hooddown"
+        }
+      }
+    },
+    {
+      "name": "Extend",
+      "waypointRelativePos": 1.349417688992042,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
+    },
+    {
+      "name": "Retract",
+      "waypointRelativePos": 2.1,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract"
+        }
+      }
+    },
+    {
+      "name": "Hooddown",
+      "waypointRelativePos": 3.0,
+      "endWaypointRelativePos": 4.800482765780729,
+      "command": null
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 3.7958181366047743,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.12,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -37.69324439805763
+  },
+  "reversed": false,
+  "folder": "OutpostBump",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

@@ -158,10 +158,10 @@
     "rotation": -140.39969032788977
   },
   "reversed": false,
-  "folder": "Depot",
+  "folder": "DepotTrench",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.8375104754245732
+    "rotation": 0.7454215324104138
   },
   "useDefaultConstraints": true
 }

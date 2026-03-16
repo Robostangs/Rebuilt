@@ -1,8 +1,9 @@
 package frc.robot.subsystems.Intake;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.Alert;
@@ -15,13 +16,13 @@ public class IntakePivot extends SubsystemBase {
     TalonFX hopperExtenderMotor;
     TalonFXConfiguration hopperExtenderConfig;
     private static IntakePivot mInstance;
-    MotionMagicTorqueCurrentFOC extenderControl;
+    PositionTorqueCurrentFOC extenderControl;
 
     Alert hopperExtenderAlert = new Alert("Hopper Extender Motor is HOT", AlertType.kError);
 
     public IntakePivot() {
-        extenderControl = new MotionMagicTorqueCurrentFOC(hopperExtenderMotor.getPosition().getValueAsDouble());
         setIntakePivotConfig();
+        extenderControl = new PositionTorqueCurrentFOC(hopperExtenderMotor.getPosition().getValueAsDouble());
 
     }
 
@@ -30,6 +31,14 @@ public class IntakePivot extends SubsystemBase {
             mInstance = new IntakePivot();
         }
         return mInstance;
+    }
+
+    public double getStatorCurrent() {
+        return hopperExtenderMotor.getStatorCurrent().getValueAsDouble();
+    }
+
+    public void setPosition(double position) {
+        hopperExtenderMotor.setPosition(position);
     }
 
     public void setIntakePivotConfig() {
@@ -43,8 +52,9 @@ public class IntakePivot extends SubsystemBase {
         hopperExtenderConfig.Slot0.kI = Constants.KirbyConstants.hopperExtenderKI;
         hopperExtenderConfig.Slot0.kD = Constants.KirbyConstants.hopperExtenderKD;
         hopperExtenderConfig.Slot0.kS = Constants.KirbyConstants.hopperExtenderKS;
-        hopperExtenderConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.KirbyConstants.kExtenderMotionMagicVelocity;
-        hopperExtenderConfig.MotionMagic.MotionMagicAcceleration = Constants.KirbyConstants.kExtenderMotionMagicAcceleration;
+        hopperExtenderConfig.Slot0.kG = Constants.KirbyConstants.hopperExtenderKG;
+        hopperExtenderConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+        hopperExtenderConfig.Slot0.GravityArmPositionOffset = 0.03;
 
         hopperExtenderMotor.getConfigurator().apply(hopperExtenderConfig);
     }
@@ -58,7 +68,7 @@ public class IntakePivot extends SubsystemBase {
     }
 
     public void postStatus(String status) {
-        SmartDashboard.putString("Intake Pivot/Status", status);
+        SmartDashboard.putString("IntakePivot/Status", status);
     }
 
     public void setExtenderPosition(double pos) {
@@ -72,12 +82,24 @@ public class IntakePivot extends SubsystemBase {
     public void checkIfMotorHot() {
         boolean isMotorHot = hopperExtenderMotor.getAncillaryDeviceTemp().getValueAsDouble() >= 45;
         hopperExtenderAlert.set(isMotorHot);
-        SmartDashboard.putBoolean("Intake Pivot/isMotorHot", isMotorHot);
+        SmartDashboard.putBoolean("IntakePivot/isMotorHot", isMotorHot);
+    }
+
+    public void setTargetPosition() {
+        hopperExtenderMotor.setControl(extenderControl);
+
+    }
+    public boolean atTargetPosition() {
+        double currentPosition = hopperExtenderMotor.getPosition().getValueAsDouble();
+        double targetPosition = extenderControl.Position;
+        return Math.abs(currentPosition - targetPosition) <= Constants.KirbyConstants.extenderPositionTolerance;
     }
 
     @Override
     public void periodic() {
-        hopperExtenderMotor.setControl(extenderControl);
+        SmartDashboard.putNumber("IntakePivot/position", hopperExtenderMotor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("IntakePivot/setpoint", extenderControl.Position);
+
         checkIfMotorHot();
     }
 }

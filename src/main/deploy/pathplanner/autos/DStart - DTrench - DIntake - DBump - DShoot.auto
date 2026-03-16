@@ -1,0 +1,25 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DStart - DTrench - DIntake - DBump - DShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Photoshoot"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Depot",
+  "choreoAuto": false
+}

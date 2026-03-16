@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 5.34507096069869,
+        "x": 5.8337158696338385,
         "y": 0.6801777997634644
       },
       "prevControl": {
-        "x": 3.9696962268429816,
+        "x": 4.45834113577813,
         "y": 0.6524509641688683
       },
       "nextControl": {
-        "x": 8.672018172312406,
-        "y": 0.7472473162360507
+        "x": 9.160663081247554,
+        "y": 0.7472473162360509
       },
       "isLocked": false,
       "linkedName": "OutpostTrenchOut"
@@ -151,7 +151,7 @@
     "rotation": 147.7450234235889
   },
   "reversed": false,
-  "folder": "Outpost",
+  "folder": "OutpostTrench",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

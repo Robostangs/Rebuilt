@@ -2,7 +2,9 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,49 +13,58 @@ import frc.robot.Constants;
 
 public class Hopper extends SubsystemBase {
     public TalonSRX backGoer;
-    public VictorSPX leftRighter;
+    public TalonFX leftRighter;
     public static Hopper mInstance;
 
     Alert leftRightHotAlert = new Alert("Hopper LeftRighter Motor is HOT", AlertType.kError);
     Alert backGoerHotAlert = new Alert("Hopper BackGoer Motor is HOT", AlertType.kError);
 
-
-    public Hopper(){
+    public Hopper() {
         backGoer = new TalonSRX(Constants.HopperConstants.kBackGoerID);
-        leftRighter= new VictorSPX(Constants.HopperConstants.kLeftRightID);    
+        leftRighter = new TalonFX(Constants.HopperConstants.kLeftRightID);
     }
 
- 
-    public void setLeftRightDutyCycle(double dutyCycle){
-        leftRighter.set(ControlMode.PercentOutput, dutyCycle);
+    public void configureLeftRighter() {
+        TalonFXConfiguration leftRight = new TalonFXConfiguration();
+
+        leftRight.CurrentLimits.StatorCurrentLimit = 15;
+        leftRight.CurrentLimits.SupplyCurrentLimit = 11;
+        leftRight.CurrentLimits.StatorCurrentLimitEnable = true;
+        leftRight.CurrentLimits.SupplyCurrentLimitEnable = true;
+
     }
 
-    public void setBackGoerDutyCycle(double dutyCycle){
+    public void setLeftRightDutyCycle(double dutyCycle) {
+        leftRighter.set(dutyCycle);
+    }
+
+    public void setBackGoerDutyCycle(double dutyCycle) {
         backGoer.set(ControlMode.PercentOutput, dutyCycle);
     }
 
     public void postLeftRighterStatus(String status) {
         SmartDashboard.putString("Hopper/leftRighterStatus", status);
     }
+
     public void postBackGoerStatus(String status) {
         SmartDashboard.putString("Hopper/backGoerStatus", status);
     }
 
-    public static Hopper getInstance(){
+    public static Hopper getInstance() {
         if (mInstance == null) {
-         mInstance = new Hopper();
+            mInstance = new Hopper();
         }
         return mInstance;
     }
     // public void checkIsHot(){
-    //     boolean leftRighterHot=leftRighter.getTemperature()>=40;
-    //     boolean backGoerHot=backGoer.getTemperature()>=40;
+    // boolean leftRighterHot=leftRighter.getTemperature()>=40;
+    // boolean backGoerHot=backGoer.getTemperature()>=40;
 
-    //     leftRightHotAlert.set(leftRighterHot);
-    //     backGoerHotAlert.set(backGoerHot);
+    // leftRightHotAlert.set(leftRighterHot);
+    // backGoerHotAlert.set(backGoerHot);
     // }
     @Override
-    public void periodic(){
+    public void periodic() {
         // checkIsHot();
     }
 }

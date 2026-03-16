@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 0.6368895858373396,
-        "y": 5.8599127979767625
+        "x": 0.5791592128801428,
+        "y": 5.990161001788908
       },
       "prevControl": {
-        "x": -0.06511133872675867,
-        "y": 6.927300974208123
+        "x": -0.12284171168395541,
+        "y": 7.057549178020269
       },
       "nextControl": {
-        "x": 0.8370901723126329,
-        "y": 5.555509012453257
+        "x": 0.7793597993554362,
+        "y": 5.685757216265403
       },
       "isLocked": false,
       "linkedName": "DepotIntake"
@@ -114,10 +114,10 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Depot",
+  "folder": "DepotTrench",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.8375104754245732
+    "rotation": 0.7454215324104138
   },
   "useDefaultConstraints": true
 }

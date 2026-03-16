@@ -4,28 +4,25 @@ import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
-
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.TurretCommands.Hood.HomeHood;
 
-@Logged
+// @Logged
 public class Hood extends SubsystemBase {
     TalonFXS hoodMotor;
     public static Hood mInstance;
-    DigitalInput limitSwitch;
     MotionMagicExpoDutyCycle hoodTargetPosition;
 
     static boolean isHomed = false;
 
+    boolean ShouldMM = true;
+
     private Hood() {
         hoodMotor = new TalonFXS(Constants.HoodConstants.hoodMotorID);
-        limitSwitch = new DigitalInput(Constants.HoodConstants.kLimitSwitchId);
         hoodTargetPosition = new MotionMagicExpoDutyCycle(hoodMotor.getPosition().getValueAsDouble());
         configureHoodMotor();
 
@@ -64,7 +61,7 @@ public class Hood extends SubsystemBase {
     }
 
     public double getHoodAngle(double MetersFromHub) {
-        double feetFromHub = Units.metersToFeet(MetersFromHub)+2;
+        double feetFromHub = Units.metersToFeet(MetersFromHub);
         SmartDashboard.putNumber(" feet from hub", feetFromHub);
 
         return -0.522 + 0.429 * Math.log(feetFromHub);
@@ -77,6 +74,7 @@ public class Hood extends SubsystemBase {
     public boolean getIsHomed() {
         return isHomed;
     }
+
     public static Hood getInstance() {
         if (mInstance == null) {
             mInstance = new Hood();
@@ -84,7 +82,7 @@ public class Hood extends SubsystemBase {
         return mInstance;
     }
 
-    public void setIsHome(boolean ishome){
+    public void setIsHome(boolean ishome) {
         isHomed = ishome;
     }
 
@@ -96,21 +94,49 @@ public class Hood extends SubsystemBase {
         hoodMotor.setPosition(pos);
     }
 
+    public void setHoodPositionAuto(double pos) {
+        hoodMotor.setPosition(pos);
+        isHomed = true;
+    }
+
+    public void setMM() {
+        ShouldMM = (!ShouldMM);
+    }
+
+    public void setMM(boolean MM) {
+        ShouldMM = MM;
+    }
+
     public double getStatorCurrent() {
         return hoodMotor.getTorqueCurrent().getValueAsDouble();
 
     }
 
-    public boolean getLimitSwitch() {
-        return limitSwitch.get();
-    }
+    // public boolean getLimitSwitch() {
+    // return limitSwitch.get();
+    // }
 
     public void setMotionMagicTarget(double pos) {
         hoodTargetPosition.Position = pos;
     }
 
     public void setMotionMagic() {
-        hoodMotor.setControl(hoodTargetPosition);
+
+        if (ShouldMM) {
+
+            if (Math.abs(hoodMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.04) {
+                hoodMotor.set(0);
+            } else {
+                if (hoodTargetPosition.Position > 0.8) {
+                    hoodTargetPosition.Position = .8;
+                } else if (hoodTargetPosition.Position < 0) {
+                    hoodTargetPosition.Position = 0;
+
+                }
+                hoodMotor.setControl(hoodTargetPosition);
+
+            }
+        }
 
     }
 
@@ -119,15 +145,15 @@ public class Hood extends SubsystemBase {
         SmartDashboard.putNumber("Hood/HoodTargetPosition", hoodTargetPosition.Position);
         SmartDashboard.putNumber("Hood/Hood pos", hoodMotor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Hood/Stator Current", getStatorCurrent());
-        if(hoodMotor.hasResetOccurred()){
+        SmartDashboard.putBoolean("Hood/manual", ShouldMM);
+        if (hoodMotor.hasResetOccurred()) {
             isHomed = false;
         }
 
-        if(!isHomed){
+        if (!isHomed) {
             CommandScheduler.getInstance().schedule(new HomeHood().withTimeout(4));
         }
- 
-        
+
     }
 
 }

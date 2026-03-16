@@ -5,27 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Photoshoot"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "CStart - Shoot - OClimb"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Photoshoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Climb"
           }
         }
       ]

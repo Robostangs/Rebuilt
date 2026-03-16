@@ -108,7 +108,13 @@ public class RobotContainer {
                                                                 () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
                                                               )));
 
-                xDrive.b().whileTrue(TurretFactory.dumbShoot().alongWith(new RunHopper()))
+                 xDrive.b().whileTrue(TurretFactory.dumbShoot().alongWith(new RunHopper()))
+                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
+                                                .andThen(new InstantCommand(
+                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
+                                                              )));
+
+                xDrive.y().whileTrue(TurretFactory.dumbShootTrench().alongWith(new RunHopper()))
                                 .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
                                                 .andThen(new InstantCommand(
                                                                 () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
@@ -130,11 +136,11 @@ public class RobotContainer {
                 xDrive.rightBumper().whileTrue(IntakeFactory.TrueSpit());
                 xDrive.leftBumper().whileTrue(IntakeFactory.ballStuck());
 
-                xDrive.povRight().whileTrue(new HomeIntake(true));
+                xDrive.povRight().onTrue(new HomeHood());
+
                 xDrive.povLeft().whileTrue(new HomeIntake(false));
 
                 xDrive.x().whileTrue(new StartIntake());
-                xDrive.y().onTrue(new HomeHood());
                 xDrive.a().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 

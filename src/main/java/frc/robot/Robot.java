@@ -357,6 +357,9 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void autonomousInit() {
 
+        LimelightHelpers.setRewindEnabled(Constants.VisionConstants.kLimelightFour, true);
+                LimelightHelpers.setRewindEnabled(Constants.VisionConstants.kLimelightFourR, true);
+
         CommandScheduler.getInstance().cancelAll();
 
         CommandScheduler.getInstance().schedule(

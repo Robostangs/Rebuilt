@@ -56,15 +56,7 @@ public class Hopper extends SubsystemBase {
         }
         return mInstance;
     }
-    // public void checkIsHot(){
-    // boolean leftRighterHot=leftRighter.getTemperature()>=40;
-    // boolean backGoerHot=backGoer.getTemperature()>=40;
-
-    // leftRightHotAlert.set(leftRighterHot);
-    // backGoerHotAlert.set(backGoerHot);
-    // }
     @Override
     public void periodic() {
-        // checkIsHot();
     }
 }

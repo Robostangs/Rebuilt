@@ -34,6 +34,7 @@ import edu.wpi.first.net.PortForwarder;
 public class LimelightHelpers {
 
     private static final Map<String, DoubleArrayEntry> doubleArrayEntries = new ConcurrentHashMap<>();
+    private static double rewindCaptureCounter = 0;
 
     /**
      * Represents a Color/Retroreflective Target Result extracted from JSON Output
@@ -1869,14 +1870,14 @@ public class LimelightHelpers {
     /**
      * Triggers a rewind capture with the specified duration.
      * Maximum duration is 165 seconds. Rate-limited on the Limelight.
+     * Maintains counter locally to ensure reliable increments across Ethernet and WiFi connections.
      * @param limelightName Name of the Limelight camera
      * @param durationSeconds Duration of rewind capture in seconds (max 165)
      */
     public static void triggerRewindCapture(String limelightName, double durationSeconds) {
-        double[] currentArray = getLimelightNTDoubleArray(limelightName, "capture_rewind");
-        double counter = (currentArray.length > 0) ? currentArray[0] : 0;
+        rewindCaptureCounter++;
         double[] entries = new double[2];
-        entries[0] = counter + 1;
+        entries[0] = rewindCaptureCounter;
         entries[1] = Math.min(durationSeconds, 165);
         setLimelightNTDoubleArray(limelightName, "capture_rewind", entries);
     }

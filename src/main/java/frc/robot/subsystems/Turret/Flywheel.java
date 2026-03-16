@@ -8,13 +8,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
-// @Logged
 public class Flywheel extends SubsystemBase {
     private TalonFX flyWheel;
     private VelocityVoltage shooterTargetVelocity;
@@ -36,7 +34,7 @@ public class Flywheel extends SubsystemBase {
     public Flywheel() {
 
         shouldShoot = false;
-        flyWheel = new TalonFX(Constants.TurretConstants.shooterMotorID);
+        flyWheel = new TalonFX(Constants.DumperConstants.shooterMotorID);
         shooterTargetVelocity = new VelocityVoltage(0);
         configureShooterMotor();
 
@@ -45,7 +43,7 @@ public class Flywheel extends SubsystemBase {
     public void configureShooterMotor() {
         TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
 
-        flywheelConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.kShooterSupplyCurrentLimit;
+        flywheelConfig.CurrentLimits.SupplyCurrentLimit = Constants.DumperConstants.kShooterSupplyCurrentLimit;
          flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterMotorStatorCurrentLimit;
 
         flywheelConfig.Slot0.kP = Constants.FlywheelConstants.kShooterMotorP;
@@ -76,7 +74,7 @@ public class Flywheel extends SubsystemBase {
 
     public boolean shooterAtTargetVelocity() {
         boolean atTarget = currentShooterVelocity()
-                - shooterTargetVelocity.Velocity > Constants.TurretConstants.kShooterVelocityTolerance;
+                - shooterTargetVelocity.Velocity > Constants.DumperConstants.kShooterVelocityTolerance;
         return atTarget;
 
     }

@@ -5,27 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Center - Shoot - DepotIntake - Shoot - OClimb"
+            "pathName": "DBump - Shoot"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Photoshoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Climb"
           }
         }
       ]

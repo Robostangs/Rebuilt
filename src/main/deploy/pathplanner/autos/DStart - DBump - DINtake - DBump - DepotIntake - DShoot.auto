@@ -7,25 +7,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Extend"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "CStart - OutpostIntake"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "DStart - DBump - DIntake - DBump"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Outpostintake - Shoot - OClimb"
+            "pathName": "DBump - DepotIntake - DShoot"
           }
         },
         {
@@ -33,17 +27,11 @@
           "data": {
             "name": "Photoshoot"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Climb"
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Center",
+  "folder": "Depot",
   "choreoAuto": false
 }

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6456670191957787,
-        "y": 0.6180449986353711
+        "x": 3.4328666871360993,
+        "y": 2.5069619382278017
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8657954948338737,
-        "y": 1.737066070705025
+        "x": 2.091875284297671,
+        "y": 2.4770923171397374
       },
       "isLocked": false,
-      "linkedName": "OutpostIntake"
+      "linkedName": "OutpostBumpIn"
     },
     {
       "anchor": {
-        "x": 0.5791592128801428,
-        "y": 5.990161001788908
+        "x": 2.2856538277838427,
+        "y": 3.3053634461426498
       },
       "prevControl": {
-        "x": 1.6563492273248608,
-        "y": 6.186481250591484
+        "x": 2.29273477301674,
+        "y": 2.997491925946143
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "DepotIntake"
+      "linkedName": "OutpostShoot"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 17.508593862195223
   },
   "reversed": false,
-  "folder": "OutpostTrench",
+  "folder": "Outpost",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 180.0
+    "velocity": 1.5,
+    "rotation": 45.0
   },
   "useDefaultConstraints": true
 }

@@ -7,13 +7,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Extend"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Center - Shoot - DepotIntake - Shoot - DClimb"
+            "pathName": "OStart - OBump - OIntake - OBump"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "OBump - OShoot"
           }
         },
         {
@@ -21,17 +27,11 @@
           "data": {
             "name": "Photoshoot"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Climb"
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Center",
+  "folder": "Outpost",
   "choreoAuto": false
 }

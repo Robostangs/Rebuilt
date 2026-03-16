@@ -14,9 +14,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import frc.robot.subsystems.Turret.*;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -24,32 +22,26 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Stable.ControllerStangs;
-import frc.robot.commands.Index;
-import frc.robot.commands.Undex;
+import frc.robot.commands.AutoAlign;
 import frc.robot.commands.HopperCommands.RunHopper;
-import frc.robot.commands.HopperCommands.spitHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
-import frc.robot.commands.IntakeCommands.MovePivot;
-import frc.robot.commands.IntakeCommands.OutTake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.commands.TurretCommands.TurretFactory;
 import frc.robot.commands.TurretCommands.setTurretDutyCycle;
-import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
 import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.Hood.setHoodDutyCycle;
-import frc.robot.commands.TurretCommands.Hood.setHoodPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Feeder;
 
 public class RobotContainer {
         public static boolean useVision = true;
         private double MaxSpeed = 1.0 * Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-        private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
-                                                                                          // second
-                                                                                          // max angular velocity
+        private double MaxAngularRate = Constants.TunerConstants.kAngularRateAt12Volts;
+
+        // second
+        // max angular velocity
 
         /* Setting up bindings for necessary control of the swerve drive platform */
         private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -75,6 +67,7 @@ public class RobotContainer {
         public RobotContainer() {
                 configureDrivingBinding();
                 configureManipBindings();
+                configureSimBinds();
                 drivetrain.registerTelemetry(logger::telemeterize);
                 logger.initSwerveLog();
         }
@@ -100,36 +93,23 @@ public class RobotContainer {
         private void configureDrivingBinding() {
                 setDrivetrain();
 
-          
-
                 xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
+                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),
+                                                Hood.getInstance())
                                                 .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
-                                                              )));
+                                                                () -> Hood.getInstance().setMotionMagic(),
+                                                                Hood.getInstance())));
 
-                 xDrive.b().whileTrue(TurretFactory.dumbShoot().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
-                                                .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
-                                                              )));
-
-                xDrive.y().whileTrue(TurretFactory.dumbShootTrench().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
-                                                .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
-                                                              )));
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(
-                                        !Robot.isRed() ? Constants.FieldConstants.resetPose : 
-                                        FlippingUtil.flipFieldPose( Constants.FieldConstants.resetPose)
-                                        )));
+                                                !Robot.isRed() ? Constants.FieldConstants.resetPose
+                                                                : FlippingUtil.flipFieldPose(
+                                                                                Constants.FieldConstants.resetPose))));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(
                                 () -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));
 
                 xDrive.rightPaddle().whileTrue(new ExtendIntake(false));
-                        
 
                 xDrive.leftPaddle().whileTrue(new RetractIntake());
 
@@ -141,8 +121,11 @@ public class RobotContainer {
                 xDrive.povLeft().whileTrue(new HomeIntake(false));
 
                 xDrive.x().whileTrue(new StartIntake());
-                xDrive.a().onTrue(new InstantCommand(
+                xDrive.b().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
+
+                xDrive.a().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                                () -> xDrive.getLeftTriggerAxis() > 0.2));
 
         }
 
@@ -155,9 +138,6 @@ public class RobotContainer {
                 xManip.rightBumper().whileTrue(new setTurretDutyCycle(0.2));
                 xManip.leftBumper().whileTrue(new setTurretDutyCycle(-0.2));
 
-
-
-
                 xManip.a().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
 
                 // xManip.b().onTrue(new InstantCommand(() -> Feeder.getInstance().forceTog()));
@@ -165,15 +145,12 @@ public class RobotContainer {
                 xManip.y().whileTrue(new ExtendIntake(false));
                 xManip.x().whileTrue(new ExtendIntake(true));
 
-
                 xManip.rightTrigger().whileTrue(new setHoodDutyCycle(() -> 0.3));
                 xManip.leftTrigger().whileTrue(new setHoodDutyCycle(() -> -0.3));
 
-
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
                                 .whileTrue(new InstantCommand(
-                                                () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * -
-                                                30)));
+                                                () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * -30)));
         }
 
         private void setDrivetrain() {
@@ -218,5 +195,13 @@ public class RobotContainer {
                                         ));
 
                 }
+        }
+
+        private void configureSimBinds() {
+                new Trigger(() -> xSim.getRawButtonPressed(1))
+                                .toggleOnTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
+                                                () -> xSim.getRawAxis(1),
+                                                () -> false));
+
         }
 }

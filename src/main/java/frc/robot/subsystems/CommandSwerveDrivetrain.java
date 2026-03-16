@@ -347,6 +347,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 || Math.abs(controller.getRightX()) > 0.05);
     }
 
+    public void postStatus(String status) {
+        SmartDashboard.putString("Drivetrain/ Status", status);
+
+    }
+
     @Override
     public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
 

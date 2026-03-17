@@ -14,8 +14,6 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
-
-
 public class AutoAlign extends Command {
     CommandSwerveDrivetrain drivetrain;
 
@@ -28,7 +26,7 @@ public class AutoAlign extends Command {
     Pose2d targetPose;
 
     /**
-     * Aligns the robot to the {@code kPassPoseRed} or {@code kPassPoseBlue} 
+     * Aligns the robot to the {@code kPassPoseRed} or {@code kPassPoseBlue}
      * 
      * @param translateX           the forward to backward movement of the robot
      * @param translateY           the right to left movement of the robot
@@ -41,61 +39,87 @@ public class AutoAlign extends Command {
 
         this.addRequirements(drivetrain);
 
-   
-
         this.translateX = translateX;
         this.translateY = translateY;
         this.babyOnBoard = babyOnBoard;
-        this.targetPose = !Robot.isRed() ? Constants.FieldConstants.HubPosition : FlippingUtil.flipFieldPose(Constants.FieldConstants.HubPosition);
-
-
+        this.targetPose = Constants.FieldConstants.HubPosition;
+        // !Robot.isRed() ? Constants.FieldConstants.HubPosition :
+        // FlippingUtil.flipFieldPose(Constants.FieldConstants.HubPosition);
 
         getTargetRotation = () -> {
 
-                return Rotation2d
-                        .fromRadians(Math.atan2(
-                                drivetrain.getState().Pose.getY() - targetPose.getY(),
-                                drivetrain.getState().Pose.getX() - targetPose.getX()));
-    };
-}
+            return Rotation2d
+                    .fromRadians(Math.atan2(
+                            drivetrain.getState().Pose.getY() - targetPose.getY(),
+                            drivetrain.getState().Pose.getX() - targetPose.getX()));
+        };
+    }
 
     @Override
     public void initialize() {
+
+        PhoenixPIDController tunePID = new PhoenixPIDController(6,1,1);
+        tunePID.enableContinuousInput(-Math.PI, Math.PI);
+
         driveRequest = new SwerveRequest.FieldCentricFacingAngle();
-        driveRequest.HeadingController = new PhoenixPIDController(1, 0, 0);
+        driveRequest.HeadingController = tunePID;
+    
 
         // this is for tuning and now we can tune the PID controller
         SmartDashboard.putData("Auto Align PID", driveRequest.HeadingController);
         drivetrain.postStatus("Auto Aligning");
 
-        driveRequest.Deadband = Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude() * 0.05;
-        driveRequest.RotationalDeadband = Constants.TunerConstants.kAngularRateAt12Volts * 0.05;
+        driveRequest.Deadband =
+        Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude() * 0.05;
+        driveRequest.RotationalDeadband =
+        Constants.TunerConstants.kAngularRateAt12Volts * 0.05;
     }
 
     @Override
     public void execute() {
-        driveRequest.TargetDirection = getTargetRotation.get();
-        double slowDown = babyOnBoard.get() ? 0.25 : 1.0;
+        // getTargetRotation = () -> {
+
+        // return Rotation2d
+        // .fromRadians((Math.atan2(
+        // drivetrain.getState().Pose.getY() - targetPose.getY(),
+        // drivetrain.getState().Pose.getX() - targetPose.getX())));
+        // };
+
+        SmartDashboard.putNumber("Drive theta",
+                Math.atan2(
+                        drivetrain.getState().Pose.getY(),
+                        drivetrain.getState().Pose.getX()));
+
+        SmartDashboard.putNumber("Drive current theta",
+                Math.atan2(
+                        drivetrain.getState().Pose.getY() - targetPose.getY(),
+                        drivetrain.getState().Pose.getX() - targetPose.getX()));
+
+        if (Math.abs(getTargetRotation.get().getDegrees()) >= Rotation2d.kPi.getDegrees()) {
+            driveRequest.TargetDirection = Rotation2d.kPi;
+        } else {
+            driveRequest.TargetDirection = getTargetRotation.get();
+
+        }
 
         driveRequest
                 .withVelocityX(-translateX.get()
-                        * (Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude())*slowDown)
+                        * (Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude()))
                 .withVelocityY(-translateY.get()
-                        * Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude()*slowDown);
+                        * Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude());
 
         drivetrain.setControl(driveRequest);
-                drivetrain.postStatus("Currently aligning");
+        drivetrain.postStatus("Currently aligning");
 
     }
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
         drivetrain.postStatus("Aligned");
     }
 
     @Override
     public boolean isFinished() {
-        return false;        
+        return false;
     }
 }

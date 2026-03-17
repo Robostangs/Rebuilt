@@ -23,7 +23,7 @@ public class VisionStangs {
     private PhotonCamera camera;
     PhotonPoseEstimator ppe;
     private Pose2d currentPose;
-    private double bigAmbiuity;
+    private double bigAmbiguity;
     private boolean isLL;
     private double timestampSeconds;
 
@@ -33,19 +33,19 @@ public class VisionStangs {
         camera = new PhotonCamera(LLname);
         this.CameraName = LLname;
         ppe = new PhotonPoseEstimator(Constants.kAprilTagFieldLayout, robotToCam);
-        bigAmbiuity = -1;
+        bigAmbiguity = -1;
         isLL = false;
     }
 
     public VisionStangs(String LLname) {
         this.CameraName = LLname;
-        bigAmbiuity = -1;
+        bigAmbiguity = -1;
         isLL = true;
     }
 
     private void Photonperiodic() {
 
-        bigAmbiuity = 0;
+        bigAmbiguity = 0;
 
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
         for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
@@ -53,15 +53,15 @@ public class VisionStangs {
             visionEst = ppe.estimateCoprocMultiTagPose(result);
 
             for (var target : result.targets) {
-                if (target.poseAmbiguity > bigAmbiuity) {
-                    bigAmbiuity = target.poseAmbiguity;
+                if (target.poseAmbiguity > bigAmbiguity) {
+                    bigAmbiguity = target.poseAmbiguity;
                 }
             }
 
-            SmartDashboard.putNumber("Vision/" + camera.getName() + " biggest ambiguity", bigAmbiuity);
+            SmartDashboard.putNumber("Vision/" + camera.getName() + " biggest ambiguity", bigAmbiguity);
         }
 
-        if (bigAmbiuity < Constants.VisionConstants.kPhotonAmbiguityThres) {
+        if (bigAmbiguity < Constants.VisionConstants.kPhotonAmbiguityThres) {
             // Only use the estimate if present and valid
             visionEst.ifPresent(est -> {
                 var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
@@ -79,7 +79,7 @@ public class VisionStangs {
 
     private void LLperiodic() {
 
-        bigAmbiuity = 0;
+        bigAmbiguity = 0;
 
         /*
          * Only seed ll4 with external yaw angle if not rotating fast, otherwise use
@@ -120,16 +120,7 @@ public class VisionStangs {
                 SmartDashboard.putString("Vision/" + CameraName + "MT 1 or 2", "1 BC DISAB:ED");
 
             }
-            // else if
-            // (CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityZWorld()
-            // .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
 
-            // fourPoseEsti = LimelightHelpe
-            // .getBotPoseEstimate_wpiBlue(CameraName);
-
-            // SmartDashboard.putString("Vision/"+CameraName+"MT 1 or 2", "1");
-
-            // }
             else {
                 fourPoseEsti = LimelightHelpers
                         .getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
@@ -141,11 +132,11 @@ public class VisionStangs {
                 this.timestampSeconds = fourPoseEsti.timestampSeconds;
                 Robot.teleopField.getObject(CameraName + " Pose LL").setPose(fourPoseEsti.pose);
                 for (LimelightHelpers.RawFiducial fiducial : fourPoseEsti.rawFiducials) {
-                    if (fiducial.ambiguity > bigAmbiuity) {
-                        bigAmbiuity = fiducial.ambiguity;
+                    if (fiducial.ambiguity > bigAmbiguity) {
+                        bigAmbiguity = fiducial.ambiguity;
                     }
                 }
-                SmartDashboard.putNumber("Vision/" + CameraName + " biggest ambiguity", bigAmbiuity);
+                SmartDashboard.putNumber("Vision/" + CameraName + " biggest ambiguity", bigAmbiguity);
 
             }
         }
@@ -156,7 +147,7 @@ public class VisionStangs {
     }
 
     public double getAmbiguity() {
-        return bigAmbiuity;
+        return bigAmbiguity;
     }
 
     public Pose2d getPose() {
@@ -167,7 +158,7 @@ public class VisionStangs {
         return CameraName;
     }
 
-    // TODO plot stds and make standard deviations based on this input
+    //TODO plot stds and make standard deviations based on this input
     public double[] getLLstds() {
         return NetworkTableInstance.getDefault().getTable("limelight").getEntry("stddevs")
                 .getDoubleArray(new double[12]);
@@ -179,33 +170,6 @@ public class VisionStangs {
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
         return false;
-        // if (Robot.isSimulation()) {
-        //     SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Simulation mode");
-        //     return false;
-        // }
-        // if (yoPoseEsti == null) {
-        //     SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Pose null");
-        //     return false;
-        // }
-        // if (yoPoseEsti.tagCount < 1) {
-        //     SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
-        //     return false;
-        // }
-        // if (yoPoseEsti.avgTagDist > Constants.VisionConstants.kLLDisThres) {
-        //                 SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Too far, Dis is: "+ yoPoseEsti.avgTagDist);
-
-        //     return false;
-        // }
-
-        // SmartDashboard.putNumber("Vision"+CameraName+"/LL4_RejectReason"+ CameraName, yoPoseEsti.avgTagDist);
-
-        // if (!RobotContainer.useVision) {
-        //     SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason"+CameraName, "useVision disabled");
-        // } else {
-        //     SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Accepted");
-        // }
-
-        // return RobotContainer.useVision;
     }
 
     public void periodic() {

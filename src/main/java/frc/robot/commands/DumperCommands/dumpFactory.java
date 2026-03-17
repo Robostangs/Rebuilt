@@ -1,14 +1,12 @@
-package frc.robot.commands.TurretCommands;
+package frc.robot.commands.DumperCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.Index;
-import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
-import frc.robot.commands.TurretCommands.Hood.setHoodPosition;
-import frc.robot.commands.TurretCommands.Hood.setHoodPositionTrench;
-import frc.robot.subsystems.Turret.Flywheel;
-import frc.robot.subsystems.Turret.Turret;
+import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
+import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
+import frc.robot.commands.DumperCommands.Hood.setHoodPositionTrench;
 
-public class TurretFactory {
+public class dumpFactory {
     public static Command Shoot(){
         return 
             new ChargeUp().alongWith(new setHoodPosition(false)).alongWith(new Index(false));

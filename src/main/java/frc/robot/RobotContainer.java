@@ -4,19 +4,19 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.pathplanner.lib.util.FlippingUtil;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import frc.robot.subsystems.Turret.*;
+import com.pathplanner.lib.util.FlippingUtil;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -24,25 +24,18 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Stable.ControllerStangs;
-import frc.robot.commands.Index;
-import frc.robot.commands.Undex;
+import frc.robot.commands.DumperCommands.dumpFactory;
+import frc.robot.commands.DumperCommands.Hood.HomeHood;
 import frc.robot.commands.HopperCommands.RunHopper;
-import frc.robot.commands.HopperCommands.spitHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
-import frc.robot.commands.IntakeCommands.MovePivot;
-import frc.robot.commands.IntakeCommands.OutTake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
-import frc.robot.commands.TurretCommands.TurretFactory;
-import frc.robot.commands.TurretCommands.setTurretDutyCycle;
-import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
-import frc.robot.commands.TurretCommands.Hood.HomeHood;
-import frc.robot.commands.TurretCommands.Hood.setHoodDutyCycle;
-import frc.robot.commands.TurretCommands.Hood.setHoodPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Turret.Flywheel;
+import frc.robot.subsystems.Turret.Hood;
+import pabeles.concurrency.ConcurrencyOps.Reset;
 
 public class RobotContainer {
         public static boolean useVision = true;
@@ -100,21 +93,18 @@ public class RobotContainer {
         private void configureDrivingBinding() {
                 setDrivetrain();
 
-          
-
-                xDrive.rightTrigger().whileTrue(TurretFactory.Shoot().alongWith(new RunHopper()))
+                xDrive.rightTrigger().whileTrue(dumpFactory.Shoot().alongWith(new RunHopper()))
                                 .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
                                                 .andThen(new InstantCommand(
                                                                 () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
                                                               )));
 
-                 xDrive.b().whileTrue(TurretFactory.dumbShoot().alongWith(new RunHopper()))
+                 xDrive.b().whileTrue(dumpFactory.dumbShoot().alongWith(new RunHopper()))
                                 .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
                                                 .andThen(new InstantCommand(
                                                                 () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
                                                               )));
-
-                xDrive.y().whileTrue(TurretFactory.dumbShootTrench().alongWith(new RunHopper()))
+                xDrive.y().whileTrue(dumpFactory.dumbShootTrench().alongWith(new RunHopper()))
                                 .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
                                                 .andThen(new InstantCommand(
                                                                 () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
@@ -128,7 +118,7 @@ public class RobotContainer {
                 xDrive.povUp().onTrue(drivetrain.runOnce(
                                 () -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));
 
-                xDrive.rightPaddle().whileTrue(new ExtendIntake(false));
+                xDrive.rightPaddle().whileTrue(new ExtendIntake());
                 
 
                 xDrive.leftPaddle().whileTrue(new RetractIntake());
@@ -147,28 +137,14 @@ public class RobotContainer {
         }
 
         public void configureManipBindings() {
-                DoubleSupplier leftStick = () -> (xManip.getLeftY() > 0.2) ? xManip.getLeftY() * 20 : 1;
-                // xManip.y().onTrue(new InstantCommand(() -> Turret.setManipTarget(true)));
+                //we only want 3 manip bindings
+                //Pass toggle goes here on x i guess (find ts later im too lazy)
 
-                // xManip.b().onTrue(new InstantCommand(() -> Turret.setManipTarget(false)));
-
-                xManip.rightBumper().whileTrue(new setTurretDutyCycle(0.2));
-                xManip.leftBumper().whileTrue(new setTurretDutyCycle(-0.2));
-
-
-
-
-                xManip.a().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
-
-                // xManip.b().onTrue(new InstantCommand(() -> Feeder.getInstance().forceTog()));
-
-                xManip.y().whileTrue(new ExtendIntake(false));
-                xManip.x().whileTrue(new ExtendIntake(true));
-
-
-                xManip.rightTrigger().whileTrue(new setHoodDutyCycle(() -> 0.3));
-                xManip.leftTrigger().whileTrue(new setHoodDutyCycle(() -> -0.3));
-
+                xDrive.a().whileTrue(dumpFactory.dumbShootTrench().alongWith(new RunHopper()))
+                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
+                                                .andThen(new InstantCommand(
+                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
+                                                              )));
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
                                 .whileTrue(new InstantCommand(

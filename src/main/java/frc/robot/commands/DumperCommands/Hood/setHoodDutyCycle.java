@@ -1,4 +1,4 @@
-package frc.robot.commands.TurretCommands.Hood;
+package frc.robot.commands.DumperCommands.Hood;
 
 import java.util.function.DoubleSupplier;
 

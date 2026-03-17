@@ -11,6 +11,8 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -23,8 +25,9 @@ public class Flywheel extends SubsystemBase {
     public Pose2d targetPose;
     private VelocityVoltage flywheelTargetVelocity;
     private double adjustVal=0;
-    private boolean canShoot=true;
+    private boolean canShoot;
     public Flywheel(){
+        canShoot=true;
         mainFlywheelMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
         slaveFlywheelMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
         configureFlywheelMotors();

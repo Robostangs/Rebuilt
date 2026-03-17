@@ -10,34 +10,26 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Hopper extends SubsystemBase {
-    public TalonFX roller1;
-    public TalonFX roller2;
+    public TalonFX roller;
     public static Hopper mInstance;
 
-    Alert hopper1Alert = new Alert("Hopper roller motor 1is HOT", AlertType.kError);
-    Alert hopper2Alert = new Alert("Hopper roller motor 2 is HOT", AlertType.kError);
-
+    Alert hopperAlert = new Alert("Hopper roller motor is HOT", AlertType.kError);
 
     public Hopper() {
-        roller1 = new TalonFX(Constants.HopperConstants.kRollerID);
-        roller2 = new TalonFX(Constants.HopperConstants.kRollerID + 1);
+        roller = new TalonFX(Constants.HopperConstants.kRollerID);
     }
 
     public void configureLeftRighter() {
-        TalonFXConfiguration roller1Config = new TalonFXConfiguration();
-        TalonFXConfiguration roller2Config = new TalonFXConfiguration();
+        TalonFXConfiguration roller = new TalonFXConfiguration();
 
-        //TODO figure out
-        // roller1Config.CurrentLimits.StatorCurrentLimit = 100;
-        // roller1Config.CurrentLimits.StatorCurrentLimitEnable = true;
+        //TODO figure out when pid tune
+        roller.CurrentLimits.StatorCurrentLimit = 100;
+        roller.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        // roller2Config.CurrentLimits.StatorCurrentLimit = 100;
-        // roller2Config.CurrentLimits.StatorCurrentLimitEnable = true;
     }
 
     public void setRollerDutyCycle(double dutyCycle) {
-        roller1.set(dutyCycle);
-        roller2.set(dutyCycle);
+        roller.set(dutyCycle);
     }
 
     public void postRollerStatus(String status) {

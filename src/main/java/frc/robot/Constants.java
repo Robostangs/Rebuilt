@@ -75,7 +75,7 @@ public final class Constants {
     public static class HopperConstants {
 
         public static final int kRollerID = 0;
-        public static final double kRollerDC = 0.75;
+        public static final double kRollerDC = 0.5;
 
     }
 

@@ -74,10 +74,8 @@ public final class Constants {
 
     public static class HopperConstants {
 
-        public static final int kBackGoerID = 1;
-        public static final int kLeftRightID = 8;
-        public static final double kBackGoerDC = 1;
-        public static final double kLeftRighterDC = 1;
+        public static final int kRollerID = 0;
+        public static final double kRollerDC = 0.5;
 
     }
 

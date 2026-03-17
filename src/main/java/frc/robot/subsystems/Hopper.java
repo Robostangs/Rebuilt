@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -12,42 +10,30 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Hopper extends SubsystemBase {
-    public TalonSRX backGoer;
-    public TalonFX leftRighter;
+    public TalonFX roller;
     public static Hopper mInstance;
 
-    Alert leftRightHotAlert = new Alert("Hopper LeftRighter Motor is HOT", AlertType.kError);
-    Alert backGoerHotAlert = new Alert("Hopper BackGoer Motor is HOT", AlertType.kError);
+    Alert hopperAlert = new Alert("Hopper roller motor is HOT", AlertType.kError);
 
     public Hopper() {
-        backGoer = new TalonSRX(Constants.HopperConstants.kBackGoerID);
-        leftRighter = new TalonFX(Constants.HopperConstants.kLeftRightID);
+        roller = new TalonFX(Constants.HopperConstants.kRollerID);
     }
 
     public void configureLeftRighter() {
-        TalonFXConfiguration leftRight = new TalonFXConfiguration();
+        TalonFXConfiguration roller = new TalonFXConfiguration();
 
-        leftRight.CurrentLimits.StatorCurrentLimit = 15;
-        leftRight.CurrentLimits.SupplyCurrentLimit = 11;
-        leftRight.CurrentLimits.StatorCurrentLimitEnable = true;
-        leftRight.CurrentLimits.SupplyCurrentLimitEnable = true;
+        //TODO figure out when pid tune
+        roller.CurrentLimits.StatorCurrentLimit = 100;
+        roller.CurrentLimits.StatorCurrentLimitEnable = true;
 
     }
 
-    public void setLeftRightDutyCycle(double dutyCycle) {
-        leftRighter.set(dutyCycle);
+    public void setRollerDutyCycle(double dutyCycle) {
+        roller.set(dutyCycle);
     }
 
-    public void setBackGoerDutyCycle(double dutyCycle) {
-        backGoer.set(ControlMode.PercentOutput, dutyCycle);
-    }
-
-    public void postLeftRighterStatus(String status) {
-        SmartDashboard.putString("Hopper/leftRighterStatus", status);
-    }
-
-    public void postBackGoerStatus(String status) {
-        SmartDashboard.putString("Hopper/backGoerStatus", status);
+    public void postRollerStatus(String status) {
+        SmartDashboard.putString("Hopper/rollerStatus", status);
     }
 
     public static Hopper getInstance() {

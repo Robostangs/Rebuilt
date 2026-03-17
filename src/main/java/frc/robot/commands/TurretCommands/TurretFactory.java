@@ -11,14 +11,14 @@ import frc.robot.subsystems.Turret.Turret;
 public class TurretFactory {
     public static Command Shoot(){
         return 
-            new ChargeUp(false).alongWith(new setHoodPosition(false)).alongWith(new Index(false));
+            new ChargeUp().alongWith(new setHoodPosition(false)).alongWith(new Index(false));
     }
 
     public static Command dumbShoot(){
-        return new ChargeUp(true).alongWith(new setHoodPosition(true)).alongWith(new Index(true));
+        return new ChargeUp().alongWith(new setHoodPosition(true)).alongWith(new Index(true));
     }
     
     public static Command dumbShootTrench(){
-        return new ChargeUp(true).alongWith(new setHoodPositionTrench()).alongWith(new Index(true));
+        return new ChargeUp().alongWith(new setHoodPositionTrench()).alongWith(new Index(true));
     }
 }

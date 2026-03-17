@@ -2,18 +2,16 @@ package frc.robot.commands.TurretCommands.Flywheel;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.subsystems.Turret.Flywheel;
 import frc.robot.subsystems.Turret.Turret;
 
 public class ChargeUp extends Command {
-    Flywheel turretShooter;
-    boolean isDumb;
+    Flywheel shooter;
 
-    public ChargeUp(boolean isDumb) {
-        turretShooter = Flywheel.getInstance();
-        this.isDumb = isDumb;
-        addRequirements(turretShooter);
-
+    public ChargeUp() {
+        shooter = Flywheel.getInstance();
+        addRequirements(shooter);
     }
 
     @Override
@@ -22,26 +20,18 @@ public class ChargeUp extends Command {
 
     @Override
     public void execute() {
-        double meterfromHub = Turret.getInstance().getMetersFromHub();
-            double targetrps = 0;
-        if(!isDumb){
-         targetrps = turretShooter.getTargetVelocity(meterfromHub);}
-        else{
-            targetrps =  75;
-        }
+        double targetrps = shooter.getFlywheelTargetVelocity();
+        shooter.setFlywheelVelocity(targetrps);
 
-        turretShooter.setShooterRPS(targetrps);
-        // turretShooter.setMotionMagic();
+        SmartDashboard.putNumber("Hood MFH", Robot.getMetersFromTarget());
 
-        SmartDashboard.putNumber("Hood MFH", meterfromHub);
-
-        turretShooter.postStatus("Charging to " + targetrps + " rps");
+        shooter.postStatus("Charging to " + targetrps + " rps");
     }
 
     @Override
     public void end(boolean interrupted) {
-        turretShooter.postStatus("Charged");
-        turretShooter.setShooterRPS(0);
+        shooter.postStatus("Charged");
+        shooter.setFlywheelVelocity(0);
     }
 
 }

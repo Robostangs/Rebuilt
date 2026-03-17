@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Seconds;
 
 import java.lang.management.GarbageCollectorMXBean;
@@ -23,6 +24,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 // import edu.wpi.first.epilogue.Logged;
 // import edu.wpi.first.epilogue.logging.NTEpilogueBackend;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
@@ -82,7 +85,6 @@ public class Robot extends TimedRobotstangs {
 
     String autoname = "";
     String oldAutoname = "";
-
     public CommandScheduler scheduler = CommandScheduler.getInstance();
 
     public Color allianceScore = Constants.ElasticConstants.purple;
@@ -91,6 +93,7 @@ public class Robot extends TimedRobotstangs {
 
     public PowerDistribution pdh = new PowerDistribution(Constants.ElasticConstants.kPdhCanId, ModuleType.kRev);
 
+    public static boolean shooterPass=false;
     // pit test choosers
     SendableChooser<Command> hoodSetpointChooser = new SendableChooser<>();
     SendableChooser<Command> intakePivotSetpointChooser = new SendableChooser<>();
@@ -101,7 +104,7 @@ public class Robot extends TimedRobotstangs {
     Command autoCommand, autoGroup;
 
     static NetworkTableEntry turretSetpoint;
-
+    static boolean isPassing = false;
     public Robot() {
         m_robotContainer = new RobotContainer();
         // Epilogue.configure(config -> {
@@ -227,7 +230,7 @@ public class Robot extends TimedRobotstangs {
                 .andThen(new InstantCommand(() -> postPitTestStatus("Running Hopper")))
                 .andThen(new RunHopper().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
-                .andThen(new ChargeUp(false).withTimeout(7))
+                .andThen(new ChargeUp().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
                 .andThen(new Index(false).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
@@ -279,12 +282,14 @@ public class Robot extends TimedRobotstangs {
             Turret.setManualTarget(true);
             Turret.getInstance().setTurretSetpointDoubleSupplier(() -> turretPosition);
         }
+        /* 
         if (flywheelDC != 0) {
             Flywheel.getInstance().setDutyCycle(flywheelDC);
         }
         if (flywheelVelocity != 0) {
             Flywheel.getInstance().setShooterRPS(flywheelVelocity);
         }
+        */
 
     }
 
@@ -473,7 +478,7 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void testPeriodic() {
-        // pitTestPeriodic();
+        pitTestPeriodic();
 
     }
 
@@ -548,13 +553,13 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Retract", new RetractIntake().withTimeout(0.5));
 
         NamedCommands.registerCommand("Dontshoot",
-                new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false))
-                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
+                new InstantCommand(() -> Flywheel.getInstance().setCanShoot(false))
+                        .finallyDo(() -> Flywheel.getInstance().setCanShoot(true)));
 
         NamedCommands.registerCommand("Hooddown",
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
-                        .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
-                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
+                        .alongWith(new InstantCommand(() -> Flywheel.getInstance().setCanShoot(false)))
+                        .finallyDo(() -> Flywheel.getInstance().setCanShoot(true)));
 
         NamedCommands.registerCommand("Photoshoot",
                 (TurretFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()))
@@ -568,6 +573,20 @@ public class Robot extends TimedRobotstangs {
 
     }
 
+    public static double getMetersFromTarget(){
+        Pose2d robotPose=CommandSwerveDrivetrain.getInstance().getState().Pose;
+        Translation2d shooterPosition = robotPose.getTranslation();
+        Pose2d target=isPassing ? Constants.FieldConstants.PassTarget
+            :Constants.FieldConstants.HubPosition;
+        return shooterPosition.getDistance(target.getTranslation());
+    }
+
+    public static void setShooterPass(boolean pass){
+        shooterPass=pass;
+    }
+    public static boolean isPassing(){
+        return shooterPass;
+    }
     public void drawCurrentAuto(String autoName) {
         List<Pose2d> poses = new ArrayList<>();
         poses.clear();

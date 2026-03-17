@@ -92,6 +92,8 @@ public final class Constants {
         public static final Pose2d resetPose =
              new Pose2d(3.5, 4, new Rotation2d(Units.degreesToRadians(180)));
 
+        public static final double maxRegressionDistance = 0;
+
     }
 
     public static class FeederConstants {
@@ -358,6 +360,10 @@ public final class Constants {
         public static final double kShooterMotorV = 0.122;
         public static final double kShooterMotorS = 0.29;
         public static final double kShooterMotorStatorCurrentLimit = 100;
+        public static final double kVelocityAtOppositeAlliancePass = 0;
+        public static final double kShooterVelocityTolerance = 0;
+        public static final int kFlywheelMotorID = 0;
+        public static final int kFlywheelSlaveMotorID = 0;
 
     }
 

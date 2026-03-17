@@ -26,7 +26,7 @@ public class ChargeUpTrench extends Command {
             double targetrps =  75;
         
 
-        turretShooter.setShooterRPS(targetrps);
+        turretShooter.setFlywheelVelocity(targetrps);
         // turretShooter.setMotionMagic();
 
 
@@ -36,7 +36,7 @@ public class ChargeUpTrench extends Command {
     @Override
     public void end(boolean interrupted) {
         turretShooter.postStatus("Charged Trench");
-        turretShooter.setShooterRPS(0);
+        turretShooter.setFlywheelVelocity(0);
     }
 
 }

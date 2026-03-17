@@ -30,7 +30,7 @@ public class setHoodPosition extends Command {
             hoodpos = .4;
         }
         else{
-        hoodpos = hood.getHoodAngle(meterfromHub);
+        hoodpos = hood.getAngleFromTarget();
 
         }
 

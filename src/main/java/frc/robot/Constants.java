@@ -156,8 +156,8 @@ public final class Constants {
 
 
     public static class HoodConstants {
-
-        public static final int hoodMotorID = 25;
+        public static final int hoodMotorSlaveID = 0;
+        public static final int hoodMotorMainID = 0;
         public static final double kHoodDownPos = 0d;
         // public static final int kLimitSwitchId = 0;
         public static final double kHoodHomeDutyCycle = -0.1;
@@ -173,6 +173,7 @@ public final class Constants {
         public static final double kHoodStatorCurrentLimit = -20;
         public static final double kHoodHomeTimeout = .5;
         public static final double kHoodUpPos = 0.8;
+        
     }
 
     public static class FlywheelConstants {

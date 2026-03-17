@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Turret;
+package frc.robot.subsystems.Dumper;
 
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;

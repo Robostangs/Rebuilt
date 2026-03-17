@@ -33,8 +33,8 @@ import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Turret.Flywheel;
-import frc.robot.subsystems.Turret.Hood;
+import frc.robot.subsystems.Dumper.Flywheel;
+import frc.robot.subsystems.Dumper.Hood;
 import pabeles.concurrency.ConcurrencyOps.Reset;
 
 public class RobotContainer {

@@ -2,7 +2,8 @@ package frc.robot.commands.DumperCommands.Hood;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Turret.Hood;
+import frc.robot.Robot;
+import frc.robot.subsystems.Dumper.Hood;
 
 public class setHoodPosition extends Command {
     Hood hood;
@@ -23,7 +24,7 @@ public class setHoodPosition extends Command {
     @Override
     public void execute() {
         //same thing merge code with kabir
-        double meterfromHub = Robot.getInstance().getMetersFromHub();
+        double meterfromHub = Robot.getMetersFromTarget();
         double hoodpos = 0;
         if(isDumb){
             hoodpos = .4;

@@ -59,8 +59,8 @@ import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Turret.Hood;
-import frc.robot.subsystems.Turret.Flywheel;
+import frc.robot.subsystems.Dumper.Flywheel;
+import frc.robot.subsystems.Dumper.Hood;
 
 public class Robot extends TimedRobotstangs {
     public static boolean isJaba;
@@ -225,12 +225,12 @@ public class Robot extends TimedRobotstangs {
             IntakePivot.getInstance().setDC(intakePivotDC);
         }
         if (flywheelDC != 0) {
-            Flywheel.getInstance().setDutyCycle(flywheelDC);
+            Flywheel.getInstance().setFlywheelDC(flywheelDC);
         }
         if (flywheelVelocity != 0) {
-            Flywheel.getInstance().setShooterRPS(flywheelVelocity);
+            Flywheel.getInstance().setFlywheelVelocity(flywheelVelocity);
         }
-        */
+        
 
     }
 

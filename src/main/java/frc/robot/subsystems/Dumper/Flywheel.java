@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Turret;
+package frc.robot.subsystems.Dumper;
 
 import java.util.function.DoubleSupplier;
 
@@ -35,7 +35,7 @@ public class Flywheel extends SubsystemBase {
     private void configureFlywheelMotors() {
         TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
 
-        flywheelConfig.CurrentLimits.SupplyCurrentLimit = Constants.TurretConstants.kShooterSupplyCurrentLimit;
+        flywheelConfig.CurrentLimits.SupplyCurrentLimit = Constants.DumperConstants.kShooterSupplyCurrentLimit;
         flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterMotorStatorCurrentLimit;
 
         flywheelConfig.Slot0.kP = Constants.FlywheelConstants.kShooterMotorP;

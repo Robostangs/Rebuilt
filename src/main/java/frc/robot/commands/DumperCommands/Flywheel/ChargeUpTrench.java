@@ -1,9 +1,8 @@
-package frc.robot.commands.TurretCommands.Flywheel;
+package frc.robot.commands.DumperCommands.Flywheel;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Turret.Flywheel;
-import frc.robot.subsystems.Turret.Turret;
+import frc.robot.subsystems.Dumper.Flywheel;
 
 public class ChargeUpTrench extends Command {
     Flywheel turretShooter;
@@ -20,15 +19,10 @@ public class ChargeUpTrench extends Command {
 
     @Override
     public void execute() {
-   
-        //Hood: 0.38
        
-            double targetrps =  75;
-        
-
-        turretShooter.setShooterRPS(targetrps);
+        double targetrps =  75;
+        turretShooter.setFlywheelVelocity(targetrps);
         // turretShooter.setMotionMagic();
-
 
         turretShooter.postStatus("Charging to " + targetrps + " rps Trench");
     }
@@ -36,7 +30,7 @@ public class ChargeUpTrench extends Command {
     @Override
     public void end(boolean interrupted) {
         turretShooter.postStatus("Charged Trench");
-        turretShooter.setShooterRPS(0);
+        turretShooter.setFlywheelVelocity(0);
     }
 
 }

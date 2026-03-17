@@ -1,9 +1,9 @@
-package frc.robot.commands.TurretCommands.Hood;
+package frc.robot.commands.DumperCommands.Hood;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.Turret.Hood;
+import frc.robot.subsystems.Dumper.Hood;
 
 public class HomeHood extends Command {
     /*
@@ -46,7 +46,7 @@ public class HomeHood extends Command {
     @Override
     public void end(boolean interrupted) {
         hood.setHoodDutyCycle(0);
-        hood.setHoodPosition(Constants.TurretConstants.kHomePosition);
+        hood.setHoodPosition(Constants.DumperConstants.kHomePosition);
         hood.postStatus("Hood homed");
         hood.setIsHome(true);
         // hood.configureHoodMotor();

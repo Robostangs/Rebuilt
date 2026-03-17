@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Seconds;
 
 import java.lang.management.GarbageCollectorMXBean;
@@ -19,10 +20,9 @@ import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.subsystems.Intake.*;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
-// import edu.wpi.first.epilogue.Epilogue;
-// import edu.wpi.first.epilogue.Logged;
-// import edu.wpi.first.epilogue.logging.NTEpilogueBackend;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
@@ -49,21 +49,19 @@ import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.LimelightHelpers;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.Index;
+import frc.robot.commands.DumperCommands.dumpFactory;
+import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
+import frc.robot.commands.DumperCommands.Hood.HomeHood;
+import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
-import frc.robot.commands.TurretCommands.Hood.HomeHood;
-import frc.robot.commands.TurretCommands.Hood.setHoodPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
-import frc.robot.commands.TurretCommands.TurretFactory;
-import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
-import frc.robot.subsystems.Turret.Hood;
-import frc.robot.subsystems.Turret.Turret;
-import frc.robot.subsystems.Turret.Flywheel;
+import frc.robot.subsystems.Dumper.Flywheel;
+import frc.robot.subsystems.Dumper.Hood;
 
-// @Logged
 public class Robot extends TimedRobotstangs {
     public static boolean isJaba;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
@@ -82,7 +80,6 @@ public class Robot extends TimedRobotstangs {
 
     String autoname = "";
     String oldAutoname = "";
-
     public CommandScheduler scheduler = CommandScheduler.getInstance();
 
     public Color allianceScore = Constants.ElasticConstants.purple;
@@ -91,6 +88,7 @@ public class Robot extends TimedRobotstangs {
 
     public PowerDistribution pdh = new PowerDistribution(Constants.ElasticConstants.kPdhCanId, ModuleType.kRev);
 
+    public static boolean shooterPass=false;
     // pit test choosers
     SendableChooser<Command> hoodSetpointChooser = new SendableChooser<>();
     SendableChooser<Command> intakePivotSetpointChooser = new SendableChooser<>();
@@ -101,57 +99,13 @@ public class Robot extends TimedRobotstangs {
     Command autoCommand, autoGroup;
 
     static NetworkTableEntry turretSetpoint;
-
+    static boolean isPassing = false;
     public Robot() {
         m_robotContainer = new RobotContainer();
-        // Epilogue.configure(config -> {
-        // config.root = "JohnLogs";
-        // config.loggingPeriod = Seconds.of(0.02);
-        // config.backend = new NTEpilogueBackend(NetworkTableInstance.getDefault());
-        // config.minimumImportance = Logged.Importance.DEBUG;
-        // });
     }
 
     void postPitTestStatus(String status) {
         SmartDashboard.putString("PitTest/Pit Test Status", status);
-    }
-
-    void updateEpilogue() {
-        // var cfg = edu.wpi.first.epilogue.Epilogue.getConfig();
-        // if (cfg.backend != null && cfg.root != null) {
-        // // base: JohnLogs
-        // var rootBackend = cfg.backend.getNested(cfg.root);
-
-        // edu.wpi.first.epilogue.Epilogue.robotLogger.tryUpdate(
-        // rootBackend.getNested("Robot"),
-        // this,
-        // cfg.errorHandler);
-        // // call the generated turret logger with that nested backend
-        // edu.wpi.first.epilogue.Epilogue.turretLogger.tryUpdate(
-        // rootBackend.getNested("Turret"),
-        // frc.robot.subsystems.Turret.Turret.getInstance(),
-        // cfg.errorHandler);
-        // edu.wpi.first.epilogue.Epilogue.climberLogger.tryUpdate(
-        // rootBackend.getNested("Climber"),
-        // frc.robot.subsystems.Climber.getInstance(),
-        // cfg.errorHandler);
-        // edu.wpi.first.epilogue.Epilogue.hoodLogger.tryUpdate(
-        // rootBackend.getNested("Hood"),
-        // frc.robot.subsystems.Turret.Hood.getInstance(),
-        // cfg.errorHandler);
-        // edu.wpi.first.epilogue.Epilogue.feederLogger.tryUpdate(
-        // rootBackend.getNested("Feeder"),
-        // frc.robot.subsystems.Feeder.getInstance(),
-        // cfg.errorHandler);
-        // edu.wpi.first.epilogue.Epilogue.kirbyLogger.tryUpdate(
-        // rootBackend.getNested("Kirby"),
-        // frc.robot.subsystems.Intake.Kirby.getInstance(),
-        // cfg.errorHandler);
-        // edu.wpi.first.epilogue.Epilogue.flywheelLogger.tryUpdate(
-        // rootBackend.getNested("Flywheel"),
-        // frc.robot.subsystems.Turret.Flywheel.getInstance(),
-        // cfg.errorHandler);
-        // }
     }
 
     @Override
@@ -187,7 +141,6 @@ public class Robot extends TimedRobotstangs {
         SmartDashboard.putNumber("PitTest/HoodDC", 0);
         SmartDashboard.putNumber("PitTest/FlywheelDC", 0);
         SmartDashboard.putNumber("PitTest/FlywheelVelocity", 0);
-        SmartDashboard.putNumber("PitTest/TurretPosition", 0);
         SmartDashboard.putNumber("PitTest/TurretDC", 0);
         SmartDashboard.putNumber("PitTest/IntakeWheelsDC", 0);
         SmartDashboard.putNumber("PitTest/FeederDC", 0);
@@ -203,7 +156,7 @@ public class Robot extends TimedRobotstangs {
         SmartDashboard.putData("PitTest/HoodSetpoints", hoodSetpointChooser);
 
         intakePivotSetpointChooser.addOption("Extend",
-                new ExtendIntake(false));
+                new ExtendIntake());
         intakePivotSetpointChooser.addOption("Retract",
                 new RetractIntake());
         SmartDashboard.putData("PitTest/IntakePivotSetpoints", intakePivotSetpointChooser);
@@ -221,13 +174,13 @@ public class Robot extends TimedRobotstangs {
         Command pitTestCommand = CommandSwerveDrivetrain.getInstance()
                 .runOnce(() -> CommandSwerveDrivetrain.getInstance().seedFieldCentric())
                 .andThen(new InstantCommand(() -> postPitTestStatus("Extending Intake")))
-                .andThen(new ExtendIntake(false))
+                .andThen(new ExtendIntake())
                 .andThen(new InstantCommand(() -> postPitTestStatus("Starting Intake Wheels")))
                 .andThen(new StartIntake().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Running Hopper")))
                 .andThen(new RunHopper().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
-                .andThen(new ChargeUp(false).withTimeout(7))
+                .andThen(new ChargeUp().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
                 .andThen(new Index(false).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
@@ -258,7 +211,6 @@ public class Robot extends TimedRobotstangs {
         double intakeWheelsDC = SmartDashboard.getNumber("PitTest/IntakeWheelsDC", 0);
         double feederDC = SmartDashboard.getNumber("PitTest/FeederDC", 0);
         double intakePivotDC = SmartDashboard.getNumber("PitTest/IntakePivotDC", 0);
-        double turretDC = SmartDashboard.getNumber("PitTest/TurretDC", 0);
 
         if (hoodDC != 0) {
             Hood.getInstance().setHoodDutyCycle(hoodDC);
@@ -266,25 +218,19 @@ public class Robot extends TimedRobotstangs {
         if (intakeWheelsDC != 0) {
             Kirby.getInstance().setKirbyWheels(intakeWheelsDC);
         }
-        if (turretDC != 0) {
-            Turret.getInstance().runTurretDutyCycle(turretDC);
-        }
         if (feederDC != 0) {
             Feeder.getInstance().setDutyCycle(feederDC);
         }
         if (intakePivotDC != 0) {
             IntakePivot.getInstance().setDC(intakePivotDC);
         }
-        if (turretPosition != 0) {
-            Turret.setManualTarget(true);
-            Turret.getInstance().setTurretSetpointDoubleSupplier(() -> turretPosition);
-        }
         if (flywheelDC != 0) {
-            Flywheel.getInstance().setDutyCycle(flywheelDC);
+            Flywheel.getInstance().setFlywheelDC(flywheelDC);
         }
         if (flywheelVelocity != 0) {
-            Flywheel.getInstance().setShooterRPS(flywheelVelocity);
+            Flywheel.getInstance().setFlywheelVelocity(flywheelVelocity);
         }
+        
 
     }
 
@@ -303,9 +249,6 @@ public class Robot extends TimedRobotstangs {
         autoChooser.addOption("FavNormal", "favCenter - Shoot - DepotIntake - Shoot");
         autoChooser.addOption("Just pre loads", "shoot");
 
-        // autoChooserFav = AutoBuilder.buildAutoChooserWithOptionsModifier(
-        // (stream) -> stream.filter(auto -> auto.getName().startsWith("fav")));
-
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
         autoname = autoChooser.getSelected();
@@ -320,7 +263,7 @@ public class Robot extends TimedRobotstangs {
             if (autoname.equals("favCenter - Shoot - DepotIntake - Shoot")) {
                 autoCommand = new PathPlannerAuto(autoname);
             } else if (autoname.equals("shoot")) {
-                autoCommand = (TurretFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()));
+                autoCommand = (dumpFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()));
 
             } else {
                 autoCommand = new PrintCommand("Auto not Autoing....");
@@ -344,10 +287,8 @@ public class Robot extends TimedRobotstangs {
         // drawCurrentAuto(null);
 
         autoGroup = new SequentialCommandGroup(
-                // new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu()),
                 new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
                 new InstantCommand(() -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
-                new InstantCommand(() -> Turret.getInstance().zeroTurret()),
 
                 autoCommand);
 
@@ -473,7 +414,7 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void testPeriodic() {
-        // pitTestPeriodic();
+        pitTestPeriodic();
 
     }
 
@@ -515,13 +456,6 @@ public class Robot extends TimedRobotstangs {
         disableTab.add("Zero Hood",
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(0)).ignoringDisable(true));
 
-        disableTab.add("RESET TO SUN TZUUUUUU",
-                new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
-                        .ignoringDisable(true));
-
-        disableTab.add("ZeroTurret",
-                new InstantCommand(() -> Turret.getInstance().zeroTurret())
-                        .ignoringDisable(true));
 
     }
 
@@ -537,37 +471,48 @@ public class Robot extends TimedRobotstangs {
     public void loadNamedCommands() {
 
         NamedCommands.registerCommand("Shoot",
-                new PrintCommand("your supposed to shoot bruh"));
+        //devin learn apostrophes bro this was previously "your"
+                new PrintCommand("you're supposed to shoot bruh"));
         NamedCommands.registerCommand("Pass",
-                new PrintCommand("your supposed to pass bruh"));
+                new PrintCommand("you're supposed to pass bruh"));
 
-        NamedCommands.registerCommand("Extend", new ExtendIntake(false));
-
-        // new ExtendIntake(false).withTimeout(0.5));
+        NamedCommands.registerCommand("Extend", new ExtendIntake());
 
         NamedCommands.registerCommand("Retract", new RetractIntake().withTimeout(0.5));
 
         NamedCommands.registerCommand("Dontshoot",
-                new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false))
-                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
+                new InstantCommand(() -> Flywheel.getInstance().setCanShoot(false))
+                        .finallyDo(() -> Flywheel.getInstance().setCanShoot(true)));
 
         NamedCommands.registerCommand("Hooddown",
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
-                        .alongWith(new InstantCommand(() -> Flywheel.getInstance().setShouldShoot(false)))
-                        .finallyDo(() -> Flywheel.getInstance().setShouldShoot(true)));
+                        .alongWith(new InstantCommand(() -> Flywheel.getInstance().setCanShoot(false)))
+                        .finallyDo(() -> Flywheel.getInstance().setCanShoot(true)));
 
         NamedCommands.registerCommand("Photoshoot",
-                (TurretFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()))
+                (dumpFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()))
         // .until(() -> Feeder.getInstance().getfuelSensor())
         );
-
-        NamedCommands.registerCommand("BumpIntake", new ExtendIntake(true));
 
         NamedCommands.registerCommand("Climb",
                 new PrintCommand("Hi!"));
 
     }
 
+    public static double getMetersFromTarget(){
+        Pose2d robotPose=CommandSwerveDrivetrain.getInstance().getState().Pose;
+        Translation2d shooterPosition = robotPose.getTranslation();
+        Pose2d target=isPassing ? Constants.FieldConstants.PassTarget
+            :Constants.FieldConstants.HubPosition;
+        return shooterPosition.getDistance(target.getTranslation());
+    }
+
+    public static void setShooterPass(boolean pass){
+        shooterPass=pass;
+    }
+    public static boolean isPassing(){
+        return shooterPass;
+    }
     public void drawCurrentAuto(String autoName) {
         List<Pose2d> poses = new ArrayList<>();
         poses.clear();

@@ -20,15 +20,14 @@ public class spitHopper extends Command {
 
     @Override
     public void execute(){
-        hopper.setBackGoerDutyCycle(-Constants.HopperConstants.kBackGoerDC);
+        hopper.setRollerDutyCycle(-Constants.HopperConstants.kRollerDC);
 
     }
 
     @Override
     public void end(boolean interrupted) {
-        hopper.setLeftRightDutyCycle(0);
-        hopper.setBackGoerDutyCycle(0);
-        hopper.postLeftRighterStatus("Stopped");
+        hopper.setRollerDutyCycle(0);
+        hopper.postRollerStatus("Stopped");
     }
 
     @Override

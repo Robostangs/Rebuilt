@@ -20,17 +20,15 @@ public class RunHopper extends Command {
 
     @Override
     public void execute(){
-        hopper.postLeftRighterStatus("Going at DC "+Constants.HopperConstants.kLeftRighterDC);
-        hopper.setLeftRightDutyCycle(Constants.HopperConstants.kLeftRighterDC);
-        hopper.setBackGoerDutyCycle(Constants.HopperConstants.kBackGoerDC);
+        hopper.postRollerStatus("Going at DC "+Constants.HopperConstants.kRollerDC);
+        hopper.setRollerDutyCycle(Constants.HopperConstants.kRollerDC);
 
     }
 
     @Override
     public void end(boolean interrupted) {
-        hopper.setLeftRightDutyCycle(0);
-        hopper.setBackGoerDutyCycle(0);
-        hopper.postLeftRighterStatus("Stopped");
+        hopper.setRollerDutyCycle(0);
+        hopper.postRollerStatus("Stopped");
     }
 
     @Override

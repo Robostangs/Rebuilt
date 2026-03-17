@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Turret.Flywheel;
+import frc.robot.subsystems.Dumper.Flywheel;
 
 public class Index extends Command {
     Feeder feeder;

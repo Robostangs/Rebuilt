@@ -1,9 +1,8 @@
-package frc.robot.commands.TurretCommands.Hood;
+package frc.robot.commands.DumperCommands.Hood;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Turret.Hood;
-import frc.robot.subsystems.Turret.Turret;
+import frc.robot.subsystems.Dumper.Hood;
 
 public class setHoodPositionTrench extends Command {
     Hood hood;

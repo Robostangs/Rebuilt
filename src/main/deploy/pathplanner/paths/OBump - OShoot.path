@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.091875284297671,
-        "y": 2.4770923171397374
+        "x": 2.9418830982653574,
+        "y": 3.316535099506507
       },
       "isLocked": false,
       "linkedName": "OutpostBumpIn"
     },
     {
       "anchor": {
-        "x": 2.2856538277838427,
-        "y": 3.3053634461426498
+        "x": 2.890920500578704,
+        "y": 3.5372785011574077
       },
       "prevControl": {
-        "x": 2.29273477301674,
-        "y": 2.997491925946143
+        "x": 2.9648380739711007,
+        "y": 3.298455988935926
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 17.508593862195223
+    "rotation": 16.633854507058803
   },
   "reversed": false,
   "folder": "Outpost",
   "idealStartingState": {
     "velocity": 1.5,
-    "rotation": 45.0
+    "rotation": 52.74572955786589
   },
   "useDefaultConstraints": true
 }

@@ -17,6 +17,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Photoshoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "DBump - DepotIntake - DShoot"

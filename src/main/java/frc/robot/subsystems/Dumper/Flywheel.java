@@ -24,14 +24,16 @@ public class Flywheel extends SubsystemBase {
     public static Flywheel mInstance;
     public Pose2d targetPose;
     private VelocityVoltage flywheelTargetVelocity;
-    private double adjustVal=0;
+    private double adjustVal = 0;
     private boolean canShoot;
-    public Flywheel(){
-        canShoot=true;
+
+    public Flywheel() {
+        canShoot = true;
         mainFlywheelMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
         slaveFlywheelMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
         configureFlywheelMotors();
     }
+
     private void configureFlywheelMotors() {
         TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
 
@@ -47,31 +49,34 @@ public class Flywheel extends SubsystemBase {
 
         flywheelConfig.Voltage.PeakReverseVoltage = Constants.FlywheelConstants.kPeakReverseOutput;
 
-        
         flywheelTargetVelocity.EnableFOC = false;
-
 
         // Apply the PID configurations to the shooter motor
         mainFlywheelMotor.getConfigurator().apply(flywheelConfig);
 
-        slaveFlywheelMotor.setControl(new Follower(mainFlywheelMotor.getDeviceID(),MotorAlignmentValue.Opposed));
+        //TODO make you have to make configs for slave
+        slaveFlywheelMotor.setControl(new Follower(mainFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed));
     }
-    public double getFlywheelTargetVelocity(){
-        double feetFromTarget=Units.metersToFeet(Robot.getMetersFromTarget());
-        if(Robot.isPassing()&&feetFromTarget>Constants.FieldConstants.maxRegressionDistance){
-            // full send if we on opposing alliance and we're past the max actual distance for passing
+
+    public double getFlywheelTargetVelocity() {
+
+        double feetFromTarget = Units.metersToFeet(Robot.getMetersFromTarget());
+        if (Robot.isPassing() && feetFromTarget > Constants.FieldConstants.maxRegressionDistance) {
+            // full send if we on opposing alliance and we're past the max actual distance
+            // for passing
             return Constants.FlywheelConstants.kVelocityAtOppositeAlliancePass;
-        }else{
+        } else {
             // Acc get regression here
             return 50;
         }
-        
+
     }
+
     public void setFlywheelVelocity(double rps) {
-        flywheelTargetVelocity.Velocity= rps+adjustVal;
+        flywheelTargetVelocity.Velocity = rps + adjustVal;
     }
-    
-    public void setFlywheelDC(double dc){
+
+    public void setFlywheelDC(double dc) {
         mainFlywheelMotor.set(dc);
     }
 
@@ -81,23 +86,30 @@ public class Flywheel extends SubsystemBase {
         }
         return mInstance;
     }
+
     public void adjustRPM(DoubleSupplier adjustment) {
-        adjustVal=adjustment.getAsDouble();
+        adjustVal = adjustment.getAsDouble();
     }
+
     public boolean shooterAtTargetVelocity() {
         double currentVelocity = mainFlywheelMotor.getVelocity().getValueAsDouble();
         double targetVelocity = flywheelTargetVelocity.Velocity;
         return Math.abs(currentVelocity - targetVelocity) <= Constants.FlywheelConstants.kShooterVelocityTolerance;
     }
+
     public void setCanShoot(boolean shouldShoot) {
         canShoot = shouldShoot;
     }
+
     @Override
-    public void periodic(){
-        if(canShoot){
+    public void periodic() {
+        if (canShoot) {
             mainFlywheelMotor.setControl(flywheelTargetVelocity);
+            //TODO you have to set control for slave motor when tou set a control for main motor
+
         }
     }
+
     public void postStatus(String status) {
         SmartDashboard.putString("Flywheel/Status", status);
     }

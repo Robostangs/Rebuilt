@@ -90,7 +90,7 @@ public final class Constants {
         public static final Pose2d resetPose =
              new Pose2d(3.5, 4, new Rotation2d(Units.degreesToRadians(180)));
 
-        public static final double maxRegressionDistance = 0;
+        public static final double maxRegressionDistance = 20;
 
     }
 

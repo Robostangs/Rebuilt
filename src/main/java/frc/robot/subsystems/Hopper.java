@@ -25,6 +25,8 @@ public class Hopper extends SubsystemBase {
         roller.CurrentLimits.StatorCurrentLimit = 40;
         roller.CurrentLimits.StatorCurrentLimitEnable = true;
 
+        //TODO bro does not apply configs
+
     }
 
     public void setRollerDutyCycle(double dutyCycle) {

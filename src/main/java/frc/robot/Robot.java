@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Seconds;
-
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -15,16 +12,13 @@ import java.util.List;
 
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.subsystems.Intake.*;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -44,14 +38,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.LimelightHelpers;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.Index;
 import frc.robot.commands.DumperCommands.dumpFactory;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
-import frc.robot.commands.DumperCommands.Hood.HomeHood;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
@@ -204,6 +196,7 @@ public class Robot extends TimedRobotstangs {
 
     void pitTestPeriodic() {
 
+        //TODO make PIT test as a whole look better 
         // read sliders and run commands
         double hoodDC = SmartDashboard.getNumber("PitTest/HoodDC", 0);
         double flywheelDC = SmartDashboard.getNumber("PitTest/FlywheelDC", 0);
@@ -295,7 +288,6 @@ public class Robot extends TimedRobotstangs {
 
     }
 
-    // TODO driver cam
     @Override
     public void autonomousInit() {
 

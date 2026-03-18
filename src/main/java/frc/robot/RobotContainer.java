@@ -35,7 +35,6 @@ import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Dumper.Flywheel;
 import frc.robot.subsystems.Dumper.Hood;
-import pabeles.concurrency.ConcurrencyOps.Reset;
 
 public class RobotContainer {
         public static boolean useVision = true;
@@ -93,6 +92,7 @@ public class RobotContainer {
         private void configureDrivingBinding() {
                 setDrivetrain();
 
+                //TODO put tese complex things into a facotry, ts too ugly
                 xDrive.rightTrigger().whileTrue(dumpFactory.Shoot().alongWith(new RunHopper()))
                                 .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
                                                 .andThen(new InstantCommand(

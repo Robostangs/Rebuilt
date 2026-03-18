@@ -10,6 +10,8 @@ import frc.robot.commands.DumperCommands.Hood.setHoodPositionTrench;
 
 public class dumpFactory {
     public static Command Shoot(){
+        //TODO, make ONE hood motion magic comand that is overloaded, if you call it without parameters then it does regression, if you give it value then it goes to that value
+        //TODO get rid of setshooterdumb
         return new InstantCommand(() -> Robot.setShooterIsDumb(false))
             .alongWith(new ChargeUp())
             .alongWith(new setHoodPosition())

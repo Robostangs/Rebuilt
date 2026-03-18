@@ -138,13 +138,11 @@ public class RobotContainer {
 
         public void configureManipBindings() {
                 //we only want 3 manip bindings
-                //Pass toggle goes here on x i guess (find ts later im too lazy)
+                xManip.x().onChange(
+                        new InstantCommand(() -> Robot.setShooterPass(xManip.x().getAsBoolean())));
 
-                xDrive.a().whileTrue(dumpFactory.dumbShootTrench().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
-                                                .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
-                                                              )));
+                xManip.a().onChange(
+                        new InstantCommand(() -> Robot.setShooterIsDumb(xManip.a().getAsBoolean())));
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
                                 .whileTrue(new InstantCommand(

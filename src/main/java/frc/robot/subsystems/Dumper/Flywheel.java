@@ -62,10 +62,13 @@ public class Flywheel extends SubsystemBase {
             // full send if we on opposing alliance and we're past the max actual distance for passing
             return Constants.FlywheelConstants.kVelocityAtOppositeAlliancePass;
         }else{
+            if(Robot.shooterIsDumb){
+                return Constants.FlywheelConstants.kDumbShootRPS;
+            }else{
             // Acc get regression here
             return 50;
+            }
         }
-        
     }
     public void setFlywheelVelocity(double rps) {
         flywheelTargetVelocity.Velocity= rps+adjustVal;

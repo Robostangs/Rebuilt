@@ -22,7 +22,6 @@ public class Hopper extends SubsystemBase {
     public void configureLeftRighter() {
         TalonFXConfiguration roller = new TalonFXConfiguration();
 
-        //TODO figure out when pid tune
         roller.CurrentLimits.StatorCurrentLimit = 100;
         roller.CurrentLimits.StatorCurrentLimitEnable = true;
 

@@ -89,6 +89,7 @@ public class Robot extends TimedRobotstangs {
     public PowerDistribution pdh = new PowerDistribution(Constants.ElasticConstants.kPdhCanId, ModuleType.kRev);
 
     public static boolean shooterPass=false;
+    public static boolean shooterIsDumb=false;
     // pit test choosers
     SendableChooser<Command> hoodSetpointChooser = new SendableChooser<>();
     SendableChooser<Command> intakePivotSetpointChooser = new SendableChooser<>();
@@ -184,7 +185,7 @@ public class Robot extends TimedRobotstangs {
                 .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
                 .andThen(new Index(false).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
-                .andThen(new setHoodPosition(false).withTimeout(7))
+                .andThen(new setHoodPosition().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Retracting Intake")))
                 .andThen(new RetractIntake())
                 .andThen(new InstantCommand(() -> postPitTestStatus("Driving Forward")))
@@ -509,6 +510,10 @@ public class Robot extends TimedRobotstangs {
 
     public static void setShooterPass(boolean pass){
         shooterPass=pass;
+    }
+
+    public static void setShooterIsDumb(boolean isDumb){
+        shooterIsDumb=isDumb;
     }
     public static boolean isPassing(){
         return shooterPass;

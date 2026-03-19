@@ -138,16 +138,24 @@ public class RobotContainer {
 
         public void configureManipBindings() {
                 //we only want 3 manip bindings
-                xManip.x().onChange(
-                        new InstantCommand(() -> Robot.setShooterPass(xManip.x().getAsBoolean())));
+                xManip.b().onChange(
+                        new InstantCommand(() -> Robot.setShooterPass(xManip.b().getAsBoolean())));
 
                 xManip.a().onChange(
                         new InstantCommand(() -> Robot.setShooterIsDumb(xManip.a().getAsBoolean())));
+                        
+                xManip.y().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
                                 .whileTrue(new InstantCommand(
                                                 () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * -
                                                 30)));
+
+                xManip.rightTrigger().whileTrue(new InstantCommand(() -> Hood.getInstance().setHoodDutyCycle(xManip.getRightTriggerAxis() * 0.25)));
+
+                xManip.leftTrigger().whileTrue(new InstantCommand(() -> Hood.getInstance().setHoodDutyCycle(xManip.getLeftTriggerAxis() * -0.25)));
+
+
         }
 
         private void setDrivetrain() {

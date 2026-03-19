@@ -13,7 +13,6 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.MotorArrangementValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
@@ -90,7 +89,8 @@ public final class Constants {
         public static final Pose2d resetPose =
              new Pose2d(3.5, 4, new Rotation2d(Units.degreesToRadians(180)));
 
-        public static final double maxRegressionDistance = 20;
+        //THIS IS IN FEET
+        public static final double maxRegressionDistance = 0;
 
     }
 
@@ -155,7 +155,7 @@ public final class Constants {
 
     public static class HoodConstants {
 
-        public static final int hoodMotorID = 25;
+        public static final int mainMotorID = 25;
         public static final double kHoodDownPos = 0d;
         // public static final int kLimitSwitchId = 0;
         public static final double kHoodHomeDutyCycle = -0.1;
@@ -171,6 +171,9 @@ public final class Constants {
         public static final double kHoodStatorCurrentLimit = -20;
         public static final double kHoodHomeTimeout = .5;
         public static final double kHoodUpPos = 0.8;
+        public static final int hoodSlaveMotorID = 0;
+        public static final double kPosAtOppositeAlliancePass = 0;
+        public static final double kDumbShootHoodPos = 0;
     }
 
     public static class FlywheelConstants {
@@ -190,6 +193,7 @@ public final class Constants {
         public static final double kShooterVelocityTolerance = 0;
         public static final int kFlywheelMotorID = 0;
         public static final int kFlywheelSlaveMotorID = 0;
+        public static final double kDumbShootRPS = 0;
 
     }
 

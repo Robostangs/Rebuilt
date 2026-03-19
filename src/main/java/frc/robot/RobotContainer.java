@@ -35,7 +35,6 @@ import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Dumper.Flywheel;
 import frc.robot.subsystems.Dumper.Hood;
-import pabeles.concurrency.ConcurrencyOps.Reset;
 
 public class RobotContainer {
         public static boolean useVision = true;
@@ -93,6 +92,7 @@ public class RobotContainer {
         private void configureDrivingBinding() {
                 setDrivetrain();
 
+                //TODO put tese complex things into a facotry, ts too ugly
                 xDrive.rightTrigger().whileTrue(dumpFactory.Shoot().alongWith(new RunHopper()))
                                 .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
                                                 .andThen(new InstantCommand(
@@ -138,18 +138,24 @@ public class RobotContainer {
 
         public void configureManipBindings() {
                 //we only want 3 manip bindings
-                //Pass toggle goes here on x i guess (find ts later im too lazy)
+                xManip.b().onChange(
+                        new InstantCommand(() -> Robot.setShooterPass(xManip.b().getAsBoolean())));
 
-                xDrive.a().whileTrue(dumpFactory.dumbShootTrench().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
-                                                .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
-                                                              )));
+                xManip.a().onChange(
+                        new InstantCommand(() -> Robot.setShooterIsDumb(xManip.a().getAsBoolean())));
+                        
+                xManip.y().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
                                 .whileTrue(new InstantCommand(
                                                 () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * -
                                                 30)));
+
+                xManip.rightTrigger().whileTrue(new InstantCommand(() -> Hood.getInstance().setHoodDutyCycle(xManip.getRightTriggerAxis() * 0.25)));
+
+                xManip.leftTrigger().whileTrue(new InstantCommand(() -> Hood.getInstance().setHoodDutyCycle(xManip.getLeftTriggerAxis() * -0.25)));
+
+
         }
 
         private void setDrivetrain() {

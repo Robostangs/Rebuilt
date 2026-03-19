@@ -7,12 +7,9 @@ import frc.robot.subsystems.Dumper.Hood;
 
 public class setHoodPosition extends Command {
     Hood hood;
-    boolean isDumb;
 
-    public setHoodPosition( boolean isDumb) {
+    public setHoodPosition() {
         hood = Hood.getInstance();
-                this.isDumb = isDumb;
-
         addRequirements(hood);
     }
 
@@ -25,22 +22,13 @@ public class setHoodPosition extends Command {
     public void execute() {
         //same thing merge code with kabir
         double meterfromHub = Robot.getMetersFromTarget();
-        double hoodpos = 0;
-        if(isDumb){
-            hoodpos = .4;
-        }
-        else{
-        hoodpos = hood.getHoodAngle(meterfromHub);
-
-        }
+        double hoodpos = hood.getHoodAngle();
 
         hood.setMotionMagicTarget(hoodpos);
-
         hood.setMotionMagic();
 
-
         hood.postStatus("Setting hood position to: " + hoodpos);
-
+        
         SmartDashboard.putNumber("Hood MFH", meterfromHub);
 
     }

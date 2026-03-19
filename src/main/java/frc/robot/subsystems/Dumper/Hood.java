@@ -1,18 +1,22 @@
 package frc.robot.subsystems.Dumper;
 
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.commands.DumperCommands.Hood.HomeHood;
 
 public class Hood extends SubsystemBase {
-    TalonFXS hoodMotor;
+    TalonFXS mainMotor;
+    TalonFXS slaveMotor;
     public static Hood mInstance;
     MotionMagicExpoDutyCycle hoodTargetPosition;
 
@@ -21,55 +25,62 @@ public class Hood extends SubsystemBase {
     boolean ShouldMM = true;
 
     private Hood() {
-        hoodMotor = new TalonFXS(Constants.HoodConstants.hoodMotorID);
-        hoodTargetPosition = new MotionMagicExpoDutyCycle(hoodMotor.getPosition().getValueAsDouble());
+        mainMotor = new TalonFXS(Constants.HoodConstants.mainMotorID);
+        slaveMotor = new TalonFXS(Constants.HoodConstants.hoodSlaveMotorID);
+        hoodTargetPosition = new MotionMagicExpoDutyCycle(mainMotor.getPosition().getValueAsDouble());
         configureHoodMotor();
 
     }
 
     public void configureHoodMotor() {
-        TalonFXSConfiguration hoodMotorConfig = new TalonFXSConfiguration();
+        TalonFXSConfiguration mainMotorConfig = new TalonFXSConfiguration();
 
-        hoodMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
+        mainMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
 
-        hoodMotorConfig.Slot0.kP = Constants.HoodConstants.kHoodMotorP;
-        hoodMotorConfig.Slot0.kI = Constants.HoodConstants.kHoodMotorI;
-        hoodMotorConfig.Slot0.kD = Constants.HoodConstants.kHoodMotorD;
-        hoodMotorConfig.Slot0.kS = Constants.HoodConstants.kHoodMotorS;
-        hoodMotorConfig.Slot0.kV = Constants.HoodConstants.kHoodMotorV;
-        hoodMotorConfig.Slot0.kA = Constants.HoodConstants.kHoodMotorA;
+        mainMotorConfig.Slot0.kP = Constants.HoodConstants.kHoodMotorP;
+        mainMotorConfig.Slot0.kI = Constants.HoodConstants.kHoodMotorI;
+        mainMotorConfig.Slot0.kD = Constants.HoodConstants.kHoodMotorD;
+        mainMotorConfig.Slot0.kS = Constants.HoodConstants.kHoodMotorS;
+        mainMotorConfig.Slot0.kV = Constants.HoodConstants.kHoodMotorV;
+        mainMotorConfig.Slot0.kA = Constants.HoodConstants.kHoodMotorA;
 
         //TODO make this constant
         hoodMotorConfig.CurrentLimits.StatorCurrentLimit = 15;
 
-        hoodMotorConfig.ExternalFeedback.SensorToMechanismRatio = Constants.HoodConstants.kHoodSensortoMechanism;
+        mainMotorConfig.ExternalFeedback.SensorToMechanismRatio = Constants.HoodConstants.kHoodSensortoMechanism;
 
-        hoodMotorConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.HoodConstants.kHoodMotionMagicCruiseVelocity;
-        hoodMotorConfig.MotionMagic.MotionMagicAcceleration = Constants.HoodConstants.kHoodMotionMagicAcceleration;
+        mainMotorConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.HoodConstants.kHoodMotionMagicCruiseVelocity;
+        mainMotorConfig.MotionMagic.MotionMagicAcceleration = Constants.HoodConstants.kHoodMotionMagicAcceleration;
 
-        //TODO make this constant
-        hoodMotorConfig.ExternalFeedback.SensorToMechanismRatio = 44;
-        hoodMotor.getConfigurator().apply(hoodMotorConfig);
+        mainMotorConfig.ExternalFeedback.SensorToMechanismRatio = 44;
+        mainMotor.getConfigurator().apply(mainMotorConfig);
 
+        TalonFXSConfiguration slaveMotorConfig = new TalonFXSConfiguration();
+        slaveMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
+        slaveMotorConfig.CurrentLimits.StatorCurrentLimit = 15;
+
+        slaveMotor.getConfigurator().apply(slaveMotorConfig);
+        slaveMotor.setControl(new Follower(Constants.HoodConstants.mainMotorID,MotorAlignmentValue.Opposed));
     }
 
-    public void setHoodStatorCurrentConfig() {
-        TalonFXSConfiguration hoodMotorConfig = new TalonFXSConfiguration();
-        hoodMotorConfig.CurrentLimits.SupplyCurrentLimit = Constants.HoodConstants.kHoodStatorCurrentLimit;
 
-        hoodMotor.getConfigurator().apply(hoodMotorConfig);
-
-    }
-
-    public double getHoodAngle(double MetersFromHub) {
-        double feetFromHub = Units.metersToFeet(MetersFromHub);
-        SmartDashboard.putNumber(" feet from hub", feetFromHub);
-
-        return -0.522 + 0.429 * Math.log(feetFromHub);
+    public double getHoodAngle() {
+        double feetFromTarget=Units.metersToFeet(Robot.getMetersFromTarget());
+        if(Robot.isPassing()&&feetFromTarget>Constants.FieldConstants.maxRegressionDistance){
+            // full send if we on opposing alliance and we're past the max actual distance for passing
+            return Constants.HoodConstants.kPosAtOppositeAlliancePass;
+        }else{
+            if(Robot.shooterIsDumb){
+                return Constants.HoodConstants.kDumbShootHoodPos;
+            }else{
+                // Acc get regression here
+                return 0;
+            }
+        }
     }
 
     public void setHoodDutyCycle(double dc) {
-        hoodMotor.set(dc);
+        mainMotor.set(dc);
     }
 
     public boolean getIsHomed() {
@@ -92,11 +103,11 @@ public class Hood extends SubsystemBase {
     }
 
     public void setHoodPosition(double pos) {
-        hoodMotor.setPosition(pos);
+        mainMotor.setPosition(pos);
     }
 
     public void setHoodPositionAuto(double pos) {
-        hoodMotor.setPosition(pos);
+        mainMotor.setPosition(pos);
         isHomed = true;
     }
 
@@ -109,7 +120,7 @@ public class Hood extends SubsystemBase {
     }
 
     public double getStatorCurrent() {
-        return hoodMotor.getTorqueCurrent().getValueAsDouble();
+        return mainMotor.getTorqueCurrent().getValueAsDouble();
 
     }
 
@@ -123,8 +134,8 @@ public class Hood extends SubsystemBase {
 
         if (ShouldMM) {
 
-            if (Math.abs(hoodMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.04) {
-                hoodMotor.set(0);
+            if (Math.abs(mainMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.04) {
+                mainMotor.set(0);
             } else {
                 if (hoodTargetPosition.Position > 0.8) {
                     hoodTargetPosition.Position = .8;
@@ -132,7 +143,7 @@ public class Hood extends SubsystemBase {
                     hoodTargetPosition.Position = 0;
 
                 }
-                hoodMotor.setControl(hoodTargetPosition);
+                mainMotor.setControl(hoodTargetPosition);
 
             }
         }
@@ -142,10 +153,10 @@ public class Hood extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Hood/HoodTargetPosition", hoodTargetPosition.Position);
-        SmartDashboard.putNumber("Hood/Hood pos", hoodMotor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Hood/Hood pos", mainMotor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Hood/Stator Current", getStatorCurrent());
         SmartDashboard.putBoolean("Hood/manual", ShouldMM);
-        if (hoodMotor.hasResetOccurred()) {
+        if (mainMotor.hasResetOccurred()) {
             isHomed = false;
         }
 

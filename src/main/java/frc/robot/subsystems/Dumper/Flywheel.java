@@ -23,7 +23,7 @@ public class Flywheel extends SubsystemBase {
     public Pose2d targetPose;
     private VelocityVoltage flywheelTargetVelocity;
     private double adjustVal = 0;
-    private boolean canShoot;
+    private VelocityVoltage flywheelTargetVelocity = new VelocityVoltage(0);
 
     public Flywheel() {
         canShoot = true;

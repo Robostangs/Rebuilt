@@ -286,9 +286,9 @@ public final class Constants {
 
         public static final String kPhotonCamNameRight = "Daredevil";
         public static final Transform3d kRobotToCamRight = new Transform3d(
-                Units.inchesToMeters(-8.895),
-                Units.inchesToMeters(13.16),
-                Units.inchesToMeters(11.796),
+                Units.inchesToMeters(-8.5),
+                Units.inchesToMeters(12),
+                Units.inchesToMeters(13.5),
                 new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(32.29 + 90),
                         Units.degreesToRadians(-90)));
 
@@ -304,7 +304,7 @@ public final class Constants {
         public static final String kLimelightRight = "Ultron";
         public static final Transform3d kRobotToCamRear = new Transform3d(new Transform2d());
 
-        public static final double kPhotonAmbiguityThres = 0.5;
+        public static final double kPhotonAmbiguityThres = 0.7;
         public static final double kLLDisThres = 3;
     }
 
@@ -359,11 +359,7 @@ public final class Constants {
                                 .withStatorCurrentLimitEnable(true));
         private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
         // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
-        private static final Pigeon2Configuration pigeonConfigs = new Pigeon2Configuration()
-                .withMountPose(new MountPoseConfigs()
-                        .withMountPoseYaw(180)
-                        .withMountPosePitch(-90)
-                        .withMountPoseRoll(66));
+        private static final Pigeon2Configuration pigeonConfigs = null;
 
         // CAN bus that the devices are located on;
         // All swerve devices must share the same CAN bus

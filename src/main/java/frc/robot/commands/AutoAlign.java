@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Meter;
+
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -8,6 +10,8 @@ import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -42,7 +46,6 @@ public class AutoAlign extends Command {
         this.translateX = translateX;
         this.translateY = translateY;
         this.babyOnBoard = babyOnBoard;
-        this.targetPose = Constants.FieldConstants.HubPosition;
         // !Robot.isRed() ? Constants.FieldConstants.HubPosition :
         // FlippingUtil.flipFieldPose(Constants.FieldConstants.HubPosition);
 
@@ -58,32 +61,51 @@ public class AutoAlign extends Command {
     @Override
     public void initialize() {
 
-        PhoenixPIDController tunePID = new PhoenixPIDController(6,1,1);
+        PhoenixPIDController tunePID = new PhoenixPIDController(6, 1, 0);
         tunePID.enableContinuousInput(-Math.PI, Math.PI);
 
         driveRequest = new SwerveRequest.FieldCentricFacingAngle();
         driveRequest.HeadingController = tunePID;
-    
 
         // this is for tuning and now we can tune the PID controller
         SmartDashboard.putData("Auto Align PID", driveRequest.HeadingController);
         drivetrain.postStatus("Auto Aligning");
 
-        driveRequest.Deadband =
-        Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude() * 0.05;
-        driveRequest.RotationalDeadband =
-        Constants.TunerConstants.kAngularRateAt12Volts * 0.05;
+        driveRequest.Deadband = Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude() * 0.05;
+        driveRequest.RotationalDeadband = Constants.TunerConstants.kAngularRateAt12Volts * 0.05;
+    }
+
+    public double timeToShoot(double metersfromHub) {
+        return 1.15 - .455 * metersfromHub + .378 * Math.pow(metersfromHub, 2) - .118 * Math.pow(metersfromHub, 3)
+                + .013 * Math.pow(metersfromHub, 4);
     }
 
     @Override
     public void execute() {
-        // getTargetRotation = () -> {
+        ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+                CommandSwerveDrivetrain.getInstance().getState().Speeds,
+                CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation());
 
-        // return Rotation2d
-        // .fromRadians((Math.atan2(
-        // drivetrain.getState().Pose.getY() - targetPose.getY(),
-        // drivetrain.getState().Pose.getX() - targetPose.getX())));
-        // };
+        double metersFromHub = CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
+                !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
+                        : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation()));
+        double time = timeToShoot(metersFromHub);
+
+        Translation2d targetHubPose = Constants.FieldConstants.HubPosition.getTranslation().minus(
+                new Translation2d(
+                        robotSpeeds.vxMetersPerSecond * time,
+                        robotSpeeds.vyMetersPerSecond * time));
+
+        targetPose = new Pose2d(targetHubPose, new Rotation2d());
+        Robot.teleopField.getObject("TargetPose").setPose(targetPose);
+
+        getTargetRotation = () -> {
+
+            return Rotation2d
+                    .fromRadians((Math.atan2(
+                            drivetrain.getState().Pose.getY() - targetPose.getY(),
+                            drivetrain.getState().Pose.getX() - targetPose.getX())));
+        };
 
         SmartDashboard.putNumber("Drive theta",
                 Math.atan2(
@@ -101,11 +123,18 @@ public class AutoAlign extends Command {
             driveRequest.TargetDirection = getTargetRotation.get();
 
         }
+        double mult = 1;
 
+        if (babyOnBoard.get()) {
+            mult = 0.75;
+        }
         driveRequest
                 .withVelocityX(-translateX.get()
+                        * mult
                         * (Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude()))
                 .withVelocityY(-translateY.get()
+                        * mult
+
                         * Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude());
 
         drivetrain.setControl(driveRequest);

@@ -3,7 +3,6 @@ package frc.robot.commands.TurretCommands.Flywheel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Turret.Flywheel;
-import frc.robot.subsystems.Turret.Turret;
 
 public class ChargeUpTrench extends Command {
     Flywheel turretShooter;

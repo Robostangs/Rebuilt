@@ -91,14 +91,14 @@ public class VisionStangs {
         } else {
 
             LimelightHelpers.SetRobotOrientation(CameraName,
-                    CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees(),
-                    0d,
+                    CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees(), 
+                    CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityXWorld().getValueAsDouble(),
                     0d,
                     0d,
                     0d,
                     0d);
 
-            LimelightHelpers.SetIMUMode(CameraName, 3);
+            LimelightHelpers.SetIMUMode(CameraName, 4);
 
         }
 
@@ -186,7 +186,7 @@ public class VisionStangs {
             SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Pose null");
             return false;
         }
-        if (yoPoseEsti.tagCount < 2) {
+        if (yoPoseEsti.tagCount < 1) {
             SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
             return false;
         }

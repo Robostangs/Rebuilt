@@ -30,7 +30,6 @@ import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.commands.TurretCommands.TurretFactory;
-import frc.robot.commands.TurretCommands.setTurretDutyCycle;
 import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.Hood.setHoodDutyCycle;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -135,9 +134,7 @@ public class RobotContainer {
 
                 // xManip.b().onTrue(new InstantCommand(() -> Turret.setManipTarget(false)));
 
-                xManip.rightBumper().whileTrue(new setTurretDutyCycle(0.2));
-                xManip.leftBumper().whileTrue(new setTurretDutyCycle(-0.2));
-
+ 
                 xManip.a().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
 
                 // xManip.b().onTrue(new InstantCommand(() -> Feeder.getInstance().forceTog()));

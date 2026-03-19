@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Turret.Turret;
 
 public class ClimberFactory {
     public enum climberStates {
@@ -37,21 +36,13 @@ public class ClimberFactory {
                 .finallyDo(() -> Climber.getInstance().setClimberState(Constants.ClimberConstants.climberStates.L1));
     }
 
-    private Command setClimberPivot(double pos) {
-        return new InstantCommand(() -> {
-            Turret.getInstance().moveTurretSafe();
-        })
-                .andThen(new WaitUntilCommand(() -> Turret.getInstance().isTurretSafeForClimber()))
-                .andThen(new PivotClimber(pos))
-                .finallyDo(() -> Turret.setManualTarget(false));
-    }
 
-    public static Command deployClimber() {
-        return new ClimberFactory().setClimberPivot(Constants.ClimberConstants.kPivotDeployedPos);
-    }
+    // public static Command deployClimber() {
+    //     return new ClimberFactory().setClimberPivot(Constants.ClimberConstants.kPivotDeployedPos);
+    // }
 
-    public static Command stowClimber() {
-        return new ClimberFactory().setClimberPivot(Constants.ClimberConstants.kPivotDeployedPos);
-    }
+    // public static Command stowClimber() {
+    //     return new ClimberFactory().setClimberPivot(Constants.ClimberConstants.kPivotDeployedPos);
+    // }
 
 }

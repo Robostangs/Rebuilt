@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Seconds;
-
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -14,7 +12,6 @@ import java.util.List;
 
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.subsystems.Intake.*;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -24,7 +21,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 // import edu.wpi.first.epilogue.logging.NTEpilogueBackend;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -44,7 +40,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.LimelightHelpers;
 import frc.robot.Stable.TimedRobotstangs;
@@ -53,14 +48,12 @@ import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
-import frc.robot.commands.TurretCommands.Hood.HomeHood;
 import frc.robot.commands.TurretCommands.Hood.setHoodPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.commands.TurretCommands.TurretFactory;
 import frc.robot.commands.TurretCommands.Flywheel.ChargeUp;
 import frc.robot.subsystems.Turret.Hood;
-import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.Turret.Flywheel;
 
 // @Logged
@@ -267,7 +260,7 @@ public class Robot extends TimedRobotstangs {
             Kirby.getInstance().setKirbyWheels(intakeWheelsDC);
         }
         if (turretDC != 0) {
-            Turret.getInstance().runTurretDutyCycle(turretDC);
+            // Turret.getInstance().runTurretDutyCycle(turretDC);
         }
         if (feederDC != 0) {
             Feeder.getInstance().setDutyCycle(feederDC);
@@ -276,8 +269,8 @@ public class Robot extends TimedRobotstangs {
             IntakePivot.getInstance().setDC(intakePivotDC);
         }
         if (turretPosition != 0) {
-            Turret.setManualTarget(true);
-            Turret.getInstance().setTurretSetpointDoubleSupplier(() -> turretPosition);
+            // Turret.setManualTarget(true);
+            // Turret.getInstance().setTurretSetpointDoubleSupplier(() -> turretPosition);
         }
         if (flywheelDC != 0) {
             Flywheel.getInstance().setDutyCycle(flywheelDC);
@@ -347,7 +340,7 @@ public class Robot extends TimedRobotstangs {
                 // new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu()),
                 new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
                 new InstantCommand(() -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
-                new InstantCommand(() -> Turret.getInstance().zeroTurret()),
+                // new InstantCommand(() -> Turret.getInstance().zeroTurret()),
 
                 autoCommand);
 
@@ -515,13 +508,13 @@ public class Robot extends TimedRobotstangs {
         disableTab.add("Zero Hood",
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(0)).ignoringDisable(true));
 
-        disableTab.add("RESET TO SUN TZUUUUUU",
-                new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
-                        .ignoringDisable(true));
+        // disableTab.add("RESET TO SUN TZUUUUUU",
+        //         new InstantCommand(() -> Turret.getInstance().resetPositionWithSunTzu())
+        //                 .ignoringDisable(true));
 
-        disableTab.add("ZeroTurret",
-                new InstantCommand(() -> Turret.getInstance().zeroTurret())
-                        .ignoringDisable(true));
+        // disableTab.add("ZeroTurret",
+        //         new InstantCommand(() -> Turret.getInstance().zeroTurret())
+        //                 .ignoringDisable(true));
 
     }
 

@@ -44,7 +44,8 @@ public class Hood extends SubsystemBase {
         mainMotorConfig.Slot0.kV = Constants.HoodConstants.kHoodMotorV;
         mainMotorConfig.Slot0.kA = Constants.HoodConstants.kHoodMotorA;
 
-        mainMotorConfig.CurrentLimits.StatorCurrentLimit = 15;
+        //TODO make this constant
+        hoodMotorConfig.CurrentLimits.StatorCurrentLimit = 15;
 
         mainMotorConfig.ExternalFeedback.SensorToMechanismRatio = Constants.HoodConstants.kHoodSensortoMechanism;
 
@@ -123,9 +124,7 @@ public class Hood extends SubsystemBase {
 
     }
 
-    // public boolean getLimitSwitch() {
-    // return limitSwitch.get();
-    // }
+
 
     public void setMotionMagicTarget(double pos) {
         hoodTargetPosition.Position = pos;

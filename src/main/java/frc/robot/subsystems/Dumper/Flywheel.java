@@ -21,15 +21,18 @@ public class Flywheel extends SubsystemBase {
     TalonFX slaveFlywheelMotor;
     public static Flywheel mInstance;
     public Pose2d targetPose;
-    private VelocityVoltage flywheelTargetVelocity;
     private double adjustVal = 0;
-    private VelocityVoltage flywheelTargetVelocity = new VelocityVoltage(0);
+    private boolean canShoot;
+    // I think when you set it to 0 it tweaks, so its set to 1
+    private VelocityVoltage flywheelTargetVelocity = new VelocityVoltage(1);
+    private Follower slaveControl;
 
     public Flywheel() {
         canShoot = true;
         mainFlywheelMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
         slaveFlywheelMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
         configureFlywheelMotors();
+        slaveControl=new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Opposed);
     }
 
     private void configureFlywheelMotors() {
@@ -51,9 +54,6 @@ public class Flywheel extends SubsystemBase {
 
         // Apply the PID configurations to the shooter motor
         mainFlywheelMotor.getConfigurator().apply(flywheelConfig);
-
-        //TODO make you have to make configs for slave
-        slaveFlywheelMotor.setControl(new Follower(mainFlywheelMotor.getDeviceID(), MotorAlignmentValue.Opposed));
     }
 
     public double getFlywheelTargetVelocity() {
@@ -67,8 +67,8 @@ public class Flywheel extends SubsystemBase {
             if(Robot.shooterIsDumb){
                 return Constants.FlywheelConstants.kDumbShootRPS;
             }else{
-            // Acc get regression here
-            return 50;
+                // Acc get regression here
+                return 50;
             }
         }
     }
@@ -107,7 +107,7 @@ public class Flywheel extends SubsystemBase {
         if (canShoot) {
             mainFlywheelMotor.setControl(flywheelTargetVelocity);
             //TODO you have to set control for slave motor when tou set a control for main motor
-
+            slaveFlywheelMotor.setControl(slaveControl);
         }
     }
 

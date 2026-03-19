@@ -21,7 +21,7 @@ public class Hood extends SubsystemBase {
     MotionMagicExpoDutyCycle hoodTargetPosition;
 
     static boolean isHomed = false;
-
+    Follower slaveControl;
     boolean ShouldMM = true;
 
     private Hood() {
@@ -29,7 +29,7 @@ public class Hood extends SubsystemBase {
         slaveMotor = new TalonFXS(Constants.HoodConstants.hoodSlaveMotorID);
         hoodTargetPosition = new MotionMagicExpoDutyCycle(mainMotor.getPosition().getValueAsDouble());
         configureHoodMotor();
-
+        slaveControl= new Follower(Constants.HoodConstants.mainMotorID,MotorAlignmentValue.Opposed);
     }
 
     public void configureHoodMotor() {
@@ -45,7 +45,7 @@ public class Hood extends SubsystemBase {
         mainMotorConfig.Slot0.kA = Constants.HoodConstants.kHoodMotorA;
 
         //TODO make this constant
-        hoodMotorConfig.CurrentLimits.StatorCurrentLimit = 15;
+        mainMotorConfig.CurrentLimits.StatorCurrentLimit = 15;
 
         mainMotorConfig.ExternalFeedback.SensorToMechanismRatio = Constants.HoodConstants.kHoodSensortoMechanism;
 

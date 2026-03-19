@@ -5,15 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Center - Shoot - DepotIntake - Shoot - DClimb"
+            "pathName": "DTrench - DShoot"
           }
         },
         {
@@ -21,17 +15,11 @@
           "data": {
             "name": "Photoshoot"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Climb"
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Center",
+  "folder": "Depot",
   "choreoAuto": false
 }

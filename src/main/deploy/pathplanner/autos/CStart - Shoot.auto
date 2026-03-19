@@ -7,19 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CStart - OutpostIntake"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Outpostintake - Shoot - OShoot"
+            "pathName": "CStart - Shoot "
           }
         },
         {

@@ -5,15 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Photoshoot"
+            "pathName": "OTrench - OShoot"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "OStart - OTrench - FuckYouPass"
+            "name": "Photoshoot"
           }
         }
       ]

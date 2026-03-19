@@ -7,25 +7,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Photoshoot"
+            "name": "Extend"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "DStart - Shoot - DTrench - DCollect - DTrench - Shoot - DClimb"
+            "pathName": "DStart - DepotIntake - Shoot"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Photoshoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Climb"
           }
         }
       ]

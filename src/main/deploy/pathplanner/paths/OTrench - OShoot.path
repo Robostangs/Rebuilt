@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6456670191957787,
-        "y": 0.6180449986353711
+        "x": 3.422793793213246,
+        "y": 0.7327363650836969
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3610333682213316,
-        "y": 1.2910830185072737
+        "x": 2.373966179949054,
+        "y": 1.0762619405021825
       },
       "isLocked": false,
-      "linkedName": "OutpostIntake"
+      "linkedName": "OutpostTrenchIn"
     },
     {
       "anchor": {
-        "x": 2.6424772727272727,
-        "y": 2.6538863636363637
+        "x": 1.464064717521834,
+        "y": 2.386087211153566
       },
       "prevControl": {
-        "x": 2.189471193575357,
-        "y": 2.2377715563724725
+        "x": 1.5029600504912661,
+        "y": 1.5689860239264917
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CenterOutpostShoot"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -138.48932490579645
+    "rotation": 27.118240551279648
   },
   "reversed": false,
-  "folder": "Center",
+  "folder": "Outpost",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 180.0
+    "velocity": 0.0,
+    "rotation": 45.0
   },
   "useDefaultConstraints": true
 }

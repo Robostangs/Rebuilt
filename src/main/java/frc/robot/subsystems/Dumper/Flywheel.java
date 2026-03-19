@@ -106,7 +106,6 @@ public class Flywheel extends SubsystemBase {
     public void periodic() {
         if (canShoot) {
             mainFlywheelMotor.setControl(flywheelTargetVelocity);
-            //TODO you have to set control for slave motor when tou set a control for main motor
             slaveFlywheelMotor.setControl(slaveControl);
         }
     }

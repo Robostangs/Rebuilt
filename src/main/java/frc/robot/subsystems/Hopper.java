@@ -20,12 +20,12 @@ public class Hopper extends SubsystemBase {
     }
 
     public void configureLeftRighter() {
-        TalonFXConfiguration roller = new TalonFXConfiguration();
+        TalonFXConfiguration rollerConfigs = new TalonFXConfiguration();
 
-        roller.CurrentLimits.StatorCurrentLimit = 100;
-        roller.CurrentLimits.StatorCurrentLimitEnable = true;
+        rollerConfigs.CurrentLimits.StatorCurrentLimit = 100;
+        rollerConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        //TODO bro does not apply configs
+        roller.getConfigurator().apply(rollerConfigs);
 
     }
 

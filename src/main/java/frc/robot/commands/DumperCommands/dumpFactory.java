@@ -10,8 +10,11 @@ import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 public class dumpFactory {
     public static Command Shoot(){
 
-        return new InstantCommand(() -> Robot.setShooterIsDumb(false))
-            .alongWith(new ChargeUp())
+        return
+        //  new InstantCommand(() -> Robot.setShooterIsDumb(false))
+        //     .alongWith(
+                new ChargeUp()
+                // )
             .alongWith(new setHoodPosition())
             .alongWith(new Index(false));
     }

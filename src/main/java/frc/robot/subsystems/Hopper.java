@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -10,13 +12,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Hopper extends SubsystemBase {
-    public TalonFX roller;
+    public TalonSRX roller;
+    public TalonFX rollerL;
+
     public static Hopper mInstance;
 
     Alert hopperAlert = new Alert("Hopper roller motor is HOT", AlertType.kError);
 
     public Hopper() {
-        roller = new TalonFX(Constants.HopperConstants.kRollerID);
+        roller = new TalonSRX(1);
+        rollerL = new TalonFX(8);
+
     }
 
     public void configureLeftRighter() {
@@ -25,12 +31,14 @@ public class Hopper extends SubsystemBase {
         rollerConfigs.CurrentLimits.StatorCurrentLimit = 100;
         rollerConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        roller.getConfigurator().apply(rollerConfigs);
+        // roller.getConfigurator().apply(rollerConfigs);
 
     }
 
+    
     public void setRollerDutyCycle(double dutyCycle) {
-        roller.set(dutyCycle);
+        roller.set(TalonSRXControlMode.PercentOutput, dutyCycle);
+        rollerL.set(dutyCycle);
     }
 
     public void postRollerStatus(String status) {
@@ -43,6 +51,7 @@ public class Hopper extends SubsystemBase {
         }
         return mInstance;
     }
+
     @Override
     public void periodic() {
     }

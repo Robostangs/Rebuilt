@@ -64,16 +64,16 @@
     },
     {
       "anchor": {
-        "x": 3.4328666871360993,
+        "x": 2.996744186046511,
         "y": 2.5069619382278017
       },
       "prevControl": {
-        "x": 4.754759484170305,
+        "x": 4.318636983080713,
         "y": 2.4797850709606983
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "OutpostBumpIn"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
@@ -142,8 +142,8 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.5,
-    "rotation": 45.0
+    "velocity": 0.0,
+    "rotation": 45.76388593642817
   },
   "reversed": false,
   "folder": "Outpost",

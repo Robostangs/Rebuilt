@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class Flywheel extends SubsystemBase {
     TalonFX mainFlywheelMotor;
@@ -32,7 +33,7 @@ public class Flywheel extends SubsystemBase {
         mainFlywheelMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
         slaveFlywheelMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
         configureFlywheelMotors();
-        slaveControl=new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Opposed);
+        slaveControl = new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Opposed);
     }
 
     private void configureFlywheelMotors() {
@@ -63,11 +64,11 @@ public class Flywheel extends SubsystemBase {
             // full send if we on opposing alliance and we're past the max actual distance
             // for passing
             return Constants.FlywheelConstants.kVelocityAtOppositeAlliancePass;
-        }else{
+        } else {
 
-                // Acc get regression here
-                return  2.2 * feetFromTarget + 52;
-            
+            // Acc get regression here
+            return 2.2 * feetFromTarget + 52;
+
         }
     }
 
@@ -102,10 +103,15 @@ public class Flywheel extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (canShoot) {
+        if (Math.abs(CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond) > 2.5
+                || flywheelTargetVelocity.Velocity == 0) {
+            mainFlywheelMotor.set(0);
+        } else {
+            flywheelTargetVelocity.Velocity = flywheelTargetVelocity.Velocity + adjustVal;
             mainFlywheelMotor.setControl(flywheelTargetVelocity);
-            slaveFlywheelMotor.setControl(slaveControl);
+
         }
+
     }
 
     public void postStatus(String status) {

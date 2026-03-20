@@ -14,7 +14,7 @@ public class ChargeUp extends Command {
     public ChargeUp() {
         shooter = Flywheel.getInstance();
         addRequirements(shooter);
-        targetRPS = shooter.getFlywheelTargetVelocity();
+        // targetRPS = shooter.getFlywheelTargetVelocity();
         smort = true;
     }    
     public ChargeUp(double targetRPS) {
@@ -26,7 +26,7 @@ public class ChargeUp extends Command {
 
     @Override
     public void initialize() {
-        shooter.setCanShoot(true);
+        // shooter.setCanShoot(true);
     }
 
     @Override

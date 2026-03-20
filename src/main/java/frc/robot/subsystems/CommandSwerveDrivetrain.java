@@ -398,7 +398,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 new PPHolonomicDriveController((Constants.AutoConstants.translationPID),
                         (Constants.AutoConstants.rotationPID)),
                 Constants.AutoConstants.RobotConfig,
-                () -> Robot.isRed(),this);
+                () -> Robot.isRed()
+                ,this);
     }
 
     /**

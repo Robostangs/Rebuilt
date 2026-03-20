@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.subsystems.Intake.*;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -73,7 +74,7 @@ public class Robot extends TimedRobotstangs {
     public static Constants.ElasticConstants.whoCanScore canBlueScore;
 
     String autoname = "";
-    String oldAutoname = "";
+    String oldAutoname = " ";
     public CommandScheduler scheduler = CommandScheduler.getInstance();
 
     public Color allianceScore = Constants.ElasticConstants.purple;
@@ -128,6 +129,8 @@ public class Robot extends TimedRobotstangs {
         configureDisabledTab();
         configureTeleopTab();
         loadNamedCommands();
+
+        oldAutoname = "blank";
 
     }
 
@@ -242,12 +245,21 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void disabledInit() {
 
-        autoChooser.addOption("FavNormal", "favCenter - Shoot - DepotIntake - Shoot");
-        autoChooser.addOption("Just pre loads", "shoot");
+        // autoChooser.addOption("FavNormal", "favCenter - Shoot - DepotIntake -
+        // Shoot");
+        // autoChooser.addOption("Depot", "DStart - DTrench - DIntake - DBump -
+        // DShoot");
+        // autoChooser.addOption("Just pre loads", "shoot");
+
+        for (String name : AutoBuilder.getAllAutoNames()) {
+            autoChooser.addOption(name, name);
+
+        }
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
         autoname = autoChooser.getSelected();
+        oldAutoname = "nada";
     }
 
     @Override
@@ -256,13 +268,14 @@ public class Robot extends TimedRobotstangs {
         autoname = autoChooser.getSelected();
 
         if (autoname != null) {
-            if (autoname.equals("favCenter - Shoot - DepotIntake - Shoot")) {
+            if (autoname.equals("favCenter - Shoot - DepotIntake - Shoot")
+                    || autoname.equals("DStart - DTrench - DIntake - DBump - DShoot")) {
                 autoCommand = new PathPlannerAuto(autoname);
             } else if (autoname.equals("shoot")) {
                 autoCommand = (dumpFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()));
 
             } else {
-                autoCommand = new PrintCommand("Auto not Autoing....");
+                autoCommand = new PathPlannerAuto(autoname);
 
             }
         } else {
@@ -275,7 +288,7 @@ public class Robot extends TimedRobotstangs {
         // drawCurrentAuto(autoCommand.getName());
         // }
 
-        oldAutoname = " autoChooser.getSelected().getName();";
+        oldAutoname = autoname;
     }
 
     @Override
@@ -483,7 +496,7 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Pass",
                 new PrintCommand("you're supposed to pass bruh"));
 
-        NamedCommands.registerCommand("Extend", new ExtendIntake());
+        NamedCommands.registerCommand("Extend", new StartIntake());
 
         NamedCommands.registerCommand("Retract", new RetractIntake().withTimeout(0.5));
 

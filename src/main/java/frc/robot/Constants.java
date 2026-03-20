@@ -189,8 +189,8 @@ public final class Constants {
         public static final double kShooterMotorS = 0.29;
         public static final double kShooterMotorStatorCurrentLimit = 100;
         public static final double kVelocityAtOppositeAlliancePass = 80;
-        public static final double kShooterVelocityTolerance = 0;
-        public static final int kFlywheelMotorID = 0;
+        public static final double kShooterVelocityTolerance = 10;
+        public static final int kFlywheelMotorID = 9;
         public static final int kFlywheelSlaveMotorID = 0;
         public static final double kDumbShootRPS = 0;
 
@@ -325,7 +325,7 @@ public final class Constants {
         // This needs to be tuned to your individual robot
         public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.12);
 
-        public static final double kAngularRateAt12Volts =  RotationsPerSecond.of(1).in(RadiansPerSecond);
+        public static final double kAngularRateAt12Volts =  RotationsPerSecond.of(1.5).in(RadiansPerSecond);
 
         // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
         // This may need to be tuned to your individual robot

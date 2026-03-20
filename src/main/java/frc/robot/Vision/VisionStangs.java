@@ -44,7 +44,7 @@ public class VisionStangs {
 
 
 
-        LimelightHelpers.SetFiducialIDFiltersOverride(LLname, Constants.VisionConstants.badIDS);
+        LimelightHelpers.SetFiducialIDFiltersOverride(LLname, Constants.VisionConstants.goodIDS);
     }
 
     private void Photonperiodic() {

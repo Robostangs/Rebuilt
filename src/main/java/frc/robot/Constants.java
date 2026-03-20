@@ -306,7 +306,8 @@ public final class Constants {
 
         public static final double kPhotonAmbiguityThres = 0.7;
         public static final double kLLDisThres = 3;
-        public static final int[] badIDS = {1,12,6,7,17,28,22,23};
+        public static final int[] goodIDS = {2,3,4,5,8,9,10,11,13,14,15,16,18,19,20,21,24,25,26,27,28,29,30};
+        // {1,12,6,7,17,28,22,23};
     }
 
     public class TunerConstants {

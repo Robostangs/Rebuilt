@@ -54,6 +54,7 @@ import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Dumper.Flywheel;
 import frc.robot.subsystems.Dumper.Hood;
 
+
 public class Robot extends TimedRobotstangs {
     public static boolean isJaba;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
@@ -212,6 +213,7 @@ public class Robot extends TimedRobotstangs {
         if (intakeWheelsDC != 0) {
             Kirby.getInstance().setKirbyWheels(intakeWheelsDC);
         }
+    
         if (feederDC != 0) {
             Feeder.getInstance().setDutyCycle(feederDC);
         }

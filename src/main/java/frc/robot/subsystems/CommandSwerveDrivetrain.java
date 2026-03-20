@@ -12,7 +12,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
@@ -345,6 +344,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return (Math.abs(controller.getLeftY()) > 0.05
                 || Math.abs(controller.getLeftX()) > 0.05
                 || Math.abs(controller.getRightX()) > 0.05);
+    }
+
+    public void postStatus(String status) {
+        SmartDashboard.putString("Drivetrain/ Status", status);
+
     }
 
     @Override

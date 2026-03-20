@@ -39,9 +39,10 @@ import frc.robot.subsystems.Dumper.Hood;
 public class RobotContainer {
         public static boolean useVision = true;
         private double MaxSpeed = 1.0 * Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-        private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
-                                                                                          // second
-                                                                                          // max angular velocity
+        private double MaxAngularRate = Constants.TunerConstants.kAngularRateAt12Volts;
+
+        // second
+        // max angular velocity
 
         /* Setting up bindings for necessary control of the swerve drive platform */
         private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -67,6 +68,7 @@ public class RobotContainer {
         public RobotContainer() {
                 configureDrivingBinding();
                 configureManipBindings();
+                configureSimBinds();
                 drivetrain.registerTelemetry(logger::telemeterize);
                 logger.initSwerveLog();
         }
@@ -111,9 +113,9 @@ public class RobotContainer {
                                                               )));
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(
-                                        !Robot.isRed() ? Constants.FieldConstants.resetPose : 
-                                        FlippingUtil.flipFieldPose( Constants.FieldConstants.resetPose)
-                                        )));
+                                                !Robot.isRed() ? Constants.FieldConstants.resetPose
+                                                                : FlippingUtil.flipFieldPose(
+                                                                                Constants.FieldConstants.resetPose))));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(
                                 () -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));
@@ -131,8 +133,11 @@ public class RobotContainer {
                 xDrive.povLeft().whileTrue(new HomeIntake(false));
 
                 xDrive.x().whileTrue(new StartIntake());
-                xDrive.a().onTrue(new InstantCommand(
+                xDrive.b().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
+
+                xDrive.a().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                                () -> xDrive.getLeftTriggerAxis() > 0.2));
 
         }
 
@@ -200,5 +205,13 @@ public class RobotContainer {
                                         ));
 
                 }
+        }
+
+        private void configureSimBinds() {
+                new Trigger(() -> xSim.getRawButtonPressed(1))
+                                .toggleOnTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
+                                                () -> xSim.getRawAxis(1),
+                                                () -> false));
+
         }
 }

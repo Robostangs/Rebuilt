@@ -237,13 +237,13 @@ public final class Constants {
         public static final String kLimelightFourR = "limelight-ultron";
 
         public static final String kLimelightThree = "limelight-agomoto";
-        public static final double kVisionAngularThreshold = 22.5;
+        public static final double kVisionAngularThreshold = 100;
 
         public static final String kPhotonCamNameRight = "Daredevil";
         public static final Transform3d kRobotToCamRight = new Transform3d(
-                Units.inchesToMeters(-8.895),
-                Units.inchesToMeters(13.16),
-                Units.inchesToMeters(11.796),
+                Units.inchesToMeters(-8.5),
+                Units.inchesToMeters(12),
+                Units.inchesToMeters(13.5),
                 new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(32.29 + 90),
                         Units.degreesToRadians(-90)));
 
@@ -259,8 +259,10 @@ public final class Constants {
         public static final String kLimelightRight = "Ultron";
         public static final Transform3d kRobotToCamRear = new Transform3d(new Transform2d());
 
-        public static final double kPhotonAmbiguityThres = 0.5;
+        public static final double kPhotonAmbiguityThres = 0.7;
         public static final double kLLDisThres = 3;
+        public static final int[] goodIDS = {2,3,4,5,8,9,10,11,13,14,15,16,18,19,20,21,24,25,26,27,28,29,30};
+        // {1,12,6,7,17,28,22,23};
     }
 
     public class TunerConstants {
@@ -314,11 +316,7 @@ public final class Constants {
                                 .withStatorCurrentLimitEnable(true));
         private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
         // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
-        private static final Pigeon2Configuration pigeonConfigs = new Pigeon2Configuration()
-                .withMountPose(new MountPoseConfigs()
-                        .withMountPoseYaw(180)
-                        .withMountPosePitch(-90)
-                        .withMountPoseRoll(66));
+        private static final Pigeon2Configuration pigeonConfigs = null;
 
         // CAN bus that the devices are located on;
         // All swerve devices must share the same CAN bus
@@ -327,6 +325,8 @@ public final class Constants {
         // Theoretical free speed (m/s) at 12 V applied output;
         // This needs to be tuned to your individual robot
         public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.12);
+
+        public static final double kAngularRateAt12Volts =  RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
         // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
         // This may need to be tuned to your individual robot

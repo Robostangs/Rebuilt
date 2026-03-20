@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Feeder;
@@ -29,10 +28,10 @@ public class Index extends Command {
 
         // } else {
 
-        //     if (Flywheel.getInstance().shooterAtTargetVelocity() || Feeder.force) {
+            if (Flywheel.getInstance().shooterAtTargetVelocity() ) {
                 feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
 
-        //     }
+            }
         // }
     }
 

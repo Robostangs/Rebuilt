@@ -41,6 +41,10 @@ public class VisionStangs {
         this.CameraName = LLname;
         bigAmbiguity = -1;
         isLL = true;
+
+
+
+        LimelightHelpers.SetFiducialIDFiltersOverride(LLname, Constants.VisionConstants.goodIDS);
     }
 
     private void Photonperiodic() {
@@ -91,8 +95,8 @@ public class VisionStangs {
         } else {
 
             LimelightHelpers.SetRobotOrientation(CameraName,
-                    CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees(),
-                    0d,
+                    CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees(), 
+                    CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityXWorld().getValueAsDouble(),
                     0d,
                     0d,
                     0d,
@@ -102,7 +106,6 @@ public class VisionStangs {
 
         }
 
-        LimelightHelpers.SetIMUAssistAlpha(CameraName, 0.4);
 
         if (DriverStation.isDisabled()) {
             NetworkTableInstance.getDefault().getTable(CameraName)
@@ -120,10 +123,19 @@ public class VisionStangs {
                 SmartDashboard.putString("Vision/" + CameraName + "MT 1 or 2", "1 BC DISAB:ED");
 
             }
+            else if
+            (CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityZWorld()
+            .getValueAsDouble() < Constants.VisionConstants.kVisionAngularThreshold) {
 
+            fourPoseEsti = LimelightHelpers
+            .getBotPoseEstimate_wpiBlue(CameraName);
+
+            SmartDashboard.putString("Vision/"+CameraName+"MT 1 or 2", "1");
+
+            }
             else {
                 fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
+                        .getBotPoseEstimate_wpiBlue(CameraName);
                 SmartDashboard.putString("Vision/" + CameraName + "MT 1 or 2", "2 BC NOT DISABELED");
 
             }
@@ -169,7 +181,33 @@ public class VisionStangs {
     }
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
-        return false;
+        if (Robot.isSimulation()) {
+            SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Simulation mode");
+            return false;
+        }
+        if (yoPoseEsti == null) {
+            SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Pose null");
+            return false;
+        }
+        if (yoPoseEsti.tagCount < 1) {
+            SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
+            return false;
+        }
+        if (yoPoseEsti.avgTagDist > Constants.VisionConstants.kLLDisThres) {
+                        SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Too far, Dis is: "+ yoPoseEsti.avgTagDist);
+
+            return false;
+        }
+
+        SmartDashboard.putNumber("Vision"+CameraName+"/Avg Dis"+ CameraName, yoPoseEsti.avgTagDist);
+
+        if (!RobotContainer.useVision) {
+            SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason"+CameraName, "useVision disabled");
+        } else {
+            SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Accepted");
+        }
+
+        return RobotContainer.useVision;
     }
 
     public void periodic() {

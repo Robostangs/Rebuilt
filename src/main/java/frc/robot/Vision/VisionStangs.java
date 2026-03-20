@@ -41,6 +41,10 @@ public class VisionStangs {
         this.CameraName = LLname;
         bigAmbiuity = -1;
         isLL = true;
+
+
+
+        LimelightHelpers.SetFiducialIDFiltersOverride(LLname, Constants.VisionConstants.badIDS);
     }
 
     private void Photonperiodic() {
@@ -98,11 +102,10 @@ public class VisionStangs {
                     0d,
                     0d);
 
-            LimelightHelpers.SetIMUMode(CameraName, 4);
+            LimelightHelpers.SetIMUMode(CameraName, 3);
 
         }
 
-        LimelightHelpers.SetIMUAssistAlpha(CameraName, 0.4);
 
         if (DriverStation.isDisabled()) {
             NetworkTableInstance.getDefault().getTable(CameraName)

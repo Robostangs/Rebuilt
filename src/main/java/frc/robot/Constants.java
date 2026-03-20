@@ -89,7 +89,7 @@ public final class Constants {
              new Pose2d(3.5, 4, new Rotation2d(Units.degreesToRadians(180)));
 
         //THIS IS IN FEET
-        public static final double maxRegressionDistance = 0;
+        public static final double maxRegressionDistance = 30;
 
     }
 
@@ -171,7 +171,7 @@ public final class Constants {
         public static final double kHoodHomeTimeout = .5;
         public static final double kHoodUpPos = 0.8;
         public static final int hoodSlaveMotorID = 0;
-        public static final double kPosAtOppositeAlliancePass = 0;
+        public static final double kPosAtOppositeAlliancePass = 0.7;
         public static final double kDumbShootHoodPos = 0;
     }
 
@@ -188,7 +188,7 @@ public final class Constants {
         public static final double kShooterMotorV = 0.122;
         public static final double kShooterMotorS = 0.29;
         public static final double kShooterMotorStatorCurrentLimit = 100;
-        public static final double kVelocityAtOppositeAlliancePass = 0;
+        public static final double kVelocityAtOppositeAlliancePass = 80;
         public static final double kShooterVelocityTolerance = 0;
         public static final int kFlywheelMotorID = 0;
         public static final int kFlywheelSlaveMotorID = 0;

@@ -29,7 +29,7 @@ public class Hood extends SubsystemBase {
         slaveMotor = new TalonFXS(Constants.HoodConstants.hoodSlaveMotorID);
         hoodTargetPosition = new MotionMagicExpoDutyCycle(mainMotor.getPosition().getValueAsDouble());
         configureHoodMotor();
-        slaveControl= new Follower(Constants.HoodConstants.mainMotorID,MotorAlignmentValue.Opposed);
+        slaveControl = new Follower(Constants.HoodConstants.mainMotorID, MotorAlignmentValue.Opposed);
     }
 
     public void configureHoodMotor() {
@@ -44,7 +44,7 @@ public class Hood extends SubsystemBase {
         mainMotorConfig.Slot0.kV = Constants.HoodConstants.kHoodMotorV;
         mainMotorConfig.Slot0.kA = Constants.HoodConstants.kHoodMotorA;
 
-        //TODO make this constant
+        // TODO make this constant
         mainMotorConfig.CurrentLimits.StatorCurrentLimit = 15;
 
         mainMotorConfig.ExternalFeedback.SensorToMechanismRatio = Constants.HoodConstants.kHoodSensortoMechanism;
@@ -60,22 +60,19 @@ public class Hood extends SubsystemBase {
         slaveMotorConfig.CurrentLimits.StatorCurrentLimit = 15;
 
         slaveMotor.getConfigurator().apply(slaveMotorConfig);
-        slaveMotor.setControl(new Follower(Constants.HoodConstants.mainMotorID,MotorAlignmentValue.Opposed));
+        slaveMotor.setControl(new Follower(Constants.HoodConstants.mainMotorID, MotorAlignmentValue.Opposed));
     }
 
-
     public double getHoodAngle(double metersFromTarget) {
-        double feetFromTarget= Units.metersToFeet(metersFromTarget);
-        if(Robot.isPassing()&&feetFromTarget>Constants.FieldConstants.maxRegressionDistance){
-            // full send if we on opposing alliance and we're past the max actual distance for passing
+        double feetFromTarget = Units.metersToFeet(metersFromTarget);
+        if (Robot.isPassing() && feetFromTarget > Constants.FieldConstants.maxRegressionDistance) {
+            // full send if we on opposing alliance and we're past the max actual distance
+            // for passing
             return Constants.HoodConstants.kPosAtOppositeAlliancePass;
-        }else{
-            if(Robot.shooterIsDumb){
-                return Constants.HoodConstants.kDumbShootHoodPos;
-            }else{
-                // Acc get regression here
-                return 0;
-            }
+        } else {
+
+            return -0.522 + 0.429 * Math.log(feetFromTarget);
+
         }
     }
 
@@ -127,8 +124,6 @@ public class Hood extends SubsystemBase {
         return mainMotor.getTorqueCurrent().getValueAsDouble();
 
     }
-
-
 
     public void setMotionMagicTarget(double pos) {
         hoodTargetPosition.Position = pos;

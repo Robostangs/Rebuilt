@@ -23,16 +23,11 @@ public class Index extends Command {
 
     public void execute() {
 
-        // if (isDumb) {
-        //     feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
+     
 
-        // } else {
-
-            if (Flywheel.getInstance().shooterAtTargetVelocity() ) {
-                feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
-
-            }
-        // }
+    if (Flywheel.getInstance().shooterAtTargetVelocity() ) {
+        feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
+        }
     }
 
     @Override

@@ -37,7 +37,7 @@ import frc.robot.subsystems.Dumper.Hood;
 
 public class RobotContainer {
         public static boolean useVision = true;
-        private double MaxSpeed =  Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+        private double MaxSpeed = Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         private double MaxAngularRate = Constants.TunerConstants.kAngularRateAt12Volts;
 
         // second
@@ -93,23 +93,26 @@ public class RobotContainer {
         private void configureDrivingBinding() {
                 setDrivetrain();
 
-                //TODO put tese complex things into a facotry, ts too ugly
+                // TODO put tese complex things into a facotry, ts too ugly
                 xDrive.rightTrigger().whileTrue(dumpFactory.Shoot().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
+                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),
+                                                Hood.getInstance())
                                                 .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
-                                                              )));
+                                                                () -> Hood.getInstance().setMotionMagic(),
+                                                                Hood.getInstance())));
 
-                 xDrive.b().whileTrue(dumpFactory.dumbShoot().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
+                xDrive.b().whileTrue(dumpFactory.dumbShoot().alongWith(new RunHopper()))
+                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),
+                                                Hood.getInstance())
                                                 .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
-                                                              )));
+                                                                () -> Hood.getInstance().setMotionMagic(),
+                                                                Hood.getInstance())));
                 xDrive.y().whileTrue(dumpFactory.dumbShootTrench().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
+                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),
+                                                Hood.getInstance())
                                                 .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
-                                                              )));
+                                                                () -> Hood.getInstance().setMotionMagic(),
+                                                                Hood.getInstance())));
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(
                                                 !Robot.isRed() ? Constants.FieldConstants.resetPose
@@ -120,7 +123,6 @@ public class RobotContainer {
                                 () -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));
 
                 xDrive.rightPaddle().whileTrue(new ExtendIntake());
-                
 
                 xDrive.leftPaddle().whileTrue(new RetractIntake());
 
@@ -141,24 +143,24 @@ public class RobotContainer {
         }
 
         public void configureManipBindings() {
-                //we only want 3 manip bindings
+                // we only want 3 manip bindings
                 xManip.b().onChange(
-                        new InstantCommand(() -> Robot.setShooterPass(xManip.b().getAsBoolean())));
+                                new InstantCommand(() -> Robot.setShooterPass(xManip.b().getAsBoolean())));
 
                 xManip.a().onChange(
-                        new InstantCommand(() -> Robot.setShooterIsDumb(xManip.a().getAsBoolean())));
-                        
+                                new InstantCommand(() -> Robot.setShooterIsDumb(xManip.a().getAsBoolean())));
+
                 xManip.y().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
                                 .whileTrue(new InstantCommand(
-                                                () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * -
-                                                30)));
+                                                () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * -30)));
 
-                xManip.rightTrigger().whileTrue(new InstantCommand(() -> Hood.getInstance().setHoodDutyCycle(xManip.getRightTriggerAxis() * 0.25)));
+                xManip.rightTrigger().whileTrue(new InstantCommand(
+                                () -> Hood.getInstance().setHoodDutyCycle(xManip.getRightTriggerAxis() * 0.25)));
 
-                xManip.leftTrigger().whileTrue(new InstantCommand(() -> Hood.getInstance().setHoodDutyCycle(xManip.getLeftTriggerAxis() * -0.25)));
-
+                xManip.leftTrigger().whileTrue(new InstantCommand(
+                                () -> Hood.getInstance().setHoodDutyCycle(xManip.getLeftTriggerAxis() * -0.25)));
 
         }
 
@@ -179,30 +181,13 @@ public class RobotContainer {
                                         // Drivetrain will execute this command periodically
                                         drivetrain.applyRequest(() -> drive
                                                         .withVelocityX(-xDrive.getLeftY() * MaxSpeed
-                                                                        * leftTrigger.getAsDouble()) // Drive
-                                                        // forward
-                                                        // with
-                                                        // negative
-                                                        // Y
-                                                        // (forward)
+                                                                        * leftTrigger.getAsDouble())
                                                         .withVelocityY(-xDrive.getLeftX() * MaxSpeed
-                                                                        * leftTrigger.getAsDouble()) // Drive
-                                                        // left
-                                                        // with
-                                                        // negative
-                                                        // X
-                                                        // (left)
+                                                                        * leftTrigger.getAsDouble())
                                                         .withRotationalRate(
                                                                         -xDrive.getRightX() * MaxAngularRate
                                                                                         * (leftTrigger.getAsDouble()
-                                                                                                        + .25)) // Drive
-                                        // counterclockwise
-                                        // with
-                                        // negative
-                                        // X
-                                        // (left)
-                                        ));
-
+                                                                                                        + .25))));
                 }
         }
 
@@ -211,6 +196,10 @@ public class RobotContainer {
                                 .toggleOnTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
                                                 () -> xSim.getRawAxis(1),
                                                 () -> false));
+                new Trigger(() -> xSim.getRawButtonPressed(2))
+                                .toggleOnTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
+                                                () -> xSim.getRawAxis(1),
+                                                () -> true));
 
         }
 }

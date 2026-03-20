@@ -73,29 +73,11 @@ public class AutoAlign extends Command {
         driveRequest.RotationalDeadband = Constants.TunerConstants.kAngularRateAt12Volts * 0.05;
     }
 
-    public double timeToShoot(double metersfromHub) {
-        return 1.15 - .455 * metersfromHub + .378 * Math.pow(metersfromHub, 2) - .118 * Math.pow(metersfromHub, 3)
-                + .013 * Math.pow(metersfromHub, 4);
-    }
 
     @Override
     public void execute() {
-        ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
-                CommandSwerveDrivetrain.getInstance().getState().Speeds,
-                CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation());
-
-        double metersFromHub = CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
-                !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
-                        : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation()));
-        double time = timeToShoot(metersFromHub);
-
-        Translation2d targetHubPose = Constants.FieldConstants.HubPosition.getTranslation().minus(
-                new Translation2d(
-                        robotSpeeds.vxMetersPerSecond * time,
-                        robotSpeeds.vyMetersPerSecond * time));
-
-        targetPose = new Pose2d(targetHubPose, new Rotation2d());
-        Robot.teleopField.getObject("TargetPose").setPose(targetPose);
+     
+        setTargetPose();
 
         getTargetRotation = () -> {
 
@@ -105,38 +87,55 @@ public class AutoAlign extends Command {
                             drivetrain.getState().Pose.getX() - targetPose.getX())));
         };
 
-        SmartDashboard.putNumber("Drive theta",
-                Math.atan2(
-                        drivetrain.getState().Pose.getY(),
-                        drivetrain.getState().Pose.getX()));
 
         SmartDashboard.putNumber("Drive current theta",
                 Math.atan2(
                         drivetrain.getState().Pose.getY() - targetPose.getY(),
                         drivetrain.getState().Pose.getX() - targetPose.getX()));
 
-        if (Math.abs(getTargetRotation.get().getDegrees()) >= Rotation2d.kPi.getDegrees()) {
-            driveRequest.TargetDirection = Rotation2d.kPi;
-        } else {
+    
             driveRequest.TargetDirection = getTargetRotation.get();
 
-        }
-        double mult = 1;
+        
 
-        if (babyOnBoard.get()) {
-            mult = 0.75;
-        }
         driveRequest
                 .withVelocityX(-translateX.get()
-                        * mult
+                        * (babyOnBoard.get() ? 1.0 : 0.25)
                         * (Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude()))
                 .withVelocityY(-translateY.get()
-                        * mult
-
+                        * (babyOnBoard.get() ? 1.0 : 0.25)
                         * Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude());
 
         drivetrain.setControl(driveRequest);
         drivetrain.postStatus("Currently aligning");
+
+    }
+
+
+
+        public double timeToShoot(double metersfromHub) {
+        return 1.15 - .455 * metersfromHub + .378 * Math.pow(metersfromHub, 2) - .118 * Math.pow(metersfromHub, 3)
+                + .013 * Math.pow(metersfromHub, 4);
+    }
+
+
+
+        public void setTargetPose() {
+           ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+                CommandSwerveDrivetrain.getInstance().getState().Speeds,
+                CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation());
+
+        double metersFromHub = Robot.getMetersFromTarget();
+        double time = timeToShoot(metersFromHub);
+
+        Translation2d targetHubPose = Constants.FieldConstants.HubPosition.getTranslation().minus(
+                new Translation2d(
+                        robotSpeeds.vxMetersPerSecond * time,
+                        robotSpeeds.vyMetersPerSecond * time));
+
+        targetPose = new Pose2d(targetHubPose, new Rotation2d());
+
+        Robot.teleopField.getObject("TargetPose").setPose(targetPose);
 
     }
 

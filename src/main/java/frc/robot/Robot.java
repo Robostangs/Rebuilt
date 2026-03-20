@@ -16,6 +16,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.subsystems.Intake.*;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FlippingUtil;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -54,7 +56,6 @@ import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Dumper.Flywheel;
 import frc.robot.subsystems.Dumper.Hood;
 
-
 public class Robot extends TimedRobotstangs {
     public static boolean isJaba;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
@@ -81,8 +82,8 @@ public class Robot extends TimedRobotstangs {
 
     public PowerDistribution pdh = new PowerDistribution(Constants.ElasticConstants.kPdhCanId, ModuleType.kRev);
 
-    public static boolean shooterPass=false;
-    public static boolean shooterIsDumb=false;
+    public static boolean shooterPass = false;
+    public static boolean shooterIsDumb = false;
     // pit test choosers
     SendableChooser<Command> hoodSetpointChooser = new SendableChooser<>();
     SendableChooser<Command> intakePivotSetpointChooser = new SendableChooser<>();
@@ -94,6 +95,7 @@ public class Robot extends TimedRobotstangs {
 
     static NetworkTableEntry turretSetpoint;
     static boolean isPassing = false;
+
     public Robot() {
         m_robotContainer = new RobotContainer();
     }
@@ -197,7 +199,7 @@ public class Robot extends TimedRobotstangs {
 
     void pitTestPeriodic() {
 
-        //TODO make PIT test as a whole look better 
+        // TODO make PIT test as a whole look better
         // read sliders and run commands
         double hoodDC = SmartDashboard.getNumber("PitTest/HoodDC", 0);
         double flywheelDC = SmartDashboard.getNumber("PitTest/FlywheelDC", 0);
@@ -212,7 +214,7 @@ public class Robot extends TimedRobotstangs {
         if (intakeWheelsDC != 0) {
             Kirby.getInstance().setKirbyWheels(intakeWheelsDC);
         }
-    
+
         if (feederDC != 0) {
             Feeder.getInstance().setDutyCycle(feederDC);
         }
@@ -225,7 +227,6 @@ public class Robot extends TimedRobotstangs {
         if (flywheelVelocity != 0) {
             Flywheel.getInstance().setFlywheelVelocity(flywheelVelocity);
         }
-        
 
     }
 
@@ -293,7 +294,7 @@ public class Robot extends TimedRobotstangs {
     public void autonomousInit() {
 
         LimelightHelpers.setRewindEnabled(Constants.VisionConstants.kLimelightFour, true);
-                LimelightHelpers.setRewindEnabled(Constants.VisionConstants.kLimelightFourR, true);
+        LimelightHelpers.setRewindEnabled(Constants.VisionConstants.kLimelightFourR, true);
 
         CommandScheduler.getInstance().cancelAll();
 
@@ -331,25 +332,24 @@ public class Robot extends TimedRobotstangs {
             canBlueScore = whoCanScore.both;
 
             // Rumble only once on entry (when it first hits 30)
-            if (gameTime>29 && gameTime<30) {
+            if (gameTime > 29 && gameTime < 30) {
                 CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(40));
                 CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(40));
             }
 
-        // transition 10 seconds
+            // transition 10 seconds
         } else if (gameTime > 130.0) {
             canBlueScore = whoCanScore.both;
-            shiftTimeLeft = gameTime - 130; 
-            if(shiftTimeLeft>4 && shiftTimeLeft<5){
+            shiftTimeLeft = gameTime - 130;
+            if (shiftTimeLeft > 4 && shiftTimeLeft < 5) {
                 CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(1));
                 CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(1));
             }
-        
 
-        // shifts
+            // shifts
 
         } else {
-            if(gameTime>128){
+            if (gameTime > 128) {
                 if (gameData.length() > 0) {
                     switch (gameData.charAt(0)) {
                         case 'B':
@@ -368,15 +368,15 @@ public class Robot extends TimedRobotstangs {
                 }
             }
 
-            double secondsIntoShifts = 130 - gameTime; 
-            double positionInShift = secondsIntoShifts % 25; 
-            shiftTimeLeft = 25 - positionInShift;    
+            double secondsIntoShifts = 130 - gameTime;
+            double positionInShift = secondsIntoShifts % 25;
+            shiftTimeLeft = 25 - positionInShift;
 
             // change of shift
-            if (shiftTimeLeft <0.1) {
+            if (shiftTimeLeft < 0.1) {
                 canBlueScore = (canBlueScore == whoCanScore.blue) ? whoCanScore.red : whoCanScore.blue;
             }
-            if(shiftTimeLeft<5&&shiftTimeLeft>4.5){
+            if (shiftTimeLeft < 5 && shiftTimeLeft > 4.5) {
                 CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(1));
                 CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(1));
             }
@@ -397,6 +397,7 @@ public class Robot extends TimedRobotstangs {
         SmartDashboard.putNumber("Match Time", gameTime);
         SmartDashboard.putNumber("Shift Time Left", shiftTimeLeft);
     }
+
     @Override
     public void teleopExit() {
 
@@ -463,7 +464,6 @@ public class Robot extends TimedRobotstangs {
         disableTab.add("Zero Hood",
                 new InstantCommand(() -> Hood.getInstance().setHoodPosition(0)).ignoringDisable(true));
 
-
     }
 
     public void logCurrentAuto() {
@@ -478,7 +478,7 @@ public class Robot extends TimedRobotstangs {
     public void loadNamedCommands() {
 
         NamedCommands.registerCommand("Shoot",
-        //devin learn apostrophes bro this was previously "your"
+                // devin learn apostrophes bro this was previously "your"
                 new PrintCommand("you're supposed to shoot bruh"));
         NamedCommands.registerCommand("Pass",
                 new PrintCommand("you're supposed to pass bruh"));
@@ -506,26 +506,26 @@ public class Robot extends TimedRobotstangs {
 
     }
 
-    public static double getMetersFromTarget(){
-        Pose2d robotPose=CommandSwerveDrivetrain.getInstance().getState().Pose;
-        Translation2d shooterPosition = robotPose.getTranslation();
-        Pose2d target=isPassing ? Constants.FieldConstants.PassTarget
-            :Constants.FieldConstants.HubPosition;
+    public static double getMetersFromTarget() {
 
-        
-        return shooterPosition.getDistance(target.getTranslation());
+        return CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
+                !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
+                        : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation()));
+
     }
 
-    public static void setShooterPass(boolean pass){
-        shooterPass=pass;
+    public static void setShooterPass(boolean pass) {
+        shooterPass = pass;
     }
 
-    public static void setShooterIsDumb(boolean isDumb){
-        shooterIsDumb=isDumb;
+    public static void setShooterIsDumb(boolean isDumb) {
+        shooterIsDumb = isDumb;
     }
-    public static boolean isPassing(){
+
+    public static boolean isPassing() {
         return shooterPass;
     }
+
     public void drawCurrentAuto(String autoName) {
         List<Pose2d> poses = new ArrayList<>();
         poses.clear();

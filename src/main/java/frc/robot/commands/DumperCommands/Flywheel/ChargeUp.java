@@ -7,10 +7,21 @@ import frc.robot.subsystems.Dumper.Flywheel;
 
 public class ChargeUp extends Command {
     Flywheel shooter;
+    double targetRPS;
+    boolean smort;
+
 
     public ChargeUp() {
         shooter = Flywheel.getInstance();
         addRequirements(shooter);
+        targetRPS = shooter.getFlywheelTargetVelocity();
+        smort = true;
+    }    
+    public ChargeUp(double targetRPS) {
+        shooter = Flywheel.getInstance();
+        addRequirements(shooter);
+        this.targetRPS = targetRPS;
+        smort = false;
     }
 
     @Override
@@ -20,12 +31,17 @@ public class ChargeUp extends Command {
 
     @Override
     public void execute() {
-        double targetrps = shooter.getFlywheelTargetVelocity();
-        shooter.setFlywheelVelocity(targetrps);
 
-        SmartDashboard.putNumber("Hood MFH", Robot.getMetersFromTarget());
 
-        shooter.postStatus("Charging to " + targetrps + " rps");
+        if(smort) {
+            targetRPS = shooter.getFlywheelTargetVelocity();
+        }
+
+        shooter.setFlywheelVelocity(targetRPS);
+
+        SmartDashboard.putNumber("Flywheel/Meters", Robot.getMetersFromTarget());
+
+        shooter.postStatus("Charging to " + targetRPS + " rps");
     }
 
     @Override

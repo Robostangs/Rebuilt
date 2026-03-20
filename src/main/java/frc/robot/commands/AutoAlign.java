@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Meter;
-
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;

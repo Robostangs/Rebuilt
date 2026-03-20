@@ -1,18 +1,23 @@
 package frc.robot.commands.DumperCommands.Hood;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.subsystems.Dumper.Hood;
-import frc.robot.Constants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Turret.Hood;
 
 public class setHoodPosition extends Command {
     Hood hood;
+    double hoodpos;
+    boolean smort;
 
     public setHoodPosition() {
         hood = Hood.getInstance();
+        this.smort = true;
+        addRequirements(hood);
+    }
+
+    public setHoodPosition(double hoodpos) {
+        this.hoodpos = hoodpos;
+        hood = Hood.getInstance();
+        this.smort = false;
         addRequirements(hood);
     }
 
@@ -23,16 +28,17 @@ public class setHoodPosition extends Command {
 
     @Override
     public void execute() {
-        //same thing merge code with kabir
-        double meterfromHub = Robot.getMetersFromTarget();
-        double hoodpos = hood.getHoodAngle();
+
+
+        if(smort) {
+            hoodpos = hood.getHoodAngle();
+        }
 
         hood.setMotionMagicTarget(hoodpos);
         hood.setMotionMagic();
 
         hood.postStatus("Setting hood position to: " + hoodpos);
-        
-        SmartDashboard.putNumber("Hood MFH", meterfromHub);
+
 
     }
 

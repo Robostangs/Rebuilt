@@ -64,8 +64,8 @@ public class Hood extends SubsystemBase {
     }
 
 
-    public double getHoodAngle() {
-        double feetFromTarget=Units.metersToFeet(Robot.getMetersFromTarget());
+    public double getHoodAngle(double metersFromTarget) {
+        double feetFromTarget= Units.metersToFeet(metersFromTarget);
         if(Robot.isPassing()&&feetFromTarget>Constants.FieldConstants.maxRegressionDistance){
             // full send if we on opposing alliance and we're past the max actual distance for passing
             return Constants.HoodConstants.kPosAtOppositeAlliancePass;
@@ -77,6 +77,10 @@ public class Hood extends SubsystemBase {
                 return 0;
             }
         }
+    }
+
+    public double getHoodAngle() {
+        return getHoodAngle((Robot.getMetersFromTarget()));
     }
 
     public void setHoodDutyCycle(double dc) {

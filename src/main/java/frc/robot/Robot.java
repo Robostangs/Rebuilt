@@ -202,7 +202,6 @@ public class Robot extends TimedRobotstangs {
         double hoodDC = SmartDashboard.getNumber("PitTest/HoodDC", 0);
         double flywheelDC = SmartDashboard.getNumber("PitTest/FlywheelDC", 0);
         double flywheelVelocity = SmartDashboard.getNumber("PitTest/FlywheelVelocity", 0);
-        double turretPosition = SmartDashboard.getNumber("PitTest/TurretPosition", 0);
         double intakeWheelsDC = SmartDashboard.getNumber("PitTest/IntakeWheelsDC", 0);
         double feederDC = SmartDashboard.getNumber("PitTest/FeederDC", 0);
         double intakePivotDC = SmartDashboard.getNumber("PitTest/IntakePivotDC", 0);
@@ -512,6 +511,8 @@ public class Robot extends TimedRobotstangs {
         Translation2d shooterPosition = robotPose.getTranslation();
         Pose2d target=isPassing ? Constants.FieldConstants.PassTarget
             :Constants.FieldConstants.HubPosition;
+
+        
         return shooterPosition.getDistance(target.getTranslation());
     }
 

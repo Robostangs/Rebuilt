@@ -322,49 +322,62 @@ public class Robot extends TimedRobotstangs {
         String gameData = DriverStation.getGameSpecificMessage();
         int gameTimeInt = (int) DriverStation.getMatchTime();
         double gameTime = DriverStation.getMatchTime();
-        if (Robot.isSimulation()) {
-            gameTimeInt = (int) (Timer.getFPGATimestamp() - lastMatchSecond);
-            gameTime = Timer.getFPGATimestamp() - lastMatchSecond;
-        } else {
-            gameTimeInt = (int) DriverStation.getMatchTime();
-            gameTime = DriverStation.getMatchTime();
-        }
+        double shiftTimeLeft = 0;
 
-        if (gameTime < 30 || gameTime > 130) {
-            if (gameTime < 31) {
+        // endgame
+        if (gameTime <= 30.0) {
+            shiftTimeLeft = gameTimeInt;
+            canBlueScore = whoCanScore.both;
+
+            // Rumble only once on entry (when it first hits 30)
+            if (gameTime>29 && gameTime<30) {
                 CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(40));
                 CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(40));
             }
+
+        // transition 10 seconds
+        } else if (gameTime > 130.0) {
             canBlueScore = whoCanScore.both;
-        } else if (gameTime < 130 && gameTime > 129) {
-            if (gameData.length() > 0) {
-                switch (gameData.charAt(0)) {
-                    case 'B':
-                        canBlueScore = whoCanScore.red;
-                        break;
-                    case 'R':
-                        canBlueScore = whoCanScore.blue;
-                        break;
-                    default:
-                        canBlueScore = whoCanScore.error;
-                        break;
-                }
-            } else {
-                canBlueScore = whoCanScore.error;
-
+            shiftTimeLeft = gameTime - 130; 
+            if(shiftTimeLeft>4 && shiftTimeLeft<5){
+                CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(1));
+                CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(1));
             }
-        }
+        
 
-        else if ((gameTimeInt - 10) % 25 == 0) {
-            canBlueScore = (canBlueScore == whoCanScore.blue) ? whoCanScore.red : whoCanScore.blue;
-            CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(1));
-            CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(1));
+        // shifts
+
         } else {
-            int secondsSince10 = gameTimeInt - 10;
-            if (secondsSince10 >= 0 && secondsSince10 % 25 == 0) {
-                if (gameTimeInt != lastMatchSecond) {
-                    canBlueScore = (canBlueScore == whoCanScore.blue) ? whoCanScore.red : whoCanScore.blue;
+            if(gameTime>128){
+                if (gameData.length() > 0) {
+                    switch (gameData.charAt(0)) {
+                        case 'B':
+                            canBlueScore = whoCanScore.red;
+                            break;
+                        case 'R':
+                            canBlueScore = whoCanScore.blue;
+                            break;
+                        default:
+                            canBlueScore = whoCanScore.error;
+                            break;
+                    }
+                } else {
+                    // this is js a placeholder
+                    canBlueScore = whoCanScore.blue;
                 }
+            }
+
+            double secondsIntoShifts = 130 - gameTime; 
+            double positionInShift = secondsIntoShifts % 25; 
+            shiftTimeLeft = 25 - positionInShift;    
+
+            // change of shift
+            if (shiftTimeLeft <0.1) {
+                canBlueScore = (canBlueScore == whoCanScore.blue) ? whoCanScore.red : whoCanScore.blue;
+            }
+            if(shiftTimeLeft<5&&shiftTimeLeft>4.5){
+                CommandScheduler.getInstance().schedule(RobotContainer.rumbleDriveController(1));
+                CommandScheduler.getInstance().schedule(RobotContainer.rumbleManipController(1));
             }
         }
 
@@ -381,8 +394,8 @@ public class Robot extends TimedRobotstangs {
         }
 
         SmartDashboard.putNumber("Match Time", gameTime);
+        SmartDashboard.putNumber("Shift Time Left", shiftTimeLeft);
     }
-
     @Override
     public void teleopExit() {
 

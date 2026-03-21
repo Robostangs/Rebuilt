@@ -264,30 +264,30 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void disabledPeriodic() {
+
         autoname = autoChooser.getSelected();
-        if (autoname != oldAutoname) {
-            if (autoname != null) {
-                if (autoname.equals("favCenter - Shoot - DepotIntake - Shoot")
-                        || autoname.equals("DStart - DTrench - DIntake - DBump - DShoot")) {
-                    autoCommand = new PathPlannerAuto(autoname);
-                } else if (autoname.equals("shoot")) {
-                    autoCommand = (dumpFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()));
 
-                } else {
-                    autoCommand = new PathPlannerAuto(autoname);
+        if (autoname != null) {
+            if (autoname.equals("favCenter - Shoot - DepotIntake - Shoot")
+                    || autoname.equals("DStart - DTrench - DIntake - DBump - DShoot")) {
+                autoCommand = new PathPlannerAuto(autoname);
+            } else if (autoname.equals("shoot")) {
+                autoCommand = (dumpFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()));
 
-                }
             } else {
-                autoCommand = new PrintCommand("Auto not Autoing....");
+                autoCommand = new PathPlannerAuto(autoname);
 
             }
-            SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
-
-            // if (!oldAutoname.equals(autoname)) {
-            // drawCurrentAuto(autoCommand.getName());
-            // }
+        } else {
+            autoCommand = new PrintCommand("Auto not Autoing....");
 
         }
+        SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
+
+        // if (!oldAutoname.equals(autoname)) {
+        // drawCurrentAuto(autoCommand.getName());
+        // }
+
         oldAutoname = autoname;
     }
 
@@ -581,7 +581,7 @@ public class Robot extends TimedRobotstangs {
                 lastCounts[i] = gcCount;
             }
 
-            SmartDashboard.putNumber("Memory/GC Time", (double) accumTime / 1000);
+            SmartDashboard.putNumber("Memory/GC Time MS", (double) accumTime);
             SmartDashboard.putNumber("Memory/GCCounts", (double) accumCounts);
             SmartDashboard.putNumber("Memory/Usage", (double) memBean.getHeapMemoryUsage().getUsed());
 

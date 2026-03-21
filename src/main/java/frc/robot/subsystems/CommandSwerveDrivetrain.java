@@ -300,21 +300,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         if (index != -1 && visionMeasurements.get(index).getPose() != null) {
-            // SmartDashboard.putString("Vision/Best pose ",
-            //         visionMeasurements.get(index).getName());
-            // SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
-            //         visionMeasurements.get(index).getAmbiguity());
-            // SmartDashboard.putString("Vision/Pose Null error ",
-            //         "Ts NOT null dude");
-            // SmartDashboard.putNumber("Vision/Vision Pose index ",
-            //         index);
+            SmartDashboard.putString("Vision/Best pose ",
+                    visionMeasurements.get(index).getName());
+            SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
+                    visionMeasurements.get(index).getAmbiguity());
+            SmartDashboard.putString("Vision/Pose Null error ",
+                    "Ts NOT null dude");
+            SmartDashboard.putNumber("Vision/Vision Pose index ",
+                    index);
 
             if(RobotContainer.useVision)
             this.addVisionMeasurement(visionMeasurements.get(index).getPose(),
                     visionMeasurements.get(index).getTimeStamp());
         } else {
-            // SmartDashboard.putString("Vision/Pose Null error ",
-            //         "Ts null dude");
+            SmartDashboard.putString("Vision/Pose Null error ",
+                    "Ts null dude");
 
         }
     }

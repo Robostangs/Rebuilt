@@ -4,8 +4,6 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
-import com.pathplanner.lib.util.FlippingUtil;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -59,7 +57,7 @@ public class AutoAlign extends Command {
     @Override
     public void initialize() {
 
-        PhoenixPIDController tunePID = new PhoenixPIDController(6, 1, 0);
+        PhoenixPIDController tunePID = new PhoenixPIDController(6.5, 0.5, 0.4);
         tunePID.enableContinuousInput(-Math.PI, Math.PI);
 
         driveRequest = new SwerveRequest.FieldCentricFacingAngle();
@@ -128,10 +126,12 @@ public class AutoAlign extends Command {
         double metersFromHub = Robot.getMetersFromTarget();
         double time = timeToShoot(metersFromHub);
 
-        Translation2d targetHubPose = Constants.FieldConstants.HubPosition.getTranslation().minus(
-                new Translation2d(
-                        robotSpeeds.vxMetersPerSecond * time,
-                        robotSpeeds.vyMetersPerSecond * time));
+        Translation2d targetHubPose = Constants.FieldConstants.HubPosition.getTranslation()
+        // .minus(
+        //         new Translation2d(
+        //                 robotSpeeds.vxMetersPerSecond * time,
+        //                 robotSpeeds.vyMetersPerSecond * time))
+                        ;
 
         targetPose = new Pose2d(targetHubPose, new Rotation2d());
 

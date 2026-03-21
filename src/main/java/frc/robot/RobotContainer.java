@@ -53,7 +53,7 @@ public class RobotContainer {
 
         private final ControllerStangs xDrive = new ControllerStangs(0);
         private final ControllerStangs xManip = new ControllerStangs(1);
-        private final GenericHID xSim = new GenericHID(2);
+        private final GenericHID xSim = new GenericHID(0);
         private static RobotContainer mInstance;
         public final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
 
@@ -94,8 +94,7 @@ public class RobotContainer {
                 setDrivetrain();
 
                 // TODO put tese complex things into a facotry, ts too ugly
-                xDrive.rightTrigger().whileTrue(
-                                (dumpFactory.Shoot().alongWith(new RunHopper())))
+                xDrive.rightTrigger().whileTrue(dumpFactory.Shoot().alongWith(new RunHopper()))
                                 .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),
                                                 Hood.getInstance())
                                                 .andThen(new InstantCommand(
@@ -138,8 +137,8 @@ public class RobotContainer {
                 xDrive.b().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                xDrive.a().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
-                                () -> xDrive.getLeftTriggerAxis() < 0.2));
+                xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                                () -> xDrive.getLeftTriggerAxis() > 0.2));
 
         }
 

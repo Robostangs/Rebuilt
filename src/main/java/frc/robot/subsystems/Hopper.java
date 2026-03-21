@@ -9,18 +9,18 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Hopper extends SubsystemBase {
-    public TalonSRX roller;
-    public TalonFX rollerL;
+    public TalonFX roller;
 
     public static Hopper mInstance;
 
     Alert hopperAlert = new Alert("Hopper roller motor is HOT", AlertType.kError);
 
     public Hopper() {
-        roller = new TalonSRX(1);
-        rollerL = new TalonFX(8);
+
+        roller = new TalonFX(Constants.HopperConstants.kRollerID);
 
     }
 
@@ -30,14 +30,13 @@ public class Hopper extends SubsystemBase {
         rollerConfigs.CurrentLimits.StatorCurrentLimit = 100;
         rollerConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        // roller.getConfigurator().apply(rollerConfigs);
+        roller.getConfigurator().apply(rollerConfigs);
 
     }
 
     
     public void setRollerDutyCycle(double dutyCycle) {
-        roller.set(TalonSRXControlMode.PercentOutput, dutyCycle);
-        rollerL.set(dutyCycle);
+        roller.set(dutyCycle);
     }
 
     public void postRollerStatus(String status) {
@@ -53,5 +52,6 @@ public class Hopper extends SubsystemBase {
 
     @Override
     public void periodic() {
+        
     }
 }

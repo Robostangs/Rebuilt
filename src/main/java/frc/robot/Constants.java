@@ -188,6 +188,7 @@ public final class Constants {
                 public static final int kFlywheelMotorID = 9;
                 public static final int kFlywheelSlaveMotorID = 0;
                 public static final double kDumbShootRPS = 0;
+                public static final double kShooterSlaveMotorStatorCurrentLimit = 60;
 
         }
 

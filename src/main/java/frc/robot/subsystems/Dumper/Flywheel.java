@@ -24,8 +24,7 @@ public class Flywheel extends SubsystemBase {
     public Pose2d targetPose;
     private double adjustVal = 0;
     private boolean canShoot;
-    // I think when you set it to 0 it tweaks, so its set to 1
-    private VelocityVoltage flywheelTargetVelocity = new VelocityVoltage(1);
+    private VelocityVoltage flywheelTargetVelocity = new VelocityVoltage(0);
     private Follower slaveControl;
 
     public Flywheel() {
@@ -33,7 +32,7 @@ public class Flywheel extends SubsystemBase {
         mainFlywheelMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
         slaveFlywheelMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
         configureFlywheelMotors();
-        slaveControl = new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Opposed);
+        slaveControl = new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Aligned);
     }
 
     private void configureFlywheelMotors() {
@@ -55,6 +54,14 @@ public class Flywheel extends SubsystemBase {
 
         // Apply the PID configurations to the shooter motor
         mainFlywheelMotor.getConfigurator().apply(flywheelConfig);
+
+        TalonFXConfiguration flyWheelSlaveConfig = new TalonFXConfiguration();
+
+        flyWheelSlaveConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterSlaveMotorStatorCurrentLimit;
+        flyWheelSlaveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+
+        slaveFlywheelMotor.getConfigurator().apply(flyWheelSlaveConfig);
+
     }
 
     public double getFlywheelTargetVelocity() {
@@ -103,12 +110,14 @@ public class Flywheel extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (Math.abs(CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond) > 2.5
+        if (Math.abs(CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond) > 2
                 || flywheelTargetVelocity.Velocity == 0) {
             mainFlywheelMotor.set(0);
+            slaveFlywheelMotor.set(0);
         } else {
             flywheelTargetVelocity.Velocity = flywheelTargetVelocity.Velocity + adjustVal;
             mainFlywheelMotor.setControl(flywheelTargetVelocity);
+            slaveFlywheelMotor.setControl(slaveControl);
 
         }
 

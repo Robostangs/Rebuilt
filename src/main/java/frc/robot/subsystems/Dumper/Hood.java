@@ -35,7 +35,7 @@ public class Hood extends SubsystemBase {
     public void configureHoodMotor() {
         TalonFXSConfiguration mainMotorConfig = new TalonFXSConfiguration();
 
-        mainMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.NEO550_JST;
+        mainMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
 
         mainMotorConfig.Slot0.kP = Constants.HoodConstants.kHoodMotorP;
         mainMotorConfig.Slot0.kI = Constants.HoodConstants.kHoodMotorI;

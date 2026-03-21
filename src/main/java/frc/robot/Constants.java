@@ -80,10 +80,6 @@ public final class Constants {
         public static class FieldConstants {
                 public static final Pose2d HubPosition = new Pose2d(4.6, 4d, new Rotation2d());
 
-                // TODO find these johns
-                public static final Pose2d PassTarget = !Robot.isRed() ? new Pose2d(1.5, 3.8, new Rotation2d())
-                                : FlippingUtil.flipFieldPose(new Pose2d(1.5, 3.8, new Rotation2d()));
-
                 // TODO find john
                 public static final Pose2d resetPose = new Pose2d(3.5, 4, new Rotation2d(Units.degreesToRadians(180)));
 
@@ -224,9 +220,7 @@ public final class Constants {
                 public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.15, 0.15,
                                 Units.degreesToRadians(100));
 
-                // TODO: find this john
-                public static final double kHumpPitchMin = 0;
-
+              
         }
 
         public class VisionConstants {

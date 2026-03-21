@@ -6,6 +6,8 @@ import frc.robot.Robot;
 import frc.robot.commands.Index;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
+import frc.robot.commands.HopperCommands.RunHopper;
+import frc.robot.subsystems.Dumper.Hood;
 
 public class dumpFactory {
     public static Command Shoot(){
@@ -16,8 +18,19 @@ public class dumpFactory {
                 new ChargeUp()
                 // )
             .alongWith(new setHoodPosition())
+            .alongWith(new RunHopper())
             .alongWith(new Index(false));
     }
+
+    public static Command HoodDown(){
+        return new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),
+                                                Hood.getInstance())
+                                                .andThen(new InstantCommand(
+                                                                () -> Hood.getInstance().setMotionMagic(),
+                                                                Hood.getInstance()));
+    }
+
+
 
     public static Command dumbShoot(){
         return new InstantCommand(() -> Robot.setShooterIsDumb(true))

@@ -99,11 +99,7 @@ public class RobotContainer {
                 // TODO put tese complex things into a facotry, ts too ugly
                 xDrive.rightTrigger().whileTrue(
                                 (dumpFactory.Shoot().alongWith(new RunHopper())))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),
-                                                Hood.getInstance())
-                                                .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),
-                                                                Hood.getInstance())));
+                                .onFalse(dumpFactory.HoodDown());
 
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(

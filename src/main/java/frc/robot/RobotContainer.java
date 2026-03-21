@@ -144,7 +144,6 @@ public class RobotContainer {
         }
 
         public void configureManipBindings() {
-                // we only want 3 manip bindings
                 xManip.b().onChange(
                                 new InstantCommand(() -> Robot.setShooterPass(xManip.b().getAsBoolean())));
 

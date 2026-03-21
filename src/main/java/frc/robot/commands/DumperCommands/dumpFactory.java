@@ -22,7 +22,7 @@ public class dumpFactory {
     public static Command dumbShoot(){
         return new InstantCommand(() -> Robot.setShooterIsDumb(true))
             .alongWith(new ChargeUp(75))
-            .alongWith(new setHoodPosition())
+            .alongWith(new setHoodPosition(.4))
             .alongWith(new Index(true))
             .finallyDo(() -> Robot.setShooterIsDumb(false));
     }

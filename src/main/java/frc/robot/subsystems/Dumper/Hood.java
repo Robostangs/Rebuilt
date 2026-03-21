@@ -44,8 +44,7 @@ public class Hood extends SubsystemBase {
         mainMotorConfig.Slot0.kV = Constants.HoodConstants.kHoodMotorV;
         mainMotorConfig.Slot0.kA = Constants.HoodConstants.kHoodMotorA;
 
-        // TODO make this constant
-        mainMotorConfig.CurrentLimits.StatorCurrentLimit = 15;
+        mainMotorConfig.CurrentLimits.StatorCurrentLimit =  Constants.HoodConstants.kHoodStatorCurrentLimit;
 
         mainMotorConfig.ExternalFeedback.SensorToMechanismRatio = Constants.HoodConstants.kHoodSensortoMechanism;
 

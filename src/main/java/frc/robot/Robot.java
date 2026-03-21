@@ -20,7 +20,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -409,6 +408,8 @@ public class Robot extends TimedRobotstangs {
 
         SmartDashboard.putNumber("Match Time", gameTime);
         SmartDashboard.putNumber("Shift Time Left", shiftTimeLeft);
+
+        SmartDashboard.putBoolean("is Dumb", shooterIsDumb);
     }
 
     @Override

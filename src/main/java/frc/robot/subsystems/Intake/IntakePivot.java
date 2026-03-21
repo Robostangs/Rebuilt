@@ -46,7 +46,6 @@ public class IntakePivot extends SubsystemBase {
         hopperExtenderMotor = new TalonFX(Constants.KirbyConstants.hopperExtenderID);
         hopperExtenderConfig = new TalonFXConfiguration();
 
-        // TODO: Find this john
         hopperExtenderConfig.Feedback.SensorToMechanismRatio = Constants.KirbyConstants.extenderSensorToMechanismRatio;
         hopperExtenderConfig.CurrentLimits.SupplyCurrentLimit = Constants.KirbyConstants.HopperExtenderCurrentLimit;
         hopperExtenderConfig.Slot0.kP = Constants.KirbyConstants.hopperExtenderKP;

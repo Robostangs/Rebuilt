@@ -67,7 +67,10 @@ public class RobotContainer {
         public RobotContainer() {
                 configureDrivingBinding();
                 configureManipBindings();
-                configureSimBinds();
+                if (Robot.isSimulation()) {
+                        configureSimBinds();
+
+                }
                 drivetrain.registerTelemetry(logger::telemeterize);
                 logger.initSwerveLog();
         }
@@ -102,18 +105,6 @@ public class RobotContainer {
                                                                 () -> Hood.getInstance().setMotionMagic(),
                                                                 Hood.getInstance())));
 
-                xDrive.b().whileTrue(dumpFactory.dumbShoot().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),
-                                                Hood.getInstance())
-                                                .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),
-                                                                Hood.getInstance())));
-                xDrive.y().whileTrue(dumpFactory.dumbShootTrench().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),
-                                                Hood.getInstance())
-                                                .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),
-                                                                Hood.getInstance())));
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(
                                                 !Robot.isRed() ? Constants.FieldConstants.resetPose
@@ -139,7 +130,10 @@ public class RobotContainer {
                                 (() -> useVision = !useVision)));
 
                 xDrive.a().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
-                                () -> xDrive.getLeftTriggerAxis() < 0.2));
+                                () -> xDrive.getLeftTriggerAxis() < 0.2, true));
+
+                xDrive.y().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                                () -> xDrive.getLeftTriggerAxis() < 0.2, true));
 
         }
 
@@ -195,11 +189,12 @@ public class RobotContainer {
                 new Trigger(() -> xSim.getRawButtonPressed(1))
                                 .toggleOnTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
                                                 () -> xSim.getRawAxis(1),
-                                                () -> false));
+                                                () -> true, false));
+
                 new Trigger(() -> xSim.getRawButtonPressed(2))
                                 .toggleOnTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
                                                 () -> xSim.getRawAxis(1),
-                                                () -> true));
+                                                () -> true, true));
 
         }
 }

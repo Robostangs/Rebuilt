@@ -13,10 +13,10 @@ public class dumpFactory {
     public static Command Shoot(){
 
         return
-        //  new InstantCommand(() -> Robot.setShooterIsDumb(false))
-        //     .alongWith(
+         new InstantCommand(() -> Robot.setShooterIsDumb(false))
+            .andThen(
                 new ChargeUp()
-                // )
+                )
             .alongWith(new setHoodPosition())
             .alongWith(new RunHopper())
             .alongWith(new Index(false));

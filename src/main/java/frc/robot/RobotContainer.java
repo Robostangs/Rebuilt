@@ -96,7 +96,6 @@ public class RobotContainer {
         private void configureDrivingBinding() {
                 setDrivetrain();
 
-                // TODO put tese complex things into a facotry, ts too ugly
                 xDrive.rightTrigger().whileTrue(
                                 (dumpFactory.Shoot().alongWith(new RunHopper())))
                                 .onFalse(dumpFactory.HoodDown());
@@ -108,7 +107,7 @@ public class RobotContainer {
                                                                                 Constants.FieldConstants.resetPose))));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(
-                                () -> drivetrain.seedFieldCentric(new Rotation2d(Units.degreesToRadians(180)))));
+                                () -> drivetrain.seedFieldCentric()));
 
                 xDrive.rightPaddle().whileTrue(new ExtendIntake());
 
@@ -134,17 +133,17 @@ public class RobotContainer {
         }
 
         public void configureManipBindings() {
-                xManip.b().onChange(
-                                new InstantCommand(() -> Robot.setShooterPass(xManip.b().getAsBoolean())));
+                xManip.b().onTrue(
+                                new InstantCommand(() -> Robot.toggleShooterPass()));
 
-                xManip.a().onChange(
-                                new InstantCommand(() -> Robot.setShooterIsDumb(xManip.a().getAsBoolean())));
+                xManip.a().onTrue(
+                                new InstantCommand(() -> Robot.toggleShooterIsDumb()));
 
                 xManip.y().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
                                 .whileTrue(new InstantCommand(
-                                                () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * -30)));
+                                                () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * 30)));
 
                 xManip.rightTrigger().whileTrue(new InstantCommand(
                                 () -> Hood.getInstance().setHoodDutyCycle(xManip.getRightTriggerAxis() * 0.25)));

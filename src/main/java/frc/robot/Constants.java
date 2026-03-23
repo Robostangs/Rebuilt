@@ -20,8 +20,6 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.util.FlippingUtil;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -85,6 +83,10 @@ public final class Constants {
 
                 // THIS IS IN FEET
                 public static final double maxRegressionDistance = 30;
+
+                //TODO find these john
+                public static final Pose2d ShootPoseDepot = new Pose2d();
+                public static final Pose2d ShootPoseOutpost = new Pose2d();
 
         }
 
@@ -221,7 +223,6 @@ public final class Constants {
                 public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.15, 0.15,
                                 Units.degreesToRadians(100));
 
-              
         }
 
         public class VisionConstants {

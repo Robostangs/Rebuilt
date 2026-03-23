@@ -80,6 +80,7 @@ public class Robot extends TimedRobotstangs {
 
     private SendableChooser<String> autoChooser = new SendableChooser<>();
 
+
     public PowerDistribution pdh = new PowerDistribution(Constants.ElasticConstants.kPdhCanId, ModuleType.kRev);
 
     public static boolean shooterPass = false;
@@ -244,16 +245,11 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void disabledInit() {
 
-        // autoChooser.addOption("FavNormal", "favCenter - Shoot - DepotIntake -
-        // Shoot");
-        // autoChooser.addOption("Depot", "DStart - DTrench - DIntake - DBump -
-        // DShoot");
-        // autoChooser.addOption("Just pre loads", "shoot");
-
         for (String name : AutoBuilder.getAllAutoNames()) {
             autoChooser.addOption(name, name);
-
         }
+        autoChooser.setDefaultOption("Sit and Shit", "SitAndShit");
+        autoChooser.addOption("Piss", "Piss");
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -264,40 +260,44 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void disabledPeriodic() {
 
-        autoname = autoChooser.getSelected();
+        if (autoname != oldAutoname) {
 
-        if (autoname != null) {
-            if (autoname.equals("favCenter - Shoot - DepotIntake - Shoot")
-                    || autoname.equals("DStart - DTrench - DIntake - DBump - DShoot")) {
-                autoCommand = new PathPlannerAuto(autoname);
-            } else if (autoname.equals("shoot")) {
-                autoCommand = (dumpFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()));
+            autoname = autoChooser.getSelected();
+
+            if (autoname != null) {
+
+                autoAlert.set(false);
+                if (autoname.equals("Piss")) {
+
+                    autoCommand = new InstantCommand(() -> CommandSwerveDrivetrain.getInstance()
+                            .resetPose(Constants.FieldConstants.ShootPoseDepot)).andThen(
+                                    dumpFactory.Shoot());
+                } else if (autoname.equals("SitAndShit")) {
+                    autoCommand = new PrintCommand("Pooping");
+                } else {
+                    autoCommand = new PathPlannerAuto(autoname);
+                }
 
             } else {
-                autoCommand = new PathPlannerAuto(autoname);
+                autoCommand = new PrintCommand("Auto not Autoing....");
+                autoAlert.set(true);
 
             }
-        } else {
-            autoCommand = new PrintCommand("Auto not Autoing....");
+            SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
 
+            drawCurrentAuto(autoCommand.getName());
+
+            oldAutoname = autoname;
         }
-        SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
-
-        // if (!oldAutoname.equals(autoname)) {
-        // drawCurrentAuto(autoCommand.getName());
-        // }
-
-        oldAutoname = autoname;
     }
 
     @Override
     public void disabledExit() {
-        // drawCurrentAuto(null);
+        drawCurrentAuto(null);
 
         autoGroup = new SequentialCommandGroup(
                 new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
                 new InstantCommand(() -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
-
                 autoCommand);
 
     }
@@ -532,8 +532,16 @@ public class Robot extends TimedRobotstangs {
         shooterPass = pass;
     }
 
+    public static void toggleShooterPass() {
+        shooterPass = !shooterPass;
+    }
+
     public static void setShooterIsDumb(boolean isDumb) {
         shooterIsDumb = isDumb;
+    }
+
+    public static void toggleShooterIsDumb() {
+        shooterIsDumb = !shooterIsDumb;
     }
 
     public static boolean isPassing() {

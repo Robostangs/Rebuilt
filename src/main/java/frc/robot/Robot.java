@@ -284,16 +284,16 @@ public class Robot extends TimedRobotstangs {
         }
         SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
 
-        // if (!oldAutoname.equals(autoname)) {
-        // drawCurrentAuto(autoCommand.getName());
-        // }
+        if (!oldAutoname.equals(autoname)) {
+        drawCurrentAuto(autoCommand.getName());
+        }
 
         oldAutoname = autoname;
     }
 
     @Override
     public void disabledExit() {
-        // drawCurrentAuto(null);
+        drawCurrentAuto(null);
 
         autoGroup = new SequentialCommandGroup(
                 new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),

@@ -509,10 +509,6 @@ public class Robot extends TimedRobotstangs {
                 new InstantCommand(() -> Flywheel.getInstance().setCanShoot(false))
                         .finallyDo(() -> Flywheel.getInstance().setCanShoot(true)));
 
-        NamedCommands.registerCommand("Hooddown",
-                new InstantCommand(() -> Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos))
-                        .alongWith(new InstantCommand(() -> Flywheel.getInstance().setCanShoot(false)))
-                        .finallyDo(() -> Flywheel.getInstance().setCanShoot(true)));
 
         NamedCommands.registerCommand("Photoshoot",
                 (dumpFactory.Shoot().alongWith(new StartIntake()))

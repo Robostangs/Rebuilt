@@ -26,7 +26,6 @@ public class ChargeUp extends Command {
 
     @Override
     public void initialize() {
-        // shooter.setCanShoot(true);
     }
 
     @Override

@@ -23,12 +23,10 @@ public class Flywheel extends SubsystemBase {
     public static Flywheel mInstance;
     public Pose2d targetPose;
     private double adjustVal = 0;
-    private boolean canShoot;
     private VelocityVoltage flywheelTargetVelocity = new VelocityVoltage(0);
     private Follower slaveControl;
 
     public Flywheel() {
-        canShoot = true;
         mainFlywheelMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
         slaveFlywheelMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
         configureFlywheelMotors();
@@ -102,10 +100,6 @@ public class Flywheel extends SubsystemBase {
         double currentVelocity = mainFlywheelMotor.getVelocity().getValueAsDouble();
         double targetVelocity = flywheelTargetVelocity.Velocity;
         return Math.abs(currentVelocity - targetVelocity) <= Constants.FlywheelConstants.kShooterVelocityTolerance;
-    }
-
-    public void setCanShoot(boolean shouldShoot) {
-        canShoot = shouldShoot;
     }
 
     @Override

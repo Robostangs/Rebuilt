@@ -167,7 +167,6 @@ public final class Constants {
                 public static final double kHoodStatorCurrentLimit = 15;
                 public static final double kHoodHomeTimeout = .5;
                 public static final double kHoodUpPos = 0.8;
-                public static final int hoodSlaveMotorID = 0;
                 public static final double kPosAtOppositeAlliancePass = 0.7;
                 public static final double kDumbShootHoodPos = 0;
         }

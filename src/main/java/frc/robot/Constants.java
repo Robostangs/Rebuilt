@@ -168,7 +168,7 @@ public final class Constants {
         public static final double kHoodMotionMagicCruiseVelocity = 0;
         public static final double kHoodMotionMagicAcceleration = 0;
         public static final double kHoodSensortoMechanism = 44;
-        public static final double kHoodStatorCurrentLimit = -20;
+        public static final double kHoodStatorCurrentLimit = 15;
         public static final double kHoodHomeTimeout = .5;
         public static final double kHoodUpPos = 0.8;
         public static final int hoodSlaveMotorID = 0;

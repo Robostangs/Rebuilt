@@ -71,7 +71,7 @@ public class RobotContainer {
                 logger.initSwerveLog();
         }
 
-        public Command controllerHaptics(double secs, CommandXboxController controller) {
+        private Command rumbleController(double secs, CommandXboxController controller) {
                 return new StartEndCommand(() -> {
                         controller.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
                         controller.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
@@ -82,33 +82,25 @@ public class RobotContainer {
         }
 
         public static Command rumbleDriveController(double secs) {
-                return RobotContainer.getInstance().controllerHaptics(secs, RobotContainer.getInstance().xDrive);
+                return RobotContainer.getInstance().rumbleController(secs, RobotContainer.getInstance().xDrive);
         }
 
         public static Command rumbleManipController(double secs) {
-                return RobotContainer.getInstance().controllerHaptics(secs, RobotContainer.getInstance().xManip);
+                return RobotContainer.getInstance().rumbleController(secs, RobotContainer.getInstance().xManip);
         }
 
         private void configureDrivingBinding() {
                 setDrivetrain();
 
-                //TODO put tese complex things into a facotry, ts too ugly
                 xDrive.rightTrigger().whileTrue(dumpFactory.Shoot().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
-                                                .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
-                                                              )));
+                                .onFalse(dumpFactory.retractHood());
 
                  xDrive.b().whileTrue(dumpFactory.dumbShoot().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
-                                                .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
-                                                              )));
+                                .onFalse(dumpFactory.retractHood());
+
                 xDrive.y().whileTrue(dumpFactory.dumbShootTrench().alongWith(new RunHopper()))
-                                .onFalse(new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
-                                                .andThen(new InstantCommand(
-                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
-                                                              )));
+                                .onFalse(dumpFactory.retractHood());
+
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(
                                         !Robot.isRed() ? Constants.FieldConstants.resetPose : 
@@ -137,7 +129,7 @@ public class RobotContainer {
         }
 
         public void configureManipBindings() {
-                //we only want 3 manip bindings
+
                 xManip.b().onChange(
                         new InstantCommand(() -> Robot.setShooterPass(xManip.b().getAsBoolean())));
 

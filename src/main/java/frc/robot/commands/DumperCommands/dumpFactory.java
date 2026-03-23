@@ -7,6 +7,7 @@ import frc.robot.commands.Index;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.DumperCommands.Hood.setHoodPositionTrench;
+import frc.robot.subsystems.Dumper.Hood;
 
 public class dumpFactory {
     public static Command Shoot(){
@@ -14,18 +15,25 @@ public class dumpFactory {
         return new InstantCommand(() -> Robot.setShooterIsDumb(false))
             .alongWith(new ChargeUp())
             .alongWith(new setHoodPosition())
-            .alongWith(new Index(false));
+            .alongWith(new Index());
     }
 
     public static Command dumbShoot(){
         return new InstantCommand(() -> Robot.setShooterIsDumb(true))
             .alongWith(new ChargeUp())
             .alongWith(new setHoodPosition())
-            .alongWith(new Index(true))
+            .alongWith(new Index())
             .finallyDo(() -> Robot.setShooterIsDumb(false));
     }
     
     public static Command dumbShootTrench(){
-        return new ChargeUp().alongWith(new setHoodPositionTrench()).alongWith(new Index(true));
+        return new ChargeUp().alongWith(new setHoodPositionTrench()).alongWith(new Index());
+    }
+
+    public static Command retractHood(){
+        return new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),Hood.getInstance())
+                                                .andThen(new InstantCommand(
+                                                                () -> Hood.getInstance().setMotionMagic(),Hood.getInstance()
+                                                              ));
     }
 }

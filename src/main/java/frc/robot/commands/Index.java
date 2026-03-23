@@ -10,7 +10,7 @@ public class Index extends Command {
     Feeder feeder;
     boolean isDumb;
 
-    public Index(boolean isDumb) {
+    public Index() {
         feeder = Feeder.getInstance();
         addRequirements(feeder);
         this.isDumb = isDumb;
@@ -23,17 +23,7 @@ public class Index extends Command {
     }
 
     public void execute() {
-
-        // if (isDumb) {
-        //     feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
-
-        // } else {
-
-        //     if (Flywheel.getInstance().shooterAtTargetVelocity() || Feeder.force) {
-                feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
-
-        //     }
-        // }
+        feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
     }
 
     @Override

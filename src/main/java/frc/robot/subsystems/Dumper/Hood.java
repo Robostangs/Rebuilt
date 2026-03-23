@@ -16,7 +16,6 @@ import frc.robot.commands.DumperCommands.Hood.HomeHood;
 
 public class Hood extends SubsystemBase {
     TalonFXS mainMotor;
-    TalonFXS slaveMotor;
     public static Hood mInstance;
     MotionMagicExpoDutyCycle hoodTargetPosition;
 
@@ -26,7 +25,6 @@ public class Hood extends SubsystemBase {
 
     private Hood() {
         mainMotor = new TalonFXS(Constants.HoodConstants.mainMotorID);
-        slaveMotor = new TalonFXS(Constants.HoodConstants.hoodSlaveMotorID);
         hoodTargetPosition = new MotionMagicExpoDutyCycle(mainMotor.getPosition().getValueAsDouble());
         configureHoodMotor();
         slaveControl = new Follower(Constants.HoodConstants.mainMotorID, MotorAlignmentValue.Opposed);
@@ -54,12 +52,6 @@ public class Hood extends SubsystemBase {
         mainMotorConfig.ExternalFeedback.SensorToMechanismRatio = 44;
         mainMotor.getConfigurator().apply(mainMotorConfig);
 
-        TalonFXSConfiguration slaveMotorConfig = new TalonFXSConfiguration();
-        slaveMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
-        slaveMotorConfig.CurrentLimits.StatorCurrentLimit = 15;
-
-        slaveMotor.getConfigurator().apply(slaveMotorConfig);
-        slaveMotor.setControl(new Follower(Constants.HoodConstants.mainMotorID, MotorAlignmentValue.Opposed));
     }
 
     public double getHoodAngle(double metersFromTarget) {

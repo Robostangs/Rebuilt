@@ -260,7 +260,7 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void disabledPeriodic() {
-                    autoname = autoChooser.getSelected();
+        autoname = autoChooser.getSelected();
 
 
         if (autoname != oldAutoname) {
@@ -290,7 +290,7 @@ public class Robot extends TimedRobotstangs {
             drawCurrentAuto(autoCommand.getName());
 
         }
-                    oldAutoname = autoname;
+        oldAutoname = autoname;
 
     }
 

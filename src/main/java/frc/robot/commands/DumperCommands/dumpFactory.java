@@ -19,7 +19,7 @@ public class dumpFactory {
                 )
             .alongWith(new setHoodPosition())
             .alongWith(new RunHopper())
-            .alongWith(new Index(false));
+            .alongWith(new Index());
     }
 
     public static Command HoodDown(){
@@ -36,11 +36,11 @@ public class dumpFactory {
         return new InstantCommand(() -> Robot.setShooterIsDumb(true))
             .alongWith(new ChargeUp(75))
             .alongWith(new setHoodPosition(.4))
-            .alongWith(new Index(true))
+            .alongWith(new Index())
             .finallyDo(() -> Robot.setShooterIsDumb(false));
     }
     
     public static Command dumbShootTrench(){
-        return new ChargeUp().alongWith(new setHoodPosition(.75)).alongWith(new Index(true));
+        return new ChargeUp().alongWith(new setHoodPosition(.75)).alongWith(new Index());
     }
 }

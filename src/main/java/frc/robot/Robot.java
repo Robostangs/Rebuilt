@@ -130,36 +130,9 @@ public class Robot extends TimedRobotstangs {
         configureTeleopTab();
         loadNamedCommands();
 
-        oldAutoname = "blank";
-
     }
 
-    void setupPitTest() {
-        CommandSwerveDrivetrain.getInstance().runOnce(() -> CommandSwerveDrivetrain.getInstance().seedFieldCentric());
-        postPitTestStatus("Pit Test Ready");
-        SmartDashboard.putNumber("PitTest/HoodDC", 0);
-        SmartDashboard.putNumber("PitTest/FlywheelDC", 0);
-        SmartDashboard.putNumber("PitTest/FlywheelVelocity", 0);
-        SmartDashboard.putNumber("PitTest/TurretDC", 0);
-        SmartDashboard.putNumber("PitTest/IntakeWheelsDC", 0);
-        SmartDashboard.putNumber("PitTest/FeederDC", 0);
-        SmartDashboard.putNumber("PitTest/IntakePivotDC", 0);
-        hoodSetpointChooser.addOption("Down",
-                Hood.getInstance().runOnce(() -> {
-                    Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos);
-                }));
-        hoodSetpointChooser.addOption("Up",
-                Hood.getInstance().runOnce(() -> {
-                    Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodUpPos);
-                }));
-        SmartDashboard.putData("PitTest/HoodSetpoints", hoodSetpointChooser);
-
-        intakePivotSetpointChooser.addOption("Extend",
-                new ExtendIntake());
-        intakePivotSetpointChooser.addOption("Retract",
-                new RetractIntake());
-        SmartDashboard.putData("PitTest/IntakePivotSetpoints", intakePivotSetpointChooser);
-
+    void setupAutoPitTest() {
         SwerveRequest forwardRequest = new SwerveRequest.FieldCentric().withVelocityX(-0.25);
         Command driveForwardCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> forwardRequest);
         SwerveRequest backRequest = new SwerveRequest.FieldCentric().withVelocityX(0.25);
@@ -181,7 +154,7 @@ public class Robot extends TimedRobotstangs {
                 .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
                 .andThen(new ChargeUp().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
-                .andThen(new Index(false).withTimeout(7))
+                .andThen(new Index().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
                 .andThen(new setHoodPosition().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Retracting Intake")))
@@ -200,9 +173,34 @@ public class Robot extends TimedRobotstangs {
         SmartDashboard.putData("PitTest/Drive Right", driveRightCommand);
     }
 
+    void setupPitTestDashboard() {
+        CommandSwerveDrivetrain.getInstance().runOnce(() -> CommandSwerveDrivetrain.getInstance().seedFieldCentric());
+        postPitTestStatus("Pit Test Ready");
+        SmartDashboard.putNumber("PitTest/HoodDC", 0);
+        SmartDashboard.putNumber("PitTest/FlywheelDC", 0);
+        SmartDashboard.putNumber("PitTest/FlywheelVelocity", 0);
+        SmartDashboard.putNumber("PitTest/IntakeWheelsDC", 0);
+        SmartDashboard.putNumber("PitTest/FeederDC", 0);
+        SmartDashboard.putNumber("PitTest/IntakePivotDC", 0);
+
+        hoodSetpointChooser.addOption("Down",
+                Hood.getInstance().runOnce(() -> {
+                    Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodDownPos);
+                }));
+        hoodSetpointChooser.addOption("Up",
+                Hood.getInstance().runOnce(() -> {
+                    Hood.getInstance().setHoodPosition(Constants.HoodConstants.kHoodUpPos);
+                }));
+        SmartDashboard.putData("PitTest/HoodSetpoints", hoodSetpointChooser);
+
+        intakePivotSetpointChooser.addOption("Extend", new ExtendIntake());
+        intakePivotSetpointChooser.addOption("Retract", new RetractIntake());
+
+        SmartDashboard.putData("PitTest/IntakePivotSetpoints", intakePivotSetpointChooser);
+    }
+
     void pitTestPeriodic() {
 
-        // TODO make PIT test as a whole look better
         // read sliders and run commands
         double hoodDC = SmartDashboard.getNumber("PitTest/HoodDC", 0);
         double flywheelDC = SmartDashboard.getNumber("PitTest/FlywheelDC", 0);
@@ -212,7 +210,10 @@ public class Robot extends TimedRobotstangs {
         double intakePivotDC = SmartDashboard.getNumber("PitTest/IntakePivotDC", 0);
 
         if (hoodDC != 0) {
+            Hood.getInstance().setMM(false);
             Hood.getInstance().setHoodDutyCycle(hoodDC);
+        }else{
+            Hood.getInstance().setMM(true);
         }
         if (intakeWheelsDC != 0) {
             Kirby.getInstance().setKirbyWheels(intakeWheelsDC);
@@ -424,7 +425,8 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void testInit() {
         CommandScheduler.getInstance().cancelAll();
-        setupPitTest();
+        setupPitTestDashboard();
+        setupAutoPitTest();
         SmartDashboard.putNumber("Hood setpoint", 0);
         SmartDashboard.putNumber("Flywheel velocity", 0);
         SwerveRequest rightRequest = new SwerveRequest.RobotCentric().withVelocityY(-0.5);
@@ -511,7 +513,7 @@ public class Robot extends TimedRobotstangs {
                         .finallyDo(() -> Flywheel.getInstance().setCanShoot(true)));
 
         NamedCommands.registerCommand("Photoshoot",
-                (dumpFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()))
+                (dumpFactory.Shoot().alongWith(new StartIntake()))
         // .until(() -> Feeder.getInstance().getfuelSensor())
         );
 

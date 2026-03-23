@@ -75,7 +75,7 @@ public class RobotContainer {
                 logger.initSwerveLog();
         }
 
-        public Command controllerHaptics(double secs, CommandXboxController controller) {
+        private Command rumbleController(double secs, CommandXboxController controller) {
                 return new StartEndCommand(() -> {
                         controller.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
                         controller.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
@@ -86,18 +86,18 @@ public class RobotContainer {
         }
 
         public static Command rumbleDriveController(double secs) {
-                return RobotContainer.getInstance().controllerHaptics(secs, RobotContainer.getInstance().xDrive);
+                return RobotContainer.getInstance().rumbleController(secs, RobotContainer.getInstance().xDrive);
         }
 
         public static Command rumbleManipController(double secs) {
-                return RobotContainer.getInstance().controllerHaptics(secs, RobotContainer.getInstance().xManip);
+                return RobotContainer.getInstance().rumbleController(secs, RobotContainer.getInstance().xManip);
         }
 
         private void configureDrivingBinding() {
                 setDrivetrain();
 
                 xDrive.rightTrigger().whileTrue(
-                                (dumpFactory.Shoot().alongWith(new RunHopper())))
+                                (dumpFactory.Shoot()))
                                 .onFalse(dumpFactory.HoodDown());
 
                 xDrive.povDown().onTrue(
@@ -124,10 +124,10 @@ public class RobotContainer {
                 xDrive.b().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                xDrive.a().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2, true));
 
-                xDrive.y().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                xDrive.y().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2, true));
 
         }
@@ -182,12 +182,12 @@ public class RobotContainer {
 
         private void configureSimBinds() {
                 new Trigger(() -> xSim.getRawButtonPressed(1))
-                                .toggleOnTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
+                                .whileTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
                                                 () -> xSim.getRawAxis(1),
                                                 () -> true, false));
 
                 new Trigger(() -> xSim.getRawButtonPressed(2))
-                                .toggleOnTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
+                                .whileTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
                                                 () -> xSim.getRawAxis(1),
                                                 () -> true, true));
 

@@ -513,7 +513,7 @@ public class Robot extends TimedRobotstangs {
                         .finallyDo(() -> Flywheel.getInstance().setCanShoot(true)));
 
         NamedCommands.registerCommand("Photoshoot",
-                (dumpFactory.Shoot().alongWith(new RunHopper()).alongWith(new StartIntake()))
+                (dumpFactory.Shoot().alongWith(new StartIntake()))
         // .until(() -> Feeder.getInstance().getfuelSensor())
         );
 

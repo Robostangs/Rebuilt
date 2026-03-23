@@ -98,7 +98,7 @@ public class RobotContainer {
 
                 // TODO put tese complex things into a facotry, ts too ugly
                 xDrive.rightTrigger().whileTrue(
-                                (dumpFactory.Shoot().alongWith(new RunHopper())))
+                                (dumpFactory.Shoot()))
                                 .onFalse(dumpFactory.HoodDown());
 
                 xDrive.povDown().onTrue(
@@ -125,10 +125,10 @@ public class RobotContainer {
                 xDrive.b().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                xDrive.a().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2, true));
 
-                xDrive.y().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                xDrive.y().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2, true));
 
         }
@@ -183,12 +183,12 @@ public class RobotContainer {
 
         private void configureSimBinds() {
                 new Trigger(() -> xSim.getRawButtonPressed(1))
-                                .toggleOnTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
+                                .whileTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
                                                 () -> xSim.getRawAxis(1),
                                                 () -> true, false));
 
                 new Trigger(() -> xSim.getRawButtonPressed(2))
-                                .toggleOnTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
+                                .whileTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
                                                 () -> xSim.getRawAxis(1),
                                                 () -> true, true));
 

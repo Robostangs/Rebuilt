@@ -75,7 +75,7 @@ public class RobotContainer {
                 logger.initSwerveLog();
         }
 
-        public Command controllerHaptics(double secs, CommandXboxController controller) {
+        private Command rumbleController(double secs, CommandXboxController controller) {
                 return new StartEndCommand(() -> {
                         controller.setRumble(GenericHID.RumbleType.kRightRumble, 1d);
                         controller.setRumble(GenericHID.RumbleType.kLeftRumble, 1d);
@@ -86,11 +86,11 @@ public class RobotContainer {
         }
 
         public static Command rumbleDriveController(double secs) {
-                return RobotContainer.getInstance().controllerHaptics(secs, RobotContainer.getInstance().xDrive);
+                return RobotContainer.getInstance().rumbleController(secs, RobotContainer.getInstance().xDrive);
         }
 
         public static Command rumbleManipController(double secs) {
-                return RobotContainer.getInstance().controllerHaptics(secs, RobotContainer.getInstance().xManip);
+                return RobotContainer.getInstance().rumbleController(secs, RobotContainer.getInstance().xManip);
         }
 
         private void configureDrivingBinding() {

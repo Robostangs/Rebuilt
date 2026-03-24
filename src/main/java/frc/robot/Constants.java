@@ -63,6 +63,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.*;
 public final class Constants {
         public static class OperatorConstants {
                 public static final int kDriverControllerPort = 0;
+                public static final double maxSpeedCap = null;
         }
 
         public static final AprilTagFieldLayout kAprilTagFieldLayout = AprilTagFieldLayout
@@ -155,8 +156,8 @@ public final class Constants {
                 public static final double kHoodDownPos = 0d;
                 // public static final int kLimitSwitchId = 0;
                 public static final double kHoodHomeDutyCycle = -0.1;
-                public static final double kHoodMotorP = 8;
-                public static final double kHoodMotorI = 1;
+                public static final double kHoodMotorP = 1.5;
+                public static final double kHoodMotorI = .5;
                 public static final double kHoodMotorD = 0;
                 public static final double kHoodMotorS = 0;
                 public static final double kHoodMotorV = 0;
@@ -165,7 +166,7 @@ public final class Constants {
                 public static final double kHoodMotionMagicAcceleration = 0;
                 public static final double kHoodSensortoMechanism = 16;
                 public static final double kHoodStatorCurrentLimit = 40;
-                public static final double kHoodHomeTimeout = .5;
+                public static final double kHoodHomeTimeout = .25;
                 public static final double kHoodUpPos = 0.8;
                 public static final double kPosAtOppositeAlliancePass = 0.7;
                 public static final double kDumbShootHoodPos = 0;

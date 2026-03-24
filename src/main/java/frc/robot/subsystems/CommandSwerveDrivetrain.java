@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -68,7 +69,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private ArrayList<VisionStangs> visionPoses = new ArrayList<>();
 
     private final SwerveRequest.ApplyRobotSpeeds AutoDrive = new SwerveRequest.ApplyRobotSpeeds();
-
+    private boolean isVisionGood=false;
     /*
      * SysId routine for characterizing translation. This is used to find PID gains
      * for the drive motors.
@@ -282,9 +283,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         setVisionPose(visionPoses);
 
         Robot.teleopField.setRobotPose(this.getState().Pose);
-
+        SmartDashboard.putBoolean("isVisionGood", isVisionGood);
     }
-
+    private Timer timeSinceBad=new Timer();
+    private void setIsVisionGood(boolean isGood){
+        if(!isGood&&!timeSinceBad.isRunning()){
+            timeSinceBad.start();
+        }
+        if(isGood){
+            timeSinceBad.stop();
+            isVisionGood=true;
+        }
+        if(timeSinceBad.isRunning()){
+            if(timeSinceBad.hasElapsed(3)){
+                isVisionGood=false;
+            }
+        }
+        
+    }
     private void setVisionPose(ArrayList<VisionStangs> visionMeasurements) {
         double smallestAmbiuity = 1;
         int index = -1;
@@ -294,6 +310,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                         visionMeasurements.get(c).getAmbiguity() > 0
                         && visionMeasurements.get(c).getAmbiguity() < 0.5) {
                     smallestAmbiuity = visionMeasurements.get(c).getAmbiguity();
+
                     index = c;
                 }
             }
@@ -308,13 +325,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     "Ts NOT null dude");
             SmartDashboard.putNumber("Vision/Vision Pose index ",
                     index);
-
+            if(RobotContainer.useVision&&visionMeasurements.get(index).getAmbiguity()<=0.4){
+                setIsVisionGood(true);
+            }
+            if(visionMeasurements.get(index).getAmbiguity()>=0.4){
+                setIsVisionGood(false);
+            }
             if(RobotContainer.useVision)
             this.addVisionMeasurement(visionMeasurements.get(index).getPose(),
                     visionMeasurements.get(index).getTimeStamp());
+            
         } else {
             SmartDashboard.putString("Vision/Pose Null error ",
                     "Ts null dude");
+            setIsVisionGood(false);
 
         }
     }

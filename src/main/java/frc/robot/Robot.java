@@ -335,6 +335,8 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopPeriodic() {
+        SmartDashboard.putBoolean("IsPassing",shooterPass);
+        SmartDashboard.putBoolean("IsDumbShoot",shooterIsDumb);
         shiftAlert.set(canBlueScore == whoCanScore.error);
         String gameData = DriverStation.getGameSpecificMessage();
         int gameTimeInt = (int) DriverStation.getMatchTime();

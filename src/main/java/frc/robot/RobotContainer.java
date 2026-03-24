@@ -53,6 +53,7 @@ public class RobotContainer {
         private final GenericHID xSim = new GenericHID(2);
         private static RobotContainer mInstance;
         public final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
+        private boolean isCappingSpeed=false;
 
         public static RobotContainer getInstance() {
                 if (mInstance == null) {
@@ -113,13 +114,17 @@ public class RobotContainer {
                 xDrive.rightBumper().whileTrue(IntakeFactory.TrueSpit());
                 xDrive.leftBumper().whileTrue(IntakeFactory.ballStuck());
 
-                xDrive.povRight().onTrue(new HomeHood());
+                xDrive.rm().onTrue(new HomeHood());
+                
 
                 xDrive.povLeft().whileTrue(new HomeIntake(false));
 
                 xDrive.x().whileTrue(new StartIntake());
                 xDrive.b().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
+                xDrive.povLeft().onTrue(new InstantCommand(
+                                (() -> isCappingSpeed = !isCappingSpeed)));
+
 
                 xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2, true));
@@ -143,20 +148,28 @@ public class RobotContainer {
                                                 () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * 30)));
 
                 xManip.rightTrigger().whileTrue(new InstantCommand(
-                                () -> Hood.getInstance().setHoodDutyCycle(xManip.getRightTriggerAxis() * 0.25)));
+                                () -> Hood.getInstance().setHoodDutyCycle(xManip.getRightTriggerAxis() * 0.2)))
+                                .onFalse(new InstantCommand(
+                                                () -> Hood.getInstance().setHoodDutyCycle(
+                                                                0)));
 
                 xManip.leftTrigger().whileTrue(new InstantCommand(
-                                () -> Hood.getInstance().setHoodDutyCycle(xManip.getLeftTriggerAxis() * -0.25)));
+                                () -> Hood.getInstance().setHoodDutyCycle(xManip.getLeftTriggerAxis() * -0.2)))
+                                .onFalse(new InstantCommand(
+                                                () -> Hood.getInstance().setHoodDutyCycle(
+                                                               0)));
+                ;
 
         }
 
         private void setDrivetrain() {
-                DoubleSupplier leftTrigger = () -> (xDrive.getLeftTriggerAxis() > 0.2) ? 0.25 : 1;
+                DoubleSupplier leftTrigger = () -> (xDrive.getLeftTriggerAxis() > 0.2) ? 0.5 :  1;
+
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(() -> drive
                                                         .withVelocityX((-xSim.getRawAxis(0))
-                                                                        * MaxSpeed)
+                                                                *MaxSpeed)
                                                         .withVelocityY((xSim.getRawAxis(1))
                                                                         * MaxSpeed)
                                                         .withRotationalRate((-xSim.getRawAxis(2))

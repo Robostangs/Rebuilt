@@ -505,10 +505,6 @@ public class Robot extends TimedRobotstangs {
 
         NamedCommands.registerCommand("Retract", new RetractIntake().withTimeout(0.5));
 
-        NamedCommands.registerCommand("Dontshoot",
-                new InstantCommand(() -> Flywheel.getInstance().setCanShoot(false))
-                        .finallyDo(() -> Flywheel.getInstance().setCanShoot(true)));
-
 
         NamedCommands.registerCommand("Photoshoot",
                 (dumpFactory.Shoot().alongWith(new StartIntake()))

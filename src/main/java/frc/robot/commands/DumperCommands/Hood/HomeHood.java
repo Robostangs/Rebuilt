@@ -32,7 +32,7 @@ public class HomeHood extends Command {
 
     @Override
     public void execute() {
-        if(hood.getStatorCurrent() < -13){
+        if(hood.getStatorCurrent() < -30){
             timer.start();
         }
         else{

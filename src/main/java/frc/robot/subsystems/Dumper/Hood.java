@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 import edu.wpi.first.math.util.Units;
@@ -20,14 +21,12 @@ public class Hood extends SubsystemBase {
     MotionMagicExpoDutyCycle hoodTargetPosition;
 
     static boolean isHomed = false;
-    Follower slaveControl;
     boolean ShouldMM = true;
 
     private Hood() {
         mainMotor = new TalonFXS(Constants.HoodConstants.mainMotorID);
         hoodTargetPosition = new MotionMagicExpoDutyCycle(mainMotor.getPosition().getValueAsDouble());
         configureHoodMotor();
-        slaveControl = new Follower(Constants.HoodConstants.mainMotorID, MotorAlignmentValue.Opposed);
     }
 
     public void configureHoodMotor() {
@@ -44,12 +43,13 @@ public class Hood extends SubsystemBase {
 
         mainMotorConfig.CurrentLimits.StatorCurrentLimit =  Constants.HoodConstants.kHoodStatorCurrentLimit;
 
+        mainMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
         mainMotorConfig.ExternalFeedback.SensorToMechanismRatio = Constants.HoodConstants.kHoodSensortoMechanism;
 
         mainMotorConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.HoodConstants.kHoodMotionMagicCruiseVelocity;
         mainMotorConfig.MotionMagic.MotionMagicAcceleration = Constants.HoodConstants.kHoodMotionMagicAcceleration;
 
-        mainMotorConfig.ExternalFeedback.SensorToMechanismRatio = 44;
         mainMotor.getConfigurator().apply(mainMotorConfig);
 
     }

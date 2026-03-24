@@ -17,12 +17,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "DBump - Shoot"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Photoshoot"

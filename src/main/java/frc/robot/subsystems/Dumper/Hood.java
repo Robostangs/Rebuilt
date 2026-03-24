@@ -1,11 +1,9 @@
 package frc.robot.subsystems.Dumper;
 
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -151,7 +149,7 @@ public class Hood extends SubsystemBase {
         }
 
         if (!isHomed) {
-            CommandScheduler.getInstance().schedule(new HomeHood().withTimeout(4));
+            // CommandScheduler.getInstance().schedule(new HomeHood().withTimeout(4));
         }
 
     }

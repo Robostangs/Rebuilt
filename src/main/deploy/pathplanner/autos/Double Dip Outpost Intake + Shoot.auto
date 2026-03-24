@@ -17,12 +17,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "OBump - OShoot"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Photoshoot"

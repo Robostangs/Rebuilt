@@ -7,12 +7,10 @@ import frc.robot.subsystems.Dumper.Flywheel;
 
 public class Index extends Command {
     Feeder feeder;
-    boolean isDumb;
 
     public Index() {
         feeder = Feeder.getInstance();
         addRequirements(feeder);
-        this.isDumb = isDumb;
     }
 
     @Override

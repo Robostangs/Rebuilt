@@ -3,32 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.890920500578704,
-        "y": 3.5372785011574077
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 3.0110517876637557,
-        "y": 2.820119234443232
-      },
-      "isLocked": false,
-      "linkedName": "OutpostShoot"
-    },
-    {
-      "anchor": {
         "x": 3.4328666871360993,
         "y": 2.5069619382278017
       },
-      "prevControl": {
-        "x": 3.1828666871360993,
-        "y": 2.5069619382278017
-      },
+      "prevControl": null,
       "nextControl": {
         "x": 3.94580251909383,
         "y": 2.5069619382278017
       },
       "isLocked": false,
-      "linkedName": "OutpostBumpIn"
+      "linkedName": "OutpostShoot"
     },
     {
       "anchor": {
@@ -52,28 +36,28 @@
         "y": 3.2828739651564773
       },
       "prevControl": {
-        "x": 7.807045806040756,
-        "y": 2.7440738719068416
+        "x": 7.649783705677121,
+        "y": 2.7304747294200213
       },
       "nextControl": {
-        "x": 7.571229260329369,
-        "y": 3.753981829263772
+        "x": 7.767012522361359,
+        "y": 4.78948121645796
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.2386663027656475,
-        "y": 3.9161199053857354
+        "x": 6.420304114490161,
+        "y": 4.205366726296958
       },
       "prevControl": {
-        "x": 6.536832209805418,
-        "y": 4.057696300574613
+        "x": 6.718470021529932,
+        "y": 4.346943121485836
       },
       "nextControl": {
-        "x": 5.798949576965065,
-        "y": 3.7073317526382823
+        "x": 5.980587388689579,
+        "y": 3.996578573549505
       },
       "isLocked": false,
       "linkedName": null
@@ -103,22 +87,6 @@
         "x": 4.446314808396761,
         "y": 2.5069619382278017
       },
-      "nextControl": {
-        "x": 3.1120668838955092,
-        "y": 2.5069619382278017
-      },
-      "isLocked": false,
-      "linkedName": "OutpostBumpIn"
-    },
-    {
-      "anchor": {
-        "x": 2.890920500578704,
-        "y": 3.5372785011574077
-      },
-      "prevControl": {
-        "x": 2.884360715927598,
-        "y": 3.2873645775250275
-      },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "OutpostShoot"
@@ -126,31 +94,31 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8822760193133047,
-      "rotationDegrees": -45.0
-    },
-    {
-      "waypointRelativePos": 2.0085920734978537,
-      "rotationDegrees": -45.0
-    },
-    {
-      "waypointRelativePos": 2.7460518374463527,
-      "rotationDegrees": -90.0
-    },
-    {
-      "waypointRelativePos": 5.024912821888409,
+      "waypointRelativePos": 1.0120240480961928,
       "rotationDegrees": 45.0
     },
     {
-      "waypointRelativePos": 6.079114136266096,
+      "waypointRelativePos": 1.7460518374463527,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 3.1062124248497014,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 4.024912821888409,
+      "rotationDegrees": 45.0
+    },
+    {
+      "waypointRelativePos": 5.0,
       "rotationDegrees": 45.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.1863089470284243,
-      "maxWaypointRelativePos": 1.8631197512919888,
+      "minWaypointRelativePos": 0.18630894702842427,
+      "maxWaypointRelativePos": 0.8631197512919888,
       "constraints": {
         "maxVelocity": 3.0,
         "maxAcceleration": 1.0,
@@ -162,8 +130,8 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 3.2049418604651168,
-      "maxWaypointRelativePos": 5.082969961240312,
+      "minWaypointRelativePos": 2.2049418604651168,
+      "maxWaypointRelativePos": 4.082969961240312,
       "constraints": {
         "maxVelocity": 3.5,
         "maxAcceleration": 3.0,
@@ -175,8 +143,8 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 5.302073239664083,
-      "maxWaypointRelativePos": 5.867671996124028,
+      "minWaypointRelativePos": 4.302073239664083,
+      "maxWaypointRelativePos": 4.867671996124028,
       "constraints": {
         "maxVelocity": 3.0,
         "maxAcceleration": 1.0,
@@ -199,13 +167,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 16.633854507058803
+    "rotation": 55.0
   },
   "reversed": false,
   "folder": "Outpost",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 16.633854507058803
+    "rotation": 55.0
   },
   "useDefaultConstraints": true
 }

@@ -8,12 +8,7 @@ public class ControllerStangs extends CommandXboxController {
         super(port);
     }
 
-    public Trigger c(){
-        return this.povLeft();
-    }
-    public Trigger z(){
-        return this.povRight();
-    }
+    
     public Trigger leftPaddle(){
         return this.leftStick();
     }

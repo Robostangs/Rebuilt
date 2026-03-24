@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.439050047762009,
-        "y": 5.6268164346797676
+        "x": 3.4186046511627906,
+        "y": 5.470948121645796
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0048504594250365,
-        "y": 6.665387588700874
+        "x": 0.9844050628258181,
+        "y": 6.509519275666902
       },
       "isLocked": false,
       "linkedName": "DepotBumpIn"
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 2.7803667534722227,
-        "y": 4.476558883101852
+        "x": 3.4186046511627906,
+        "y": 5.470948121645796
       },
       "prevControl": {
-        "x": 1.4330423925733875,
-        "y": 5.270023675678271
+        "x": 2.0712802902639553,
+        "y": 6.2644129142222145
       },
       "nextControl": null,
       "isLocked": false,
@@ -77,13 +77,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -16.522438069534974
+    "rotation": -60.46121774044193
   },
   "reversed": false,
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 1.5,
-    "rotation": -45.0
+    "rotation": -35.311
   },
   "useDefaultConstraints": true
 }

@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 8.04397171585648,
-        "y": 2.63526490162037
+        "x": 7.9779427549195,
+        "y": 2.988461538461538
       },
       "prevControl": {
-        "x": 8.140419198495367,
-        "y": 1.078064525462963
+        "x": 7.98965600992418,
+        "y": 2.1099674131105397
       },
       "nextControl": {
-        "x": 7.994001172544421,
-        "y": 3.442068217925433
+        "x": 7.961717352415027,
+        "y": 4.205366726296958
       },
       "isLocked": false,
       "linkedName": "OutpostFuelCollect"
@@ -64,16 +64,16 @@
     },
     {
       "anchor": {
-        "x": 2.996744186046511,
+        "x": 3.4328666871360993,
         "y": 2.5069619382278017
       },
       "prevControl": {
-        "x": 4.318636983080713,
+        "x": 4.754759484170302,
         "y": 2.4797850709606983
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "OutpostShoot"
     }
   ],
   "rotationTargets": [
@@ -143,7 +143,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 45.76388593642817
+    "rotation": 55.0
   },
   "reversed": false,
   "folder": "Outpost",

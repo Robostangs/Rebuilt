@@ -201,7 +201,7 @@ public class RobotContainer {
                                                 () -> true, false));
 
                 new Trigger(() -> xSim.getRawButtonPressed(2))
-                                .onTrue(AlignToHub.getAlignToHub());
+                                .onTrue(new AlignToHub().getAlignToHub(4));
 
         }
 }

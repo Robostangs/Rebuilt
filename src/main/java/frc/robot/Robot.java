@@ -343,7 +343,6 @@ public class Robot extends TimedRobotstangs {
 
             Hood.getInstance().setMotionMagicTarget(hoodSetpoint);
 
-            AlignToHub.drawShootingRing();
      
 
         SmartDashboard.putBoolean("IsPassing",shooterPass);

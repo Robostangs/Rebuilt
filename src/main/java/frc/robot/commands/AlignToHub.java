@@ -20,13 +20,13 @@ import com.pathplanner.lib.util.FlippingUtil;
 
 public class AlignToHub {
 
-    private static final Translation2d hubPos = !Robot.isRed()
+    private final Translation2d hubPos = !Robot.isRed()
             ? Constants.FieldConstants.HubPosition.getTranslation()
             : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation());
 
-    private static final double shootRadius = Units.inchesToMeters(80);
+    private double shootRadius = 0;
 
-    public static Pose2d getTargetPose() {
+    public Pose2d getTargetPose() {
         Translation2d robotPos = CommandSwerveDrivetrain.getInstance()
                 .getState().Pose.getTranslation();
 
@@ -47,7 +47,7 @@ public class AlignToHub {
         return new Pose2d(targetTranslation, facingHub);
     }
 
-    public static void drawShootingRing() {
+    public void drawShootingRing() {
         int numPoints = 36;
         List<Pose2d> ringPoses = new ArrayList<>();
 
@@ -61,7 +61,7 @@ public class AlignToHub {
         Robot.teleopField.getObject("Shooting Ring").setPoses(ringPoses);
     }
 
-    public static PathPlannerPath generatePath(Pose2d targetPose) {
+    public PathPlannerPath generatePath(Pose2d targetPose) {
         Pose2d currentPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
 
         Pose2d startPose = new Pose2d(
@@ -78,7 +78,7 @@ public class AlignToHub {
                 targetPose.getRotation());
 
         List<Waypoint> waypoints;
-  
+
         waypoints = PathPlannerPath.waypointsFromPoses(startPose, endPose);
 
         double mult = 1;
@@ -120,13 +120,19 @@ public class AlignToHub {
         return path;
     }
 
-    public static Command getAlignToHub() {
-        return new DeferredCommand(() -> {
+    public Command getAlignToHub(double radius) {
+        shootRadius = radius;
+
+        DeferredCommand alignCommand = new DeferredCommand(() -> {
+            drawShootingRing();
+
             Pose2d target = getTargetPose();
 
             Robot.teleopField.getObject("Hub Align Pose").setPose(target);
 
             return AutoBuilder.followPath(generatePath(target));
         }, Set.of(CommandSwerveDrivetrain.getInstance()));
+
+        return alignCommand;
     }
 }

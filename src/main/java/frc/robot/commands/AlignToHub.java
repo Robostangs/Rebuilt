@@ -24,7 +24,7 @@ public class AlignToHub {
             ? Constants.FieldConstants.HubPosition.getTranslation()
             : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation());
 
-    private static final double shootRadius = Units.inchesToMeters(60);
+    private static final double shootRadius = Units.inchesToMeters(80);
 
     public static Pose2d getTargetPose() {
         Translation2d robotPos = CommandSwerveDrivetrain.getInstance()
@@ -66,6 +66,7 @@ public class AlignToHub {
 
         Pose2d startPose = new Pose2d(
                 currentPose.getX(), currentPose.getY(),
+
                 currentPose.getTranslation()
                         .minus(targetPose.getTranslation())
                         .getAngle()
@@ -73,41 +74,33 @@ public class AlignToHub {
 
         Pose2d endPose = new Pose2d(
                 targetPose.getX(), targetPose.getY(),
-                targetPose.getRotation().plus(Rotation2d.kCCW_90deg));
+
+                targetPose.getRotation());
 
         List<Waypoint> waypoints;
-        double rotationDiff = Math.abs(
-                currentPose.getRotation().minus(targetPose.getRotation()).getDegrees());
+  
+        waypoints = PathPlannerPath.waypointsFromPoses(startPose, endPose);
 
-        if (rotationDiff < 45) {
-            waypoints = PathPlannerPath.waypointsFromPoses(startPose, endPose);
-        } else {
-            waypoints = PathPlannerPath.waypointsFromPoses(
-                    startPose,
-                    endPose.transformBy(new Transform2d(
-                            Units.inchesToMeters(18), 0, Rotation2d.kZero)),
-                    endPose);
-        }
-
+        double mult = 1;
         PathConstraints constraints = new PathConstraints(
 
-                Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.7,
+                Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * mult,
 
-                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared * 0.7,
+                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared * mult,
 
-                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * 0.7,
-                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * 0.7);
+                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * mult,
+                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * mult);
 
         PathConstraints endConstraints = new PathConstraints(
-                Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.7,
-                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared * 0.7,
-                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * 0.7,
-                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * 0.7);
+                Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * mult,
+                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared * mult,
+                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * mult,
+                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * mult);
 
         List<RotationTarget> rotationTargets = new ArrayList<>();
         rotationTargets.add(new RotationTarget(
                 0.8,
-                endPose.getRotation().plus(Rotation2d.fromDegrees(270))));
+                endPose.getRotation()));
 
         List<ConstraintsZone> zones = new ArrayList<>();
         zones.add(new ConstraintsZone(0.6, 1.0, endConstraints));

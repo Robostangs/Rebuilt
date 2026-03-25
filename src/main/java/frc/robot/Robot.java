@@ -43,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.LimelightHelpers;
 import frc.robot.Stable.TimedRobotstangs;
+import frc.robot.commands.AlignToHub;
 import frc.robot.commands.Index;
 import frc.robot.commands.DumperCommands.dumpFactory;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
@@ -341,6 +342,8 @@ public class Robot extends TimedRobotstangs {
         double hoodSetpoint = SmartDashboard.getNumber("Hood/HoodPosition", 0);
 
             Hood.getInstance().setMotionMagicTarget(hoodSetpoint);
+
+            AlignToHub.drawShootingRing();
      
 
         SmartDashboard.putBoolean("IsPassing",shooterPass);

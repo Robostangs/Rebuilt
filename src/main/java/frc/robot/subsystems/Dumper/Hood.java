@@ -118,6 +118,11 @@ public class Hood extends SubsystemBase {
         hoodTargetPosition.Position = pos;
     }
 
+    public void gotoMM(){
+                        mainMotor.setControl(hoodTargetPosition);
+
+    }
+
     public void setMotionMagic() {
 
         if (ShouldMM) {
@@ -144,6 +149,10 @@ public class Hood extends SubsystemBase {
         SmartDashboard.putNumber("Hood/Hood pos", mainMotor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Hood/Stator Current", getStatorCurrent());
         SmartDashboard.putBoolean("Hood/manual", ShouldMM);
+        if(ShouldMM){
+                            mainMotor.setControl(hoodTargetPosition);
+
+        }
         if (mainMotor.hasResetOccurred()) {
             isHomed = false;
         }

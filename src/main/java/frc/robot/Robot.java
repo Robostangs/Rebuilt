@@ -80,7 +80,6 @@ public class Robot extends TimedRobotstangs {
 
     private SendableChooser<String> autoChooser = new SendableChooser<>();
 
-
     public PowerDistribution pdh = new PowerDistribution(Constants.ElasticConstants.kPdhCanId, ModuleType.kRev);
 
     public static boolean shooterPass = false;
@@ -212,7 +211,7 @@ public class Robot extends TimedRobotstangs {
         if (hoodDC != 0) {
             Hood.getInstance().setMM(false);
             Hood.getInstance().setHoodDutyCycle(hoodDC);
-        }else{
+        } else {
             Hood.getInstance().setMM(true);
         }
         if (intakeWheelsDC != 0) {
@@ -262,9 +261,7 @@ public class Robot extends TimedRobotstangs {
     public void disabledPeriodic() {
         autoname = autoChooser.getSelected();
 
-
         if (autoname != oldAutoname) {
-
 
             if (autoname != null) {
 
@@ -330,27 +327,24 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void teleopInit() {
         lastMatchSecond = Robot.isSimulation() ? (int) Timer.getFPGATimestamp() : (int) DriverStation.getMatchTime();
+        SmartDashboard.putNumber("Flywheel/FlywheelVelocity", 0);
+        SmartDashboard.putNumber("Hood/HoodPosition", 0);
 
     }
 
     @Override
     public void teleopPeriodic() {
-        SmartDashboard.putNumber("Flywheel/FlywheelVelocity", 0);
-        SmartDashboard.putNumber("Hood/HoodDutyCycle", 0);
+
         double flywheelVelocity = SmartDashboard.getNumber("Flywheel/FlywheelVelocity", 0);
-         if (flywheelVelocity != 0) {
             Flywheel.getInstance().setFlywheelVelocity(flywheelVelocity);
-        }
-        double hoodDC = SmartDashboard.getNumber("Hood/HoodDutyCycle", 0);
-        if (hoodDC != 0) {
-            Hood.getInstance().setMM(false);
-            Hood.getInstance().setHoodDutyCycle(hoodDC);
-        }else{
-            Hood.getInstance().setMM(true);
-        }
+
+        double hoodSetpoint = SmartDashboard.getNumber("Hood/HoodPosition", 0);
+
+            Hood.getInstance().setMotionMagicTarget(hoodSetpoint);
+     
 
         SmartDashboard.putBoolean("IsPassing",shooterPass);
-        SmartDashboard.putBoolean("IsDumbShoot",shooterIsDumb);
+        SmartDashboard.putBoolean("IsDumbShoot ",shooterIsDumb);
         shiftAlert.set(canBlueScore == whoCanScore.error);
         String gameData = DriverStation.getGameSpecificMessage();
         int gameTimeInt = (int) DriverStation.getMatchTime();
@@ -521,11 +515,6 @@ public class Robot extends TimedRobotstangs {
 
         NamedCommands.registerCommand("Retract", new RetractIntake().withTimeout(0.5));
 
-
-        NamedCommands.registerCommand("Photoshoot",
-                (dumpFactory.Shoot().alongWith(new StartIntake()))
-        // .until(() -> Feeder.getInstance().getfuelSensor())
-        );
 
         NamedCommands.registerCommand("Climb",
                 new PrintCommand("Hi!"));

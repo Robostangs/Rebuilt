@@ -21,13 +21,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Stable.ControllerStangs;
 import frc.robot.commands.DumperCommands.dumpFactory;
 import frc.robot.commands.DumperCommands.Hood.HomeHood;
+import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.commands.AutoAlign;
-
+import frc.robot.commands.Index;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Dumper.Flywheel;
 import frc.robot.subsystems.Dumper.Hood;
@@ -111,10 +112,10 @@ public class RobotContainer {
 
                 xDrive.leftPaddle().whileTrue(new RetractIntake());
 
-                xDrive.rightBumper().whileTrue(IntakeFactory.TrueSpit());
+                // xDrive.rightBumper().whileTrue(IntakeFactory.TrueSpit());
                 xDrive.leftBumper().whileTrue(IntakeFactory.ballStuck());
 
-                xDrive.rm().onTrue(new HomeHood());
+                xDrive.rightBumper().onTrue(new HomeHood());
                 
 
                 xDrive.povLeft().whileTrue(new HomeIntake(false));
@@ -125,12 +126,14 @@ public class RobotContainer {
                 xDrive.povLeft().onTrue(new InstantCommand(
                                 (() -> isCappingSpeed = !isCappingSpeed)));
 
+                xDrive.a().whileTrue(new RunHopper().alongWith(new Index()));
 
-                xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
-                                () -> xDrive.getLeftTriggerAxis() < 0.2, true));
 
-                xDrive.y().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
-                                () -> xDrive.getLeftTriggerAxis() < 0.2, true));
+                // xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                //                 () -> xDrive.getLeftTriggerAxis() < 0.2, true));
+
+                // xDrive.y().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                //                 () -> xDrive.getLeftTriggerAxis() < 0.2, true));
 
         }
 

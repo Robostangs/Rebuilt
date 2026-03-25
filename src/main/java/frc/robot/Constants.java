@@ -70,7 +70,7 @@ public final class Constants {
 
         public static class HopperConstants {
 
-                public static final int kRollerID = 0;
+                public static final int kRollerID = 17;
                 public static final double kRollerDC = 0.5;
 
         }
@@ -94,7 +94,7 @@ public final class Constants {
 
                 public static final int feederMotorID = 45;
                 public static final double feederSupplyLimit = 60;
-                public static final double kFeedDutyCycle = 1;
+                public static final double kFeedDutyCycle = 0.4;
                 public static final int fuelSensorID = 0;
 
         }
@@ -122,7 +122,7 @@ public final class Constants {
                 public static final double shooterMotionMagicAcceleration = 0;
                 public static final double shooterMotionMagicJerk = 0;
                 public static final double kShooterVelocityTolerance = -5;
-                public static final double kShooterSupplyCurrentLimit = 20;
+                public static final double kShooterSupplyCurrentLimit = 50;
 
         }
 
@@ -165,7 +165,7 @@ public final class Constants {
                 public static final double kHoodMotionMagicAcceleration = 0;
                 public static final double kHoodSensortoMechanism = 16;
                 public static final double kHoodStatorCurrentLimit = 40;
-                public static final double kHoodHomeTimeout = .25;
+                public static final double kHoodHomeTimeout = .5;
                 public static final double kHoodUpPos = 0.8;
                 public static final double kPosAtOppositeAlliancePass = 0.7;
                 public static final double kDumbShootHoodPos = 0;
@@ -176,18 +176,18 @@ public final class Constants {
                 public static final double kPeakReverseOutput = 0;
                 public static final double kShootSpeed = 60;
                 // public static final int kFlywheelMotorID = 0;
-                public static final double kShooterMotorP = 3.5;
-                public static final double kShooterMotorI = 0.08;
+                public static final double kShooterMotorP = .55;
+                public static final double kShooterMotorI = 0.1;
                 public static final double kShooterMotorD = 0;
                 public static final double kShooterMotorG = 0;
                 public static final double kShooterMotorA = 0;
-                public static final double kShooterMotorV = 0.122;
-                public static final double kShooterMotorS = 0.29;
+                public static final double kShooterMotorV = 0.133;
+                public static final double kShooterMotorS = 0.33;
                 public static final double kShooterMotorStatorCurrentLimit = 100;
                 public static final double kVelocityAtOppositeAlliancePass = 80;
                 public static final double kShooterVelocityTolerance = 10;
                 public static final int kFlywheelMotorID = 9;
-                public static final int kFlywheelSlaveMotorID = 0;
+                public static final int kFlywheelSlaveMotorID = 10;
                 public static final double kDumbShootRPS = 0;
                 public static final double kShooterSlaveMotorStatorCurrentLimit = 60;
 

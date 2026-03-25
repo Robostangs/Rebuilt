@@ -252,7 +252,7 @@ public final class Constants {
                 public static final String kLimelightRight = "Ultron";
                 public static final Transform3d kRobotToCamRear = new Transform3d(new Transform2d());
 
-                public static final double kPhotonAmbiguityThres = 0.7;
+                public static final double kPhotonAmbiguityThres = 0.2;
                 public static final double kLLDisThres = 3;
                 public static final int[] goodIDS = { 2, 3, 4, 5, 8, 9, 10, 11, 13, 14, 15, 16, 18, 19, 20, 21, 24, 25,
                                 26, 27, 28, 29, 30 };

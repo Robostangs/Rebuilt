@@ -56,6 +56,8 @@ public class VisionStangs {
 
             visionEst = ppe.estimateCoprocMultiTagPose(result);
 
+            
+
             for (var target : result.targets) {
                 if (target.poseAmbiguity > bigAmbiguity) {
                     bigAmbiguity = target.poseAmbiguity;
@@ -67,9 +69,11 @@ public class VisionStangs {
 
         if (bigAmbiguity < Constants.VisionConstants.kPhotonAmbiguityThres) {
             // Only use the estimate if present and valid
+
             visionEst.ifPresent(est -> {
                 var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
 
+                
                 if (pose2d != null) {
                     timestampSeconds = est.timestampSeconds;
                     Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);

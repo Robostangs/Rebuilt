@@ -335,6 +335,20 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopPeriodic() {
+        SmartDashboard.putNumber("Flywheel/FlywheelVelocity", 0);
+        SmartDashboard.putNumber("Hood/HoodDutyCycle", 0);
+        double flywheelVelocity = SmartDashboard.getNumber("Flywheel/FlywheelVelocity", 0);
+         if (flywheelVelocity != 0) {
+            Flywheel.getInstance().setFlywheelVelocity(flywheelVelocity);
+        }
+        double hoodDC = SmartDashboard.getNumber("Hood/HoodDutyCycle", 0);
+        if (hoodDC != 0) {
+            Hood.getInstance().setMM(false);
+            Hood.getInstance().setHoodDutyCycle(hoodDC);
+        }else{
+            Hood.getInstance().setMM(true);
+        }
+
         SmartDashboard.putBoolean("IsPassing",shooterPass);
         SmartDashboard.putBoolean("IsDumbShoot",shooterIsDumb);
         shiftAlert.set(canBlueScore == whoCanScore.error);

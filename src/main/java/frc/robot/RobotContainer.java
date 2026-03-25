@@ -27,6 +27,7 @@ import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
+import frc.robot.commands.AlignToHub;
 import frc.robot.commands.AutoAlign;
 import frc.robot.commands.Index;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -200,9 +201,7 @@ public class RobotContainer {
                                                 () -> true, false));
 
                 new Trigger(() -> xSim.getRawButtonPressed(2))
-                                .whileTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
-                                                () -> xSim.getRawAxis(1),
-                                                () -> true, true));
+                                .onTrue(AlignToHub.getAlignToHub());
 
         }
 }

@@ -207,6 +207,7 @@ public final class Constants {
                                 // TODO find this john
                                 Amps.of(120),
                                 1);
+
                 private final static Translation2d[] kModulePositions = {
                                 new Translation2d(Inches.of(9.875), Inches.of(9.875)),
                                 new Translation2d(Inches.of(9.875), Inches.of(-9.875)),
@@ -221,6 +222,19 @@ public final class Constants {
                 // TODO: find this john
                 public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.15, 0.15,
                                 Units.degreesToRadians(100));
+
+                   // Theoretical free speed (m/s) at 12 V applied output;
+        // This needs to be tuned to your individual robot
+        public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.12);
+
+        // The maximum acceleration of the robot in meters per second squared.
+        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+
+        // The maximum angular speed of the robot in radians per second.
+        public static final double kMaxAngularSpeedRadiansPerSecond = 13.5;
+
+        // The maximum angular acceleration of the robot in radians per second squared.
+        public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 3;
 
         }
 
@@ -258,6 +272,8 @@ public final class Constants {
                                 26, 27, 28, 29, 30 };
                 // {1,12,6,7,17,28,22,23};
         }
+
+      
 
         public class TunerConstants {
                 // Both sets of gains need to be tuned to your individual robot.

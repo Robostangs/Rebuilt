@@ -25,6 +25,7 @@ import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.RetractIntake;
+import frc.robot.commands.IntakeCommands.SetPivotPosition;
 import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.commands.AutoAlign;
 
@@ -116,6 +117,8 @@ public class RobotContainer {
 
                 xDrive.rm().onTrue(new HomeHood());
                 
+                xDrive.lm().whileTrue(IntakeFactory.OscillateIntake())
+                                .onFalse(new SetPivotPosition(0.0));
 
                 xDrive.povLeft().whileTrue(new HomeIntake(false));
 
@@ -125,7 +128,8 @@ public class RobotContainer {
                 xDrive.povLeft().onTrue(new InstantCommand(
                                 (() -> isCappingSpeed = !isCappingSpeed)));
 
-
+                
+                
                 xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2, true));
 

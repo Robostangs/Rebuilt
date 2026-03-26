@@ -18,13 +18,11 @@ public class IntakePivot extends SubsystemBase {
     private static IntakePivot mInstance;
     PositionTorqueCurrentFOC extenderControl;
 
-    //                                                                   67676767
     Alert hopperExtenderAlert = new Alert("Hopper Extender Motor is HOT", AlertType.kError);
 
     public IntakePivot() {
         setIntakePivotConfig();
         extenderControl = new PositionTorqueCurrentFOC(hopperExtenderMotor.getPosition().getValueAsDouble());
-
     }
 
     public static IntakePivot getInstance() {
@@ -82,7 +80,6 @@ public class IntakePivot extends SubsystemBase {
     public void checkIfMotorHot() {
         boolean isMotorHot = hopperExtenderMotor.getAncillaryDeviceTemp().getValueAsDouble() >= 45;
         hopperExtenderAlert.set(isMotorHot);
-        SmartDashboard.putBoolean("IntakePivot/isMotorHot", isMotorHot);
     }
 
     public void setTargetPosition() {

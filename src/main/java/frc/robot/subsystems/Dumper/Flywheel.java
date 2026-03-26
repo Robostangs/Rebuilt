@@ -70,7 +70,6 @@ public class Flywheel extends SubsystemBase {
             // for passing
             return Constants.FlywheelConstants.kVelocityAtOppositeAlliancePass;
         } else {
-
             // Acc get regression here
             return 2.2 * feetFromTarget + 52;
 

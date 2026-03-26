@@ -26,7 +26,6 @@ public class HomeHood extends Command {
     public void initialize() {
         hood.postStatus("Hood homing");
         hood.setHoodDutyCycle(Constants.HoodConstants.kHoodHomeDutyCycle);
-        // hood.setHoodStatorCurrentConfig();
 
     }
 
@@ -49,7 +48,6 @@ public class HomeHood extends Command {
         hood.setHoodPosition(Constants.DumperConstants.kHomePosition);
         hood.postStatus("Hood homed");
         hood.setIsHome(true);
-        // hood.configureHoodMotor();
 
     }
 

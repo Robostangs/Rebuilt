@@ -50,6 +50,7 @@ import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
+import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -365,7 +366,7 @@ public class Robot extends TimedRobotstangs {
             }
 
             // transition 10 seconds
-        } else if (gameTime > 130.0) {
+        }else if (gameTime > 130.0) {
             canBlueScore = whoCanScore.both;
             shiftTimeLeft = gameTime - 130;
             if (shiftTimeLeft > 4 && shiftTimeLeft < 5) {
@@ -424,7 +425,7 @@ public class Robot extends TimedRobotstangs {
         SmartDashboard.putNumber("Match Time", gameTime);
         SmartDashboard.putNumber("Shift Time Left", shiftTimeLeft);
 
-        SmartDashboard.putBoolean("is Dumb", shooterIsDumb);
+        //SmartDashboard.putBoolean("is Dumb", shooterIsDumb);
     }
 
     @Override
@@ -438,6 +439,7 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void testInit() {
+        SmartDashboard.putData("Testfbejkw",IntakeFactory.OscillateIntake());
         CommandScheduler.getInstance().cancelAll();
         setupPitTestDashboard();
         setupAutoPitTest();
@@ -508,7 +510,6 @@ public class Robot extends TimedRobotstangs {
     public void loadNamedCommands() {
 
         NamedCommands.registerCommand("Shoot",
-                // devin learn apostrophes bro this was previously "your"
                 new PrintCommand("you're supposed to shoot bruh"));
         NamedCommands.registerCommand("Pass",
                 new PrintCommand("you're supposed to pass bruh"));
@@ -518,13 +519,15 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Retract", new RetractIntake().withTimeout(0.5));
 
 
+        NamedCommands.registerCommand("Photoshoot",
+                (dumpFactory.Shoot().alongWith(new StartIntake())));
+
         NamedCommands.registerCommand("Climb",
                 new PrintCommand("Hi!"));
 
     }
 
     public static double getMetersFromTarget() {
-
         return CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
                 !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
                         : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation()));

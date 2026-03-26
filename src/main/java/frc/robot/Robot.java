@@ -356,7 +356,7 @@ public class Robot extends TimedRobotstangs {
             }
 
             // transition 10 seconds
-        } else if (gameTime > 130.0) {
+        }else if (gameTime > 130.0) {
             canBlueScore = whoCanScore.both;
             shiftTimeLeft = gameTime - 130;
             if (shiftTimeLeft > 4 && shiftTimeLeft < 5) {
@@ -415,7 +415,7 @@ public class Robot extends TimedRobotstangs {
         SmartDashboard.putNumber("Match Time", gameTime);
         SmartDashboard.putNumber("Shift Time Left", shiftTimeLeft);
 
-        SmartDashboard.putBoolean("is Dumb", shooterIsDumb);
+        //SmartDashboard.putBoolean("is Dumb", shooterIsDumb);
     }
 
     @Override
@@ -500,7 +500,6 @@ public class Robot extends TimedRobotstangs {
     public void loadNamedCommands() {
 
         NamedCommands.registerCommand("Shoot",
-                // devin learn apostrophes bro this was previously "your"
                 new PrintCommand("you're supposed to shoot bruh"));
         NamedCommands.registerCommand("Pass",
                 new PrintCommand("you're supposed to pass bruh"));
@@ -511,9 +510,7 @@ public class Robot extends TimedRobotstangs {
 
 
         NamedCommands.registerCommand("Photoshoot",
-                (dumpFactory.Shoot().alongWith(new StartIntake()))
-        // .until(() -> Feeder.getInstance().getfuelSensor())
-        );
+                (dumpFactory.Shoot().alongWith(new StartIntake())));
 
         NamedCommands.registerCommand("Climb",
                 new PrintCommand("Hi!"));
@@ -521,7 +518,6 @@ public class Robot extends TimedRobotstangs {
     }
 
     public static double getMetersFromTarget() {
-
         return CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
                 !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
                         : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation()));

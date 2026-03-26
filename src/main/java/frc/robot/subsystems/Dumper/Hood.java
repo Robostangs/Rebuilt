@@ -7,11 +7,9 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.commands.DumperCommands.Hood.HomeHood;
 
 public class Hood extends SubsystemBase {
     TalonFXS mainMotor;
@@ -125,8 +123,8 @@ public class Hood extends SubsystemBase {
             if (Math.abs(mainMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.04) {
                 mainMotor.set(0);
             } else {
-                if (hoodTargetPosition.Position > 0.8) {
-                    hoodTargetPosition.Position = .8;
+                if (hoodTargetPosition.Position > 1.3) {
+                    hoodTargetPosition.Position = 1.3;
                 } else if (hoodTargetPosition.Position < 0) {
                     hoodTargetPosition.Position = 0;
 
@@ -147,11 +145,6 @@ public class Hood extends SubsystemBase {
         if (mainMotor.hasResetOccurred()) {
             isHomed = false;
         }
-
-        if (!isHomed) {
-            // CommandScheduler.getInstance().schedule(new HomeHood().withTimeout(4));
-        }
-
     }
 
 }

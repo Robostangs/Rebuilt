@@ -54,8 +54,12 @@ public class Feeder extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Feeder/Duty Cycle", feederMotor.getDutyCycle().getValueAsDouble());
-        SmartDashboard.putNumber("Feeder/Veloctiy ", feederMotor.getVelocity().getValueAsDouble());
-        SmartDashboard.putNumber("Feeder/tourque current ", feederMotor.getTorqueCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Feeder/Velocity ", feederMotor.getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Feeder/Torque Current ", feederMotor.getTorqueCurrent().getValueAsDouble());
+        if (feederMotor.getAncillaryDeviceTemp().getValueAsDouble() > 60){
+            
+        }
+
 
     }
 }

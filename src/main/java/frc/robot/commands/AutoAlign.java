@@ -36,8 +36,7 @@ public class AutoAlign extends Command {
      * @param howManyBabiesOnBoard 1 - the value of how much to slow down (right
      *                             trigger axis)
      */
-    public AutoAlign(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Boolean> babyOnBoard,
-            boolean isHub) {
+    public AutoAlign(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Boolean> babyOnBoard) {
 
         drivetrain = CommandSwerveDrivetrain.getInstance();
 
@@ -77,7 +76,7 @@ public class AutoAlign extends Command {
     @Override
     public void execute() {
 
-        if (isHub) {
+        if (!Robot.isPassing()) {
             setTargetPose();
 
             getTargetRotation = () -> {

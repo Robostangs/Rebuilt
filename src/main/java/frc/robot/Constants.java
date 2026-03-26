@@ -84,9 +84,12 @@ public final class Constants {
                 // THIS IS IN FEET
                 public static final double maxRegressionDistance = 30;
 
-                //TODO find these john
+                // TODO find these john
                 public static final Pose2d ShootPoseDepot = new Pose2d();
                 public static final Pose2d ShootPoseOutpost = new Pose2d();
+
+                public static final double kMeterToHalfBump = 1.55;
+                public static final double kMeterToTower = 3;
 
         }
 
@@ -169,6 +172,9 @@ public final class Constants {
                 public static final double kHoodUpPos = 0.8;
                 public static final double kPosAtOppositeAlliancePass = 0.7;
                 public static final double kDumbShootHoodPos = 0;
+                public static final double kHalfSetpoint = 0;
+                public static final double kTrenchSetpoint = 0;
+                public static final double kShootSetpoint = 0;
         }
 
         public static class FlywheelConstants {
@@ -190,6 +196,9 @@ public final class Constants {
                 public static final int kFlywheelSlaveMotorID = 10;
                 public static final double kDumbShootRPS = 0;
                 public static final double kShooterSlaveMotorStatorCurrentLimit = 60;
+                public static final double kHalfSetpoint = 0;
+                public static final double kTrenchSetpoint = 0;
+                public static final double kShootSetpoint = 0;
 
         }
 
@@ -223,18 +232,18 @@ public final class Constants {
                 public static final Vector<N3> kErrorInMyVisionReg = VecBuilder.fill(0.15, 0.15,
                                 Units.degreesToRadians(100));
 
-                   // Theoretical free speed (m/s) at 12 V applied output;
-        // This needs to be tuned to your individual robot
-        public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.12);
+                // Theoretical free speed (m/s) at 12 V applied output;
+                // This needs to be tuned to your individual robot
+                public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.12);
 
-        // The maximum acceleration of the robot in meters per second squared.
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+                // The maximum acceleration of the robot in meters per second squared.
+                public static final double kMaxAccelerationMetersPerSecondSquared = 3;
 
-        // The maximum angular speed of the robot in radians per second.
-        public static final double kMaxAngularSpeedRadiansPerSecond = 13.5;
+                // The maximum angular speed of the robot in radians per second.
+                public static final double kMaxAngularSpeedRadiansPerSecond = 13.5;
 
-        // The maximum angular acceleration of the robot in radians per second squared.
-        public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 3;
+                // The maximum angular acceleration of the robot in radians per second squared.
+                public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 3;
 
         }
 
@@ -248,10 +257,10 @@ public final class Constants {
 
                 public static final String kPhotonCamNameRight = "Daredevil";
                 public static final Transform3d kRobotToCamRight = new Transform3d(
-                                Units.inchesToMeters(-8.5),
+                                Units.inchesToMeters(-0.25),
                                 Units.inchesToMeters(12),
-                                Units.inchesToMeters(13.5),
-                                new Rotation3d(Units.degreesToRadians(180), Units.degreesToRadians(32.29 + 90),
+                                Units.inchesToMeters(27.75),
+                                new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(80),
                                                 Units.degreesToRadians(-90)));
 
                 public static final String kPhotonCamNameBack = "Kratos";
@@ -272,8 +281,6 @@ public final class Constants {
                                 26, 27, 28, 29, 30 };
                 // {1,12,6,7,17,28,22,23};
         }
-
-      
 
         public class TunerConstants {
                 // Both sets of gains need to be tuned to your individual robot.

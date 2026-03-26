@@ -100,6 +100,7 @@ public class RobotContainer {
 
                 xDrive.rm().whileTrue(
                                 (dumpFactory.ShootHalforPass()));
+                                //close shoot
 
                 xDrive.lm().whileTrue(
                                 (dumpFactory.ShootTrench()));
@@ -112,6 +113,7 @@ public class RobotContainer {
                 xDrive.leftBumper()
                                 .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToTower));
 
+                                //TODO Find ts pose
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(
                                                 !Robot.isRed() ? Constants.FieldConstants.resetPose
@@ -125,21 +127,14 @@ public class RobotContainer {
 
                 xDrive.leftPaddle().whileTrue(new RetractIntake());
 
-                xDrive.rightBumper().whileTrue(IntakeFactory.TrueSpit());
-                xDrive.leftBumper().whileTrue(IntakeFactory.ballStuck());
+                xDrive.leftTrigger().whileTrue(IntakeFactory.TrueSpit());
+                xDrive.rightTrigger().whileTrue(IntakeFactory.ballStuck());
 
-                xDrive.rm().onTrue(new HomeHood());
-                
-                xDrive.lm().whileTrue(IntakeFactory.OscillateIntake())
+                xDrive.x().whileTrue(IntakeFactory.OscillateIntake())
                                 .onFalse(new SetPivotPosition(0.0));
 
-                xDrive.povLeft().whileTrue(new HomeIntake(false));
 
-                xDrive.x().whileTrue(new StartIntake());
-
-
-                xDrive.b().whileTrue(new HomeIntake(false));
-                xDrive.b().onTrue(new InstantCommand(
+                xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
         
                 xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),

@@ -88,8 +88,8 @@ public final class Constants {
                 public static final Pose2d ShootPoseDepot = new Pose2d();
                 public static final Pose2d ShootPoseOutpost = new Pose2d();
 
-                public static final double kMeterToHalfBump = 1.55;
-                public static final double kMeterToTower = 3;
+                public static final double kMeterToHalfBump = 2;
+                public static final double kMeterToTower = 3.5;
 
         }
 
@@ -259,8 +259,8 @@ public final class Constants {
 
                 public static final String kPhotonCamNameRight = "Daredevil";
                 public static final Transform3d kRobotToCamRight = new Transform3d(
-                                Units.inchesToMeters(-0.25),
-                                Units.inchesToMeters(12),
+                                Units.inchesToMeters(1),
+                                Units.inchesToMeters(-12.5),
                                 Units.inchesToMeters(27.75),
                                 new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(10),
                                                 Units.degreesToRadians(-90)));

@@ -71,7 +71,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.ApplyRobotSpeeds AutoDrive = new SwerveRequest.ApplyRobotSpeeds();
     private boolean isVisionGood = false;
 
-    private Timer timeSinceBad = new Timer();
 
     /*
      * SysId routine for characterizing translation. This is used to find PID gains

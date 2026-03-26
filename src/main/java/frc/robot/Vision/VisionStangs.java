@@ -101,7 +101,7 @@ public class VisionStangs {
             LimelightHelpers.SetIMUMode(CameraName, 1);
 
             NetworkTableInstance.getDefault().getTable(CameraName)
-                .getEntry("throttle-set").setNumber(isDisabled ? 200 : 0);
+                .getEntry("throttle-set").setNumber( 200 );
         } else {
 
             LimelightHelpers.SetRobotOrientation(CameraName,
@@ -127,13 +127,13 @@ public class VisionStangs {
 
             if(isDisabled || !isFastJohn) {
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
-                mtLabel = isDisabled ? "MT 1 (disabled)" : "MT1";
+                mtLabel = isDisabled ? "MT 1 (disabled)" : "MT1(too fast)";
             } else {
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
                 mtLabel = "MT 2";
             }
 
-            SmartDashboard.putString("Vision/" + CameraName + "/MT Mode", mtLabel);
+            SmartDashboard.putString("Vision/" + CameraName + "/MT Mode ", mtLabel);
 
             if(isPosegoo(fourPoseEsti)){
                 this.currentPose = fourPoseEsti.pose;

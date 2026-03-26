@@ -332,6 +332,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             if(RobotContainer.useVision){
             this.addVisionMeasurement(visionMeasurements.get(index).getPose(),
                     visionMeasurements.get(index).getTimeStamp());
+                           SmartDashboard.putString("Vision/Pose Null error ",
+                    "Ts null dude");
             }
             
         } else {

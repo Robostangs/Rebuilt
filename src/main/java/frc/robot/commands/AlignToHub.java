@@ -4,8 +4,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -124,13 +126,16 @@ public class AlignToHub {
         shootRadius = radius;
 
         DeferredCommand alignCommand = new DeferredCommand(() -> {
+
+            SmartDashboard.putBoolean("IsAligned",false);  
+
             drawShootingRing();
 
             Pose2d target = getTargetPose();
 
             Robot.teleopField.getObject("Hub Align Pose").setPose(target);
 
-            return AutoBuilder.followPath(generatePath(target));
+            return AutoBuilder.followPath(generatePath(target)).andThen(new InstantCommand(() -> SmartDashboard.putBoolean("IsAligned",true)));
         }, Set.of(CommandSwerveDrivetrain.getInstance()));
 
         return alignCommand;

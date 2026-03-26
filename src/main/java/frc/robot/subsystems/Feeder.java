@@ -58,10 +58,5 @@ public class Feeder extends SubsystemBase {
         SmartDashboard.putNumber("Feeder/Duty Cycle", feederMotor.getDutyCycle().getValueAsDouble());
         SmartDashboard.putNumber("Feeder/Velocity ", feederMotor.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Feeder/Torque Current ", feederMotor.getTorqueCurrent().getValueAsDouble());
-        if (feederMotor.getAncillaryDeviceTemp().getValueAsDouble() > 60){
-            
-        }
-
-
     }
 }

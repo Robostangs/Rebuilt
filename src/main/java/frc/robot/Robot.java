@@ -347,7 +347,6 @@ public class Robot extends TimedRobotstangs {
      
 
         SmartDashboard.putBoolean("IsPassing",shooterPass);
-        SmartDashboard.putBoolean("IsDumbShoot ",shooterIsDumb);
         shiftAlert.set(canBlueScore == whoCanScore.error);
         String gameData = DriverStation.getGameSpecificMessage();
         int gameTimeInt = (int) DriverStation.getMatchTime();
@@ -424,8 +423,6 @@ public class Robot extends TimedRobotstangs {
 
         SmartDashboard.putNumber("Match Time", gameTime);
         SmartDashboard.putNumber("Shift Time Left", shiftTimeLeft);
-
-        //SmartDashboard.putBoolean("is Dumb", shooterIsDumb);
     }
 
     @Override
@@ -439,17 +436,12 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void testInit() {
-        SmartDashboard.putData("Testfbejkw",IntakeFactory.OscillateIntake());
+        SmartDashboard.putData("Test Oscillate Intake",IntakeFactory.OscillateIntake());
         CommandScheduler.getInstance().cancelAll();
         setupPitTestDashboard();
         setupAutoPitTest();
         SmartDashboard.putNumber("Hood setpoint", 0);
         SmartDashboard.putNumber("Flywheel velocity", 0);
-        SwerveRequest rightRequest = new SwerveRequest.RobotCentric().withVelocityY(-0.5);
-        Command driveRightCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> rightRequest);
-
-        SmartDashboard.putData("Do the wheel john", driveRightCommand);
-
     }
 
     @Override
@@ -463,10 +455,6 @@ public class Robot extends TimedRobotstangs {
     }
 
     public static boolean isRed() {
-
-        // if(!DriverStation.isDSAttached()){
-        // return false;
-        // }
         try {
             if (DriverStation.getAlliance().get() == null) {
                 return false;
@@ -479,7 +467,6 @@ public class Robot extends TimedRobotstangs {
         } catch (Exception e) {
             return false;
         }
-
     }
 
     public void configureDisabledTab() {

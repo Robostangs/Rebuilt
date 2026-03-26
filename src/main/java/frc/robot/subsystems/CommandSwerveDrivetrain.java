@@ -287,7 +287,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         setVisionPose(visionPoses);
 
         Robot.teleopField.setRobotPose(this.getState().Pose);
-        SmartDashboard.putBoolean("isVisionGood", isVisionGood);
+        //SmartDashboard.putBoolean("isVisionGood", isVisionGood);
     }
 
     private void setVisionPose(ArrayList<VisionStangs> visionMeasurements) {

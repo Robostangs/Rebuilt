@@ -129,6 +129,7 @@ public class VisionStangs {
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
                 mtLabel = isDisabled ? "MT 1 (disabled)" : "MT1(too fast)";
             } else {
+                //look over this before comp
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
                 mtLabel = "MT 2";
             }

@@ -22,9 +22,8 @@ public class dumpFactory {
     public static Command ShootHalforPass() {
 
         if(Robot.isPassing()){
-            return new InstantCommand(() -> Robot.setShooterIsDumb(false))
-                    .andThen(
-                            new ChargeUp(Constants.FlywheelConstants.kShootSetpoint))
+            return 
+                            new ChargeUp(Constants.FlywheelConstants.kShootSetpoint)
                     .alongWith(new setHoodPosition(Constants.HoodConstants.kShootSetpoint))
                     .alongWith(new RunHopper())
                     .alongWith(new Index());

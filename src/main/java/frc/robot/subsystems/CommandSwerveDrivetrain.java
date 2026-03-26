@@ -270,6 +270,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Angular john", CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityZWorld()
                     .getValueAsDouble());
 
+                    SmartDashboard.putBoolean("Vision/UseVision", RobotContainer.useVision);
 
         photonVisionBack.periodic();
         photonVisionRight.periodic();
@@ -325,15 +326,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     "Ts NOT null dude");
             SmartDashboard.putNumber("Vision/Vision Pose index ",
                     index);
-            if(RobotContainer.useVision&&visionMeasurements.get(index).getAmbiguity()<=0.4){
-                setIsVisionGood(true);
-            }
-            if(visionMeasurements.get(index).getAmbiguity()>=0.4){
-                setIsVisionGood(false);
-            }
-            if(RobotContainer.useVision)
+
+            if(RobotContainer.useVision){
             this.addVisionMeasurement(visionMeasurements.get(index).getPose(),
-                    visionMeasurements.get(index).getTimeStamp());
+                    visionMeasurements.get(index).getTimeStamp());}
             
         } else {
             SmartDashboard.putString("Vision/Pose Null error ",

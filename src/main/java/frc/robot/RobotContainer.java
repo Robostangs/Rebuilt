@@ -128,11 +128,11 @@ public class RobotContainer {
 
 
                 xDrive.b().whileTrue(new HomeIntake(false));
-                // xDrive.b().onTrue(new InstantCommand(
-                //                 (() -> useVision = !useVision)));
+                xDrive.b().onTrue(new InstantCommand(
+                                (() -> useVision = !useVision)));
         
-                // xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
-                //                 () -> xDrive.getLeftTriggerAxis() < 0.2));
+                xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                                () -> xDrive.getLeftTriggerAxis() < 0.2));
 
         }
 

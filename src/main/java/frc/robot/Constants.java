@@ -199,7 +199,7 @@ public final class Constants {
                 public static final double kShooterSlaveMotorStatorCurrentLimit = 60;
                 public static final double kHalfSetpoint = 0;
                 public static final double kTrenchSetpoint = 0;
-                public static final double kShootSetpoint = 36d;
+                public static final double kShootSetpoint = 30d;
 
         }
 
@@ -261,7 +261,7 @@ public final class Constants {
                                 Units.inchesToMeters(-0.25),
                                 Units.inchesToMeters(12),
                                 Units.inchesToMeters(27.75),
-                                new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(80),
+                                new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(10),
                                                 Units.degreesToRadians(-90)));
 
                 public static final String kPhotonCamNameBack = "Kratos";
@@ -355,8 +355,8 @@ public class TunerConstants {
 private static final Distance kWheelRadius = Inches.of(2 * (181.5 / 187.32));
 
 
-    private static final boolean kInvertLeftSide = true;
-    private static final boolean kInvertRightSide = false;
+    private static final boolean kInvertLeftSide = false;
+    private static final boolean kInvertRightSide = true;
 
     private static final int kPigeonId = 0;
 
@@ -422,9 +422,10 @@ private static final Distance kWheelRadius = Inches.of(2 * (181.5 / 187.32));
     private static final int kBackLeftDriveMotorId = 11;
     private static final int kBackLeftSteerMotorId = 12;
     private static final int kBackLeftEncoderId = 13;
-    private static final Angle kBackLeftEncoderOffset = Rotations.of(0.0966796875);
+    private static final Angle kBackLeftEncoderOffset = Rotations.of(-0.400390625);
     private static final boolean kBackLeftSteerMotorInverted = false;
     private static final boolean kBackLeftEncoderInverted = false;
+
 
     private static final Distance kBackLeftXPos = Inches.of(-9.875);
     private static final Distance kBackLeftYPos = Inches.of(9.875);

@@ -84,7 +84,7 @@ public class AutoAlign extends Command {
                 return Rotation2d
                         .fromRadians((Math.atan2(
                                 drivetrain.getState().Pose.getY() - targetPose.getY(),
-                                drivetrain.getState().Pose.getX() - targetPose.getX())));
+                                drivetrain.getState().Pose.getX() - targetPose.getX()))).minus(Rotation2d.k180deg);
             };
                     SmartDashboard.putNumber("Drive current theta",
                 Math.atan2(

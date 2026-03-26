@@ -150,7 +150,7 @@ public class Hood extends SubsystemBase {
         SmartDashboard.putNumber("Hood/Stator Current", getStatorCurrent());
         SmartDashboard.putBoolean("Hood/manual", ShouldMM);
         if(ShouldMM){
-                            mainMotor.setControl(hoodTargetPosition);
+                            // mainMotor.setControl(hoodTargetPosition);
 
         }
         if (mainMotor.hasResetOccurred()) {

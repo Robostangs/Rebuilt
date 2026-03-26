@@ -4,88 +4,120 @@
     {
       "anchor": {
         "x": 3.4186046511627906,
-        "y": 5.470948121645796
+        "y": 5.3573703041144904
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8007111404366376,
-        "y": 5.470948121645796
+        "x": 3.5418288615733915,
+        "y": 6.211424935386729
+      },
+      "isLocked": false,
+      "linkedName": "DepotShoot"
+    },
+    {
+      "anchor": {
+        "x": 3.439050047762009,
+        "y": 5.6268164346797676
+      },
+      "prevControl": {
+        "x": 3.189050047762009,
+        "y": 5.6268164346797676
+      },
+      "nextControl": {
+        "x": 3.821156537035856,
+        "y": 5.6268164346797676
       },
       "isLocked": false,
       "linkedName": "DepotBumpIn"
     },
     {
       "anchor": {
-        "x": 5.333202146690519,
-        "y": 5.470948121645796
+        "x": 5.452027633101852,
+        "y": 5.357
       },
       "prevControl": {
-        "x": 4.557980679567923,
-        "y": 5.470948121645796
+        "x": 4.676806165979256,
+        "y": 5.357
       },
       "nextControl": {
-        "x": 5.58320214669052,
-        "y": 5.470948121645796
+        "x": 5.702027633101853,
+        "y": 5.357
       },
       "isLocked": false,
       "linkedName": "DepotBumpOut"
     },
     {
       "anchor": {
-        "x": 7.134221824686941,
-        "y": 5.3573703041144904
+        "x": 6.971793463427947,
+        "y": 5.4994092862991275
       },
       "prevControl": {
-        "x": 6.771232849785768,
-        "y": 5.43657069476868
+        "x": 6.608804488526774,
+        "y": 5.578609676953317
       },
       "nextControl": {
-        "x": 7.840421447139635,
-        "y": 5.203284946581738
+        "x": 7.67799308588064,
+        "y": 5.345323928766375
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.209373881932022,
-        "y": 3.21561717352415
+        "x": 6.971793463427947,
+        "y": 4.103914551491994
       },
       "prevControl": {
-        "x": 6.957494214815055,
-        "y": 3.176242419161884
+        "x": 7.713172488450919,
+        "y": 4.211578589174481
       },
       "nextControl": {
-        "x": 5.9010912343470485,
-        "y": 3.231842576028623
+        "x": 5.712282796579331,
+        "y": 3.921006754912664
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.333202146690519,
-        "y": 5.470948121645796
+        "x": 5.452027633101852,
+        "y": 5.357
       },
       "prevControl": {
-        "x": 6.0146690518783545,
-        "y": 5.503398926654739
+        "x": 5.702027633101852,
+        "y": 5.357
       },
       "nextControl": {
-        "x": 4.032781709181341,
-        "y": 5.409023338907265
+        "x": 4.1501336308847865,
+        "y": 5.357
       },
       "isLocked": false,
       "linkedName": "DepotBumpOut"
+    },
+    {
+      "anchor": {
+        "x": 3.439050047762009,
+        "y": 5.6268164346797676
+      },
+      "prevControl": {
+        "x": 3.9744815103867492,
+        "y": 5.6268164346797676
+      },
+      "nextControl": {
+        "x": 2.9410119108575015,
+        "y": 5.6268164346797676
+      },
+      "isLocked": false,
+      "linkedName": "DepotBumpIn"
     },
     {
       "anchor": {
         "x": 3.4186046511627906,
-        "y": 5.470948121645796
+        "y": 5.3573703041144904
       },
       "prevControl": {
-        "x": 3.954036113787531,
-        "y": 5.470948121645796
+        "x": 3.640563168341951,
+        "y": 6.340477655546845
       },
       "nextControl": null,
       "isLocked": false,
@@ -94,31 +126,31 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.314067529506438,
-      "rotationDegrees": -45.0
+      "waypointRelativePos": 0.695916040772534,
+      "rotationDegrees": 45.0
     },
     {
-      "waypointRelativePos": 2.312231759656653,
+      "waypointRelativePos": 2.314067529506438,
+      "rotationDegrees": 45.0
+    },
+    {
+      "waypointRelativePos": 3.312231759656653,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 3.3266533066132284,
-      "rotationDegrees": -90.0
-    },
-    {
-      "waypointRelativePos": 3.7040638412017177,
+      "waypointRelativePos": 4.704063841201718,
       "rotationDegrees": -45.0
     },
     {
-      "waypointRelativePos": 5,
+      "waypointRelativePos": 6.048777829935624,
       "rotationDegrees": -45.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.0,
-      "maxWaypointRelativePos": 1.0281007751937987,
+      "minWaypointRelativePos": 0.7331233850129197,
+      "maxWaypointRelativePos": 2.0281007751937987,
       "constraints": {
         "maxVelocity": 5.12,
         "maxAcceleration": 1.0,
@@ -130,8 +162,8 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 3.824087532299738,
-      "maxWaypointRelativePos": 4.782037306201551,
+      "minWaypointRelativePos": 4.824087532299738,
+      "maxWaypointRelativePos": 5.782037306201551,
       "constraints": {
         "maxVelocity": 3.0,
         "maxAcceleration": 1.0,
@@ -143,8 +175,8 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.734163032945736,
-      "maxWaypointRelativePos": 3.9080264857881133,
+      "minWaypointRelativePos": 2.734163032945736,
+      "maxWaypointRelativePos": 4.908026485788113,
       "constraints": {
         "maxVelocity": 3.5,
         "maxAcceleration": 3.0,
@@ -167,13 +199,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -60.46121774044193
+    "rotation": -50.0
   },
   "reversed": false,
   "folder": "Depot",
   "idealStartingState": {
-    "velocity": 0.0,
-    "rotation": -35.311
+    "velocity": 0,
+    "rotation": -50.0
   },
   "useDefaultConstraints": true
 }

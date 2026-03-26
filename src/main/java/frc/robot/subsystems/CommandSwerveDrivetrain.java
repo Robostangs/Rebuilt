@@ -61,7 +61,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
     private VisionStangs photonVisionBack = new VisionStangs(Constants.VisionConstants.kLimelightFour);
-        private VisionStangs photonVisionLeft = new VisionStangs(Constants.VisionConstants.kLimelightFourR);
+    private VisionStangs photonVisionLeft = new VisionStangs(Constants.VisionConstants.kLimelightFourR);
 
     private VisionStangs photonVisionRight = new VisionStangs(Constants.VisionConstants.kPhotonCamNameRight,
             Constants.VisionConstants.kRobotToCamRight);
@@ -69,9 +69,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private ArrayList<VisionStangs> visionPoses = new ArrayList<>();
 
     private final SwerveRequest.ApplyRobotSpeeds AutoDrive = new SwerveRequest.ApplyRobotSpeeds();
-    private boolean isVisionGood=false;
+    private boolean isVisionGood = false;
 
-    private Timer timeSinceBad=new Timer();
+    private Timer timeSinceBad = new Timer();
 
     /*
      * SysId routine for characterizing translation. This is used to find PID gains
@@ -270,9 +270,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
 
-        SmartDashboard.putNumber("Angular john", CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityZWorld()
-                    .getValueAsDouble());
-
+        SmartDashboard.putNumber("Angular john",
+                CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityZWorld()
+                        .getValueAsDouble());
 
         photonVisionBack.periodic();
         photonVisionRight.periodic();
@@ -289,30 +289,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putBoolean("isVisionGood", isVisionGood);
     }
 
-    private void setIsVisionGood(boolean isGood){
-        if(!isGood&&!timeSinceBad.isRunning()){
-            timeSinceBad.start();
-        }
-        if(isGood){
-            timeSinceBad.stop();
-            isVisionGood=true;
-        }
-        if(timeSinceBad.isRunning()){
-            if(timeSinceBad.hasElapsed(4)){
-                isVisionGood=false;
-            }
-        }
-    }
-
     private void setVisionPose(ArrayList<VisionStangs> visionMeasurements) {
         double smallestAmbiguity = 1;
         int index = -1;
         for (int c = 0; c < visionMeasurements.size(); c++) {
             if (visionMeasurements.get(c) != null) {
+
                 double cAmbiguity = visionMeasurements.get(c).getAmbiguity();
+                
                 if (cAmbiguity < smallestAmbiguity &&
-                        cAmbiguity > 0
-                        && cAmbiguity < 0.5) {
+                    cAmbiguity > 0 && 
+                    cAmbiguity < 0.5) {
                     smallestAmbiguity = cAmbiguity;
                     index = c;
                 }
@@ -324,22 +311,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     visionMeasurements.get(index).getName());
             SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
                     visionMeasurements.get(index).getAmbiguity());
-            if(RobotContainer.useVision&&visionMeasurements.get(index).getAmbiguity()<=0.4){
-                setIsVisionGood(true);
-            }else{
-                setIsVisionGood(false);
+
+            if (RobotContainer.useVision) {
+                this.addVisionMeasurement(visionMeasurements.get(index).getPose(),
+                        visionMeasurements.get(index).getTimeStamp());
+                SmartDashboard.putString("Vision/Pose Null error ",
+                        "Ts null dude");
+                isVisionGood = (true);
             }
-            if(RobotContainer.useVision){
-            this.addVisionMeasurement(visionMeasurements.get(index).getPose(),
-                    visionMeasurements.get(index).getTimeStamp());
-                           SmartDashboard.putString("Vision/Pose Null error ",
-                    "Ts null dude");
-            }
-            
+
         } else {
             SmartDashboard.putString("Vision/Pose Null error ",
                     "Ts null dude");
-            setIsVisionGood(false);
+            isVisionGood = (false);
 
         }
     }
@@ -416,15 +400,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 this::resetPose,
                 () -> this.getState().Speeds,
                 (speed, feedforward) -> this.setControl(
-                       AutoDrive
+                        AutoDrive
                                 .withSpeeds(speed)
                                 .withWheelForceFeedforwardsX(feedforward.robotRelativeForcesX())
                                 .withWheelForceFeedforwardsY(feedforward.robotRelativeForcesY())),
                 new PPHolonomicDriveController((Constants.AutoConstants.translationPID),
                         (Constants.AutoConstants.rotationPID)),
                 Constants.AutoConstants.RobotConfig,
-                () -> Robot.isRed()
-                ,this);
+                () -> Robot.isRed(), this);
     }
 
     /**

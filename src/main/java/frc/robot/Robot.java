@@ -305,9 +305,10 @@ public class Robot extends TimedRobotstangs {
         autoGroup = new SequentialCommandGroup(
                 new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
                 new InstantCommand(() -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
-                autoCommand,
-                new AutoAlign(),
-                dumpFactory.PhotoShoot());
+                autoCommand
+                // ,new AutoAlign(),
+                // dumpFactory.PhotoShoot()
+                );
 
     }
 

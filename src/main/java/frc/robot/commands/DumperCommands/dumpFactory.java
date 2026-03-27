@@ -2,6 +2,7 @@ package frc.robot.commands.DumperCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.Index;
@@ -25,8 +26,8 @@ public class dumpFactory {
                 if (Robot.isPassing()) {
                         return new ChargeUp(Constants.FlywheelConstants.kShootSetpoint)
                                         .alongWith(new setHoodPosition(Constants.HoodConstants.kShootSetpoint))
-                                        .alongWith(new RunHopper())
-                                        .alongWith(new Index());
+                                        .alongWith(new Index())
+                                        .alongWith(new WaitCommand(0.3).andThen(new RunHopper()));
 
                 }
                 return

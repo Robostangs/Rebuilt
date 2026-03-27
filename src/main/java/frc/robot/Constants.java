@@ -177,7 +177,7 @@ public final class Constants {
                 public static final double kDumbShootHoodPos = 0;
                 public static final double kHalfSetpoint = 0.17;
                 public static final double kTrenchSetpoint = 0;
-                public static final double kShootSetpoint = 0.2;
+                public static final double kShootSetpoint = 0.5;
         }
 
         public static class FlywheelConstants {
@@ -194,7 +194,7 @@ public final class Constants {
                 public static final double kShooterMotorS = 0.33;
                 public static final double kShooterMotorStatorCurrentLimit = 100;
                 public static final double kVelocityAtOppositeAlliancePass = 80;
-                public static final double kShooterVelocityTolerance = 5;
+                public static final double kShooterVelocityTolerance = 3;
                 public static final int kFlywheelMotorID = 9;
                 public static final int kFlywheelSlaveMotorID = 10;
                 public static final double kDumbShootRPS = 0;
@@ -202,6 +202,7 @@ public final class Constants {
                 public static final double kHalfSetpoint = 30;
                 public static final double kTrenchSetpoint = 0;
                 public static final double kShootSetpoint = 30d;
+                public static final double kPassSetpoint = 50;
 
         }
 

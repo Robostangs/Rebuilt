@@ -22,19 +22,19 @@ public class dumpFactory {
 
         public static Command ShootHalforPass() {
 
-                if (Robot.isPassing()) {
-                        return new ChargeUp(Constants.FlywheelConstants.kShootSetpoint)
-                                        .alongWith(new setHoodPosition(Constants.HoodConstants.kShootSetpoint))
-                                        .alongWith(new RunHopper())
-                                        .alongWith(new Index());
-
-                }
                 return
 
                 new ChargeUp(Constants.FlywheelConstants.kHalfSetpoint)
                                 .alongWith(new setHoodPosition(Constants.HoodConstants.kHalfSetpoint))
                                 .alongWith(new RunHopper())
                                 .alongWith(new Index());
+        }
+
+        public static Command pass(){
+                  return new ChargeUp(Constants.FlywheelConstants.kPassSetpoint)
+                                        .alongWith(new setHoodPosition(Constants.HoodConstants.kPosAtOppositeAlliancePass))
+                                        .alongWith(new RunHopper())
+                                        .alongWith(new Index());
         }
 
         public static Command PhotoShoot() {

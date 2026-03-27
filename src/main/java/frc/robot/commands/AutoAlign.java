@@ -91,7 +91,7 @@ public class AutoAlign extends Command {
                             drivetrain.getState().Pose.getY() - targetPose.getY(),
                             drivetrain.getState().Pose.getX() - targetPose.getX()));
         } else {
-            getTargetRotation = () -> Rotation2d.kZero;
+            getTargetRotation = () -> Rotation2d.k180deg;
         }
 
         driveRequest.TargetDirection = getTargetRotation.get();

@@ -100,6 +100,7 @@ public class RobotContainer {
 
                 xDrive.rightTrigger().whileTrue(
                                 (dumpFactory.ShootHalforPass()));
+                xDrive.rightBumper().whileTrue(dumpFactory.pass());
                 // close shoot
 
                 xDrive.rm()

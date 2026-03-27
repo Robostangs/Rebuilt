@@ -129,9 +129,6 @@ public class RobotContainer {
 
                 // xDrive.x().whileTrue(IntakeFactory.OscillateIntake())
                 // .onFalse(new SetPivotPosition(0.0));
-
-                xDrive.x().whileTrue(new HomeHood());
-
                 // xDrive.rightPaddle().whileTrue(new RunHopper().alongWith(new Index()));
 
                 xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),

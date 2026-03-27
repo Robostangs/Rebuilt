@@ -141,8 +141,8 @@ public final class Constants {
                 public static final double hopperExtenderKD = 100;
                 public static final double hopperExtenderKS = 15;
                 public static final double extenderSensorToMechanismRatio = 4.0 * 4 * 48 / 16;
-                public static final double kExtendSetpoint = 0;
-                public static final double kRetractSetpoint = 0.26;
+                public static final double kExtendSetpoint = 0.02;
+                public static final double kRetractSetpoint = 0.23;
                 // TODO: find this john
                 public static final double kHopperExtensionTolerance = 0.01;
                 public static final double IntakeWheelCurrentLimit = 20;
@@ -151,7 +151,8 @@ public final class Constants {
                 public static final double kHomePosition = 0.29;
                 public static final double extenderPositionTolerance = 0.03;
                 public static final double IntakeWheelsStatorLimit = 40;
-		public static final Double IntakePivotOscillateUpPos = 0.5;
+		public static final double IntakePivotOscillateUpPos = 0.5;
+        public static final double kIntakePivotBump = .15;
         }
 
         public static class HoodConstants {
@@ -193,12 +194,12 @@ public final class Constants {
                 public static final double kShooterMotorS = 0.33;
                 public static final double kShooterMotorStatorCurrentLimit = 100;
                 public static final double kVelocityAtOppositeAlliancePass = 80;
-                public static final double kShooterVelocityTolerance = 10;
+                public static final double kShooterVelocityTolerance = 5;
                 public static final int kFlywheelMotorID = 9;
                 public static final int kFlywheelSlaveMotorID = 10;
                 public static final double kDumbShootRPS = 0;
                 public static final double kShooterSlaveMotorStatorCurrentLimit = 60;
-                public static final double kHalfSetpoint = 32;
+                public static final double kHalfSetpoint = 30;
                 public static final double kTrenchSetpoint = 0;
                 public static final double kShootSetpoint = 30d;
 
@@ -255,7 +256,7 @@ public final class Constants {
                 public static final String kLimelightFourR = "limelight-ultron";
 
                 public static final String kLimelightThree = "limelight-agomoto";
-                public static final double kVisionAngularThreshold = 100;
+                public static final double kVisionAngularThreshold = 20;
 
                 public static final String kPhotonCamNameRight = "Daredevil";
                 public static final Transform3d kRobotToCamRight = new Transform3d(
@@ -280,7 +281,7 @@ public final class Constants {
                 public static final double kPhotonAmbiguityThres = 0.2;
                 public static final double kLLDisThres = 3;
                 public static final int[] goodIDS = { 2, 3, 4, 5, 8, 9, 10, 11, 13, 14, 15, 16, 18, 19, 20, 21, 24, 25,
-                                26, 27, 28, 29, 30 };
+                                26, 27, 29, 30, 31, 32 };
                 // {1,12,6,7,17,28,22,23};
                 //                
 

@@ -121,6 +121,8 @@ public class Flywheel extends SubsystemBase {
 
         }
 
+        SmartDashboard.putNumber("Flywheel/Target Velocity", flywheelTargetVelocity.Velocity);
+
     }
 
     public void postStatus(String status) {

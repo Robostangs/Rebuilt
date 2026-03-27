@@ -19,10 +19,10 @@ public class Undex extends Command {
     }
 
     public void execute() {
-        if (Flywheel.getInstance().shooterAtTargetVelocity()) {
+        // if (Flywheel.getInstance().shooterAtTargetVelocity()) {
             feeder.setDutyCycle(-1);
 
-        }
+        // }
     }
 
     @Override

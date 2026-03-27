@@ -8,6 +8,7 @@ import frc.robot.commands.Index;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
+import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.subsystems.Dumper.Hood;
 
 public class dumpFactory {
@@ -34,6 +35,10 @@ public class dumpFactory {
                                 .alongWith(new setHoodPosition(Constants.HoodConstants.kHalfSetpoint))
                                 .alongWith(new RunHopper())
                                 .alongWith(new Index());
+        }
+
+        public static Command PhotoShoot() {
+                return ShootHalforPass().alongWith(new StartIntake());
         }
 
         public static Command ShootTrench() {

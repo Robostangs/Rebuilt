@@ -23,6 +23,7 @@ public class SetPivotPosition extends Command {
     @Override
     public void initialize() {
         pivot.setExtenderPosition(pos);
+        pivot.postStatus("going to: " + pos);
     }
 
     @Override

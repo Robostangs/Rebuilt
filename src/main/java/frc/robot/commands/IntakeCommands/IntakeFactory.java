@@ -17,9 +17,9 @@ public class IntakeFactory {
     }
 
     public static Command OscillateIntake(){
-        return new SetPivotPosition(Constants.KirbyConstants.IntakePivotOscillateUpPos).withTimeout(1)
-            .andThen(new SetPivotPosition(0.0).withTimeout(1))
-                .repeatedly();
+        return new SetPivotPosition(Constants.KirbyConstants.IntakePivotOscillateUpPos)
+            .andThen(new SetPivotPosition(0.05));
+                // .repeatedly();
     }
 
 

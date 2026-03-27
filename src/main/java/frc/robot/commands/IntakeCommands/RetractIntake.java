@@ -12,15 +12,13 @@ public class RetractIntake extends Command {
 
     public RetractIntake() {
         pivot = IntakePivot.getInstance();
-        kirby = Kirby.getInstance();
-        addRequirements(kirby, pivot);
+        addRequirements( pivot);
 
     }
 
     @Override
     public void initialize() {
         pivot.setExtenderPosition(Constants.KirbyConstants.kRetractSetpoint);
-        kirby.setKirbyWheels(0);
     }
 
     public void execute() {
@@ -29,7 +27,6 @@ public class RetractIntake extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        kirby.setKirbyWheels(0);
     }
 
     @Override

@@ -102,9 +102,6 @@ public class RobotContainer {
                                 (dumpFactory.ShootHalforPass()));
                 // close shoot
 
-                xDrive.leftTrigger().whileTrue(
-                                (dumpFactory.ShootTrench()));
-
                 xDrive.rm()
                                 .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToHalfBump));
 
@@ -127,9 +124,8 @@ public class RobotContainer {
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                // xDrive.x().whileTrue(IntakeFactory.OscillateIntake())
-                // .onFalse(new SetPivotPosition(0.0));
-                // xDrive.rightPaddle().whileTrue(new RunHopper().alongWith(new Index()));
+                xDrive.x().whileTrue(new StartIntake());
+
 
                 xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2));
@@ -152,7 +148,10 @@ public class RobotContainer {
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
                                 .whileTrue(new InstantCommand(
-                                                () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * 30)));
+                                                () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * -15)))
+                                .onFalse(
+                                                new InstantCommand(
+                                                                () -> Flywheel.getInstance().adjustRPM(() -> 0)));
 
                 xManip.rightTrigger().whileTrue(new setHoodDutyCycle(() -> xManip.getLeftTriggerAxis() * -0.2));
 
@@ -161,7 +160,7 @@ public class RobotContainer {
         }
 
         private void setDrivetrain() {
-                DoubleSupplier leftBumper = () -> (xDrive.leftBumper().getAsBoolean()) ? 0.5 : 1;
+                DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
 
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(

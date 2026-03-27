@@ -44,6 +44,7 @@ import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.Stable.LimelightHelpers;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.AlignToHub;
+import frc.robot.commands.AutoAlign;
 import frc.robot.commands.Index;
 import frc.robot.commands.DumperCommands.dumpFactory;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
@@ -52,6 +53,7 @@ import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.RetractIntake;
+import frc.robot.commands.IntakeCommands.SetPivotPosition;
 import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
@@ -250,8 +252,11 @@ public class Robot extends TimedRobotstangs {
         for (String name : AutoBuilder.getAllAutoNames()) {
             autoChooser.addOption(name, name);
         }
+
         autoChooser.setDefaultOption("Sit and Shit", "SitAndShit");
         autoChooser.addOption("Piss", "Piss");
+                // autoChooser.addOption("DStart - DTrench - DIntake - DBump - DShoot", "DStart - DTrench - DIntake - DBump - DShoot");
+
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -300,7 +305,9 @@ public class Robot extends TimedRobotstangs {
         autoGroup = new SequentialCommandGroup(
                 new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
                 new InstantCommand(() -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
-                autoCommand);
+                autoCommand,
+                new AutoAlign(),
+                dumpFactory.PhotoShoot());
 
     }
 
@@ -330,15 +337,12 @@ public class Robot extends TimedRobotstangs {
     public void teleopInit() {
         lastMatchSecond = Robot.isSimulation() ? (int) Timer.getFPGATimestamp() : (int) DriverStation.getMatchTime();
 
-
     }
 
     @Override
     public void teleopPeriodic() {
 
-     
-
-        SmartDashboard.putBoolean("IsPassing",shooterPass);
+        SmartDashboard.putBoolean("IsPassing", shooterPass);
         shiftAlert.set(canBlueScore == whoCanScore.error);
         String gameData = DriverStation.getGameSpecificMessage();
         int gameTimeInt = (int) DriverStation.getMatchTime();
@@ -357,7 +361,7 @@ public class Robot extends TimedRobotstangs {
             }
 
             // transition 10 seconds
-        }else if (gameTime > 130.0) {
+        } else if (gameTime > 130.0) {
             canBlueScore = whoCanScore.both;
             shiftTimeLeft = gameTime - 130;
             if (shiftTimeLeft > 4 && shiftTimeLeft < 5) {
@@ -428,11 +432,11 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void testInit() {
-        SmartDashboard.putData("Test Oscillate Intake",IntakeFactory.OscillateIntake());
+        SmartDashboard.putData("Test Oscillate Intake", IntakeFactory.OscillateIntake());
         CommandScheduler.getInstance().cancelAll();
         setupPitTestDashboard();
         setupAutoPitTest();
-    
+
     }
 
     @Override
@@ -496,9 +500,13 @@ public class Robot extends TimedRobotstangs {
 
         NamedCommands.registerCommand("Retract", new RetractIntake().withTimeout(0.5));
 
-
         NamedCommands.registerCommand("Photoshoot",
-                (dumpFactory.ShootHalforPass().alongWith(new StartIntake())));
+                (dumpFactory.PhotoShoot()));
+
+        NamedCommands.registerCommand("AutoAlign", new AutoAlign());
+
+
+        NamedCommands.registerCommand("BumpTake", new SetPivotPosition(Constants.KirbyConstants.kIntakePivotBump));
 
         NamedCommands.registerCommand("Climb",
                 new PrintCommand("Hi!"));

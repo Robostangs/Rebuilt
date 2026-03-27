@@ -25,17 +25,10 @@ public class AutoAlign extends Command {
     Supplier<Boolean> babyOnBoard;
     Supplier<Rotation2d> getTargetRotation;
     boolean isHub;
+    boolean isAuto;
 
     Pose2d targetPose;
 
-    /**
-     * Aligns the robot to the {@code kPassPoseRed} or {@code kPassPoseBlue}
-     * 
-     * @param translateX           the forward to backward movement of the robot
-     * @param translateY           the right to left movement of the robot
-     * @param howManyBabiesOnBoard 1 - the value of how much to slow down (right
-     *                             trigger axis)
-     */
     public AutoAlign(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Boolean> babyOnBoard) {
 
         drivetrain = CommandSwerveDrivetrain.getInstance();
@@ -43,17 +36,23 @@ public class AutoAlign extends Command {
         this.translateX = translateX;
         this.translateY = translateY;
         this.babyOnBoard = babyOnBoard;
-        this.isHub = isHub;
+        this.isAuto = false;
 
         this.addRequirements(drivetrain);
 
-        // getTargetRotation = () -> {
+    }
 
-        // return Rotation2d
-        // .fromRadians(Math.atan2(
-        // drivetrain.getState().Pose.getY() - targetPose.getY(),
-        // drivetrain.getState().Pose.getX() - targetPose.getX()));
-        // };
+    public AutoAlign() {
+
+        drivetrain = CommandSwerveDrivetrain.getInstance();
+
+        this.translateX = () -> 0D;
+        this.translateY = () -> 0D;
+        this.babyOnBoard = () -> false;
+        this.isAuto = true;
+
+        this.addRequirements(drivetrain);
+
     }
 
     @Override
@@ -84,18 +83,16 @@ public class AutoAlign extends Command {
                 return Rotation2d
                         .fromRadians((Math.atan2(
                                 drivetrain.getState().Pose.getY() - targetPose.getY(),
-                                drivetrain.getState().Pose.getX() - targetPose.getX()))).minus(Rotation2d.k180deg);
+                                drivetrain.getState().Pose.getX() - targetPose.getX())))
+                        .minus(Rotation2d.k180deg);
             };
-                    SmartDashboard.putNumber("Drive current theta",
-                Math.atan2(
-                        drivetrain.getState().Pose.getY() - targetPose.getY(),
-                        drivetrain.getState().Pose.getX() - targetPose.getX()));
-        }
-        else{
+            SmartDashboard.putNumber("Drive current theta",
+                    Math.atan2(
+                            drivetrain.getState().Pose.getY() - targetPose.getY(),
+                            drivetrain.getState().Pose.getX() - targetPose.getX()));
+        } else {
             getTargetRotation = () -> Rotation2d.kZero;
         }
-
-
 
         driveRequest.TargetDirection = getTargetRotation.get();
 
@@ -118,12 +115,6 @@ public class AutoAlign extends Command {
     }
 
     public void setTargetPose() {
-        ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
-                CommandSwerveDrivetrain.getInstance().getState().Speeds,
-                CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation());
-
-        double metersFromHub = Robot.getMetersFromTarget();
-        double time = timeToShoot(metersFromHub);
 
         Translation2d targetHubPose = !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
                 : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation());
@@ -141,6 +132,11 @@ public class AutoAlign extends Command {
 
     @Override
     public boolean isFinished() {
+        if(isAuto){
+            return
+            (driveRequest.HeadingController.atSetpoint());
+        }
+
         return false;
     }
 }

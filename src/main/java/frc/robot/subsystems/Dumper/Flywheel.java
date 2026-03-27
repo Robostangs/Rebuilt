@@ -30,7 +30,7 @@ public class Flywheel extends SubsystemBase {
         mainShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
         slaceShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
         configureFlywheelMotors();
-        slaveControl = new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Aligned);
+        slaveControl = new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Opposed);
     }
 
     private void configureFlywheelMotors() {
@@ -49,6 +49,10 @@ public class Flywheel extends SubsystemBase {
         flywheelConfig.Voltage.PeakReverseVoltage = Constants.FlywheelConstants.kPeakReverseOutput;
 
         flywheelTargetVelocity.EnableFOC = false;
+
+        // mainShooterMotor.getVelocity().setUpdateFrequency(1000);
+
+        mainShooterMotor.getMotorVoltage().setUpdateFrequency(250);
 
         // Apply the PID configurations to the shooter motor
         mainShooterMotor.getConfigurator().apply(flywheelConfig);
@@ -103,7 +107,7 @@ public class Flywheel extends SubsystemBase {
 
     @Override
     public void periodic() {
-        
+
         SmartDashboard.putNumber("Flywheel/Main Velocity", mainShooterMotor.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Flywheel/Slave Velocity", slaceShooterMotor.getVelocity().getValueAsDouble());
         if (Math.abs(CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond) > 2

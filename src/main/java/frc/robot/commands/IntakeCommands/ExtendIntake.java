@@ -14,7 +14,7 @@ public class ExtendIntake extends Command {
     public ExtendIntake() {
         kirby = Kirby.getInstance();
         pivot = IntakePivot.getInstance();
-        addRequirements(kirby);
+        addRequirements(kirby,pivot);
     }
     @Override
     public void initialize() {

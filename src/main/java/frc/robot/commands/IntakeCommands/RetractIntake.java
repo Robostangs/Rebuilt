@@ -1,6 +1,5 @@
 package frc.robot.commands.IntakeCommands;
 
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake.IntakePivot;
@@ -14,8 +13,8 @@ public class RetractIntake extends Command {
     public RetractIntake() {
         pivot = IntakePivot.getInstance();
         kirby = Kirby.getInstance();
-        addRequirements(pivot);
-        addRequirements(kirby);
+        addRequirements(kirby, pivot);
+
     }
 
     @Override
@@ -32,6 +31,7 @@ public class RetractIntake extends Command {
     public void end(boolean interrupted) {
         kirby.setKirbyWheels(0);
     }
+
     @Override
     public boolean isFinished() {
         return false;

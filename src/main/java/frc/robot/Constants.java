@@ -174,7 +174,7 @@ public final class Constants {
                 public static final double kHoodUpPos = 0.8;
                 public static final double kPosAtOppositeAlliancePass = 0.7;
                 public static final double kDumbShootHoodPos = 0;
-                public static final double kHalfSetpoint = 0;
+                public static final double kHalfSetpoint = 0.17;
                 public static final double kTrenchSetpoint = 0;
                 public static final double kShootSetpoint = 0.2;
         }
@@ -198,7 +198,7 @@ public final class Constants {
                 public static final int kFlywheelSlaveMotorID = 10;
                 public static final double kDumbShootRPS = 0;
                 public static final double kShooterSlaveMotorStatorCurrentLimit = 60;
-                public static final double kHalfSetpoint = 0;
+                public static final double kHalfSetpoint = 32;
                 public static final double kTrenchSetpoint = 0;
                 public static final double kShootSetpoint = 30d;
 
@@ -464,15 +464,7 @@ private static final Distance kWheelRadius = Inches.of(2 * (181.5 / 187.32));
             kBackRightXPos, kBackRightYPos, kInvertRightSide, kBackRightSteerMotorInverted, kBackRightEncoderInverted
         );
 
-    /**
-     * Creates a CommandSwerveDrivetrain instance.
-     * This should only be called once in your robot program,.
-     */
-    public static CommandSwerveDrivetrain createDrivetrain() {
-        return new CommandSwerveDrivetrain(
-            DrivetrainConstants, FrontLeft, FrontRight, BackLeft, BackRight
-        );
-    }
+   
 
 
     /**

@@ -329,20 +329,12 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void teleopInit() {
         lastMatchSecond = Robot.isSimulation() ? (int) Timer.getFPGATimestamp() : (int) DriverStation.getMatchTime();
-        SmartDashboard.putNumber("Flywheel/FlywheelVelocity", 0);
-        SmartDashboard.putNumber("Hood/HoodPosition", 0);
+
 
     }
 
     @Override
     public void teleopPeriodic() {
-
-        double flywheelVelocity = SmartDashboard.getNumber("Flywheel/FlywheelVelocity", 0);
-            Flywheel.getInstance().setFlywheelVelocity(flywheelVelocity);
-
-        double hoodSetpoint = SmartDashboard.getNumber("Hood/HoodPosition", 0);
-
-            Hood.getInstance().setMotionMagicTarget(hoodSetpoint);
 
      
 
@@ -440,8 +432,7 @@ public class Robot extends TimedRobotstangs {
         CommandScheduler.getInstance().cancelAll();
         setupPitTestDashboard();
         setupAutoPitTest();
-        SmartDashboard.putNumber("Hood setpoint", 0);
-        SmartDashboard.putNumber("Flywheel velocity", 0);
+    
     }
 
     @Override
@@ -501,13 +492,13 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Pass",
                 new PrintCommand("you're supposed to pass bruh"));
 
-        NamedCommands.registerCommand("Extend", new StartIntake());
+        NamedCommands.registerCommand("Extend", new ExtendIntake());
 
         NamedCommands.registerCommand("Retract", new RetractIntake().withTimeout(0.5));
 
 
         NamedCommands.registerCommand("Photoshoot",
-                (dumpFactory.Shoot().alongWith(new StartIntake())));
+                (dumpFactory.ShootHalforPass().alongWith(new StartIntake())));
 
         NamedCommands.registerCommand("Climb",
                 new PrintCommand("Hi!"));

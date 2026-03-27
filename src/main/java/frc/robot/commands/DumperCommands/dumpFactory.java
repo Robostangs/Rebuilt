@@ -11,59 +11,58 @@ import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.subsystems.Dumper.Hood;
 
 public class dumpFactory {
-    public static Command Shoot() {
+        public static Command Shoot() {
 
-        return new ChargeUp()
-                .alongWith(new setHoodPosition())
-                .alongWith(new RunHopper())
-                .alongWith(new Index());
-    }
-
-    public static Command ShootHalforPass() {
-
-        if(Robot.isPassing()){
-            return 
-                            new ChargeUp(Constants.FlywheelConstants.kShootSetpoint)
-                    .alongWith(new setHoodPosition(Constants.HoodConstants.kShootSetpoint))
-                    .alongWith(new RunHopper())
-                    .alongWith(new Index());
-
+                return new ChargeUp()
+                                .alongWith(new setHoodPosition())
+                                .alongWith(new RunHopper())
+                                .alongWith(new Index());
         }
-        return new InstantCommand(() -> Robot.setShooterIsDumb(false))
-                .andThen(
-                        new ChargeUp(Constants.FlywheelConstants.kHalfSetpoint))
-                .alongWith(new setHoodPosition(Constants.HoodConstants.kHalfSetpoint))
-                .alongWith(new RunHopper())
-                .alongWith(new Index());
-    }
 
-    public static Command ShootTrench() {
+        public static Command ShootHalforPass() {
 
-        return new InstantCommand(() -> Robot.setShooterIsDumb(false))
-                .andThen(
-                        new ChargeUp(Constants.FlywheelConstants.kTrenchSetpoint))
-                .alongWith(new setHoodPosition(Constants.HoodConstants.kTrenchSetpoint))
-                .alongWith(new RunHopper())
-                .alongWith(new Index());
-    }
+                if (Robot.isPassing()) {
+                        return new ChargeUp(Constants.FlywheelConstants.kShootSetpoint)
+                                        .alongWith(new setHoodPosition(Constants.HoodConstants.kShootSetpoint))
+                                        .alongWith(new RunHopper())
+                                        .alongWith(new Index());
 
-    public static Command HoodDown() {
-        return new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),
-                Hood.getInstance())
-                .andThen(new InstantCommand(
-                        () -> Hood.getInstance().setMotionMagic(),
-                        Hood.getInstance()));
-    }
+                }
+                return
 
-    public static Command dumbShoot() {
-        return new InstantCommand(() -> Robot.setShooterIsDumb(true))
-                .alongWith(new ChargeUp(75))
-                .alongWith(new setHoodPosition(.4))
-                .alongWith(new Index())
-                .finallyDo(() -> Robot.setShooterIsDumb(false));
-    }
+                new ChargeUp(Constants.FlywheelConstants.kHalfSetpoint)
+                                .alongWith(new setHoodPosition(Constants.HoodConstants.kHalfSetpoint))
+                                .alongWith(new RunHopper())
+                                .alongWith(new Index());
+        }
 
-    public static Command dumbShootTrench() {
-        return new ChargeUp().alongWith(new setHoodPosition(.75)).alongWith(new Index());
-    }
+        public static Command ShootTrench() {
+
+                return new InstantCommand(() -> Robot.setShooterIsDumb(false))
+                                .andThen(
+                                                new ChargeUp(Constants.FlywheelConstants.kTrenchSetpoint))
+                                .alongWith(new setHoodPosition(Constants.HoodConstants.kTrenchSetpoint))
+                                .alongWith(new RunHopper())
+                                .alongWith(new Index());
+        }
+
+        public static Command HoodDown() {
+                return new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),
+                                Hood.getInstance())
+                                .andThen(new InstantCommand(
+                                                () -> Hood.getInstance().setMotionMagic(),
+                                                Hood.getInstance()));
+        }
+
+        public static Command dumbShoot() {
+                return new InstantCommand(() -> Robot.setShooterIsDumb(true))
+                                .alongWith(new ChargeUp(75))
+                                .alongWith(new setHoodPosition(.4))
+                                .alongWith(new Index())
+                                .finallyDo(() -> Robot.setShooterIsDumb(false));
+        }
+
+        public static Command dumbShootTrench() {
+                return new ChargeUp().alongWith(new setHoodPosition(.75)).alongWith(new Index());
+        }
 }

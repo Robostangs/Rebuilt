@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.Alert;
@@ -52,6 +53,11 @@ public class IntakePivot extends SubsystemBase {
         hopperExtenderConfig.Slot0.kG = Constants.KirbyConstants.hopperExtenderKG;
         hopperExtenderConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         hopperExtenderConfig.Slot0.GravityArmPositionOffset = 0.03;
+
+        hopperExtenderConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+        hopperExtenderConfig.CurrentLimits.StatorCurrentLimit = 80;
+
 
         hopperExtenderMotor.getConfigurator().apply(hopperExtenderConfig);
     }

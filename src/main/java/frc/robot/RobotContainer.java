@@ -106,10 +106,10 @@ public class RobotContainer {
                                 (dumpFactory.ShootTrench()));
 
                 xDrive.rm()
-                        .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToHalfBump));
+                                .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToHalfBump));
 
                 xDrive.lm()
-                        .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToTower));
+                                .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToTower));
 
                 xDrive.rightPaddle().whileTrue(new ExtendIntake());
                 xDrive.leftPaddle().whileTrue(new RetractIntake());
@@ -127,8 +127,12 @@ public class RobotContainer {
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                xDrive.x().whileTrue(IntakeFactory.OscillateIntake())
-                                .onFalse(new SetPivotPosition(0.0));
+                // xDrive.x().whileTrue(IntakeFactory.OscillateIntake())
+                // .onFalse(new SetPivotPosition(0.0));
+
+                xDrive.x().whileTrue(new HomeHood());
+
+                // xDrive.rightPaddle().whileTrue(new RunHopper().alongWith(new Index()));
 
                 xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2));

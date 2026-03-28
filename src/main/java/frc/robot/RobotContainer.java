@@ -13,6 +13,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.util.FlippingUtil;
 
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -97,6 +98,15 @@ public class RobotContainer {
                 return RobotContainer.getInstance().rumbleController(secs, RobotContainer.getInstance().xManip);
         }
 
+        /**TODO:
+         * intake
+         * Autoalign
+         * autoalign to hub
+         * text xdrive
+         * 
+         * */
+
+
         private void configureDrivingBinding() {
                 setDrivetrain();
 
@@ -145,7 +155,8 @@ public class RobotContainer {
 
                 xManip.a().whileTrue(new HomeHood());
 
-                xManip.rightPaddle().whileTrue(new HomeIntake(false));
+                xManip.rightPaddle().whileTrue(new HomeIntake(
+                        false));
                 xManip.leftPaddle().whileTrue(new HomeIntake(true));
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
@@ -163,27 +174,24 @@ public class RobotContainer {
 
         private void setDrivetrain() {
                 DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
-                BooleanSupplier isMoving = () -> (xDrive.getLeftX() > 0 || xDrive.getLeftY() > 0);
+                BooleanSupplier isMoving = () -> (Math.abs(xDrive.getLeftX()) > 0 || Math.abs(xDrive.getLeftY()) > 0);
                 if (Robot.isSimulation()) {
-                                drivetrain.setDefaultCommand(
-                                                drivetrain.applyRequest(
+                        drivetrain.setDefaultCommand(
+                                        drivetrain.applyRequest(
 
-                                                                () -> drive.withVelocityX((-xSim.getRawAxis(0))
-                                                                                * MaxSpeed)
-                                                                                .withVelocityY((xSim.getRawAxis(1))
-                                                                                                * MaxSpeed)
-                                                                                .withRotationalRate((-xSim
-                                                                                                .getRawAxis(2))
-                                                                                                * MaxAngularRate)));
-                
+                                                        () -> drive.withVelocityX((-xSim.getRawAxis(0))
+                                                                        * MaxSpeed)
+                                                                        .withVelocityY((xSim.getRawAxis(1))
+                                                                                        * MaxSpeed)
+                                                                        .withRotationalRate((-xSim
+                                                                                        .getRawAxis(2))
+                                                                                        * MaxAngularRate)));
 
                 } else {
+                        
+                        drivetrain.setDefaultCommand(drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
 
-                        if (isMoving.getAsBoolean()) {
-
-                                drivetrain.setDefaultCommand(
-                                                // Drivetrain will execute this command periodically
-                                                drivetrain.applyRequest(() -> drive
+                        new Trigger(isMoving).debounce(0.15,DebounceType.kFalling).whileTrue(drivetrain.applyRequest(() -> drive
                                                                 .withVelocityX(-xDrive.getLeftY() * MaxSpeed
                                                                                 * leftBumper.getAsDouble())
                                                                 .withVelocityY(-xDrive.getLeftX() * MaxSpeed
@@ -191,10 +199,9 @@ public class RobotContainer {
                                                                 .withRotationalRate(
                                                                                 -xDrive.getRightX() * MaxAngularRate
                                                                                                 * (leftBumper.getAsDouble()
-                                                                                                                + .25))));
-                        } else {
-                                drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
-                        }
+                                                                                                                + .25))))
+                                                                                                                ;
+                        
                 }
         }
 

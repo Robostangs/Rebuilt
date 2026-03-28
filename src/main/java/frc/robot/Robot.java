@@ -255,8 +255,8 @@ public class Robot extends TimedRobotstangs {
 
         autoChooser.setDefaultOption("Sit and Shit", "SitAndShit");
         autoChooser.addOption("Piss", "Piss");
-                // autoChooser.addOption("DStart - DTrench - DIntake - DBump - DShoot", "DStart - DTrench - DIntake - DBump - DShoot");
-
+        // autoChooser.addOption("DStart - DTrench - DIntake - DBump - DShoot", "DStart
+        // - DTrench - DIntake - DBump - DShoot");
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -306,9 +306,9 @@ public class Robot extends TimedRobotstangs {
                 new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
                 new InstantCommand(() -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
                 autoCommand
-                // ,new AutoAlign(),
-                // dumpFactory.PhotoShoot()
-                );
+        // ,new AutoAlign(),
+        // dumpFactory.PhotoShoot()
+        );
 
     }
 
@@ -363,6 +363,26 @@ public class Robot extends TimedRobotstangs {
 
             // transition 10 seconds
         } else if (gameTime > 130.0) {
+            // get who won autos from fms
+            if (gameData.length() > 0) {
+                switch (gameData.charAt(0)) {
+                    case 'B':
+                        canBlueScore = whoCanScore.red;
+                        break;
+                    case 'R':
+                        canBlueScore = whoCanScore.blue;
+                        break;
+                    default:
+                        canBlueScore = whoCanScore.error;
+                        break;
+                }
+                SmartDashboard.putString("gameData", String.valueOf(gameData.charAt(0)));
+            } else {
+                // this is js a placeholder
+                canBlueScore = whoCanScore.blue;
+                SmartDashboard.putString("gameData", "no game data");
+            }
+
             canBlueScore = whoCanScore.both;
             shiftTimeLeft = gameTime - 130;
             if (shiftTimeLeft > 4 && shiftTimeLeft < 5) {
@@ -373,24 +393,6 @@ public class Robot extends TimedRobotstangs {
             // shifts
 
         } else {
-            if (gameTime > 128) {
-                if (gameData.length() > 0) {
-                    switch (gameData.charAt(0)) {
-                        case 'B':
-                            canBlueScore = whoCanScore.red;
-                            break;
-                        case 'R':
-                            canBlueScore = whoCanScore.blue;
-                            break;
-                        default:
-                            canBlueScore = whoCanScore.error;
-                            break;
-                    }
-                } else {
-                    // this is js a placeholder
-                    canBlueScore = whoCanScore.blue;
-                }
-            }
 
             double secondsIntoShifts = 130 - gameTime;
             double positionInShift = secondsIntoShifts % 25;
@@ -417,7 +419,7 @@ public class Robot extends TimedRobotstangs {
         } else {
             allianceScore = Constants.ElasticConstants.white;
         }
-
+        SmartDashboard.putString("whocanscore", allianceScore.toHexString());
         SmartDashboard.putNumber("Match Time", gameTime);
         SmartDashboard.putNumber("Shift Time Left", shiftTimeLeft);
     }
@@ -508,7 +510,6 @@ public class Robot extends TimedRobotstangs {
                 (dumpFactory.PhotoShoot()));
 
         NamedCommands.registerCommand("AutoAlign", new AutoAlign());
-
 
         NamedCommands.registerCommand("BumpTake", new SetPivotPosition(Constants.KirbyConstants.kIntakePivotBump));
 

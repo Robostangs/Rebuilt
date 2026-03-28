@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 3.191449016100179,
-        "y": 5.0004114490161
+        "x": 3.029194991055456,
+        "y": 4.8706082289803225
       },
       "prevControl": {
-        "x": 2.5828046757321514,
-        "y": 5.1100479970705965
+        "x": 2.4205506506874284,
+        "y": 4.9802447770348195
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "DepotShootAcc"
     }
   ],
   "rotationTargets": [
@@ -89,7 +89,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -46.16913932790743
+    "rotation": -35.75388725443687
   },
   "reversed": false,
   "folder": "Center",

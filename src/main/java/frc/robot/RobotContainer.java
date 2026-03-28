@@ -5,6 +5,8 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
+
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -162,16 +164,19 @@ public class RobotContainer {
 
         private void setDrivetrain() {
                 DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
-
+                BooleanSupplier isMoving= () -> (xDrive.getLeftX()>0||xDrive.getLeftY()>0);
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
-                                        drivetrain.applyRequest(() -> drive
+                                drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake())
+                                drivetrain.applyRequest(() -> isMoving.getAsBoolean()?drive
                                                         .withVelocityX((-xSim.getRawAxis(0))
                                                                         * MaxSpeed)
                                                         .withVelocityY((xSim.getRawAxis(1))
                                                                         * MaxSpeed)
                                                         .withRotationalRate((-xSim.getRawAxis(2))
-                                                                        * MaxAngularRate)));
+                                                                        * MaxAngularRate):new SwerveRequest.SwerveDriveBrake()));
+                                                                        
+                        
                 } else {
 
                         drivetrain.setDefaultCommand(

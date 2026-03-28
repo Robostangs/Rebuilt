@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.265066737594104,
-        "y": 4.643897577694079
+        "x": 1.1794991055456165,
+        "y": 6.817656529516995
       },
       "isLocked": false,
       "linkedName": "CenterStartDepot"
@@ -20,12 +20,12 @@
         "y": 5.925259391771019
       },
       "prevControl": {
-        "x": 0.5470890321672827,
-        "y": 5.323157819852282
+        "x": 0.6076551699256657,
+        "y": 6.171226869295991
       },
       "nextControl": {
-        "x": 0.5791592128801428,
-        "y": 6.5418246869409655
+        "x": 0.5182124508256744,
+        "y": 5.679291914246042
       },
       "isLocked": false,
       "linkedName": null
@@ -53,8 +53,8 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.787259615384615,
-      "maxWaypointRelativePos": 1.3803464854111394,
+      "minWaypointRelativePos": 0.8557213930348251,
+      "maxWaypointRelativePos": 1.2786069651741299,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 3.0,

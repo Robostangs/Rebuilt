@@ -174,7 +174,7 @@ public class RobotContainer {
 
         private void setDrivetrain() {
                 DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
-                BooleanSupplier isMoving = () -> (Math.abs(xDrive.getLeftX()) > 0 || Math.abs(xDrive.getLeftY()) > 0);
+                BooleanSupplier isMoving = () -> (Math.abs(xDrive.getLeftX()) > 0 || Math.abs(xDrive.getLeftY()) > 0||Math.abs( xDrive.getRightX()) > 0);
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(

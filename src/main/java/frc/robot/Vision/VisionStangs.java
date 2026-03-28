@@ -148,6 +148,9 @@ public class VisionStangs {
                 }
                 SmartDashboard.putNumber("Vision/" + CameraName + "/Biggest Ambiguity", bigAmbiguity);
             }
+            else {
+                this.currentPose = null;
+            }
         }
     }
 

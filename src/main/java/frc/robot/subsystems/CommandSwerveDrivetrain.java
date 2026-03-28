@@ -150,6 +150,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
         configurePathPlanner();
+        // SmartDashboard.putData(mDrivetrain(Subsystem));
 
         this.setVisionMeasurementStdDevs(Constants.AutoConstants.kErrorInMyVisionReg);
 

@@ -20,6 +20,8 @@ public class Feeder extends SubsystemBase {
     public Feeder() {
         feederMotor = new TalonFX(Constants.FeederConstants.feederMotorID);
         fuelSensor = new DigitalInput(Constants.FeederConstants.fuelSensorID);
+                SmartDashboard.putData(instance);
+
     }
 
     public void configureFeeder() {

@@ -23,6 +23,8 @@ public class IntakePivot extends SubsystemBase {
     public IntakePivot() {
         setIntakePivotConfig();
         extenderControl = new PositionTorqueCurrentFOC(hopperExtenderMotor.getPosition().getValueAsDouble());
+                SmartDashboard.putData(mInstance);
+
     }
 
     public static IntakePivot getInstance() {

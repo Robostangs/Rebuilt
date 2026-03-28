@@ -19,6 +19,8 @@ public class Hopper extends SubsystemBase {
     public Hopper() {
 
         roller = new TalonFX(Constants.HopperConstants.kRollerID);
+                SmartDashboard.putData(mInstance);
+
 
     }
 

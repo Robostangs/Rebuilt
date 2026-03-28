@@ -23,6 +23,8 @@ public class Hood extends SubsystemBase {
         mainMotor = new TalonFXS(Constants.HoodConstants.mainMotorID);
         hoodTargetPosition = new MotionMagicExpoDutyCycle(mainMotor.getPosition().getValueAsDouble());
         configureHoodMotor();
+                SmartDashboard.putData(mInstance);
+
     }
 
     public void configureHoodMotor() {

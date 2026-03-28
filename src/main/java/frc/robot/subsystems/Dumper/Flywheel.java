@@ -31,6 +31,7 @@ public class Flywheel extends SubsystemBase {
         slaceShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
         configureFlywheelMotors();
         slaveControl = new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Opposed);
+        SmartDashboard.putData(mInstance);
     }
 
     private void configureFlywheelMotors() {

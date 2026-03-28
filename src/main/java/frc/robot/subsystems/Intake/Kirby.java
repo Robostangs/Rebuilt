@@ -16,6 +16,7 @@ public class Kirby extends SubsystemBase {
 
         kirbyWheels = new TalonFX(Constants.KirbyConstants.kirbyWheelsID);
         setIntakePivotConfig();
+        SmartDashboard.putData(mInstance);
 
     }
 

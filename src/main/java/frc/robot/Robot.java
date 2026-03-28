@@ -332,6 +332,7 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void autonomousExit() {
+        CommandScheduler.getInstance().cancelAll();
     }
 
     @Override
@@ -509,7 +510,8 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Photoshoot",
                 (dumpFactory.PhotoShoot()));
 
-        NamedCommands.registerCommand("AutoAlign", new AutoAlign());
+        NamedCommands.registerCommand("AutoAlign", new PrintCommand("ALIGN!"));
+        // new AutoAlign());
 
         NamedCommands.registerCommand("BumpTake", new SetPivotPosition(Constants.KirbyConstants.kIntakePivotBump));
 

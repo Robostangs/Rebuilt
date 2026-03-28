@@ -129,7 +129,6 @@ public class RobotContainer {
 
                 xDrive.x().whileTrue(new StartIntake());
 
-
                 xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2));
 
@@ -164,31 +163,39 @@ public class RobotContainer {
 
         private void setDrivetrain() {
                 DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
-                BooleanSupplier isMoving= () -> (xDrive.getLeftX()>0||xDrive.getLeftY()>0);
+                BooleanSupplier isMoving = () -> (xDrive.getLeftX() > 0 || xDrive.getLeftY() > 0);
                 if (Robot.isSimulation()) {
-                        drivetrain.setDefaultCommand(
-                                drivetrain.applyRequest(() -> isMoving.getAsBoolean()?drive
-                                                        .withVelocityX((-xSim.getRawAxis(0))
-                                                                        * MaxSpeed)
-                                                        .withVelocityY((xSim.getRawAxis(1))
-                                                                        * MaxSpeed)
-                                                        .withRotationalRate((-xSim.getRawAxis(2))
-                                                                        * MaxAngularRate):new SwerveRequest.SwerveDriveBrake()));
-                                                                        
-                        
+                        if (isMoving.getAsBoolean()) {
+                                drivetrain.setDefaultCommand(
+                                                drivetrain.applyRequest(() -> isMoving.getAsBoolean() ? drive
+                                                                .withVelocityX((-xSim.getRawAxis(0))
+                                                                                * MaxSpeed)
+                                                                .withVelocityY((xSim.getRawAxis(1))
+                                                                                * MaxSpeed)
+                                                                .withRotationalRate((-xSim.getRawAxis(2))
+                                                                                * MaxAngularRate)
+                                                                : new SwerveRequest.SwerveDriveBrake()));
+                        }
+
                 } else {
 
-                        drivetrain.setDefaultCommand(
-                                        // Drivetrain will execute this command periodically
-                                        drivetrain.applyRequest(() -> drive
-                                                        .withVelocityX(-xDrive.getLeftY() * MaxSpeed
-                                                                        * leftBumper.getAsDouble())
-                                                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed
-                                                                        * leftBumper.getAsDouble())
-                                                        .withRotationalRate(
-                                                                        -xDrive.getRightX() * MaxAngularRate
-                                                                                        * (leftBumper.getAsDouble()
-                                                                                                        + .25))));
+                        if (isMoving.getAsBoolean()) {
+
+                                drivetrain.setDefaultCommand(
+                                                // Drivetrain will execute this command periodically
+                                                drivetrain.applyRequest(() -> drive
+                                                                .withVelocityX(-xDrive.getLeftY() * MaxSpeed
+                                                                                * leftBumper.getAsDouble())
+                                                                .withVelocityY(-xDrive.getLeftX() * MaxSpeed
+                                                                                * leftBumper.getAsDouble())
+                                                                .withRotationalRate(
+                                                                                -xDrive.getRightX() * MaxAngularRate
+                                                                                                * (leftBumper.getAsDouble()
+                                                                                                                + .25))));
+                        }
+                        else{
+                                drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
+                        }
                 }
         }
 

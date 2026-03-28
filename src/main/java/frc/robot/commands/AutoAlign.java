@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -75,6 +77,7 @@ public class AutoAlign extends Command {
     @Override
     public void execute() {
 
+
         if (!Robot.isPassing()) {
             setTargetPose();
 
@@ -84,7 +87,10 @@ public class AutoAlign extends Command {
                         .fromRadians((Math.atan2(
                                 drivetrain.getState().Pose.getY() - targetPose.getY(),
                                 drivetrain.getState().Pose.getX() - targetPose.getX())))
-                        .minus(Rotation2d.k180deg);
+                        .minus(Rotation2d.kZero)
+
+                        // .minus(Robot.isRed() ? Rotation2d.k180deg : Rotation2d.kZero)
+                        ;
             };
             SmartDashboard.putNumber("Drive current theta",
                     Math.atan2(

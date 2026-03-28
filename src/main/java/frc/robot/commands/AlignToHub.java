@@ -22,123 +22,127 @@ import com.pathplanner.lib.util.FlippingUtil;
 
 public class AlignToHub {
 
-    private final Translation2d hubPos = !Robot.isRed()
-            ? Constants.FieldConstants.HubPosition.getTranslation()
-            : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation());
+        public Translation2d hubPos = !Robot.isRed()
+                        ? Constants.FieldConstants.HubPosition.getTranslation()
+                        : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation());
 
-    private double shootRadius = 0;
+        private double shootRadius = 0;
 
-    public Pose2d getTargetPose() {
-        Translation2d robotPos = CommandSwerveDrivetrain.getInstance()
-                .getState().Pose.getTranslation();
+        public Pose2d getTargetPose() {
+                Translation2d robotPos = CommandSwerveDrivetrain.getInstance()
+                                .getState().Pose.getTranslation();
 
-        Translation2d hubToRobot = robotPos.minus(hubPos);
+                hubPos = !Robot.isRed()
+                                ? Constants.FieldConstants.HubPosition.getTranslation()
+                                : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation());
 
-        double dist = hubToRobot.getNorm();
+                Translation2d hubToRobot = robotPos.minus(hubPos);
 
-        // if (dist < 0.01) {
-        //     hubToRobot = new Translation2d(shootRadius, 0);
-        //     dist = shootRadius;
-        // }
+                double dist = hubToRobot.getNorm();
 
-        Translation2d targetTranslation = hubPos.plus(
-                hubToRobot.times(shootRadius / dist));
+                // if (dist < 0.01) {
+                // hubToRobot = new Translation2d(shootRadius, 0);
+                // dist = shootRadius;
+                // }
 
-        Rotation2d facingHub = hubToRobot.getAngle().plus(Rotation2d.k180deg);
+                Translation2d targetTranslation = hubPos.plus(
+                                hubToRobot.times(shootRadius / dist));
 
-        return new Pose2d(targetTranslation, facingHub);
-    }
+                Rotation2d facingHub = hubToRobot.getAngle().plus(Rotation2d.k180deg);
 
-    public void drawShootingRing() {
-        int numPoints = 36;
-        List<Pose2d> ringPoses = new ArrayList<>();
-
-        for (int i = 0; i < numPoints; i++) {
-            double angleRad = (2 * Math.PI / numPoints) * i;
-            Translation2d point = hubPos.plus(
-                    new Translation2d(shootRadius, new Rotation2d(angleRad)));
-            ringPoses.add(new Pose2d(point, new Rotation2d(angleRad)));
+                return new Pose2d(targetTranslation, facingHub);
         }
 
-        Robot.teleopField.getObject("Shooting Ring").setPoses(ringPoses);
-    }
+        public void drawShootingRing() {
+                int numPoints = 36;
+                List<Pose2d> ringPoses = new ArrayList<>();
 
-    public PathPlannerPath generatePath(Pose2d targetPose) {
-        Pose2d currentPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
+                for (int i = 0; i < numPoints; i++) {
+                        double angleRad = (2 * Math.PI / numPoints) * i;
+                        Translation2d point = hubPos.plus(
+                                        new Translation2d(shootRadius, new Rotation2d(angleRad)));
+                        ringPoses.add(new Pose2d(point, new Rotation2d(angleRad)));
+                }
 
-        Pose2d startPose = new Pose2d(
-                currentPose.getX(), currentPose.getY(),
+                Robot.teleopField.getObject("Shooting Ring").setPoses(ringPoses);
+        }
 
-                currentPose.getTranslation()
-                        .minus(targetPose.getTranslation())
-                        .getAngle()
-                        .minus(Rotation2d.k180deg));
+        public PathPlannerPath generatePath(Pose2d targetPose) {
+                Pose2d currentPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
 
-        Pose2d endPose = new Pose2d(
-                targetPose.getX(), targetPose.getY(),
+                Pose2d startPose = new Pose2d(
+                                currentPose.getX(), currentPose.getY(),
 
-                targetPose.getRotation());
+                                currentPose.getTranslation()
+                                                .minus(targetPose.getTranslation())
+                                                .getAngle()
+                                                .minus(Rotation2d.k180deg));
 
-        List<Waypoint> waypoints;
+                Pose2d endPose = new Pose2d(
+                                targetPose.getX(), targetPose.getY(),
 
-        waypoints = PathPlannerPath.waypointsFromPoses(startPose, endPose);
+                                targetPose.getRotation());
 
-        double mult = 1;
-        PathConstraints constraints = new PathConstraints(
+                List<Waypoint> waypoints;
 
-                Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * mult,
+                waypoints = PathPlannerPath.waypointsFromPoses(startPose, endPose);
 
-                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared * mult,
+                double mult = 1;
+                PathConstraints constraints = new PathConstraints(
 
-                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * mult,
-                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * mult);
+                                Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * mult,
 
-        PathConstraints endConstraints = new PathConstraints(
-                Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * mult,
-                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared * mult,
-                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * mult,
-                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * mult);
+                                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared * mult,
 
-        List<RotationTarget> rotationTargets = new ArrayList<>();
-        rotationTargets.add(new RotationTarget(
-                0.8,
-                endPose.getRotation()));
+                                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * mult,
+                                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * mult);
 
-        List<ConstraintsZone> zones = new ArrayList<>();
-        zones.add(new ConstraintsZone(0.6, 1.0, endConstraints));
+                PathConstraints endConstraints = new PathConstraints(
+                                Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * mult,
+                                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared * mult,
+                                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * mult,
+                                Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared * mult);
 
-        PathPlannerPath path = new PathPlannerPath(
-                waypoints,
-                rotationTargets,
-                Collections.emptyList(),
-                zones,
-                Collections.emptyList(),
-                constraints,
-                null,
-                new GoalEndState(0.0, targetPose.getRotation()),
-                false);
+                List<RotationTarget> rotationTargets = new ArrayList<>();
+                rotationTargets.add(new RotationTarget(
+                                0.8,
+                                endPose.getRotation()));
 
-        path.preventFlipping = true;
-        return path;
-    }
+                List<ConstraintsZone> zones = new ArrayList<>();
+                zones.add(new ConstraintsZone(0.6, 1.0, endConstraints));
 
-    public Command getAlignToHub(double radius) {
-        shootRadius = radius;
+                PathPlannerPath path = new PathPlannerPath(
+                                waypoints,
+                                rotationTargets,
+                                Collections.emptyList(),
+                                zones,
+                                Collections.emptyList(),
+                                constraints,
+                                null,
+                                new GoalEndState(0.0, targetPose.getRotation()),
+                                false);
 
-        DeferredCommand alignCommand = new DeferredCommand(() -> {
+                path.preventFlipping = true;
+                return path;
+        }
 
-            SmartDashboard.putBoolean("IsAligned",false);  
+        public Command getAlignToHub(double radius) {
+                shootRadius = radius;
 
+                DeferredCommand alignCommand = new DeferredCommand(() -> {
 
-            drawShootingRing();
+                        SmartDashboard.putBoolean("IsAligned", false);
 
-            Pose2d target = getTargetPose();
+                        drawShootingRing();
 
-            Robot.teleopField.getObject("Hub Align Pose").setPose(target);
+                        Pose2d target = getTargetPose();
 
-            return AutoBuilder.followPath(generatePath(target)).andThen(new InstantCommand(() -> SmartDashboard.putBoolean("IsAligned",true)));
-        }, Set.of(CommandSwerveDrivetrain.getInstance()));
+                        Robot.teleopField.getObject("Hub Align Pose").setPose(target);
 
-        return alignCommand;
-    }
+                        return AutoBuilder.followPath(generatePath(target)).andThen(
+                                        new InstantCommand(() -> SmartDashboard.putBoolean("IsAligned", true)));
+                }, Set.of(CommandSwerveDrivetrain.getInstance()));
+
+                return alignCommand;
+        }
 }

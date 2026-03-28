@@ -167,7 +167,6 @@ public class RobotContainer {
                 BooleanSupplier isMoving= () -> (xDrive.getLeftX()>0||xDrive.getLeftY()>0);
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
-                                drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake())
                                 drivetrain.applyRequest(() -> isMoving.getAsBoolean()?drive
                                                         .withVelocityX((-xSim.getRawAxis(0))
                                                                         * MaxSpeed)

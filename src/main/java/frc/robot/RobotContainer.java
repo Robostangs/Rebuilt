@@ -165,17 +165,17 @@ public class RobotContainer {
                 DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
                 BooleanSupplier isMoving = () -> (xDrive.getLeftX() > 0 || xDrive.getLeftY() > 0);
                 if (Robot.isSimulation()) {
-                        if (isMoving.getAsBoolean()) {
                                 drivetrain.setDefaultCommand(
-                                                drivetrain.applyRequest(() -> isMoving.getAsBoolean() ? drive
-                                                                .withVelocityX((-xSim.getRawAxis(0))
+                                                drivetrain.applyRequest(
+
+                                                                () -> drive.withVelocityX((-xSim.getRawAxis(0))
                                                                                 * MaxSpeed)
-                                                                .withVelocityY((xSim.getRawAxis(1))
-                                                                                * MaxSpeed)
-                                                                .withRotationalRate((-xSim.getRawAxis(2))
-                                                                                * MaxAngularRate)
-                                                                : new SwerveRequest.SwerveDriveBrake()));
-                        }
+                                                                                .withVelocityY((xSim.getRawAxis(1))
+                                                                                                * MaxSpeed)
+                                                                                .withRotationalRate((-xSim
+                                                                                                .getRawAxis(2))
+                                                                                                * MaxAngularRate)));
+                
 
                 } else {
 
@@ -192,8 +192,7 @@ public class RobotContainer {
                                                                                 -xDrive.getRightX() * MaxAngularRate
                                                                                                 * (leftBumper.getAsDouble()
                                                                                                                 + .25))));
-                        }
-                        else{
+                        } else {
                                 drivetrain.setControl(new SwerveRequest.SwerveDriveBrake());
                         }
                 }
@@ -206,7 +205,7 @@ public class RobotContainer {
                                                 () -> true));
 
                 new Trigger(() -> xSim.getRawButtonPressed(2))
-                                .onTrue(new AlignToHub().getAlignToHub(4));
+                                .onTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToHalfBump));
 
         }
 }

@@ -433,7 +433,10 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void testInit() {
+        SwerveRequest rightRequest = new SwerveRequest.FieldCentric().withVelocityY(0.3);
+        Command driveRightCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> rightRequest);
         SmartDashboard.putData("Test Oscillate Intake", IntakeFactory.OscillateIntake());
+        SmartDashboard.putData("Get wheel odometry", driveRightCommand);
         CommandScheduler.getInstance().cancelAll();
         setupPitTestDashboard();
         setupAutoPitTest();

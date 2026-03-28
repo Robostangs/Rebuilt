@@ -27,8 +27,8 @@ public class dumpFactory {
 
                 new ChargeUp(Constants.FlywheelConstants.kHalfSetpoint)
                                 .alongWith(new setHoodPosition(Constants.HoodConstants.kHalfSetpoint))
-                                .alongWith(new RunHopper())
-                                .alongWith(new Index());
+                                .alongWith(new Index())
+                                .alongWith(new WaitCommand(0.3).andThen(new RunHopper()));
         }
 
         public static Command pass(){

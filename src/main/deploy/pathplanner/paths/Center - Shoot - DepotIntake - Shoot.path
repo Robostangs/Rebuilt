@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.1794991055456165,
-        "y": 6.817656529516995
+        "x": 2.265066737594104,
+        "y": 4.643897577694079
       },
       "isLocked": false,
       "linkedName": "CenterStartDepot"
     },
     {
       "anchor": {
-        "x": 0.48180679785330904,
-        "y": 5.876583184257603
+        "x": 0.5629338103756705,
+        "y": 5.925259391771019
       },
       "prevControl": {
-        "x": 0.4507981142060068,
-        "y": 6.124652653436021
+        "x": 0.5470890321672827,
+        "y": 5.323157819852282
       },
       "nextControl": {
-        "x": 0.5629338103756705,
-        "y": 5.227567084078712
+        "x": 0.5791592128801428,
+        "y": 6.5418246869409655
       },
       "isLocked": false,
       "linkedName": null
@@ -53,11 +53,11 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.38805970149253716,
-      "maxWaypointRelativePos": 1.303482587064677,
+      "minWaypointRelativePos": 0.787259615384615,
+      "maxWaypointRelativePos": 1.3803464854111394,
       "constraints": {
-        "maxVelocity": 0.5,
-        "maxAcceleration": 1.5,
+        "maxVelocity": 1.0,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,

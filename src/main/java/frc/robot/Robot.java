@@ -337,6 +337,8 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopInit() {
+        CommandScheduler.getInstance().cancelAll();
+
         lastMatchSecond = Robot.isSimulation() ? (int) Timer.getFPGATimestamp() : (int) DriverStation.getMatchTime();
 
     }
@@ -491,6 +493,8 @@ public class Robot extends TimedRobotstangs {
 
     }
 
+
+    //Q41, put autoalign back in changed path to go more in and slower, canceled commands going into teleop., added auto align back to auto
     public void configureTeleopTab() {
         teleopTab = Shuffleboard.getTab("Teleop");
 
@@ -510,8 +514,9 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Photoshoot",
                 (dumpFactory.PhotoShoot()));
 
-        NamedCommands.registerCommand("AutoAlign", new PrintCommand("ALIGN!"));
-        // new AutoAlign());
+        NamedCommands.registerCommand("AutoAlign", new AutoAlign());
+
+        //  new PrintCommand("ALIGN!"));
 
         NamedCommands.registerCommand("BumpTake", new SetPivotPosition(Constants.KirbyConstants.kIntakePivotBump));
 

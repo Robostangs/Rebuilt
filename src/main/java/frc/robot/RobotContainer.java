@@ -192,9 +192,9 @@ public class RobotContainer {
                         drivetrain.setDefaultCommand(drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
 
                         new Trigger(isMoving).debounce(0.15,DebounceType.kFalling).whileTrue(drivetrain.applyRequest(() -> drive
-                                                                .withVelocityX(-xDrive.getLeftY() * MaxSpeed
+                                                                .withVelocityX(-xDrive.getLeftY() * MaxSpeed 
                                                                                 * leftBumper.getAsDouble())
-                                                                .withVelocityY(-xDrive.getLeftX() * MaxSpeed
+                                                                .withVelocityY(-xDrive.getLeftX() * MaxSpeed 
                                                                                 * leftBumper.getAsDouble())
                                                                 .withRotationalRate(
                                                                                 -xDrive.getRightX() * MaxAngularRate

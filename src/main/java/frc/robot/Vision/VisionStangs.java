@@ -189,7 +189,7 @@ public class VisionStangs {
             SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Pose null");
             return false;
         }
-        if (yoPoseEsti.tagCount < 1) {
+        if (yoPoseEsti.tagCount < 2) {
             SmartDashboard.putString("Vision"+CameraName+"/LL4_RejectReason", "Not enough tags: " + yoPoseEsti.tagCount);
             return false;
         }

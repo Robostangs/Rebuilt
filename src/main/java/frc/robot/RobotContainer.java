@@ -110,8 +110,8 @@ public class RobotContainer {
         private void configureDrivingBinding() {
                 setDrivetrain();
 
-                xDrive.rightTrigger().whileTrue(
-                                (dumpFactory.ShootHalforPass()));
+                xDrive.leftBumper().whileTrue(
+                                (dumpFactory.ShootHalforPass(() -> xDrive.getRightTriggerAxis() > 0.5)));
                 xDrive.rightBumper().whileTrue(dumpFactory.pass());
                 // close shoot
 

@@ -36,7 +36,24 @@ public class dumpFactory {
                                                                 .alongWith(new WaitCommand(0.3)
                                                                                 .andThen(new RunHopper())));
         }
-        
+
+              public static Command ShootHalforPass(BooleanSupplier triggSupplier) {
+
+                return new ChargeUp(Constants.FlywheelConstants.kHalfSetpoint)
+                                .alongWith(new setHoodPosition(Constants.HoodConstants.kHalfSetpoint))
+                                .alongWith(
+                                                new WaitUntilCommand(triggSupplier).andThen(
+                                                new WaitUntilCommand(
+                                                                () -> Flywheel.getInstance().shooterAtTargetVelocity())
+                                                                .andThen(new Index())
+                                                                .alongWith(new WaitCommand(0.3)
+                                                                                .andThen(new RunHopper())))
+                                                                                
+                                                                                
+                                                                                
+                                                                                );
+        }
+
 
         public static Command pass() {
                 return new ChargeUp(Constants.FlywheelConstants.kPassSetpoint)

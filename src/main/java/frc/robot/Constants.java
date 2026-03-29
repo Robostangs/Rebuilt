@@ -148,7 +148,7 @@ public final class Constants {
                 public static final double IntakeWheelCurrentLimit = 20;
                 public static final double hopperExtenderKG = 40;
                 public static final double kHomeDutyCycle = 0.1;
-                public static final double kHomePosition = 0.29;
+                public static final double kHomePosition = 0.28;
                 public static final double extenderPositionTolerance = 0.03;
                 public static final double IntakeWheelsStatorLimit = 40;
 		public static final double IntakePivotOscillateUpPos = 0.5;

@@ -113,8 +113,7 @@ public class RobotContainer {
                 xDrive.leftBumper().whileTrue(
                                 (dumpFactory.ShootHalforPass(() -> xDrive.getRightTriggerAxis() > 0.5)));
                 xDrive.rightBumper().whileTrue(dumpFactory.pass());
-                // close shoot
-
+        
                 xDrive.rm()
                                 .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToHalfBump));
 
@@ -155,6 +154,8 @@ public class RobotContainer {
 
                 xManip.a().whileTrue(new HomeHood());
 
+                xManip.x().whileTrue(dumpFactory.ShootHalforPass());
+
                 xManip.rightPaddle().whileTrue(new HomeIntake(
                         false));
                 xManip.leftPaddle().whileTrue(new HomeIntake(true));
@@ -191,7 +192,7 @@ public class RobotContainer {
                         
                         drivetrain.setDefaultCommand(drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
 
-                        new Trigger(isMoving).debounce(0.15,DebounceType.kFalling).whileTrue(drivetrain.applyRequest(() -> drive
+                        new Trigger(isMoving).whileTrue(drivetrain.applyRequest(() -> drive
                                                                 .withVelocityX(-xDrive.getLeftY() * MaxSpeed 
                                                                                 * leftBumper.getAsDouble())
                                                                 .withVelocityY(-xDrive.getLeftX() * MaxSpeed 

@@ -316,8 +316,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     visionMeasurements.get(index).getAmbiguity());
 
             if (RobotContainer.useVision) {
-                this.addVisionMeasurement(visionMeasurements.get(index).getPose(),
-                        visionMeasurements.get(index).getTimeStamp());
+                // this.addVisionMeasurement(visionMeasurements.get(index).getPose(),
+                //         visionMeasurements.get(index).getTimeStamp());
                 SmartDashboard.putString("Vision/Pose Null error ",
                         "Ts null dude");
                 isVisionGood = (true);

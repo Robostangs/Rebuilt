@@ -61,7 +61,12 @@ public class AlignToHub {
                         double angleRad = (2 * Math.PI / numPoints) * i;
                         Translation2d point = hubPos.plus(
                                         new Translation2d(shootRadius, new Rotation2d(angleRad)));
-                        ringPoses.add(new Pose2d(point, new Rotation2d(angleRad)));
+
+                        Pose2d pose = new Pose2d(point, new Rotation2d(angleRad));
+                        if (Robot.isRed()) {
+                                pose = FlippingUtil.flipFieldPose(pose);
+                        }
+                        ringPoses.add(pose);
                 }
 
                 Robot.teleopField.getObject("Shooting Ring").setPoses(ringPoses);

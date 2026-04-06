@@ -81,7 +81,7 @@ public class Flywheel extends SubsystemBase {
     }
 
     public void setFlywheelVelocity(double rps) {
-        flywheelTargetVelocity.Velocity = rps + adjustVal;
+        flywheelTargetVelocity.Velocity = rps;
     }
 
     public void setFlywheelDC(double dc) {

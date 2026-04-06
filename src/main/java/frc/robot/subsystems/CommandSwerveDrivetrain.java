@@ -281,7 +281,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // photonVisionRight.periodic();
         // photonVisionLeft.periodic();
 
-        // visionPoses.clear();
+        visionPoses.clear();
         visionPoses.add(photonVisionBack);
         // // visionPoses.add(photonVisionRight);
         // visionPoses.add(photonVisionLeft);

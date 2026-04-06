@@ -60,7 +60,6 @@ public class RobotContainer {
         private final GenericHID xSim = new GenericHID(2);
         private static RobotContainer mInstance;
         public final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
-        private boolean isCappingSpeed = false;
 
         public static RobotContainer getInstance() {
                 if (mInstance == null) {

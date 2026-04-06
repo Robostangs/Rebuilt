@@ -19,7 +19,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class Flywheel extends SubsystemBase {
     TalonFX mainShooterMotor;
-    TalonFX slaceShooterMotor;
+    TalonFX slaveShooterMotor;
     public static Flywheel mInstance;
     public Pose2d targetPose;
     private double adjustVal = 0;
@@ -28,7 +28,7 @@ public class Flywheel extends SubsystemBase {
 
     public Flywheel() {
         mainShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
-        slaceShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
+        slaveShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
         configureFlywheelMotors();
         slaveControl = new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Opposed);
         SmartDashboard.putData(mInstance);
@@ -63,7 +63,7 @@ public class Flywheel extends SubsystemBase {
         flyWheelSlaveConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterSlaveMotorStatorCurrentLimit;
         flyWheelSlaveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        slaceShooterMotor.getConfigurator().apply(flyWheelSlaveConfig);
+        slaveShooterMotor.getConfigurator().apply(flyWheelSlaveConfig);
 
     }
 
@@ -82,7 +82,7 @@ public class Flywheel extends SubsystemBase {
     }
 
     public void setFlywheelVelocity(double rps) {
-        flywheelTargetVelocity.Velocity = rps + adjustVal;
+        flywheelTargetVelocity.Velocity = rps;
     }
 
     public void setFlywheelDC(double dc) {
@@ -110,15 +110,15 @@ public class Flywheel extends SubsystemBase {
     public void periodic() {
 
         SmartDashboard.putNumber("Flywheel/Main Velocity", mainShooterMotor.getVelocity().getValueAsDouble());
-        SmartDashboard.putNumber("Flywheel/Slave Velocity", slaceShooterMotor.getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Flywheel/Slave Velocity", slaveShooterMotor.getVelocity().getValueAsDouble());
         if (Math.abs(CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond) > 2
                 || flywheelTargetVelocity.Velocity == 0) {
             mainShooterMotor.set(0);
-            slaceShooterMotor.set(0);
+            slaveShooterMotor.set(0);
         } else {
             flywheelTargetVelocity.Velocity = flywheelTargetVelocity.Velocity + adjustVal;
             mainShooterMotor.setControl(flywheelTargetVelocity);
-            slaceShooterMotor.setControl(slaveControl);
+            slaveShooterMotor.setControl(slaveControl);
 
         }
 

@@ -40,10 +40,10 @@ public class AlignToHub {
 
                 double dist = hubToRobot.getNorm();
 
-                // if (dist < 0.01) {
-                // hubToRobot = new Translation2d(shootRadius, 0);
-                // dist = shootRadius;
-                // }
+                if (dist < 0.01) {
+                        hubToRobot = new Translation2d(shootRadius, 0);
+                        dist = shootRadius;
+                }
 
                 Translation2d targetTranslation = hubPos.plus(
                                 hubToRobot.times(shootRadius / dist));

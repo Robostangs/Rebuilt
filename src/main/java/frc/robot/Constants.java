@@ -99,6 +99,14 @@ public final class Constants {
                 public static final double feederSupplyLimit = 60;
                 public static final double kFeedDutyCycle = 0.4;
                 public static final int fuelSensorID = 0;
+                public static final double feederExtenderKP = 0;
+                public static final double feederExtenderKI = 0;
+                public static final double feederExtenderKD = 0;
+                public static final double feederExtenderKS = 0;
+                public static final double feederExtenderKG = 0;
+                public static final double extenderSensorToMechanismRatio = 0;
+                public static final double HopperExtenderCurrentLimit = 0;
+
 
         }
 

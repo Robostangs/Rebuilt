@@ -99,6 +99,19 @@ public class Flywheel extends SubsystemBase {
         adjustVal = adjustment.getAsDouble();
     }
 
+    public void setControl() {
+        if (Math.abs(CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond) > 2
+                || flywheelTargetVelocity.Velocity == 0) {
+            mainShooterMotor.set(0);
+            slaveShooterMotor.set(0);
+        } else {
+            flywheelTargetVelocity.Velocity = flywheelTargetVelocity.Velocity + adjustVal;
+            mainShooterMotor.setControl(flywheelTargetVelocity);
+            slaveShooterMotor.setControl(slaveControl);
+
+        }
+    }
+
     public boolean shooterAtTargetVelocity() {
         double currentVelocity = mainShooterMotor.getVelocity().getValueAsDouble();
         double targetVelocity = flywheelTargetVelocity.Velocity;
@@ -110,16 +123,6 @@ public class Flywheel extends SubsystemBase {
 
         SmartDashboard.putNumber("Flywheel/Main Velocity", mainShooterMotor.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Flywheel/Slave Velocity", slaveShooterMotor.getVelocity().getValueAsDouble());
-        if (Math.abs(CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond) > 2
-                || flywheelTargetVelocity.Velocity == 0) {
-            mainShooterMotor.set(0);
-            slaveShooterMotor.set(0);
-        } else {
-            flywheelTargetVelocity.Velocity = flywheelTargetVelocity.Velocity + adjustVal;
-            mainShooterMotor.setControl(flywheelTargetVelocity);
-            slaveShooterMotor.setControl(slaveControl);
-
-        }
 
         SmartDashboard.putNumber("Flywheel/Target Velocity", flywheelTargetVelocity.Velocity);
 

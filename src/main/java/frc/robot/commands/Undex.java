@@ -23,6 +23,7 @@ public class Undex extends Command {
             feeder.setDutyCycle(-1);
 
         // }
+        feeder.setControl();
     }
 
     @Override

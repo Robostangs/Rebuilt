@@ -39,6 +39,8 @@ public class setHoodPosition extends Command {
 
         hood.postStatus("Setting hood position to: " + hoodpos);
 
+        hood.setControl();
+
 
     }
 

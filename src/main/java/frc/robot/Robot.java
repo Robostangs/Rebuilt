@@ -268,7 +268,7 @@ public class Robot extends TimedRobotstangs {
     public void disabledPeriodic() {
         autoname = autoChooser.getSelected();
 
-        if (autoname != oldAutoname) {
+        if (!autoname.equals(oldAutoname)) {
 
             if (autoname != null) {
 

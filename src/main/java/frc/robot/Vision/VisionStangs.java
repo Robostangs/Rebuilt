@@ -41,6 +41,8 @@ public class VisionStangs {
         this.CameraName = LLname;
         bigAmbiguity = -1;
         isLL = true;
+
+        LimelightHelpers.SetFiducialIDFiltersOverride(LLname, Constants.VisionConstants.goodIDS);
     }
 
     private void Photonperiodic() {
@@ -63,6 +65,7 @@ public class VisionStangs {
 
         if (bigAmbiguity < Constants.VisionConstants.kPhotonAmbiguityThres) {
             // Only use the estimate if present and valid
+
             visionEst.ifPresent(est -> {
                 var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
 
@@ -86,58 +89,59 @@ public class VisionStangs {
          * internal imu with mode 2
          */
 
-        if (DriverStation.isDisabled()) {
+        boolean isDisabled = DriverStation.isDisabled();
+        CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
+
+        if (isDisabled) {
             LimelightHelpers.SetIMUMode(CameraName, 1);
+
+            LimelightHelpers.SetThrottle(CameraName, 200);
         } else {
 
             LimelightHelpers.SetRobotOrientation(CameraName,
-                    CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees(),
-                    0d,
+                    drivetrain.getState().Pose.getRotation().getDegrees(),
+                    drivetrain.getPigeon2().getAngularVelocityXWorld().getValueAsDouble(),
                     0d,
                     0d,
                     0d,
                     0d);
 
             LimelightHelpers.SetIMUMode(CameraName, 3);
+            LimelightHelpers.SetThrottle(CameraName, 0);
 
         }
 
-        LimelightHelpers.SetIMUAssistAlpha(CameraName, 0.4);
-
-        if (DriverStation.isDisabled()) {
-            NetworkTableInstance.getDefault().getTable(CameraName)
-                    .getEntry("throttle-set").setNumber(200);
-        } else {
-            NetworkTableInstance.getDefault().getTable(CameraName)
-                    .getEntry("throttle-set").setNumber(0);
-        }
         if (!Robot.isSimulation()) {
 
             LimelightHelpers.PoseEstimate fourPoseEsti;
-            if (DriverStation.isDisabled()) {
+            String mtLabel;
+            double yawRate = drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble();
+            boolean isFastJohn = Math.abs(yawRate) > Constants.VisionConstants.kVisionAngularThreshold;
 
+            if (isDisabled || !isFastJohn) {
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
-                SmartDashboard.putString("Vision/" + CameraName + "MT 1 or 2", "1 BC DISAB:ED");
-
+                mtLabel = isDisabled ? "MT 1 (disabled)" : "MT1(too fast)";
+            } else {
+                // look over this before comp
+                fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
+                mtLabel = "MT 2";
             }
 
-            else {
-                fourPoseEsti = LimelightHelpers
-                        .getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
-                SmartDashboard.putString("Vision/" + CameraName + "MT 1 or 2", "2 BC NOT DISABELED");
+            SmartDashboard.putString("Vision/" + CameraName + "/MT Mode ", mtLabel);
 
-            }
             if (isPosegoo(fourPoseEsti)) {
                 this.currentPose = fourPoseEsti.pose;
                 this.timestampSeconds = fourPoseEsti.timestampSeconds;
                 Robot.teleopField.getObject(CameraName + " Pose LL").setPose(fourPoseEsti.pose);
+
                 for (LimelightHelpers.RawFiducial fiducial : fourPoseEsti.rawFiducials) {
                     if (fiducial.ambiguity > bigAmbiguity) {
                         bigAmbiguity = fiducial.ambiguity;
                     }
                 }
-                SmartDashboard.putNumber("Vision/" + CameraName + " biggest ambiguity", bigAmbiguity);
-
+                SmartDashboard.putNumber("Vision/" + CameraName + "/Biggest Ambiguity", bigAmbiguity);
+            } else {
+                this.currentPose = null;
             }
         }
     }
@@ -158,7 +162,7 @@ public class VisionStangs {
         return CameraName;
     }
 
-    //TODO plot stds and make standard deviations based on this input
+    // TODO plot stds and make standard deviations based on this input
     public double[] getLLstds() {
         return NetworkTableInstance.getDefault().getTable("limelight").getEntry("stddevs")
                 .getDoubleArray(new double[12]);
@@ -169,7 +173,35 @@ public class VisionStangs {
     }
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
-        return false;
+        if (Robot.isSimulation()) {
+            SmartDashboard.putString("Vision" + CameraName + "/LL4_RejectReason", "Simulation mode");
+            return false;
+        }
+        if (yoPoseEsti == null) {
+            SmartDashboard.putString("Vision" + CameraName + "/LL4_RejectReason", "Pose null");
+            return false;
+        }
+        if (yoPoseEsti.tagCount < 2) {
+            SmartDashboard.putString("Vision" + CameraName + "/LL4_RejectReason",
+                    "Not enough tags: " + yoPoseEsti.tagCount);
+            return false;
+        }
+        if (yoPoseEsti.avgTagDist > Constants.VisionConstants.kLLDisThres) {
+            SmartDashboard.putString("Vision" + CameraName + "/LL4_RejectReason",
+                    "Too far, Dis is: " + yoPoseEsti.avgTagDist);
+
+            return false;
+        }
+
+        SmartDashboard.putNumber("Vision" + CameraName + "/Avg Dis" + CameraName, yoPoseEsti.avgTagDist);
+
+        if (!RobotContainer.useVision) {
+            SmartDashboard.putString("Vision" + CameraName + "/LL4_RejectReason" + CameraName, "useVision disabled");
+        } else {
+            SmartDashboard.putString("Vision" + CameraName + "/LL4_RejectReason", "Accepted");
+        }
+
+        return RobotContainer.useVision;
     }
 
     public void periodic() {

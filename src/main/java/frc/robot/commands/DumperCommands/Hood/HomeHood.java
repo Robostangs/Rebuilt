@@ -26,13 +26,13 @@ public class HomeHood extends Command {
     public void initialize() {
         hood.postStatus("Hood homing");
         hood.setHoodDutyCycle(Constants.HoodConstants.kHoodHomeDutyCycle);
-        // hood.setHoodStatorCurrentConfig();
+        hood.setMM(false);
 
     }
 
     @Override
     public void execute() {
-        if(hood.getStatorCurrent() < -13){
+        if(hood.getStatorCurrent() < -30){
             timer.start();
         }
         else{
@@ -48,8 +48,9 @@ public class HomeHood extends Command {
         hood.setHoodDutyCycle(0);
         hood.setHoodPosition(Constants.DumperConstants.kHomePosition);
         hood.postStatus("Hood homed");
+                hood.setMM(true);
+
         hood.setIsHome(true);
-        // hood.configureHoodMotor();
 
     }
 

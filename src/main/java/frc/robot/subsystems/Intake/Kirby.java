@@ -10,13 +10,12 @@ public class Kirby extends SubsystemBase {
     TalonFX kirbyWheels;
     TalonFXConfiguration kirbyConfig;
     private static Kirby mInstance;
-    
+
     /** The intake wheels. */
     public Kirby() {
 
         kirbyWheels = new TalonFX(Constants.KirbyConstants.kirbyWheelsID);
         setIntakePivotConfig();
-        
 
     }
 
@@ -27,12 +26,12 @@ public class Kirby extends SubsystemBase {
         return mInstance;
     }
 
-    public void setIntakePivotConfig()
-    {
+    public void setIntakePivotConfig() {
         kirbyConfig = new TalonFXConfiguration();
         kirbyConfig.CurrentLimits.SupplyCurrentLimit = Constants.KirbyConstants.IntakeWheelCurrentLimit;
-    }
+        kirbyConfig.CurrentLimits.StatorCurrentLimit = Constants.KirbyConstants.IntakeWheelsStatorLimit;
 
+    }
 
     public void setKirbyWheels(double speed) {
         kirbyWheels.set(speed);

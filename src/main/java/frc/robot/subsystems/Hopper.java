@@ -11,23 +11,28 @@ import frc.robot.Constants;
 
 public class Hopper extends SubsystemBase {
     public TalonFX roller;
+
     public static Hopper mInstance;
 
     Alert hopperAlert = new Alert("Hopper roller motor is HOT", AlertType.kError);
 
     public Hopper() {
+
         roller = new TalonFX(Constants.HopperConstants.kRollerID);
+
     }
 
     public void configureLeftRighter() {
-        TalonFXConfiguration roller = new TalonFXConfiguration();
+        TalonFXConfiguration rollerConfigs = new TalonFXConfiguration();
 
-        //TODO figure out when pid tune
-        roller.CurrentLimits.StatorCurrentLimit = 100;
-        roller.CurrentLimits.StatorCurrentLimitEnable = true;
+        rollerConfigs.CurrentLimits.StatorCurrentLimit = 100;
+        rollerConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+
+        roller.getConfigurator().apply(rollerConfigs);
 
     }
 
+    
     public void setRollerDutyCycle(double dutyCycle) {
         roller.set(dutyCycle);
     }
@@ -42,7 +47,13 @@ public class Hopper extends SubsystemBase {
         }
         return mInstance;
     }
+
     @Override
     public void periodic() {
+        if (roller.getAncillaryDeviceTemp().getValueAsDouble() > 80) {
+            hopperAlert.set(true);
+        } else {
+            hopperAlert.set(false);
+        }
     }
 }

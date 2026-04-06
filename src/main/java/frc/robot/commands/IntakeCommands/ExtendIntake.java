@@ -14,14 +14,14 @@ public class ExtendIntake extends Command {
     public ExtendIntake() {
         kirby = Kirby.getInstance();
         pivot = IntakePivot.getInstance();
-        addRequirements(kirby);
+        addRequirements(kirby,pivot);
     }
     @Override
     public void initialize() {
         pivot.setExtenderPosition(Constants.KirbyConstants.kExtendSetpoint);
         kirby.setKirbyWheels(Constants.KirbyConstants.kirbyIntakeSpeed);
         kirby.postStatus("Wheels going at: "+Constants.KirbyConstants.kirbyIntakeSpeed );
-                pivot.postStatus("Extended");
+        pivot.postStatus("Extended");
     }
 
     public void execute() {

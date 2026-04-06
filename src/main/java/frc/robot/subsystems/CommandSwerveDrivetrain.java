@@ -61,16 +61,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
     private VisionStangs photonVisionBack = new VisionStangs(Constants.VisionConstants.kLimelightFourR);
-    // private VisionStangs photonVisionLeft = new VisionStangs(Constants.VisionConstants.kLimelightFourR);
+    // private VisionStangs photonVisionLeft = new
+    // VisionStangs(Constants.VisionConstants.kLimelightFourR);
 
-    // private VisionStangs photonVisionRight = new VisionStangs(Constants.VisionConstants.kPhotonCamNameRight,
-    //         Constants.VisionConstants.kRobotToCamRight);
+    // private VisionStangs photonVisionRight = new
+    // VisionStangs(Constants.VisionConstants.kPhotonCamNameRight,
+    // Constants.VisionConstants.kRobotToCamRight);
 
     private ArrayList<VisionStangs> visionPoses = new ArrayList<>();
 
     private final SwerveRequest.ApplyRobotSpeeds AutoDrive = new SwerveRequest.ApplyRobotSpeeds();
     private boolean isVisionGood = false;
-
 
     /*
      * SysId routine for characterizing translation. This is used to find PID gains
@@ -270,64 +271,55 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         SmartDashboard.putNumber("Angular john",
-                CommandSwerveDrivetrain.getInstance().getPigeon2().getAngularVelocityZWorld()
-                        .getValueAsDouble());
-
-
-                    SmartDashboard.putBoolean("Vision/UseVision", RobotContainer.useVision);
+                getPigeon2().getAngularVelocityZWorld().getValueAsDouble());
+        SmartDashboard.putBoolean("Vision/UseVision", RobotContainer.useVision);
 
         photonVisionBack.periodic();
-        // photonVisionRight.periodic();
-        // photonVisionLeft.periodic();
 
-        // visionPoses.clear();
+        visionPoses.clear();
         visionPoses.add(photonVisionBack);
-        // // visionPoses.add(photonVisionRight);
-        // visionPoses.add(photonVisionLeft);
 
         setVisionPose(visionPoses);
 
         Robot.teleopField.setRobotPose(this.getState().Pose);
-        //SmartDashboard.putBoolean("isVisionGood", isVisionGood);
     }
 
     private void setVisionPose(ArrayList<VisionStangs> visionMeasurements) {
-        double smallestAmbiguity = 1;
-        int index = -1;
-        for (int c = 0; c < visionMeasurements.size(); c++) {
-            if (visionMeasurements.get(c) != null) {
+        isVisionGood = false;
 
-                double cAmbiguity = visionMeasurements.get(c).getAmbiguity();
-                
-                if (cAmbiguity < smallestAmbiguity &&
-                    cAmbiguity > 0 && 
-                    cAmbiguity < 0.5) {
-                    smallestAmbiguity = cAmbiguity;
-                    index = c;
-                }
+        if (!RobotContainer.useVision) {
+            return;
+        }
+
+        VisionStangs bestCamera = null;
+        double smallestAmbiguity = Constants.VisionConstants.kLLAmbiguityThres;
+
+        for (VisionStangs camera : visionMeasurements) {
+            if (camera == null || camera.getPose() == null) {
+                continue;
+            }
+
+            double ambiguity = camera.getAmbiguity();
+
+            if (ambiguity > 0 && ambiguity < smallestAmbiguity) {
+                smallestAmbiguity = ambiguity;
+                bestCamera = camera;
             }
         }
 
-        if (index != -1 && visionMeasurements.get(index).getPose() != null) {
-            SmartDashboard.putString("Vision/Best pose ",
-                    visionMeasurements.get(index).getName());
-            SmartDashboard.putNumber("Vision/Best Pose ambiguity: ",
-                    visionMeasurements.get(index).getAmbiguity());
-
-            if (RobotContainer.useVision) {
-                this.addVisionMeasurement(visionMeasurements.get(index).getPose(),
-                        visionMeasurements.get(index).getTimeStamp());
-                SmartDashboard.putString("Vision/Pose Null error ",
-                        "Ts null dude");
-                isVisionGood = (true);
-            }
-
-        } else {
-            SmartDashboard.putString("Vision/Pose Null error ",
-                    "Ts null dude");
-            isVisionGood = (false);
-
+        if (bestCamera == null) {
+            SmartDashboard.putString("Vision/Status", "No valid measurement");
+            return;
         }
+
+        this.addVisionMeasurement(
+                bestCamera.getPose(),
+                bestCamera.getTimeStamp());
+
+        isVisionGood = true;
+
+        SmartDashboard.putString("Vision/Best Camera", bestCamera.getName());
+        SmartDashboard.putNumber("Vision/Best Ambiguity", bestCamera.getAmbiguity());
     }
 
     private void startSimThread() {

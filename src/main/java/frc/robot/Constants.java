@@ -104,8 +104,7 @@ public final class Constants {
                 public static final double feederExtenderKD = 0;
                 public static final double feederExtenderKS = 0;
                 public static final double feederExtenderKG = 0;
-                public static final double extenderSensorToMechanismRatio = 0;
-                public static final double HopperExtenderCurrentLimit = 0;
+                public static final double HopperExtenderCurrentLimit = 60;
 
 
         }

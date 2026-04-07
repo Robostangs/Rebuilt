@@ -35,7 +35,6 @@ public class Feeder extends SubsystemBase {
         feedConfigurator.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         
-        feedConfigurator.Feedback.SensorToMechanismRatio = Constants.FeederConstants.extenderSensorToMechanismRatio;
         feedConfigurator.CurrentLimits.SupplyCurrentLimit = Constants.FeederConstants.HopperExtenderCurrentLimit;
         feedConfigurator.Slot0.kP = Constants.FeederConstants.feederExtenderKP;
         feedConfigurator.Slot0.kI = Constants.FeederConstants.feederExtenderKI;

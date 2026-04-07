@@ -13,6 +13,7 @@ import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.StartIntake;
+import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Dumper.Flywheel;
 import frc.robot.subsystems.Dumper.Hood;
 
@@ -33,7 +34,7 @@ public class dumpFactory {
                                                 new WaitUntilCommand(
                                                                 () -> Flywheel.getInstance().shooterAtTargetVelocity())
                                                                 .andThen(new Index())
-                                                                .alongWith(new WaitCommand(0.3)
+                                                                .alongWith(new WaitUntilCommand(() -> Feeder.getInstance().feederAtTargetVelocity())
                                                                                 .andThen(new RunHopper())));
         }
         

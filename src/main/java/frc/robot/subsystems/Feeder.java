@@ -34,7 +34,6 @@ public class Feeder extends SubsystemBase {
         feedConfigurator.CurrentLimits.SupplyCurrentLimit = Constants.FeederConstants.feederSupplyLimit;
         feedConfigurator.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        
         feedConfigurator.CurrentLimits.SupplyCurrentLimit = Constants.FeederConstants.HopperExtenderCurrentLimit;
         feedConfigurator.Slot0.kP = Constants.FeederConstants.feederExtenderKP;
         feedConfigurator.Slot0.kI = Constants.FeederConstants.feederExtenderKI;
@@ -43,7 +42,6 @@ public class Feeder extends SubsystemBase {
         feedConfigurator.Slot0.kG = Constants.FeederConstants.feederExtenderKG;
         feedConfigurator.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         feedConfigurator.Slot0.GravityArmPositionOffset = 0.00;
-
 
         feederMotor.getConfigurator().apply(feedConfigurator);
     }
@@ -58,6 +56,12 @@ public class Feeder extends SubsystemBase {
 
     public void setFeederVelocity(double velocityRPS) {
         feederTargetVelocity.Velocity = velocityRPS;
+    }
+
+    public boolean feederAtTargetVelocity() {
+        double currentVelocity = feederMotor.getVelocity().getValueAsDouble();
+        double targetVelocity = feederTargetVelocity.Velocity;
+        return Math.abs(currentVelocity - targetVelocity) <= Constants.FlywheelConstants.kShooterVelocityTolerance;
     }
 
     public void setFeederControl(VelocityVoltage control) {
@@ -75,7 +79,6 @@ public class Feeder extends SubsystemBase {
     public void setFeederMode(NeutralModeValue mode) {
         feederMotor.setNeutralMode(mode);
     }
-
 
     public void postStatus(String status) {
         SmartDashboard.putString("Feeder/status", status);
@@ -97,7 +100,6 @@ public class Feeder extends SubsystemBase {
         SmartDashboard.putNumber("Feeder/Duty Cycle", feederMotor.getDutyCycle().getValueAsDouble());
         SmartDashboard.putNumber("Feeder/Velocity ", feederMotor.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Feeder/Torque Current ", feederMotor.getTorqueCurrent().getValueAsDouble());
-
 
     }
 }

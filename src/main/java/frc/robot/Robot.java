@@ -213,10 +213,8 @@ public class Robot extends TimedRobotstangs {
         double intakePivotDC = SmartDashboard.getNumber("PitTest/IntakePivotDC", 0);
 
         if (hoodDC != 0) {
-            Hood.getInstance().setMM(false);
             Hood.getInstance().setHoodDutyCycle(hoodDC);
         } else {
-            Hood.getInstance().setMM(true);
         }
         if (intakeWheelsDC != 0) {
             Kirby.getInstance().setKirbyWheels(intakeWheelsDC);
@@ -232,7 +230,7 @@ public class Robot extends TimedRobotstangs {
             Flywheel.getInstance().setFlywheelDC(flywheelDC);
         }
         if (flywheelVelocity != 0) {
-            Flywheel.getInstance().setFlywheelVelocity(flywheelVelocity);
+            Flywheel.getInstance().setVelocity(flywheelVelocity);
         }
 
     }
@@ -445,17 +443,31 @@ public class Robot extends TimedRobotstangs {
         CommandScheduler.getInstance().cancelAll();
         setupPitTestDashboard();
         setupAutoPitTest();
+        SmartDashboard.putNumber("Regression Hood Setpoint", 0);
+        SmartDashboard.putNumber("Regression Flywheel Setpoint", 0);     
+
+
+        Hood.getInstance().setDefaultCommand( new setHoodPosition(() ->SmartDashboard.getNumber("Regression Hood Setpoint", 0)));
+        Flywheel.getInstance().setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0)));
+
+        CommandScheduler.getInstance().schedule(
+        new setHoodPosition(() ->SmartDashboard.getNumber("Regression Hood Setpoint", 0)), 
+        new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0))
+        );
+
 
     }
 
     @Override
     public void testPeriodic() {
-        pitTestPeriodic();
+
 
     }
 
     @Override
     public void testExit() {
+
+        
     }
 
     public static boolean isRed() {

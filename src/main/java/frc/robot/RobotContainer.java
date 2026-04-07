@@ -123,20 +123,21 @@ public class RobotContainer {
                 xDrive.rightPaddle().whileTrue(new ExtendIntake());
                 xDrive.leftPaddle().whileTrue(new RetractIntake());
 
+
                 // TODO Find ts pose
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(
                                                 !Robot.isRed() ? Constants.FieldConstants.resetPose
                                                                 : FlippingUtil.flipFieldPose(
                                                                                 Constants.FieldConstants.resetPose))));
-
+                
                 xDrive.povUp().onTrue(drivetrain.runOnce(
                                 () -> drivetrain.seedFieldCentric()));
 
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                xDrive.x().whileTrue(new StartIntake());
+                xDrive.x().whileTrue(dumpFactory.feed());
 
                 xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2));
@@ -150,7 +151,8 @@ public class RobotContainer {
                 xManip.b().onTrue(
                                 new InstantCommand(() -> Robot.toggleShooterPass()));
 
-                xManip.y().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
+                // xManip.y().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
+
 
                 xManip.a().whileTrue(new HomeHood());
 

@@ -1,11 +1,13 @@
 package frc.robot.commands.DumperCommands.Hood;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Dumper.Hood;
 
 public class setHoodPosition extends Command {
     Hood hood;
-    double hoodpos;
+    DoubleSupplier hoodpos;
     boolean smort;
 
     public setHoodPosition() {
@@ -14,7 +16,7 @@ public class setHoodPosition extends Command {
         addRequirements(hood);
     }
 
-    public setHoodPosition(double hoodpos) {
+    public setHoodPosition(DoubleSupplier hoodpos) {
         this.hoodpos = hoodpos;
         hood = Hood.getInstance();
         this.smort = false;
@@ -28,18 +30,21 @@ public class setHoodPosition extends Command {
 
     @Override
     public void execute() {
-
+double currentTarget;
 
         if(smort) {
-            hoodpos = hood.getHoodAngle();
+            
+            currentTarget = hood.getHoodAngle();
+        }
+        else{
+            currentTarget = hoodpos.getAsDouble();
         }
 
-        hood.setMotionMagicTarget(hoodpos);
-        hood.setMotionMagic();
+        
+        hood.setMotionMagic(currentTarget);
 
         hood.postStatus("Setting hood position to: " + hoodpos);
 
-        hood.setControl();
 
 
     }

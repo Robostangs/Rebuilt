@@ -28,6 +28,7 @@ public class SetPivotPosition extends Command {
 
     @Override
     public void execute() {
+        pivot.setTargetPosition();
 
     }
 

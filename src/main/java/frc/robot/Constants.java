@@ -97,7 +97,7 @@ public final class Constants {
 
                 public static final int feederMotorID = 45;
                 public static final double feederSupplyLimit = 60;
-                public static final double kFeedDutyCycle = 0.4;
+                public static final double kFeedDutyCycle = 1d;
                 public static final int fuelSensorID = 0;
                 public static final double feederExtenderKP = 0;
                 public static final double feederExtenderKI = 0;
@@ -143,9 +143,9 @@ public final class Constants {
                 public static final int hopperExtenderID = 59;
                 public static final double kirbyIntakeSpeed = -1;
                 public static final double kirbyOuttakeSpeed = 0.5;
-                public static final double hopperExtenderKP = 1000;
-                public static final double hopperExtenderKI = 100;
-                public static final double hopperExtenderKD = 100;
+                public static final double hopperExtenderKP = 1200;
+                public static final double hopperExtenderKI = 850;
+                public static final double hopperExtenderKD = 150;
                 public static final double hopperExtenderKS = 15;
                 public static final double extenderSensorToMechanismRatio = 4.0 * 4 * 48 / 16;
                 public static final double kExtendSetpoint = 0.02;
@@ -156,9 +156,9 @@ public final class Constants {
                 public static final double hopperExtenderKG = 40;
                 public static final double kHomeDutyCycle = 0.1;
                 public static final double kHomePosition = 0.29;
-                public static final double extenderPositionTolerance = 0.03;
+                public static final double extenderPositionTolerance = 0.015;
                 public static final double IntakeWheelsStatorLimit = 40;
-		public static final double IntakePivotOscillateUpPos = 0.5;
+		public static final double IntakePivotOscillateUpPos = 0.4;
         public static final double kIntakePivotBump = .15;
         }
 
@@ -180,7 +180,7 @@ public final class Constants {
                 public static final double kHoodStatorCurrentLimit = 40;
                 public static final double kHoodHomeTimeout = .5;
                 public static final double kHoodUpPos = 0.8;
-                public static final double kPosAtOppositeAlliancePass = 0.7;
+                public static final double kPosAtOppositeAlliancePass = 1.3;
                 public static final double kDumbShootHoodPos = 0;
                 public static final double kHalfSetpoint = 0.17;
                 public static final double kTrenchSetpoint = 0;

@@ -30,6 +30,7 @@ public class Flywheel extends SubsystemBase {
         mainShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
         slaveShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
         configureFlywheelMotors();
+        
         slaveControl = new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Opposed);
     }
 
@@ -80,9 +81,6 @@ public class Flywheel extends SubsystemBase {
         }
     }
 
-    public void setFlywheelVelocity(double rps) {
-        flywheelTargetVelocity.Velocity = rps;
-    }
 
     public void setFlywheelDC(double dc) {
         mainShooterMotor.set(dc);
@@ -99,18 +97,15 @@ public class Flywheel extends SubsystemBase {
         adjustVal = adjustment.getAsDouble();
     }
 
-    public void setControl() {
-        if (Math.abs(CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond) > 2
-                || flywheelTargetVelocity.Velocity == 0) {
-            mainShooterMotor.set(0);
-            slaveShooterMotor.set(0);
-        } else {
-            flywheelTargetVelocity.Velocity = flywheelTargetVelocity.Velocity + adjustVal;
+    public void setVelocity(double target){
+        flywheelTargetVelocity.Velocity = target;
+
             mainShooterMotor.setControl(flywheelTargetVelocity);
             slaveShooterMotor.setControl(slaveControl);
 
-        }
     }
+
+
 
     public boolean shooterAtTargetVelocity() {
         double currentVelocity = mainShooterMotor.getVelocity().getValueAsDouble();

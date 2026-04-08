@@ -19,6 +19,7 @@ public class setKirbyWheels extends Command {
     @Override
     public void initialize() {
         kirby.setKirbyWheels(speed.getAsDouble());
+        kirby.postStatus("Setting kirby wheels to speed: " + speed.getAsDouble());
     }
 
 

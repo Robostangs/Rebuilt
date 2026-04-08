@@ -30,6 +30,7 @@ public class MovePivot extends Command {
     @Override
     public void execute() {
         pivot.setDC(dutyCycle.getAsDouble());
+        pivot.postStatus("Moving pivot at duty cycle: " + dutyCycle.getAsDouble());
 
     }
 

@@ -142,6 +142,6 @@ public class AlignToHub {
                                         new InstantCommand(() -> SmartDashboard.putBoolean("IsAligned", true)));
                 }, Set.of(CommandSwerveDrivetrain.getInstance()));
 
-                return alignCommand;
+                return alignCommand.withName("Auto align to hub");
         }
 }

@@ -146,8 +146,7 @@ public class RobotContainer {
 
                 xManip.a().whileTrue(new HomeHood());
 
-                xManip.rightPaddle().whileTrue(new HomeIntake(
-                                false));
+                xManip.rightPaddle().whileTrue(new HomeIntake(false));
                 xManip.leftPaddle().whileTrue(new HomeIntake(true));
 
                 xManip.rightTrigger().whileTrue(new setHoodDutyCycle(() -> xManip.getLeftTriggerAxis() * -0.2));

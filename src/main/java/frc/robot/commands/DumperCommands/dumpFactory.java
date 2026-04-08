@@ -5,7 +5,6 @@ import java.util.Set;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.FeederCommands.setFeederSpeed;
@@ -47,13 +46,13 @@ public class DumpFactory {
 
         }
 
-        public static Command ShootRegression() {
+        public static Command RegressionShoot() {
 
                 return new ChargeUp()
                                 .alongWith(
                                                 new setHoodPosition())
                                 .alongWith(
-                                                SmartFeed());
+                                                SmartFeed()).withName("Regression Shoot Command");
         }
 
         public static Command Pass() {
@@ -61,19 +60,19 @@ public class DumpFactory {
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 .alongWith(
-                                                SmartFeed());
+                                                SmartFeed()).withName("Pass Command");
         }
 
         public static Command SmartShoot() {
                 if (Robot.isPassing()) {
                         return Pass();
                 } else {
-                        return ShootRegression().alongWith(IntakeFactory.OscillateIntake());
+                        return RegressionShoot().alongWith(IntakeFactory.OscillateIntake());
                 }
         }
 
         public static Command PhotoShoot() {
-                return ShootRegression().alongWith(IntakeFactory.OscillateIntake());
+                return RegressionShoot().alongWith(IntakeFactory.OscillateIntake());
         }
 
 }

@@ -52,7 +52,6 @@ public class ChargeUp extends Command {
     @Override
     public void end(boolean interrupted) {
         shooter.postStatus("Charged");
-        shooter.setFlywheelDC(0);
     }
 
 }

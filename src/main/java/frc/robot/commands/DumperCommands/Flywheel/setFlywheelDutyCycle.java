@@ -24,6 +24,7 @@ public class setFlywheelDutyCycle extends Command{
   @Override
   public void execute() {
     flywheel.setFlywheelDC(speed.getAsDouble());
+    flywheel.postStatus("Setting flywheel duty cycle to " + speed.getAsDouble());
   }
 
   @Override

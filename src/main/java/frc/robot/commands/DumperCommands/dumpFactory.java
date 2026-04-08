@@ -56,8 +56,7 @@ public class dumpFactory {
                                                 new WaitUntilCommand(
                                                                 () -> Flywheel.getInstance().shooterAtTargetVelocity())
                                                                 .andThen(new Index())
-                                                                .alongWith(new WaitUntilCommand(() -> Feeder
-                                                                                .getInstance().feederAtTargetVelocity())
+                                                                .alongWith(new WaitUntilCommand(0.3)
                                                                                 .andThen(new RunHopper())));
         }
 

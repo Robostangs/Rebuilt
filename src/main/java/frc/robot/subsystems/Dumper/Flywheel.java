@@ -40,6 +40,8 @@ public class Flywheel extends SubsystemBase {
         flywheelConfig.CurrentLimits.SupplyCurrentLimit = Constants.DumperConstants.kShooterSupplyCurrentLimit;
         flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterMotorStatorCurrentLimit;
 
+        flywheelConfig.CurrentLimits.SupplyCurrentLowerTime = 2;
+
         flywheelConfig.Slot0.kP = Constants.FlywheelConstants.kShooterMotorP;
         flywheelConfig.Slot0.kI = Constants.FlywheelConstants.kShooterMotorI;
         flywheelConfig.Slot0.kD = Constants.FlywheelConstants.kShooterMotorD;
@@ -58,12 +60,8 @@ public class Flywheel extends SubsystemBase {
         // Apply the PID configurations to the shooter motor
         mainShooterMotor.getConfigurator().apply(flywheelConfig);
 
-        TalonFXConfiguration flyWheelSlaveConfig = new TalonFXConfiguration();
 
-        flyWheelSlaveConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterSlaveMotorStatorCurrentLimit;
-        flyWheelSlaveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-
-        slaveShooterMotor.getConfigurator().apply(flyWheelSlaveConfig);
+        slaveShooterMotor.getConfigurator().apply(flywheelConfig);
 
     }
 

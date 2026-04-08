@@ -132,7 +132,7 @@ public final class Constants {
                 public static final double shooterMotionMagicAcceleration = 0;
                 public static final double shooterMotionMagicJerk = 0;
                 public static final double kShooterVelocityTolerance = -5;
-                public static final double kShooterSupplyCurrentLimit = 50;
+                public static final double kShooterSupplyCurrentLimit = 100;
 
         }
 

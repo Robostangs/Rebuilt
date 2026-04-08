@@ -1,35 +1,39 @@
+package frc.robot.FeederCommands;
 
-package frc.robot.commands;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Dumper.Flywheel;
-public class Undex extends Command {
-    Feeder feeder;
 
-    public Undex() {
+public class Index extends Command {
+    Feeder feeder;
+    DoubleSupplier feedDC;
+
+    public Index(DoubleSupplier feedDC) {
         feeder = Feeder.getInstance();
+        this.feedDC = feedDC;
+
         addRequirements(feeder);
     }
 
     @Override
     public void initialize() {
 
-        feeder.postStatus("Undex started: " + -1);
+        feeder.postStatus("Index started: " + feedDC);
     }
 
     public void execute() {
-        // if (Flywheel.getInstance().shooterAtTargetVelocity()) {
-            feeder.setDutyCycle(-1);
 
-        // }
-        feeder.setControl();
+            feeder.setDutyCycle(feedDC.getAsDouble());
+        
     }
 
     @Override
     public void end(boolean interrupted) {
         feeder.setDutyCycle(0.0);
-        feeder.postStatus("Undex ended");
+        feeder.postStatus("Index ended");
     }
 
     @Override

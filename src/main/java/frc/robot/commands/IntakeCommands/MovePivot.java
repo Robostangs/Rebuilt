@@ -38,7 +38,6 @@ public class MovePivot extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        kirby.setKirbyWheels(0.0);
     }
 
     @Override

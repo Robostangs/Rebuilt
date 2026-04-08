@@ -41,22 +41,26 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
+import frc.robot.FeederCommands.Index;
 import frc.robot.Stable.LimelightHelpers;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.AlignToHub;
 import frc.robot.commands.AutoAlign;
-import frc.robot.commands.Index;
 import frc.robot.commands.DumperCommands.dumpFactory;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
+import frc.robot.commands.DumperCommands.Flywheel.setFlywheelDutyCycle;
+import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
+import frc.robot.commands.IntakeCommands.MovePivot;
 import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.SetPivotPosition;
 import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Dumper.Flywheel;
 import frc.robot.subsystems.Dumper.Hood;
 
@@ -133,6 +137,15 @@ public class Robot extends TimedRobotstangs {
         configureTeleopTab();
         loadNamedCommands();
 
+        Hood.getInstance().setDefaultCommand( new setHoodDutyCycle(() -> 0d));
+        Flywheel.getInstance().setDefaultCommand(new setFlywheelDutyCycle(() -> 0d));
+        Feeder.getInstance().setDefaultCommand(new Index(() -> 0d));
+        IntakePivot.getInstance().setDefaultCommand(new MovePivot(() -> 0d));
+        Kirby.getInstance().setDefaultCommand(new StartIntake(() -> 0));
+        Hopper.getInstance().setDefaultCommand(new RunHopper(() -> 0d));
+
+
+
     }
 
     void setupAutoPitTest() {
@@ -151,13 +164,13 @@ public class Robot extends TimedRobotstangs {
                 .andThen(new InstantCommand(() -> postPitTestStatus("Extending Intake")))
                 .andThen(new ExtendIntake())
                 .andThen(new InstantCommand(() -> postPitTestStatus("Starting Intake Wheels")))
-                .andThen(new StartIntake().withTimeout(7))
+                .andThen(new StartIntake(() -> -1).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Running Hopper")))
-                .andThen(new RunHopper().withTimeout(7))
+                .andThen(new RunHopper(() -> 0d).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
                 .andThen(new ChargeUp().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
-                .andThen(new Index().withTimeout(7))
+                .andThen(new Index(() -> 0).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
                 .andThen(new setHoodPosition().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Retracting Intake")))
@@ -246,6 +259,9 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void disabledInit() {
+
+           
+
 
         for (String name : AutoBuilder.getAllAutoNames()) {
             autoChooser.addOption(name, name);
@@ -338,6 +354,8 @@ public class Robot extends TimedRobotstangs {
         CommandScheduler.getInstance().cancelAll();
 
         lastMatchSecond = Robot.isSimulation() ? (int) Timer.getFPGATimestamp() : (int) DriverStation.getMatchTime();
+
+     
 
     }
 
@@ -467,7 +485,7 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void testExit() {
 
-        
+
     }
 
     public static boolean isRed() {

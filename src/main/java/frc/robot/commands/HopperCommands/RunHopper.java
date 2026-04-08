@@ -1,5 +1,7 @@
 package frc.robot.commands.HopperCommands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Feeder;
@@ -9,9 +11,11 @@ import frc.robot.subsystems.Dumper.Flywheel;
 public class RunHopper extends Command {
 
     Hopper hopper;
+    DoubleSupplier speed;
 
-    public RunHopper() {
+    public RunHopper(DoubleSupplier speed) {
         hopper = Hopper.getInstance();
+        this.speed = speed;
         addRequirements(hopper);
     }
 
@@ -23,16 +27,13 @@ public class RunHopper extends Command {
     @Override
     public void execute() {
         hopper.postRollerStatus("Going at DC " + Constants.HopperConstants.kRollerDC);
-        if (Flywheel.getInstance().shooterAtTargetVelocity()&& Feeder.getInstance().feederAtTargetVelocity()) {
 
-            hopper.setRollerDutyCycle(Constants.HopperConstants.kRollerDC);
-        }
+        hopper.setRollerDutyCycle(speed.getAsDouble());
 
     }
 
     @Override
     public void end(boolean interrupted) {
-        hopper.setRollerDutyCycle(0);
         hopper.postRollerStatus("Stopped");
     }
 

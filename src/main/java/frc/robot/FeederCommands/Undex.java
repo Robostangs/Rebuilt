@@ -1,14 +1,13 @@
-package frc.robot.commands;
+
+package frc.robot.FeederCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Dumper.Flywheel;
-
-public class Index extends Command {
+public class Undex extends Command {
     Feeder feeder;
 
-    public Index() {
+    public Undex() {
         feeder = Feeder.getInstance();
         addRequirements(feeder);
     }
@@ -16,19 +15,21 @@ public class Index extends Command {
     @Override
     public void initialize() {
 
-        feeder.postStatus("Index started: " + Constants.FeederConstants.kFeedDutyCycle);
+        feeder.postStatus("Undex started: " + -1);
     }
 
     public void execute() {
+        // if (Flywheel.getInstance().shooterAtTargetVelocity()) {
+            feeder.setDutyCycle(-1);
 
-            feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
-        
+        // }
+        feeder.setControl();
     }
 
     @Override
     public void end(boolean interrupted) {
         feeder.setDutyCycle(0.0);
-        feeder.postStatus("Index ended");
+        feeder.postStatus("Undex ended");
     }
 
     @Override

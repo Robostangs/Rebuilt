@@ -4,7 +4,6 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Dumper.Flywheel;
-import frc.robot.subsystems.Dumper.Hood;
 
 public class setFlywheelDutyCycle extends Command{
    
@@ -29,7 +28,6 @@ public class setFlywheelDutyCycle extends Command{
 
   @Override
   public void end(boolean interrupted) {
-    flywheel.setFlywheelDC(0);
 
   }
 

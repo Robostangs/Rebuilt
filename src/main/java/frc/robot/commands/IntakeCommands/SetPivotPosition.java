@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake.IntakePivot;
 
 
-public class SetPivotPosition extends Command {
+public class setPivotPosition extends Command {
     IntakePivot pivot;
     DoubleSupplier dutyCycle;
     double pos;
 
   
-    public SetPivotPosition(double position) {
+    public setPivotPosition(double position) {
         pivot = IntakePivot.getInstance();
         this.pos = position;
 

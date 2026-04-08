@@ -4,7 +4,6 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake.IntakePivot;
-import frc.robot.subsystems.Intake.Kirby;
 
 /**
  * Spins the Kirby intake wheels at a given duty cycle while scheduled.

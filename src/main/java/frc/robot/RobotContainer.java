@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Stable.ControllerStangs;
-import frc.robot.commands.DumperCommands.dumpFactory;
+import frc.robot.commands.DumperCommands.DumpFactory;
 import frc.robot.commands.DumperCommands.Hood.HomeHood;
 import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
 import frc.robot.commands.IntakeCommands.HomeIntake;
@@ -30,7 +30,6 @@ import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.AlignToHub;
 import frc.robot.commands.AutoAlign;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Dumper.Flywheel;
 
 public class RobotContainer {
         public static boolean useVision = true;
@@ -90,21 +89,21 @@ public class RobotContainer {
                 return RobotContainer.getInstance().rumbleController(secs, RobotContainer.getInstance().xManip);
         }
 
-        /**TODO:
+        /**
+         * TODO:
          * intake
          * Autoalign
          * autoalign to hub
          * text xdrive
          * 
-         * */
-
+         */
 
         private void configureDrivingBinding() {
                 setDrivetrain();
 
                 xDrive.rightTrigger().whileTrue(
-                                (dumpFactory.ShootHalforPass()));
-                xDrive.rightBumper().whileTrue(dumpFactory.pass());
+                                (DumpFactory.SmartShoot()));
+                xDrive.rightBumper().whileTrue(DumpFactory.Pass());
                 // close shoot
 
                 xDrive.rm()
@@ -116,21 +115,20 @@ public class RobotContainer {
                 xDrive.rightPaddle().whileTrue(IntakeFactory.ExtendIntake());
                 xDrive.leftPaddle().whileTrue(IntakeFactory.RetractIntake());
 
-
                 // TODO Find ts pose
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(
                                                 !Robot.isRed() ? Constants.FieldConstants.resetPose
                                                                 : FlippingUtil.flipFieldPose(
                                                                                 Constants.FieldConstants.resetPose))));
-                
+
                 xDrive.povUp().onTrue(drivetrain.runOnce(
                                 () -> drivetrain.seedFieldCentric()));
 
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                xDrive.x().whileTrue(dumpFactory.feed());
+                xDrive.x().whileTrue(DumpFactory.SmartFeed());
 
                 xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2));
@@ -144,21 +142,13 @@ public class RobotContainer {
                 xManip.b().onTrue(
                                 new InstantCommand(() -> Robot.toggleShooterPass()));
 
-                // xManip.y().onTrue(new InstantCommand(() -> Hood.getInstance().setMM()));
-
+                xManip.x().onTrue(new InstantCommand(() -> Robot.toggleShooterIsDumb()));
 
                 xManip.a().whileTrue(new HomeHood());
 
                 xManip.rightPaddle().whileTrue(new HomeIntake(
-                        false));
+                                false));
                 xManip.leftPaddle().whileTrue(new HomeIntake(true));
-
-                new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05)
-                                .whileTrue(new InstantCommand(
-                                                () -> Flywheel.getInstance().adjustRPM(() -> xManip.getLeftY() * -15)))
-                                .onFalse(
-                                                new InstantCommand(
-                                                                () -> Flywheel.getInstance().adjustRPM(() -> 0)));
 
                 xManip.rightTrigger().whileTrue(new setHoodDutyCycle(() -> xManip.getLeftTriggerAxis() * -0.2));
 
@@ -168,7 +158,8 @@ public class RobotContainer {
 
         private void setDrivetrain() {
                 DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
-                BooleanSupplier isMoving = () -> (Math.abs(xDrive.getLeftX()) > 0 || Math.abs(xDrive.getLeftY()) > 0||Math.abs( xDrive.getRightX()) > 0);
+                BooleanSupplier isMoving = () -> (Math.abs(xDrive.getLeftX()) > 0 || Math.abs(xDrive.getLeftY()) > 0
+                                || Math.abs(xDrive.getRightX()) > 0);
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(
@@ -182,20 +173,21 @@ public class RobotContainer {
                                                                                         * MaxAngularRate)));
 
                 } else {
-                        
-                        drivetrain.setDefaultCommand(drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
 
-                        new Trigger(isMoving).debounce(0.15,DebounceType.kFalling).whileTrue(drivetrain.applyRequest(() -> drive
-                                                                .withVelocityX(-xDrive.getLeftY() * MaxSpeed 
-                                                                                * leftBumper.getAsDouble())
-                                                                .withVelocityY(-xDrive.getLeftX() * MaxSpeed 
-                                                                                * leftBumper.getAsDouble())
-                                                                .withRotationalRate(
-                                                                                -xDrive.getRightX() * MaxAngularRate
-                                                                                                * (leftBumper.getAsDouble()
-                                                                                                                + .25))))
-                                                                                                                ;
-                        
+                        drivetrain.setDefaultCommand(
+                                        drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
+
+                        new Trigger(isMoving).debounce(0.15, DebounceType.kFalling)
+                                        .whileTrue(drivetrain.applyRequest(() -> drive
+                                                        .withVelocityX(-xDrive.getLeftY() * MaxSpeed
+                                                                        * leftBumper.getAsDouble())
+                                                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed
+                                                                        * leftBumper.getAsDouble())
+                                                        .withRotationalRate(
+                                                                        -xDrive.getRightX() * MaxAngularRate
+                                                                                        * (leftBumper.getAsDouble()
+                                                                                                        + .25))));
+
                 }
         }
 

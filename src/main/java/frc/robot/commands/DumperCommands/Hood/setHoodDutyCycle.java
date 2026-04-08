@@ -36,7 +36,6 @@ public class setHoodDutyCycle extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    hood.setHoodDutyCycle(0);
 
   }
 

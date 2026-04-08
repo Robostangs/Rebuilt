@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -59,7 +58,7 @@ public class Feeder extends SubsystemBase {
     public boolean feederAtTargetVelocity() {
         double currentVelocity = feederMotor.getVelocity().getValueAsDouble();
         double targetVelocity = feederTargetVelocity.Velocity;
-        return Math.abs(currentVelocity - targetVelocity) <= Constants.FlywheelConstants.kShooterVelocityTolerance;
+        return Math.abs(currentVelocity - targetVelocity) <= Constants.FeederConstants.kFeederVelocityTolerance;
     }
 
     public void setFeederControl(VelocityVoltage control) {

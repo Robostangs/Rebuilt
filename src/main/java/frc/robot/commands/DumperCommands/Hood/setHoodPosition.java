@@ -30,22 +30,18 @@ public class setHoodPosition extends Command {
 
     @Override
     public void execute() {
-double currentTarget;
+        double currentTarget;
 
-        if(smort) {
-            
+        if (smort) {
+
             currentTarget = hood.getHoodAngle();
-        }
-        else{
+        } else {
             currentTarget = hoodpos.getAsDouble();
         }
 
-        
         hood.setMotionMagic(currentTarget);
 
         hood.postStatus("Setting hood position to: " + hoodpos);
-
-
 
     }
 

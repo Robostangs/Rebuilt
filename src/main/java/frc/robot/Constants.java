@@ -42,8 +42,6 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.*;
@@ -105,6 +103,7 @@ public final class Constants {
         public static final double feederExtenderKS = 0.13;
         public static final double feederExtenderKG = 0;
         public static final double HopperExtenderCurrentLimit = 60;
+        public static final double kFeederVelocityTolerance = 3;
 
     }
 

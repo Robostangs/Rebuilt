@@ -15,14 +15,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class Flywheel extends SubsystemBase {
     TalonFX mainShooterMotor;
     TalonFX slaveShooterMotor;
     public static Flywheel mInstance;
     public Pose2d targetPose;
-    private double adjustVal = 0;
     private VelocityVoltage flywheelTargetVelocity = new VelocityVoltage(0);
     private Follower slaveControl;
 
@@ -89,10 +87,6 @@ public class Flywheel extends SubsystemBase {
             mInstance = new Flywheel();
         }
         return mInstance;
-    }
-
-    public void adjustRPM(DoubleSupplier adjustment) {
-        adjustVal = adjustment.getAsDouble();
     }
 
     public void setVelocity(double target){

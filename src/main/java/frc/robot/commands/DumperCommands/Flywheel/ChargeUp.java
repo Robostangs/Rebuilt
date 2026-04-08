@@ -15,7 +15,6 @@ public class ChargeUp extends Command {
     public ChargeUp() {
         shooter = Flywheel.getInstance();
         addRequirements(shooter);
-        // targetRPS = shooter.getFlywheelTargetVelocity();
         smort = true;
     }
 

@@ -41,12 +41,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
-import frc.robot.FeederCommands.Index;
+import frc.robot.FeederCommands.setFeederSpeed;
 import frc.robot.Stable.LimelightHelpers;
 import frc.robot.Stable.TimedRobotstangs;
-import frc.robot.commands.AlignToHub;
 import frc.robot.commands.AutoAlign;
-import frc.robot.commands.DumperCommands.dumpFactory;
+import frc.robot.commands.DumperCommands.DumpFactory;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
 import frc.robot.commands.DumperCommands.Flywheel.setFlywheelDutyCycle;
 import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
@@ -54,7 +53,7 @@ import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.MovePivot;
-import frc.robot.commands.IntakeCommands.SetPivotPosition;
+import frc.robot.commands.IntakeCommands.setPivotPosition;
 import frc.robot.commands.IntakeCommands.setKirbyWheels;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
@@ -63,7 +62,6 @@ import frc.robot.subsystems.Dumper.Flywheel;
 import frc.robot.subsystems.Dumper.Hood;
 
 public class Robot extends TimedRobotstangs {
-    public static boolean isJaba;
     CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     public static RobotContainer m_robotContainer;
     public static ShuffleboardTab disableTab, teleopTab;
@@ -113,7 +111,6 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void robotInit() {
 
-        isJaba = true;
         SmartDashboard.putData("Field", teleopField);
 
         DataLogManager.start("");
@@ -137,7 +134,7 @@ public class Robot extends TimedRobotstangs {
 
         Hood.getInstance().setDefaultCommand( new setHoodDutyCycle(() -> 0d));
         Flywheel.getInstance().setDefaultCommand(new setFlywheelDutyCycle(() -> 0d));
-        Feeder.getInstance().setDefaultCommand(new Index(() -> 0d));
+        Feeder.getInstance().setDefaultCommand(new setFeederSpeed(() -> 0d));
         IntakePivot.getInstance().setDefaultCommand(new MovePivot(() -> 0d));
         Kirby.getInstance().setDefaultCommand(new setKirbyWheels(() -> 0));
         Hopper.getInstance().setDefaultCommand(new RunHopper(() -> 0d));
@@ -167,7 +164,7 @@ public class Robot extends TimedRobotstangs {
                 .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
                 .andThen(new ChargeUp().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
-                .andThen(new Index(() -> 0).withTimeout(7))
+                .andThen(new setFeederSpeed(() -> 0).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
                 .andThen(new setHoodPosition().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Retracting Intake")))
@@ -287,7 +284,7 @@ public class Robot extends TimedRobotstangs {
 
                     autoCommand = new InstantCommand(() -> CommandSwerveDrivetrain.getInstance()
                             .resetPose(Constants.FieldConstants.ShootPoseDepot)).andThen(
-                                    dumpFactory.Shoot());
+                                    DumpFactory.Shoot());
                 } else if (autoname.equals("SitAndShit")) {
                     autoCommand = new PrintCommand("Pooping");
                 } else {
@@ -538,13 +535,13 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Retract",IntakeFactory.RetractIntake());
 
         NamedCommands.registerCommand("Photoshoot",
-                (dumpFactory.PhotoShoot()));
+                (DumpFactory.PhotoShoot()));
 
         NamedCommands.registerCommand("AutoAlign", new AutoAlign());
 
         //  new PrintCommand("ALIGN!"));
 
-        NamedCommands.registerCommand("BumpTake", new SetPivotPosition(Constants.KirbyConstants.kIntakePivotBump));
+        NamedCommands.registerCommand("BumpTake", new setPivotPosition(Constants.KirbyConstants.kIntakePivotBump));
 
         NamedCommands.registerCommand("Climb",
                 new PrintCommand("Hi!"));
@@ -576,6 +573,10 @@ public class Robot extends TimedRobotstangs {
 
     public static boolean isPassing() {
         return shooterPass;
+    }
+
+    public static boolean isShooterDumb() {
+        return shooterIsDumb;
     }
 
     public void drawCurrentAuto(String autoName) {

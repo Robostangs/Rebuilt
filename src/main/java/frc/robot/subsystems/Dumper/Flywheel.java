@@ -1,7 +1,5 @@
 package frc.robot.subsystems.Dumper;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -15,14 +13,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class Flywheel extends SubsystemBase {
     TalonFX mainShooterMotor;
     TalonFX slaveShooterMotor;
     public static Flywheel mInstance;
     public Pose2d targetPose;
-    private double adjustVal = 0;
     private VelocityVoltage flywheelTargetVelocity = new VelocityVoltage(0);
     private Follower slaveControl;
 
@@ -30,6 +26,7 @@ public class Flywheel extends SubsystemBase {
         mainShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
         slaveShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
         configureFlywheelMotors();
+
         slaveControl = new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Opposed);
     }
 
@@ -38,6 +35,8 @@ public class Flywheel extends SubsystemBase {
 
         flywheelConfig.CurrentLimits.SupplyCurrentLimit = Constants.DumperConstants.kShooterSupplyCurrentLimit;
         flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterMotorStatorCurrentLimit;
+
+        flywheelConfig.CurrentLimits.SupplyCurrentLowerTime = 2;
 
         flywheelConfig.Slot0.kP = Constants.FlywheelConstants.kShooterMotorP;
         flywheelConfig.Slot0.kI = Constants.FlywheelConstants.kShooterMotorI;
@@ -57,12 +56,7 @@ public class Flywheel extends SubsystemBase {
         // Apply the PID configurations to the shooter motor
         mainShooterMotor.getConfigurator().apply(flywheelConfig);
 
-        TalonFXConfiguration flyWheelSlaveConfig = new TalonFXConfiguration();
-
-        flyWheelSlaveConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterSlaveMotorStatorCurrentLimit;
-        flyWheelSlaveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-
-        slaveShooterMotor.getConfigurator().apply(flyWheelSlaveConfig);
+        slaveShooterMotor.getConfigurator().apply(flywheelConfig);
 
     }
 
@@ -80,12 +74,10 @@ public class Flywheel extends SubsystemBase {
         }
     }
 
-    public void setFlywheelVelocity(double rps) {
-        flywheelTargetVelocity.Velocity = rps;
-    }
-
     public void setFlywheelDC(double dc) {
         mainShooterMotor.set(dc);
+        slaveShooterMotor.set(0);
+
     }
 
     public static Flywheel getInstance() {
@@ -95,21 +87,12 @@ public class Flywheel extends SubsystemBase {
         return mInstance;
     }
 
-    public void adjustRPM(DoubleSupplier adjustment) {
-        adjustVal = adjustment.getAsDouble();
-    }
+    public void setVelocity(double target) {
+        flywheelTargetVelocity.Velocity = target;
 
-    public void setControl() {
-        if (Math.abs(CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond) > 2
-                || flywheelTargetVelocity.Velocity == 0) {
-            mainShooterMotor.set(0);
-            slaveShooterMotor.set(0);
-        } else {
-            flywheelTargetVelocity.Velocity = flywheelTargetVelocity.Velocity + adjustVal;
-            mainShooterMotor.setControl(flywheelTargetVelocity);
-            slaveShooterMotor.setControl(slaveControl);
+        mainShooterMotor.setControl(flywheelTargetVelocity);
+        slaveShooterMotor.setControl(slaveControl);
 
-        }
     }
 
     public boolean shooterAtTargetVelocity() {

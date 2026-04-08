@@ -1,30 +1,31 @@
-package frc.robot.commands;
+package frc.robot.FeederCommands;
+
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Dumper.Flywheel;
 
-public class Index extends Command {
+public class setFeederSpeed extends Command {
     Feeder feeder;
+    DoubleSupplier feedDC;
 
-    public Index() {
+    public setFeederSpeed(DoubleSupplier feedDC) {
         feeder = Feeder.getInstance();
+        this.feedDC = feedDC;
+
         addRequirements(feeder);
     }
 
     @Override
     public void initialize() {
 
-        feeder.postStatus("Index started: " + Constants.FeederConstants.kFeedDutyCycle);
+        feeder.postStatus("Index started: " + feedDC);
     }
 
     public void execute() {
 
-        feeder.setControl();
-        if (Flywheel.getInstance().shooterAtTargetVelocity() ) {
-            feeder.setDutyCycle(Constants.FeederConstants.kFeedDutyCycle);
-        }
+            feeder.setDutyCycle(feedDC.getAsDouble());
+        
     }
 
     @Override

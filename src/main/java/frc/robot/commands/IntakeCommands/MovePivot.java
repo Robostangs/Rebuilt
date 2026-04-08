@@ -4,25 +4,17 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake.IntakePivot;
-import frc.robot.subsystems.Intake.Kirby;
 
-/**
- * Spins the Kirby intake wheels at a given duty cycle while scheduled.
- */
+
 public class MovePivot extends Command {
-    private final Kirby kirby;
     private final IntakePivot pivot;
     private final DoubleSupplier dutyCycle;
 
-    /**
-     * Create a new Swallow command that runs the Kirby wheels at the given duty
-     * cycle.
-     */
+    
     public MovePivot(DoubleSupplier dutyCycle) {
-        kirby = Kirby.getInstance();
         pivot = IntakePivot.getInstance();
         this.dutyCycle = dutyCycle;
-        addRequirements(kirby);
+        addRequirements(pivot);
     }
 
     @Override
@@ -33,12 +25,12 @@ public class MovePivot extends Command {
     @Override
     public void execute() {
         pivot.setDC(dutyCycle.getAsDouble());
+        pivot.postStatus("Moving pivot at duty cycle: " + dutyCycle.getAsDouble());
 
     }
 
     @Override
     public void end(boolean interrupted) {
-        kirby.setKirbyWheels(0.0);
     }
 
     @Override

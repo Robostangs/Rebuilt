@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -27,6 +26,7 @@ public class Feeder extends SubsystemBase {
         fuelSensor = new DigitalInput(Constants.FeederConstants.fuelSensorID);
 
         feederTargetVelocity = new VelocityVoltage(0d);
+        configureFeeder();
     }
 
     public void configureFeeder() {
@@ -34,14 +34,12 @@ public class Feeder extends SubsystemBase {
         feedConfigurator.CurrentLimits.SupplyCurrentLimit = Constants.FeederConstants.feederSupplyLimit;
         feedConfigurator.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        feedConfigurator.CurrentLimits.SupplyCurrentLimit = Constants.FeederConstants.HopperExtenderCurrentLimit;
         feedConfigurator.Slot0.kP = Constants.FeederConstants.feederExtenderKP;
         feedConfigurator.Slot0.kI = Constants.FeederConstants.feederExtenderKI;
         feedConfigurator.Slot0.kD = Constants.FeederConstants.feederExtenderKD;
         feedConfigurator.Slot0.kS = Constants.FeederConstants.feederExtenderKS;
-        feedConfigurator.Slot0.kG = Constants.FeederConstants.feederExtenderKG;
-        feedConfigurator.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-        feedConfigurator.Slot0.GravityArmPositionOffset = 0.00;
+
+        feedConfigurator.Voltage.PeakReverseVoltage = 0;
 
         feederMotor.getConfigurator().apply(feedConfigurator);
     }
@@ -54,18 +52,16 @@ public class Feeder extends SubsystemBase {
         feederTargetVelocity.Velocity = feederMotor.getVelocity().getValueAsDouble();
     }
 
-    public void setFeederVelocity(double velocityRPS) {
-        feederTargetVelocity.Velocity = velocityRPS;
-    }
-
     public boolean feederAtTargetVelocity() {
         double currentVelocity = feederMotor.getVelocity().getValueAsDouble();
         double targetVelocity = feederTargetVelocity.Velocity;
-        return Math.abs(currentVelocity - targetVelocity) <= Constants.FlywheelConstants.kShooterVelocityTolerance;
+        return Math.abs(currentVelocity - targetVelocity) <= Constants.FeederConstants.kFeederVelocityTolerance;
     }
 
-    public void setFeederControl(VelocityVoltage control) {
-        feederMotor.setControl(control);
+    public void setFeederControl(double velocityRPS) {
+        feederTargetVelocity.Velocity = velocityRPS;
+
+        feederMotor.setControl(feederTargetVelocity);
     }
 
     public void forceTog() {

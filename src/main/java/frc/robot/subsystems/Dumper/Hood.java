@@ -47,21 +47,21 @@ public class Hood extends SubsystemBase {
         mainMotorConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.HoodConstants.kHoodMotionMagicCruiseVelocity;
         mainMotorConfig.MotionMagic.MotionMagicAcceleration = Constants.HoodConstants.kHoodMotionMagicAcceleration;
 
+        mainMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 1.3;
+        mainMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+
+
         mainMotor.getConfigurator().apply(mainMotorConfig);
 
     }
 
     public double getHoodAngle(double metersFromTarget) {
-        double feetFromTarget = Units.metersToFeet(metersFromTarget);
-        if (Robot.isPassing() && feetFromTarget > Constants.FieldConstants.maxRegressionDistance) {
-            // full send if we on opposing alliance and we're past the max actual distance
-            // for passing
-            return Constants.HoodConstants.kPosAtOppositeAlliancePass;
-        } else {
+        double MetersfromTarget = (metersFromTarget);
 
-            return -0.522 + 0.429 * Math.log(feetFromTarget);
 
-        }
+            return -1.57+ (1.83*MetersfromTarget)-(0.674* Math.pow(MetersfromTarget, 2))+ (.0838 * Math.pow(MetersfromTarget, 3));
+
+        
     }
 
     public double getHoodAngle() {

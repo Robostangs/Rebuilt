@@ -356,6 +356,7 @@ public class Robot extends TimedRobotstangs {
     public void teleopPeriodic() {
 
         SmartDashboard.putBoolean("IsPassing", shooterPass);
+        SmartDashboard.putBoolean("Is dumb", isShooterDumb());
         shiftAlert.set(canBlueScore == whoCanScore.error);
         String gameData = DriverStation.getGameSpecificMessage();
         int gameTimeInt = (int) DriverStation.getMatchTime();
@@ -449,7 +450,6 @@ public class Robot extends TimedRobotstangs {
     public void testInit() {
         SwerveRequest rightRequest = new SwerveRequest.FieldCentric().withVelocityY(0.3);
         Command driveRightCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> rightRequest);
-        SmartDashboard.putData("Test Oscillate Intake", IntakeFactory.OscillateIntake());
         SmartDashboard.putData("Get wheel odometry", driveRightCommand);
         CommandScheduler.getInstance().cancelAll();
         setupPitTestDashboard();
@@ -461,10 +461,6 @@ public class Robot extends TimedRobotstangs {
         Hood.getInstance().setDefaultCommand( new setHoodPosition(() ->SmartDashboard.getNumber("Regression Hood Setpoint", 0)));
         Flywheel.getInstance().setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0)));
 
-        CommandScheduler.getInstance().schedule(
-        new setHoodPosition(() ->SmartDashboard.getNumber("Regression Hood Setpoint", 0)), 
-        new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0))
-        );
 
 
     }

@@ -102,7 +102,7 @@ public class RobotContainer {
                 setDrivetrain();
 
                 xDrive.rightTrigger().whileTrue(
-                                (DumpFactory.SmartShoot()));
+                                (DumpFactory.RegressionShoot()));
                 xDrive.rightBumper().whileTrue(DumpFactory.Pass());
                 // close shoot
 
@@ -130,7 +130,7 @@ public class RobotContainer {
 
                 xDrive.x().whileTrue(DumpFactory.SmartFeed());
 
-                xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                xDrive.a().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2));
 
                 xDrive.y().whileTrue(IntakeFactory.TrueSpit());
@@ -157,8 +157,8 @@ public class RobotContainer {
 
         private void setDrivetrain() {
                 DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
-                BooleanSupplier isMoving = () -> (Math.abs(xDrive.getLeftX()) > 0 || Math.abs(xDrive.getLeftY()) > 0
-                                || Math.abs(xDrive.getRightX()) > 0);
+                BooleanSupplier isMoving = () -> (Math.abs(xDrive.getLeftX()) > 0.1 || Math.abs(xDrive.getLeftY()) > 0.1
+                                || Math.abs(xDrive.getRightX()) > 0.1);
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(

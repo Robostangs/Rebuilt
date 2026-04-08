@@ -62,16 +62,12 @@ public class Flywheel extends SubsystemBase {
 
     public double getFlywheelTargetVelocity() {
 
-        double feetFromTarget = Units.metersToFeet(Robot.getMetersFromTarget());
-        if (Robot.isPassing() && feetFromTarget > Constants.FieldConstants.maxRegressionDistance) {
-            // full send if we on opposing alliance and we're past the max actual distance
-            // for passing
-            return Constants.FlywheelConstants.kVelocityAtOppositeAlliancePass;
-        } else {
-            // Acc get regression here
-            return 2.2 * feetFromTarget + 52;
+        double MetersfromTarget = (Robot.getMetersFromTarget());
 
-        }
+            // Acc get regression here
+            return 15.3+(8.27*MetersfromTarget) +((-.936)*Math.pow(MetersfromTarget, 2));
+
+        
     }
 
     public void setFlywheelDC(double dc) {

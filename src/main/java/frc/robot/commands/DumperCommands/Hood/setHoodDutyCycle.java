@@ -32,11 +32,11 @@ public class setHoodDutyCycle extends Command {
   @Override
   public void execute() {
     hood.setHoodDutyCycle(speed.getAsDouble());
+    hood.postStatus("Setting hood duty cycle to " + speed.getAsDouble());
   }
 
   @Override
   public void end(boolean interrupted) {
-    hood.setHoodDutyCycle(0);
 
   }
 

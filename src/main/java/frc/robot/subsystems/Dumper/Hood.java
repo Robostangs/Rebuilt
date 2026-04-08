@@ -1,7 +1,6 @@
 package frc.robot.subsystems.Dumper;
 
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -17,7 +16,6 @@ public class Hood extends SubsystemBase {
     public static Hood mInstance;
     MotionMagicExpoDutyCycle hoodTargetPosition;
     static boolean isHomed = false;
-    boolean ShouldMM = true;
 
     private Hood() {
         mainMotor = new TalonFXS(Constants.HoodConstants.mainMotorID);
@@ -30,6 +28,9 @@ public class Hood extends SubsystemBase {
 
         mainMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
 
+                //TODO clamp values
+
+
         mainMotorConfig.Slot0.kP = Constants.HoodConstants.kHoodMotorP;
         mainMotorConfig.Slot0.kI = Constants.HoodConstants.kHoodMotorI;
         mainMotorConfig.Slot0.kD = Constants.HoodConstants.kHoodMotorD;
@@ -37,7 +38,7 @@ public class Hood extends SubsystemBase {
         mainMotorConfig.Slot0.kV = Constants.HoodConstants.kHoodMotorV;
         mainMotorConfig.Slot0.kA = Constants.HoodConstants.kHoodMotorA;
 
-        mainMotorConfig.CurrentLimits.StatorCurrentLimit =  Constants.HoodConstants.kHoodStatorCurrentLimit;
+        mainMotorConfig.CurrentLimits.StatorCurrentLimit = Constants.HoodConstants.kHoodStatorCurrentLimit;
 
         mainMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
@@ -99,13 +100,7 @@ public class Hood extends SubsystemBase {
         isHomed = true;
     }
 
-    public void setMM() {
-        ShouldMM = (!ShouldMM);
-    }
 
-    public void setMM(boolean MM) {
-        ShouldMM = MM;
-    }
 
     public double getStatorCurrent() {
         return mainMotor.getTorqueCurrent().getValueAsDouble();
@@ -116,28 +111,28 @@ public class Hood extends SubsystemBase {
         hoodTargetPosition.Position = pos;
     }
 
-    public void gotoMM(){
-                        mainMotor.setControl(hoodTargetPosition);
+    public void gotoMM() {
+        mainMotor.setControl(hoodTargetPosition);
 
     }
 
-    public void setMotionMagic() {
+   
 
-        if (ShouldMM) {
+    public void setMotionMagic(double target) {
+        hoodTargetPosition.Position = target;
 
-            if (Math.abs(mainMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.04) {
-                mainMotor.set(0);
-            } else {
-                if (hoodTargetPosition.Position > 1.3) {
-                    hoodTargetPosition.Position = 1.3;
-                } else if (hoodTargetPosition.Position < 0) {
-                    hoodTargetPosition.Position = 0;
+        // if (Math.abs(mainMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.04) {
+        //     mainMotor.set(0);
+        // } else {
+        //     if (hoodTargetPosition.Position > 1.3) {
+        //         hoodTargetPosition.Position = 1.3;
+        //     } else if (hoodTargetPosition.Position < 0) {
+        //         hoodTargetPosition.Position = 0;
 
-                }
-                mainMotor.setControl(hoodTargetPosition);
+        //     }
+            mainMotor.setControl(hoodTargetPosition);
 
-            }
-        }
+        // }
 
     }
 
@@ -146,14 +141,7 @@ public class Hood extends SubsystemBase {
         SmartDashboard.putNumber("Hood/HoodTargetPosition", hoodTargetPosition.Position);
         SmartDashboard.putNumber("Hood/Hood pos", mainMotor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Hood/Stator Current", getStatorCurrent());
-        SmartDashboard.putBoolean("Hood/manual", ShouldMM);
-        if(ShouldMM){
-                            // mainMotor.setControl(hoodTargetPosition);
 
-        }
-        if (mainMotor.hasResetOccurred()) {
-            isHomed = false;
-        }
     }
 
 }

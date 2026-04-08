@@ -26,6 +26,7 @@ public class Feeder extends SubsystemBase {
         fuelSensor = new DigitalInput(Constants.FeederConstants.fuelSensorID);
 
         feederTargetVelocity = new VelocityVoltage(0d);
+        configureFeeder();
     }
 
     public void configureFeeder() {
@@ -51,18 +52,16 @@ public class Feeder extends SubsystemBase {
         feederTargetVelocity.Velocity = feederMotor.getVelocity().getValueAsDouble();
     }
 
-    public void setFeederVelocity(double velocityRPS) {
-        feederTargetVelocity.Velocity = velocityRPS;
-    }
-
     public boolean feederAtTargetVelocity() {
         double currentVelocity = feederMotor.getVelocity().getValueAsDouble();
         double targetVelocity = feederTargetVelocity.Velocity;
         return Math.abs(currentVelocity - targetVelocity) <= Constants.FeederConstants.kFeederVelocityTolerance;
     }
 
-    public void setFeederControl(VelocityVoltage control) {
-        feederMotor.setControl(control);
+    public void setFeederControl(double velocityRPS) {
+        feederTargetVelocity.Velocity = velocityRPS;
+
+        feederMotor.setControl(feederTargetVelocity);
     }
 
     public void forceTog() {

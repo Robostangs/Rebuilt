@@ -8,7 +8,6 @@ import frc.robot.subsystems.Intake.IntakePivot;
 
 public class setPivotPosition extends Command {
     IntakePivot pivot;
-    DoubleSupplier dutyCycle;
     double pos;
 
   

@@ -28,6 +28,9 @@ public class Hood extends SubsystemBase {
 
         mainMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
 
+                //TODO clamp values
+
+
         mainMotorConfig.Slot0.kP = Constants.HoodConstants.kHoodMotorP;
         mainMotorConfig.Slot0.kI = Constants.HoodConstants.kHoodMotorI;
         mainMotorConfig.Slot0.kD = Constants.HoodConstants.kHoodMotorD;

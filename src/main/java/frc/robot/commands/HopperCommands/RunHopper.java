@@ -24,7 +24,7 @@ public class RunHopper extends Command {
 
     @Override
     public void execute() {
-        hopper.postRollerStatus("Going at DC " + Constants.HopperConstants.kRollerDC);
+        hopper.postRollerStatus("Going at DC " + speed.getAsDouble());
 
         hopper.setRollerDutyCycle(speed.getAsDouble());
 

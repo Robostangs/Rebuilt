@@ -28,7 +28,7 @@ public class Feed extends Command{
             currentTarget = targetRPS.getAsDouble();
         
 
-        feeder.setFeederVelocity(currentTarget);
+        feeder.setFeederControl(currentTarget);
 
         SmartDashboard.putNumber("Feeder/target velocity", currentTarget);
 

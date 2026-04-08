@@ -26,7 +26,7 @@ public class Flywheel extends SubsystemBase {
         mainShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
         slaveShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
         configureFlywheelMotors();
-        
+
         slaveControl = new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Opposed);
     }
 
@@ -56,7 +56,6 @@ public class Flywheel extends SubsystemBase {
         // Apply the PID configurations to the shooter motor
         mainShooterMotor.getConfigurator().apply(flywheelConfig);
 
-
         slaveShooterMotor.getConfigurator().apply(flywheelConfig);
 
     }
@@ -75,9 +74,10 @@ public class Flywheel extends SubsystemBase {
         }
     }
 
-
     public void setFlywheelDC(double dc) {
         mainShooterMotor.set(dc);
+        slaveShooterMotor.set(0);
+
     }
 
     public static Flywheel getInstance() {
@@ -87,15 +87,13 @@ public class Flywheel extends SubsystemBase {
         return mInstance;
     }
 
-    public void setVelocity(double target){
+    public void setVelocity(double target) {
         flywheelTargetVelocity.Velocity = target;
 
-            mainShooterMotor.setControl(flywheelTargetVelocity);
-            slaveShooterMotor.setControl(slaveControl);
+        mainShooterMotor.setControl(flywheelTargetVelocity);
+        slaveShooterMotor.setControl(slaveControl);
 
     }
-
-
 
     public boolean shooterAtTargetVelocity() {
         double currentVelocity = mainShooterMotor.getVelocity().getValueAsDouble();

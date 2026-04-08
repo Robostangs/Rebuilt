@@ -34,14 +34,12 @@ public class Feeder extends SubsystemBase {
         feedConfigurator.CurrentLimits.SupplyCurrentLimit = Constants.FeederConstants.feederSupplyLimit;
         feedConfigurator.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        feedConfigurator.CurrentLimits.SupplyCurrentLimit = Constants.FeederConstants.HopperExtenderCurrentLimit;
         feedConfigurator.Slot0.kP = Constants.FeederConstants.feederExtenderKP;
         feedConfigurator.Slot0.kI = Constants.FeederConstants.feederExtenderKI;
         feedConfigurator.Slot0.kD = Constants.FeederConstants.feederExtenderKD;
         feedConfigurator.Slot0.kS = Constants.FeederConstants.feederExtenderKS;
-        feedConfigurator.Slot0.kG = Constants.FeederConstants.feederExtenderKG;
-        feedConfigurator.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-        feedConfigurator.Slot0.GravityArmPositionOffset = 0.00;
+
+        feedConfigurator.Voltage.PeakReverseVoltage = 0;
 
         feederMotor.getConfigurator().apply(feedConfigurator);
     }

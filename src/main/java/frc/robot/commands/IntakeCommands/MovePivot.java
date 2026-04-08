@@ -10,7 +10,6 @@ import frc.robot.subsystems.Intake.Kirby;
  * Spins the Kirby intake wheels at a given duty cycle while scheduled.
  */
 public class MovePivot extends Command {
-    private final Kirby kirby;
     private final IntakePivot pivot;
     private final DoubleSupplier dutyCycle;
 
@@ -19,10 +18,9 @@ public class MovePivot extends Command {
      * cycle.
      */
     public MovePivot(DoubleSupplier dutyCycle) {
-        kirby = Kirby.getInstance();
         pivot = IntakePivot.getInstance();
         this.dutyCycle = dutyCycle;
-        addRequirements(kirby);
+        addRequirements(pivot);
     }
 
     @Override

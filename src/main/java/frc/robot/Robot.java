@@ -52,12 +52,10 @@ import frc.robot.commands.DumperCommands.Flywheel.setFlywheelDutyCycle;
 import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
-import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.MovePivot;
-import frc.robot.commands.IntakeCommands.RetractIntake;
 import frc.robot.commands.IntakeCommands.SetPivotPosition;
-import frc.robot.commands.IntakeCommands.StartIntake;
+import frc.robot.commands.IntakeCommands.setKirbyWheels;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
@@ -141,7 +139,7 @@ public class Robot extends TimedRobotstangs {
         Flywheel.getInstance().setDefaultCommand(new setFlywheelDutyCycle(() -> 0d));
         Feeder.getInstance().setDefaultCommand(new Index(() -> 0d));
         IntakePivot.getInstance().setDefaultCommand(new MovePivot(() -> 0d));
-        Kirby.getInstance().setDefaultCommand(new StartIntake(() -> 0));
+        Kirby.getInstance().setDefaultCommand(new setKirbyWheels(() -> 0));
         Hopper.getInstance().setDefaultCommand(new RunHopper(() -> 0d));
 
 
@@ -162,9 +160,8 @@ public class Robot extends TimedRobotstangs {
         Command pitTestCommand = CommandSwerveDrivetrain.getInstance()
                 .runOnce(() -> CommandSwerveDrivetrain.getInstance().seedFieldCentric())
                 .andThen(new InstantCommand(() -> postPitTestStatus("Extending Intake")))
-                .andThen(new ExtendIntake())
                 .andThen(new InstantCommand(() -> postPitTestStatus("Starting Intake Wheels")))
-                .andThen(new StartIntake(() -> -1).withTimeout(7))
+                .andThen(new setKirbyWheels(() -> -1).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Running Hopper")))
                 .andThen(new RunHopper(() -> 0d).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
@@ -174,7 +171,6 @@ public class Robot extends TimedRobotstangs {
                 .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
                 .andThen(new setHoodPosition().withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Retracting Intake")))
-                .andThen(new RetractIntake())
                 .andThen(new InstantCommand(() -> postPitTestStatus("Driving Forward")))
                 .andThen(() -> driveForwardCommand.withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Driving Left")))
@@ -209,8 +205,8 @@ public class Robot extends TimedRobotstangs {
                 }));
         SmartDashboard.putData("PitTest/HoodSetpoints", hoodSetpointChooser);
 
-        intakePivotSetpointChooser.addOption("Extend", new ExtendIntake());
-        intakePivotSetpointChooser.addOption("Retract", new RetractIntake());
+        intakePivotSetpointChooser.addOption("Extend", IntakeFactory.ExtendIntake());
+        intakePivotSetpointChooser.addOption("Retract", IntakeFactory.RetractIntake());
 
         SmartDashboard.putData("PitTest/IntakePivotSetpoints", intakePivotSetpointChooser);
     }
@@ -537,9 +533,9 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Pass",
                 new PrintCommand("you're supposed to pass bruh"));
 
-        NamedCommands.registerCommand("Extend", new ExtendIntake());
+        NamedCommands.registerCommand("Extend", IntakeFactory.ExtendIntake());
 
-        NamedCommands.registerCommand("Retract", new RetractIntake().withTimeout(0.5));
+        NamedCommands.registerCommand("Retract",IntakeFactory.RetractIntake());
 
         NamedCommands.registerCommand("Photoshoot",
                 (dumpFactory.PhotoShoot()));

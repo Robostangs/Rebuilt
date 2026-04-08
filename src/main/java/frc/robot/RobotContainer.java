@@ -21,23 +21,16 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.FeederCommands.Index;
 import frc.robot.Stable.ControllerStangs;
 import frc.robot.commands.DumperCommands.dumpFactory;
 import frc.robot.commands.DumperCommands.Hood.HomeHood;
 import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
-import frc.robot.commands.HopperCommands.RunHopper;
-import frc.robot.commands.IntakeCommands.ExtendIntake;
 import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
-import frc.robot.commands.IntakeCommands.RetractIntake;
-import frc.robot.commands.IntakeCommands.SetPivotPosition;
-import frc.robot.commands.IntakeCommands.StartIntake;
 import frc.robot.commands.AlignToHub;
 import frc.robot.commands.AutoAlign;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Dumper.Flywheel;
-import frc.robot.subsystems.Dumper.Hood;
 
 public class RobotContainer {
         public static boolean useVision = true;
@@ -120,8 +113,8 @@ public class RobotContainer {
                 xDrive.lm()
                                 .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToTower));
 
-                xDrive.rightPaddle().whileTrue(new ExtendIntake());
-                xDrive.leftPaddle().whileTrue(new RetractIntake());
+                xDrive.rightPaddle().whileTrue(IntakeFactory.ExtendIntake());
+                xDrive.leftPaddle().whileTrue(IntakeFactory.RetractIntake());
 
 
                 // TODO Find ts pose

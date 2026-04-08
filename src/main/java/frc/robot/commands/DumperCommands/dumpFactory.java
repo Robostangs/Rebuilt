@@ -9,7 +9,7 @@ import frc.robot.FeederCommands.Index;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
-import frc.robot.commands.IntakeCommands.StartIntake;
+import frc.robot.commands.IntakeCommands.setKirbyWheels;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Dumper.Flywheel;
 
@@ -57,7 +57,7 @@ public class dumpFactory {
         }
 
         public static Command PhotoShoot() {
-                return ShootHalforPass().alongWith(new StartIntake(() -> -1));
+                return ShootHalforPass().alongWith(new setKirbyWheels(() -> -1));
         }
 
         public static Command ShootTrench() {

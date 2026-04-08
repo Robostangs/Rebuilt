@@ -5,16 +5,17 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Dumper.Flywheel;
 
 public class Feed extends Command{
-     Flywheel shooter;
+     Feeder feeder;
     DoubleSupplier targetRPS;
 
     public Feed(DoubleSupplier targetRPS) {
-        shooter = Flywheel.getInstance();
+        feeder = Feeder.getInstance();
         this.targetRPS = targetRPS;
-        addRequirements(shooter);
+        addRequirements(feeder);
     }
 
     @Override
@@ -29,16 +30,18 @@ public class Feed extends Command{
             currentTarget = targetRPS.getAsDouble();
         
 
-        shooter.setVelocity(currentTarget);
+        feeder.setFeederVelocity(currentTarget);
+
+        SmartDashboard.putNumber("Feeder/target velocity", currentTarget);
 
 
-        shooter.postStatus("Charging to " + targetRPS + " rps");
+        feeder.postStatus("Charging to " + targetRPS + " rps");
 
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooter.postStatus("Charged");
+        feeder.postStatus("Charged");
     }
 
 }

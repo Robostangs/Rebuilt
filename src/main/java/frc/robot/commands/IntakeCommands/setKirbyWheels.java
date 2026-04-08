@@ -1,32 +1,33 @@
 package frc.robot.commands.IntakeCommands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.Intake.Kirby;
 
-public class OutTake extends Command {
+public class setKirbyWheels extends Command {
     
     Kirby kirby;
+    DoubleSupplier speed;
 
-    public OutTake() {
+    public setKirbyWheels( DoubleSupplier speed) {
         kirby = Kirby.getInstance();
+        this.speed = speed;
         addRequirements(kirby);
     }
+
     @Override
     public void initialize() {
-        kirby.setKirbyWheels(Constants.KirbyConstants.kirbyOuttakeSpeed);
+        kirby.setKirbyWheels(speed.getAsDouble());
     }
 
 
     @Override
     public void end(boolean interrupted) {
-        kirby.setKirbyWheels(0);
-
     }
 
     @Override
     public boolean isFinished() {
         return false;
     }
-
 }

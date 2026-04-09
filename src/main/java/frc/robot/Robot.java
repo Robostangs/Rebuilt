@@ -540,7 +540,7 @@ public class Robot extends TimedRobotstangs {
     public static double getMetersFromTarget() {
 
         return CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
-               setTargetPose().getTranslation());
+                setTargetPose().getTranslation());
 
     }
 
@@ -561,14 +561,16 @@ public class Robot extends TimedRobotstangs {
                 : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation());
 
         double time = timeToShoot(
-           CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
-              hubPose)
-            );
+                CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
+                        hubPose));
+
+        double vx = Math.abs(robotSpeeds.vxMetersPerSecond) > 0.05 ? robotSpeeds.vxMetersPerSecond : 0;
+        double vy = Math.abs(robotSpeeds.vyMetersPerSecond) > 0.05 ? robotSpeeds.vyMetersPerSecond : 0;
 
         Translation2d targetHubPose = hubPose.minus(
                 new Translation2d(
-                        robotSpeeds.vxMetersPerSecond * time,
-                        robotSpeeds.vyMetersPerSecond * time));
+                        vx * time,
+                        vy * time));
 
         targetPose = new Pose2d(targetHubPose, new Rotation2d());
 

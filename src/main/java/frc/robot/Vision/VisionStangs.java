@@ -100,13 +100,13 @@ public class VisionStangs {
 
             LimelightHelpers.SetRobotOrientation(CameraName,
                     drivetrain.getState().Pose.getRotation().getDegrees(),
-                    drivetrain.getPigeon2().getAngularVelocityXWorld().getValueAsDouble(),
+                    drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), // Z = yaw
                     0d,
                     0d,
                     0d,
                     0d);
 
-            LimelightHelpers.SetIMUMode(CameraName, 3);
+            LimelightHelpers.SetIMUMode(CameraName, 0);
             LimelightHelpers.SetThrottle(CameraName, 0);
 
         }
@@ -119,13 +119,13 @@ public class VisionStangs {
             boolean isFastJohn = Math.abs(yawRate) > Constants.VisionConstants.kVisionAngularThreshold;
 
             if (isDisabled) {
-                fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName); 
+                fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
                 mtLabel = "MT1 (disabled)";
             } else if (isFastJohn) {
                 fourPoseEsti = null;
                 mtLabel = "Rejected (too fast)";
             } else {
-                fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(CameraName); 
+                fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
                 mtLabel = "MT2";
             }
 

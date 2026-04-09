@@ -15,9 +15,7 @@ public class Hood extends SubsystemBase {
     TalonFXS mainMotor;
     public static Hood mInstance;
     MotionMagicExpoDutyCycle hoodTargetPosition;
-
     static boolean isHomed = false;
-    boolean ShouldMM = true;
 
     private Hood() {
         mainMotor = new TalonFXS(Constants.HoodConstants.mainMotorID);
@@ -30,6 +28,9 @@ public class Hood extends SubsystemBase {
 
         mainMotorConfig.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
 
+                //TODO clamp values
+
+
         mainMotorConfig.Slot0.kP = Constants.HoodConstants.kHoodMotorP;
         mainMotorConfig.Slot0.kI = Constants.HoodConstants.kHoodMotorI;
         mainMotorConfig.Slot0.kD = Constants.HoodConstants.kHoodMotorD;
@@ -37,7 +38,7 @@ public class Hood extends SubsystemBase {
         mainMotorConfig.Slot0.kV = Constants.HoodConstants.kHoodMotorV;
         mainMotorConfig.Slot0.kA = Constants.HoodConstants.kHoodMotorA;
 
-        mainMotorConfig.CurrentLimits.StatorCurrentLimit =  Constants.HoodConstants.kHoodStatorCurrentLimit;
+        mainMotorConfig.CurrentLimits.StatorCurrentLimit = Constants.HoodConstants.kHoodStatorCurrentLimit;
 
         mainMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
@@ -46,21 +47,21 @@ public class Hood extends SubsystemBase {
         mainMotorConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.HoodConstants.kHoodMotionMagicCruiseVelocity;
         mainMotorConfig.MotionMagic.MotionMagicAcceleration = Constants.HoodConstants.kHoodMotionMagicAcceleration;
 
+        mainMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 1.3;
+        mainMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+
+
         mainMotor.getConfigurator().apply(mainMotorConfig);
 
     }
 
     public double getHoodAngle(double metersFromTarget) {
-        double feetFromTarget = Units.metersToFeet(metersFromTarget);
-        if (Robot.isPassing() && feetFromTarget > Constants.FieldConstants.maxRegressionDistance) {
-            // full send if we on opposing alliance and we're past the max actual distance
-            // for passing
-            return Constants.HoodConstants.kPosAtOppositeAlliancePass;
-        } else {
+        double MetersfromTarget = (metersFromTarget);
 
-            return -0.522 + 0.429 * Math.log(feetFromTarget);
 
-        }
+            return -1.57+ (1.83*MetersfromTarget)-(0.674* Math.pow(MetersfromTarget, 2))+ (.0838 * Math.pow(MetersfromTarget, 3));
+
+        
     }
 
     public double getHoodAngle() {
@@ -99,13 +100,7 @@ public class Hood extends SubsystemBase {
         isHomed = true;
     }
 
-    public void setMM() {
-        ShouldMM = (!ShouldMM);
-    }
 
-    public void setMM(boolean MM) {
-        ShouldMM = MM;
-    }
 
     public double getStatorCurrent() {
         return mainMotor.getTorqueCurrent().getValueAsDouble();
@@ -116,28 +111,28 @@ public class Hood extends SubsystemBase {
         hoodTargetPosition.Position = pos;
     }
 
-    public void gotoMM(){
-                        mainMotor.setControl(hoodTargetPosition);
+    public void gotoMM() {
+        mainMotor.setControl(hoodTargetPosition);
 
     }
 
-    public void setMotionMagic() {
+   
 
-        if (ShouldMM) {
+    public void setMotionMagic(double target) {
+        hoodTargetPosition.Position = target;
 
-            if (Math.abs(mainMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.04) {
-                mainMotor.set(0);
-            } else {
-                if (hoodTargetPosition.Position > 1.3) {
-                    hoodTargetPosition.Position = 1.3;
-                } else if (hoodTargetPosition.Position < 0) {
-                    hoodTargetPosition.Position = 0;
+        // if (Math.abs(mainMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.04) {
+        //     mainMotor.set(0);
+        // } else {
+        //     if (hoodTargetPosition.Position > 1.3) {
+        //         hoodTargetPosition.Position = 1.3;
+        //     } else if (hoodTargetPosition.Position < 0) {
+        //         hoodTargetPosition.Position = 0;
 
-                }
-                mainMotor.setControl(hoodTargetPosition);
+        //     }
+            mainMotor.setControl(hoodTargetPosition);
 
-            }
-        }
+        // }
 
     }
 
@@ -146,14 +141,7 @@ public class Hood extends SubsystemBase {
         SmartDashboard.putNumber("Hood/HoodTargetPosition", hoodTargetPosition.Position);
         SmartDashboard.putNumber("Hood/Hood pos", mainMotor.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("Hood/Stator Current", getStatorCurrent());
-        SmartDashboard.putBoolean("Hood/manual", ShouldMM);
-        if(ShouldMM){
-                            // mainMotor.setControl(hoodTargetPosition);
 
-        }
-        if (mainMotor.hasResetOccurred()) {
-            isHomed = false;
-        }
     }
 
 }

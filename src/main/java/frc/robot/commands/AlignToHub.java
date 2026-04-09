@@ -3,7 +3,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
@@ -40,10 +39,10 @@ public class AlignToHub {
 
                 double dist = hubToRobot.getNorm();
 
-                // if (dist < 0.01) {
-                // hubToRobot = new Translation2d(shootRadius, 0);
-                // dist = shootRadius;
-                // }
+                if (dist < 0.01) {
+                        hubToRobot = new Translation2d(shootRadius, 0);
+                        dist = shootRadius;
+                }
 
                 Translation2d targetTranslation = hubPos.plus(
                                 hubToRobot.times(shootRadius / dist));
@@ -148,6 +147,6 @@ public class AlignToHub {
                                         new InstantCommand(() -> SmartDashboard.putBoolean("IsAligned", true)));
                 }, Set.of(CommandSwerveDrivetrain.getInstance()));
 
-                return alignCommand;
+                return alignCommand.withName("Auto align to hub");
         }
 }

@@ -95,8 +95,7 @@ public class VisionStangs {
         if (isDisabled) {
             LimelightHelpers.SetIMUMode(CameraName, 1);
 
-            NetworkTableInstance.getDefault().getTable(CameraName)
-                    .getEntry("throttle_set").setNumber(200);
+            LimelightHelpers.SetThrottle(CameraName, 200);
         } else {
 
             LimelightHelpers.SetRobotOrientation(CameraName,
@@ -108,9 +107,8 @@ public class VisionStangs {
                     0d);
 
             LimelightHelpers.SetIMUMode(CameraName, 3);
+            LimelightHelpers.SetThrottle(CameraName, 0);
 
-            NetworkTableInstance.getDefault().getTable(CameraName)
-                    .getEntry("throttle_set").setNumber(0);
         }
 
         if (!Robot.isSimulation()) {

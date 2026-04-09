@@ -274,6 +274,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 getPigeon2().getAngularVelocityZWorld().getValueAsDouble());
         SmartDashboard.putBoolean("Vision/UseVision", RobotContainer.useVision);
 
+                    SmartDashboard.putNumber("Drivetrain/current speed", Math.sqrt(
+                        
+
+                    Math.pow(this.getState().Speeds.vxMetersPerSecond, 2)+
+ Math.pow(this.getState().Speeds.vyMetersPerSecond, 2)                    
+                    )
+                    );
+
         photonVisionBack.periodic();
 
         visionPoses.clear();

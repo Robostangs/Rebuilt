@@ -1,81 +1,91 @@
 package frc.robot.commands.DumperCommands;
 
-import java.util.function.BooleanSupplier;
+import java.util.Set;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.commands.Index;
+import frc.robot.FeederCommands.Feed;
+import frc.robot.FeederCommands.setFeederSpeed;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
-import frc.robot.commands.IntakeCommands.StartIntake;
+import frc.robot.commands.IntakeCommands.IntakeFactory;
+import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Dumper.Flywheel;
-import frc.robot.subsystems.Dumper.Hood;
 
-public class dumpFactory {
+public class DumpFactory {
         public static Command Shoot() {
-
                 return new ChargeUp()
                                 .alongWith(new setHoodPosition())
-                                .alongWith(new RunHopper())
-                                .alongWith(new Index());
+                                .alongWith(new RunHopper(() -> Constants.HopperConstants.kRollerDC))
+                                .alongWith(new setFeederSpeed(() -> Constants.FeederConstants.kFeedDutyCycle));
         }
 
-        public static Command ShootHalforPass() {
+        public static Command SmartFeed() {
+                return new DeferredCommand(
+                                () -> {
+                                        if (!Robot.isShooterDumb()) {
 
-                return new ChargeUp(Constants.FlywheelConstants.kHalfSetpoint)
-                                .alongWith(new setHoodPosition(Constants.HoodConstants.kHalfSetpoint))
-                                .alongWith(
-                                                new WaitUntilCommand(
+                                                return new WaitUntilCommand(
                                                                 () -> Flywheel.getInstance().shooterAtTargetVelocity())
-                                                                .andThen(new Index())
-                                                                .alongWith(new WaitCommand(0.3)
-                                                                                .andThen(new RunHopper())));
-        }
-        
+                                                                .andThen(new Feed(
+                                                                                () -> 85))
+                                                                .alongWith(new WaitUntilCommand(() -> Feeder
+                                                                                .getInstance().feederAtTargetVelocity())
+                                                                                .andThen(new RunHopper(
+                                                                                                () -> Constants.HopperConstants.kRollerDC)));
+                                        } else {
+                                                return (new RunHopper(() -> Constants.HopperConstants.kRollerDC))
+                                                                .alongWith(new setFeederSpeed(
+                                                                                () -> 1));
+                                        }
+                                }, Set.of(Hopper.getInstance(), Feeder.getInstance()));
 
-        public static Command pass() {
-                return new ChargeUp(Constants.FlywheelConstants.kPassSetpoint)
-                                .alongWith(new setHoodPosition(Constants.HoodConstants.kPosAtOppositeAlliancePass))
-                                .alongWith(new RunHopper())
-                                .alongWith(new Index());
+        }
+
+        public static Command RegressionShoot() {
+
+                return new ChargeUp()
+                                .alongWith(
+                                                new setHoodPosition())
+                                .alongWith(
+                                                SmartFeed())
+                                .withName("Regression Shoot Command");
+        }
+
+        public static Command Pass() {
+                return new ChargeUp(() -> Constants.FlywheelConstants.kPassSetpoint)
+                                .alongWith(new setHoodPosition(
+                                                () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
+                                .alongWith(
+                                                SmartFeed())
+                                .withName("Pass Command");
+        }
+
+        public static Command ElectroShoot() {
+                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
+                                .alongWith(
+                                                new setHoodPosition(() -> Constants.HoodConstants.kDumbShootHoodPos))
+                                .alongWith(
+                                                SmartFeed())
+                                .withName("Regression Shoot Command");
+        }
+
+        public static Command SmartShoot() {
+                if (Robot.isPassing()) {
+                        return Pass();
+                } else {
+                        return RegressionShoot().alongWith(IntakeFactory.OscillateIntake());
+                }
         }
 
         public static Command PhotoShoot() {
-                return ShootHalforPass().alongWith(new StartIntake());
+                return (RegressionShoot().alongWith(IntakeFactory.OscillateIntake()))
+                                .until(() -> Hopper.getInstance().getPhotoSensor());
         }
 
-        public static Command ShootTrench() {
-
-                return new InstantCommand(() -> Robot.setShooterIsDumb(false))
-                                .andThen(
-                                                new ChargeUp(Constants.FlywheelConstants.kTrenchSetpoint))
-                                .alongWith(new setHoodPosition(Constants.HoodConstants.kTrenchSetpoint))
-                                .alongWith(new RunHopper())
-                                .alongWith(new Index());
-        }
-
-        public static Command HoodDown() {
-                return new InstantCommand(() -> Hood.getInstance().setMotionMagicTarget(0),
-                                Hood.getInstance())
-                                .andThen(new InstantCommand(
-                                                () -> Hood.getInstance().setMotionMagic(),
-                                                Hood.getInstance()));
-        }
-
-        public static Command dumbShoot() {
-                return new InstantCommand(() -> Robot.setShooterIsDumb(true))
-                                .alongWith(new ChargeUp(75))
-                                .alongWith(new setHoodPosition(.4))
-                                .alongWith(new Index())
-                                .finallyDo(() -> Robot.setShooterIsDumb(false));
-        }
-
-        public static Command dumbShootTrench() {
-                return new ChargeUp().alongWith(new setHoodPosition(.75)).alongWith(new Index());
-        }
 }

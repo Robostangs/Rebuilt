@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,6 +12,7 @@ import frc.robot.Constants;
 
 public class Hopper extends SubsystemBase {
     public TalonFX roller;
+    private DigitalInput photosensor;
 
     public static Hopper mInstance;
 
@@ -19,6 +21,7 @@ public class Hopper extends SubsystemBase {
     public Hopper() {
 
         roller = new TalonFX(Constants.HopperConstants.kRollerID);
+        photosensor = new DigitalInput(1);
 
     }
 
@@ -35,6 +38,11 @@ public class Hopper extends SubsystemBase {
     
     public void setRollerDutyCycle(double dutyCycle) {
         roller.set(dutyCycle);
+    }
+
+    public boolean getPhotoSensor(){
+        return photosensor.get();
+        // return false;
     }
 
     public void postRollerStatus(String status) {
@@ -55,5 +63,7 @@ public class Hopper extends SubsystemBase {
         } else {
             hopperAlert.set(false);
         }
+
+        SmartDashboard.putBoolean("Hopper/photoelectric", getPhotoSensor());
     }
 }

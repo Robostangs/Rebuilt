@@ -1,7 +1,5 @@
 package frc.robot.subsystems.Dumper;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -15,21 +13,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class Flywheel extends SubsystemBase {
     TalonFX mainShooterMotor;
-    TalonFX slaceShooterMotor;
+    TalonFX slaveShooterMotor;
     public static Flywheel mInstance;
     public Pose2d targetPose;
-    private double adjustVal = 0;
     private VelocityVoltage flywheelTargetVelocity = new VelocityVoltage(0);
     private Follower slaveControl;
 
     public Flywheel() {
         mainShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
-        slaceShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
+        slaveShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
         configureFlywheelMotors();
+
         slaveControl = new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Opposed);
     }
 
@@ -38,6 +35,8 @@ public class Flywheel extends SubsystemBase {
 
         flywheelConfig.CurrentLimits.SupplyCurrentLimit = Constants.DumperConstants.kShooterSupplyCurrentLimit;
         flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterMotorStatorCurrentLimit;
+
+        flywheelConfig.CurrentLimits.SupplyCurrentLowerTime = 2;
 
         flywheelConfig.Slot0.kP = Constants.FlywheelConstants.kShooterMotorP;
         flywheelConfig.Slot0.kI = Constants.FlywheelConstants.kShooterMotorI;
@@ -57,35 +56,24 @@ public class Flywheel extends SubsystemBase {
         // Apply the PID configurations to the shooter motor
         mainShooterMotor.getConfigurator().apply(flywheelConfig);
 
-        TalonFXConfiguration flyWheelSlaveConfig = new TalonFXConfiguration();
-
-        flyWheelSlaveConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterSlaveMotorStatorCurrentLimit;
-        flyWheelSlaveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-
-        slaceShooterMotor.getConfigurator().apply(flyWheelSlaveConfig);
+        slaveShooterMotor.getConfigurator().apply(flywheelConfig);
 
     }
 
     public double getFlywheelTargetVelocity() {
 
-        double feetFromTarget = Units.metersToFeet(Robot.getMetersFromTarget());
-        if (Robot.isPassing() && feetFromTarget > Constants.FieldConstants.maxRegressionDistance) {
-            // full send if we on opposing alliance and we're past the max actual distance
-            // for passing
-            return Constants.FlywheelConstants.kVelocityAtOppositeAlliancePass;
-        } else {
+        double MetersfromTarget = (Robot.getMetersFromTarget());
+
             // Acc get regression here
-            return 2.2 * feetFromTarget + 52;
+            return 15.3+(8.27*MetersfromTarget) +((-.936)*Math.pow(MetersfromTarget, 2));
 
-        }
-    }
-
-    public void setFlywheelVelocity(double rps) {
-        flywheelTargetVelocity.Velocity = rps + adjustVal;
+        
     }
 
     public void setFlywheelDC(double dc) {
         mainShooterMotor.set(dc);
+        slaveShooterMotor.set(0);
+
     }
 
     public static Flywheel getInstance() {
@@ -95,8 +83,12 @@ public class Flywheel extends SubsystemBase {
         return mInstance;
     }
 
-    public void adjustRPM(DoubleSupplier adjustment) {
-        adjustVal = adjustment.getAsDouble();
+    public void setVelocity(double target) {
+        flywheelTargetVelocity.Velocity = target;
+
+        mainShooterMotor.setControl(flywheelTargetVelocity);
+        slaveShooterMotor.setControl(slaveControl);
+
     }
 
     public boolean shooterAtTargetVelocity() {
@@ -109,17 +101,7 @@ public class Flywheel extends SubsystemBase {
     public void periodic() {
 
         SmartDashboard.putNumber("Flywheel/Main Velocity", mainShooterMotor.getVelocity().getValueAsDouble());
-        SmartDashboard.putNumber("Flywheel/Slave Velocity", slaceShooterMotor.getVelocity().getValueAsDouble());
-        if (Math.abs(CommandSwerveDrivetrain.getInstance().getState().Speeds.omegaRadiansPerSecond) > 2
-                || flywheelTargetVelocity.Velocity == 0) {
-            mainShooterMotor.set(0);
-            slaceShooterMotor.set(0);
-        } else {
-            flywheelTargetVelocity.Velocity = flywheelTargetVelocity.Velocity + adjustVal;
-            mainShooterMotor.setControl(flywheelTargetVelocity);
-            slaceShooterMotor.setControl(slaveControl);
-
-        }
+        SmartDashboard.putNumber("Flywheel/Slave Velocity", slaveShooterMotor.getVelocity().getValueAsDouble());
 
         SmartDashboard.putNumber("Flywheel/Target Velocity", flywheelTargetVelocity.Velocity);
 

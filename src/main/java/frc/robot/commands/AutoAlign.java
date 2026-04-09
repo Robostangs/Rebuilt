@@ -9,6 +9,8 @@ import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -74,9 +76,9 @@ public class AutoAlign extends Command {
     @Override
     public void execute() {
 
+        targetPose = Robot.setTargetPose();
 
         if (!Robot.isPassing()) {
-            setTargetPose();
 
             getTargetRotation = () -> {
 
@@ -86,18 +88,29 @@ public class AutoAlign extends Command {
                                 drivetrain.getState().Pose.getX() - targetPose.getX())))
                         // .minus(Rotation2d.kZero)
 
-                        .minus(!Robot.isRed() ? Rotation2d.k180deg : Rotation2d.kZero)
-                        ;
+                        .minus(!Robot.isRed() ? Rotation2d.k180deg : Rotation2d.kZero);
             };
-            SmartDashboard.putNumber("Drive current theta",
-                    Math.atan2(
-                            drivetrain.getState().Pose.getY() - targetPose.getY(),
-                            drivetrain.getState().Pose.getX() - targetPose.getX()));
+     
         } else {
             getTargetRotation = () -> Rotation2d.k180deg;
         }
 
         driveRequest.TargetDirection = getTargetRotation.get();
+
+               SmartDashboard.putNumber("Drive current theta",
+                  (
+                  Units.radiansToRotations(
+                Math.atan2(
+                                drivetrain.getState().Pose.getY() - targetPose.getY(),
+                                drivetrain.getState().Pose.getX() - targetPose.getX())
+                  ) 
+                                ));
+
+                   SmartDashboard.putNumber("Drive Target theta",
+                  (
+                  driveRequest.TargetDirection.getRadians()
+                                ));
+
 
         driveRequest
                 .withVelocityX(-translateX.get()
@@ -110,23 +123,12 @@ public class AutoAlign extends Command {
         drivetrain.setControl(driveRequest);
         drivetrain.postStatus("Currently aligning");
 
-    }
-
-    public double timeToShoot(double metersfromHub) {
-        return 1.15 - .455 * metersfromHub + .378 * Math.pow(metersfromHub, 2) - .118 * Math.pow(metersfromHub, 3)
-                + .013 * Math.pow(metersfromHub, 4);
-    }
-
-    public void setTargetPose() {
-
-        Translation2d targetHubPose = !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
-                : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation());
-
-        targetPose = new Pose2d(targetHubPose, new Rotation2d());
-
-        Robot.teleopField.getObject("TargetPose").setPose(targetPose);
+        SmartDashboard.putBoolean("Is pid at setpoint", driveRequest.HeadingController.atSetpoint());
 
     }
+
+
+    
 
     @Override
     public void end(boolean interrupted) {
@@ -135,10 +137,9 @@ public class AutoAlign extends Command {
 
     @Override
     public boolean isFinished() {
-        if(isAuto){
-            return
-            (driveRequest.HeadingController.atSetpoint());
-        }
+        // if (isAuto) {
+        //     return (driveRequest.HeadingController.atSetpoint());
+        // }
 
         return false;
     }

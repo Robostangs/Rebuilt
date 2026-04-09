@@ -53,7 +53,8 @@ public class DumpFactory {
                                 .alongWith(
                                                 new setHoodPosition())
                                 .alongWith(
-                                                SmartFeed()).withName("Regression Shoot Command");
+                                                SmartFeed())
+                                .withName("Regression Shoot Command");
         }
 
         public static Command Pass() {
@@ -61,18 +62,18 @@ public class DumpFactory {
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 .alongWith(
-                                                SmartFeed()).withName("Pass Command");
+                                                SmartFeed())
+                                .withName("Pass Command");
         }
 
-
-        public static Command ElectroShoot(){
-                     return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
+        public static Command ElectroShoot() {
+                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
                                 .alongWith(
                                                 new setHoodPosition(() -> Constants.HoodConstants.kDumbShootHoodPos))
                                 .alongWith(
-                                                SmartFeed()).withName("Regression Shoot Command");
+                                                SmartFeed())
+                                .withName("Regression Shoot Command");
         }
-
 
         public static Command SmartShoot() {
                 if (Robot.isPassing()) {
@@ -83,7 +84,8 @@ public class DumpFactory {
         }
 
         public static Command PhotoShoot() {
-                return RegressionShoot().alongWith(IntakeFactory.OscillateIntake());
+                return (RegressionShoot().alongWith(IntakeFactory.OscillateIntake()))
+                                .until(() -> Hopper.getInstance().getPhotoSensor());
         }
 
 }

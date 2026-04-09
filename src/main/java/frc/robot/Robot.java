@@ -20,6 +20,9 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -132,14 +135,12 @@ public class Robot extends TimedRobotstangs {
         configureTeleopTab();
         loadNamedCommands();
 
-        Hood.getInstance().setDefaultCommand( new setHoodDutyCycle(() -> 0d));
+        Hood.getInstance().setDefaultCommand(new setHoodDutyCycle(() -> 0d));
         Flywheel.getInstance().setDefaultCommand(new setFlywheelDutyCycle(() -> 0d));
         Feeder.getInstance().setDefaultCommand(new setFeederSpeed(() -> 0d));
         IntakePivot.getInstance().setDefaultCommand(new MovePivot(() -> 0d));
         Kirby.getInstance().setDefaultCommand(new setKirbyWheels(() -> 0));
         Hopper.getInstance().setDefaultCommand(new RunHopper(() -> 0d));
-
-
 
     }
 
@@ -253,9 +254,6 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void disabledInit() {
 
-           
-
-
         for (String name : AutoBuilder.getAllAutoNames()) {
             autoChooser.addOption(name, name);
         }
@@ -347,8 +345,6 @@ public class Robot extends TimedRobotstangs {
         CommandScheduler.getInstance().cancelAll();
 
         lastMatchSecond = Robot.isSimulation() ? (int) Timer.getFPGATimestamp() : (int) DriverStation.getMatchTime();
-
-     
 
     }
 
@@ -455,25 +451,22 @@ public class Robot extends TimedRobotstangs {
         setupPitTestDashboard();
         setupAutoPitTest();
         SmartDashboard.putNumber("Regression Hood Setpoint", 0);
-        SmartDashboard.putNumber("Regression Flywheel Setpoint", 0);     
+        SmartDashboard.putNumber("Regression Flywheel Setpoint", 0);
 
-
-        Hood.getInstance().setDefaultCommand( new setHoodPosition(() ->SmartDashboard.getNumber("Regression Hood Setpoint", 0)));
-        Flywheel.getInstance().setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0)));
-
-
+        Hood.getInstance()
+                .setDefaultCommand(new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood Setpoint", 0)));
+        Flywheel.getInstance()
+                .setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0)));
 
     }
 
     @Override
     public void testPeriodic() {
 
-
     }
 
     @Override
     public void testExit() {
-
 
     }
 
@@ -512,8 +505,8 @@ public class Robot extends TimedRobotstangs {
 
     }
 
-
-    //Q41, put autoalign back in changed path to go more in and slower, canceled commands going into teleop., added auto align back to auto
+    // Q41, put autoalign back in changed path to go more in and slower, canceled
+    // commands going into teleop., added auto align back to auto
     public void configureTeleopTab() {
         teleopTab = Shuffleboard.getTab("Teleop");
 
@@ -528,14 +521,14 @@ public class Robot extends TimedRobotstangs {
 
         NamedCommands.registerCommand("Extend", IntakeFactory.ExtendIntake());
 
-        NamedCommands.registerCommand("Retract",IntakeFactory.RetractIntake());
+        NamedCommands.registerCommand("Retract", IntakeFactory.RetractIntake());
 
         NamedCommands.registerCommand("Photoshoot",
                 (DumpFactory.PhotoShoot()));
 
         NamedCommands.registerCommand("AutoAlign", new AutoAlign());
 
-        //  new PrintCommand("ALIGN!"));
+        // new PrintCommand("ALIGN!"));
 
         NamedCommands.registerCommand("BumpTake", new setPivotPosition(Constants.KirbyConstants.kIntakePivotBump));
 
@@ -545,9 +538,43 @@ public class Robot extends TimedRobotstangs {
     }
 
     public static double getMetersFromTarget() {
+
         return CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
-                !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
-                        : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation()));
+               setTargetPose().getTranslation());
+
+    }
+
+    public static double timeToShoot(double metersfromHub) {
+        return 1.15 - .455 * metersfromHub + .378 * Math.pow(metersfromHub, 2) - .118 * Math.pow(metersfromHub, 3)
+                + .013 * Math.pow(metersfromHub, 4);
+    }
+
+    public static Pose2d setTargetPose() {
+
+        Pose2d targetPose;
+
+        ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+                CommandSwerveDrivetrain.getInstance().getState().Speeds,
+                CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation());
+
+        Translation2d hubPose = !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
+                : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation());
+
+        double time = timeToShoot(
+           CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
+              hubPose)
+            );
+
+        Translation2d targetHubPose = hubPose.minus(
+                new Translation2d(
+                        robotSpeeds.vxMetersPerSecond * time,
+                        robotSpeeds.vyMetersPerSecond * time));
+
+        targetPose = new Pose2d(targetHubPose, new Rotation2d());
+
+        Robot.teleopField.getObject("TargetPose").setPose(targetPose);
+
+        return targetPose;
 
     }
 

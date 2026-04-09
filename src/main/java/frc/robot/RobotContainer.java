@@ -173,11 +173,13 @@ public class RobotContainer {
 
                 } else {
 
-                        drivetrain.setDefaultCommand(
-                                        drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
+                        // drivetrain.setDefaultCommand(
+                        // drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
 
-                        new Trigger(isMoving).debounce(0.15, DebounceType.kFalling)
-                                        .whileTrue(drivetrain.applyRequest(() -> drive
+                        // new Trigger(isMoving).debounce(0.15, DebounceType.kFalling)
+                        // .whileTrue(
+                        drivetrain.setDefaultCommand(
+                                        drivetrain.applyRequest(() -> drive
                                                         .withVelocityX(-xDrive.getLeftY() * MaxSpeed
                                                                         * leftBumper.getAsDouble())
                                                         .withVelocityY(-xDrive.getLeftX() * MaxSpeed
@@ -186,6 +188,7 @@ public class RobotContainer {
                                                                         -xDrive.getRightX() * MaxAngularRate
                                                                                         * (leftBumper.getAsDouble()
                                                                                                         + .25))));
+                        // );
 
                 }
         }

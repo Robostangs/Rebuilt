@@ -9,7 +9,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.util.ArrayList;
 import java.util.List;
-
+import frc.robot.Stable.StangDashboard;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -112,7 +112,7 @@ public class Robot extends TimedRobotstangs {
     public void robotInit() {
 
         SmartDashboard.putData("Field", teleopField);
-
+        StangDashboard.init();
         DataLogManager.start("");
         DataLogManager.log("Driverstation connected");
         DriverStation.startDataLog(DataLogManager.getLog());

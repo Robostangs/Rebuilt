@@ -17,7 +17,7 @@ import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Dumper.Flywheel;
 
-public class DumpFactory {
+public class ShootFactory {
         public static Command Shoot() {
                 return new ChargeUp()
                                 .alongWith(new setHoodPosition())

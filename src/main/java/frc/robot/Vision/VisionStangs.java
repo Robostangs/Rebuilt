@@ -106,7 +106,7 @@ public class VisionStangs {
                     0d,
                     0d);
 
-            LimelightHelpers.SetIMUMode(CameraName, 0);
+            LimelightHelpers.SetIMUMode(CameraName, 4);
             LimelightHelpers.SetThrottle(CameraName, 0);
 
         }

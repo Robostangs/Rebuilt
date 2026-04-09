@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Stable.ControllerStangs;
-import frc.robot.commands.DumperCommands.DumpFactory;
+import frc.robot.commands.DumperCommands.ShootFactory;
 import frc.robot.commands.DumperCommands.Hood.HomeHood;
 import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
 import frc.robot.commands.IntakeCommands.HomeIntake;
@@ -102,8 +102,8 @@ public class RobotContainer {
                 setDrivetrain();
 
                 xDrive.rightTrigger().whileTrue(
-                                (DumpFactory.RegressionShoot()));
-                xDrive.rightBumper().whileTrue(DumpFactory.Pass());
+                                (ShootFactory.RegressionShoot()));
+                xDrive.rightBumper().whileTrue(ShootFactory.Pass());
                 // close shoot
 
                 xDrive.rm()
@@ -128,7 +128,7 @@ public class RobotContainer {
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                xDrive.x().whileTrue(DumpFactory.SmartFeed());
+                xDrive.x().whileTrue(ShootFactory.SmartFeed());
 
                 xDrive.a().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2));

@@ -48,7 +48,7 @@ import frc.robot.FeederCommands.setFeederSpeed;
 import frc.robot.Stable.LimelightHelpers;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.AutoAlign;
-import frc.robot.commands.DumperCommands.DumpFactory;
+import frc.robot.commands.DumperCommands.ShootFactory;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
 import frc.robot.commands.DumperCommands.Flywheel.setFlywheelDutyCycle;
 import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
@@ -282,7 +282,7 @@ public class Robot extends TimedRobotstangs {
 
                     autoCommand = new InstantCommand(() -> CommandSwerveDrivetrain.getInstance()
                             .resetPose(Constants.FieldConstants.ShootPoseDepot)).andThen(
-                                    DumpFactory.Shoot());
+                                    ShootFactory.Shoot());
                 } else if (autoname.equals("SitAndShit")) {
                     autoCommand = new PrintCommand("Pooping");
                 } else {
@@ -312,7 +312,7 @@ public class Robot extends TimedRobotstangs {
                 new InstantCommand(() -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
                 autoCommand
         // ,new AutoAlign(),
-        // dumpFactory.PhotoShoot()
+        // ShootFactory.PhotoShoot()
         );
 
     }
@@ -524,7 +524,7 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Retract", IntakeFactory.RetractIntake());
 
         NamedCommands.registerCommand("Photoshoot",
-                (DumpFactory.RegressionShoot()));
+                (ShootFactory.RegressionShoot()));
 
         NamedCommands.registerCommand("AutoAlign", new AutoAlign());
 

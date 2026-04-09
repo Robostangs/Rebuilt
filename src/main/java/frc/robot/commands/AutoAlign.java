@@ -61,9 +61,11 @@ public class AutoAlign extends Command {
 
         PhoenixPIDController tunePID = new PhoenixPIDController(6.5, 0.5, 0.4);
         tunePID.enableContinuousInput(-Math.PI, Math.PI);
+        tunePID.setTolerance(0.01);
 
         driveRequest = new SwerveRequest.FieldCentricFacingAngle();
         driveRequest.HeadingController = tunePID;
+
 
         // this is for tuning and now we can tune the PID controller
         SmartDashboard.putData("Auto Align PID", driveRequest.HeadingController);
@@ -97,16 +99,13 @@ public class AutoAlign extends Command {
 
         driveRequest.TargetDirection = getTargetRotation.get();
 
-               SmartDashboard.putNumber("Drive current theta",
-                  (
-                  Units.radiansToRotations(
-                Math.atan2(
-                                drivetrain.getState().Pose.getY() - targetPose.getY(),
-                                drivetrain.getState().Pose.getX() - targetPose.getX())
-                  ) 
-                                ));
+               SmartDashboard.putNumber("Drive Target theta",
+                  
+                                  driveRequest.HeadingController.getSetpoint()
 
-                   SmartDashboard.putNumber("Drive Target theta",
+                );
+
+                   SmartDashboard.putNumber("Drive Current theta",
                   (
                   driveRequest.TargetDirection.getRadians()
                                 ));

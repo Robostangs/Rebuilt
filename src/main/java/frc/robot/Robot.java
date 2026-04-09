@@ -138,7 +138,7 @@ public class Robot extends TimedRobotstangs {
         Hood.getInstance().setDefaultCommand(new setHoodDutyCycle(() -> 0d));
         Flywheel.getInstance().setDefaultCommand(new setFlywheelDutyCycle(() -> 0d));
         Feeder.getInstance().setDefaultCommand(new setFeederSpeed(() -> 0d));
-        IntakePivot.getInstance().setDefaultCommand(new MovePivot(() -> 0d));
+        // IntakePivot.getInstance().setDefaultCommand(new MovePivot(() -> 0d));
         Kirby.getInstance().setDefaultCommand(new setKirbyWheels(() -> 0));
         Hopper.getInstance().setDefaultCommand(new RunHopper(() -> 0d));
 
@@ -524,7 +524,7 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Retract", IntakeFactory.RetractIntake());
 
         NamedCommands.registerCommand("Photoshoot",
-                (DumpFactory.PhotoShoot()));
+                (DumpFactory.RegressionShoot()));
 
         NamedCommands.registerCommand("AutoAlign", new AutoAlign());
 

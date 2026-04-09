@@ -141,9 +141,9 @@ public class AutoAlign extends Command {
 
     @Override
     public boolean isFinished() {
-        // if (isAuto) {
-        // return (driveRequest.HeadingController.atSetpoint());
-        // }
+        if (isAuto) {
+        return (driveRequest.HeadingController.atSetpoint());
+        }
 
         return false;
     }

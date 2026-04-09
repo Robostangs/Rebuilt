@@ -84,8 +84,10 @@ public class DumpFactory {
         }
 
         public static Command PhotoShoot() {
-                return (RegressionShoot().alongWith(IntakeFactory.OscillateIntake()))
-                                .until(() -> Hopper.getInstance().getPhotoSensor());
+                return (RegressionShoot());
+                
+                // .alongWith(IntakeFactory.OscillateIntake()))
+                //                 .until(() -> Hopper.getInstance().getPhotoSensor());
         }
 
 }

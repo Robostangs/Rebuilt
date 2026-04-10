@@ -94,7 +94,7 @@ public class AutoAlign extends Command {
                                 drivetrain.getState().Pose.getY() - targetPose.getY(),
                                 drivetrain.getState().Pose.getX() - targetPose.getX())))
 
-                        .minus(Robot.isRed() ? Rotation2d.k180deg : Rotation2d.kZero)
+                        .minus(!Robot.isRed() ? Rotation2d.k180deg : Rotation2d.kZero)
                         ;
 
             };

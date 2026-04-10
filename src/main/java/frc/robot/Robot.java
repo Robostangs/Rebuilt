@@ -287,6 +287,9 @@ public class Robot extends TimedRobotstangs {
                     autoCommand = new PrintCommand("Pooping");
                 } else {
                     autoCommand = new PathPlannerAuto(autoname);
+
+                    drawCurrentAuto(autoCommand.getName());
+
                 }
 
             } else {
@@ -295,8 +298,6 @@ public class Robot extends TimedRobotstangs {
 
             }
             SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
-
-            drawCurrentAuto(autoCommand.getName());
 
         }
         oldAutoname = autoname;
@@ -611,7 +612,7 @@ public class Robot extends TimedRobotstangs {
             try {
                 for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
                     for (Pose2d pose : path.getPathPoses()) {
-                        if(Robot.isRed()){
+                        if (Robot.isRed()) {
                             pose = FlippingUtil.flipFieldPose(pose);
                         }
                         poses.add(pose);
@@ -623,7 +624,7 @@ public class Robot extends TimedRobotstangs {
                 e.printStackTrace();
                 autoAlert.set(true);
             }
-          
+
             teleopField.getObject("auto").setPoses(poses);
 
         }

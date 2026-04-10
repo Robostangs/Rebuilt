@@ -3,7 +3,6 @@ package frc.robot.Vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -100,7 +99,7 @@ public class VisionStangs {
 
             LimelightHelpers.SetRobotOrientation(CameraName,
                     drivetrain.getState().Pose.getRotation().getDegrees(),
-                    drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), // Z = yaw
+                    drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 
                     0d,
                     0d,
                     0d,

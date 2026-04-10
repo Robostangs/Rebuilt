@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
@@ -157,8 +153,9 @@ public class RobotContainer {
 
         private void setDrivetrain() {
                 DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
-                BooleanSupplier isMoving = () -> (Math.abs(xDrive.getLeftX()) > 0.1 || Math.abs(xDrive.getLeftY()) > 0.1
-                                || Math.abs(xDrive.getRightX()) > 0.1);
+                BooleanSupplier isNotMoving = () -> (!((Math.abs(xDrive.getLeftX()) > 0.1
+                                || Math.abs(xDrive.getLeftY()) > 0.1
+                                || Math.abs(xDrive.getRightX()) > 0.1)));
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(
@@ -173,11 +170,12 @@ public class RobotContainer {
 
                 } else {
 
-                        // drivetrain.setDefaultCommand(
-                        // drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
+              
+                        new Trigger(isNotMoving).debounce(0.15, DebounceType.kFalling).whileTrue(
+                                        drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake())
+                        );
 
-                        // new Trigger(isMoving).debounce(0.15, DebounceType.kFalling)
-                        // .whileTrue(
+             
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(() -> drive
                                                         .withVelocityX(-xDrive.getLeftY() * MaxSpeed
@@ -188,7 +186,7 @@ public class RobotContainer {
                                                                         -xDrive.getRightX() * MaxAngularRate
                                                                                         * (leftBumper.getAsDouble()
                                                                                                         + .25))));
-                        // );
+                   
 
                 }
         }
@@ -200,7 +198,7 @@ public class RobotContainer {
                                                 () -> true));
 
                 new Trigger(() -> xSim.getRawButtonPressed(2))
-                                .onTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToHalfBump));
+                                .onTrue(new AutoAlign());
 
         }
 }

@@ -55,7 +55,6 @@ import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
-import frc.robot.commands.IntakeCommands.MovePivot;
 import frc.robot.commands.IntakeCommands.setPivotPosition;
 import frc.robot.commands.IntakeCommands.setKirbyWheels;
 import frc.robot.subsystems.CommandSwerveDrivetrain;

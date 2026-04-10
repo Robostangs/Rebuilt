@@ -4,13 +4,8 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
-import com.pathplanner.lib.util.FlippingUtil;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -42,9 +37,11 @@ public class AutoAlign extends Command {
         PhoenixPIDController tunePID = new PhoenixPIDController(6.5, 0.5, 0.4);
         tunePID.enableContinuousInput(-Math.PI, Math.PI);
 
+        tunePID.setTolerance(0.01);
+
         driveRequest = new SwerveRequest.FieldCentricFacingAngle();
         driveRequest.HeadingController = tunePID;
-        driveRequest.HeadingController.reset(); // still reset on first use
+        driveRequest.HeadingController.reset();
 
         this.addRequirements(drivetrain);
 
@@ -75,11 +72,7 @@ public class AutoAlign extends Command {
     @Override
     public void initialize() {
 
-        driveRequest.HeadingController.reset(); // reset accumulation but keep the object
-        SmartDashboard.putData("Auto Align PID", driveRequest.HeadingController);
-        drivetrain.postStatus("Auto Aligning");
-
-        // this is for tuning and now we can tune the PID controller
+        driveRequest.HeadingController.reset();
         SmartDashboard.putData("Auto Align PID", driveRequest.HeadingController);
         drivetrain.postStatus("Auto Aligning");
 
@@ -101,7 +94,9 @@ public class AutoAlign extends Command {
                                 drivetrain.getState().Pose.getY() - targetPose.getY(),
                                 drivetrain.getState().Pose.getX() - targetPose.getX())))
 
-                        .minus(!Robot.isRed() ? Rotation2d.k180deg : Rotation2d.kZero);
+                        .minus(Robot.isRed() ? Rotation2d.k180deg : Rotation2d.kZero)
+                        ;
+
             };
 
         } else {
@@ -142,7 +137,7 @@ public class AutoAlign extends Command {
     @Override
     public boolean isFinished() {
         if (isAuto) {
-        return (driveRequest.HeadingController.atSetpoint());
+            return (driveRequest.HeadingController.atSetpoint());
         }
 
         return false;

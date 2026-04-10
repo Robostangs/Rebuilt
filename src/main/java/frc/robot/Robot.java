@@ -247,6 +247,7 @@ public class Robot extends TimedRobotstangs {
         CommandScheduler.getInstance().run();
         gscollect.update();
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
+        SmartDashboard.putBoolean("Alliance is Red", Robot.isRed());
 
     }
 

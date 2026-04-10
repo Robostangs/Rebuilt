@@ -55,7 +55,7 @@ import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
-import frc.robot.commands.IntakeCommands.setPivotPosition;
+import frc.robot.commands.IntakeCommands.setIntakePosition;
 import frc.robot.commands.IntakeCommands.setKirbyWheels;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
@@ -530,7 +530,7 @@ public class Robot extends TimedRobotstangs {
 
         // new PrintCommand("ALIGN!"));
 
-        NamedCommands.registerCommand("BumpTake", new setPivotPosition(Constants.KirbyConstants.kIntakePivotBump));
+        NamedCommands.registerCommand("BumpTake", new setIntakePosition(Constants.KirbyConstants.kIntakePivotBump));
 
         NamedCommands.registerCommand("Climb",
                 new PrintCommand("Hi!"));

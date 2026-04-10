@@ -19,20 +19,20 @@ public class IntakeFactory {
     }
 
     public static Command ExtendIntake() {
-        return new setPivotPosition(Constants.KirbyConstants.kExtendSetpoint)
+        return new setIntakePosition(Constants.KirbyConstants.kExtendSetpoint)
             .alongWith(new setKirbyWheels(() -> 1))
             .withName("Extend Intake Command");
     }
 
     public static Command RetractIntake() {
-        return new setPivotPosition(Constants.KirbyConstants.kRetractSetpoint)
+        return new setIntakePosition(Constants.KirbyConstants.kRetractSetpoint)
         .withName("Retract Intake Command");
     }
 
     public static Command OscillateIntake() {
-        return (new setPivotPosition(0.145)
+        return (new setIntakePosition(0.145)
                 .andThen(new WaitCommand(0.25))
-                .andThen(new setPivotPosition(Constants.KirbyConstants.kExtendSetpoint))
+                .andThen(new setIntakePosition(Constants.KirbyConstants.kExtendSetpoint))
                 .andThen(new WaitCommand(0.25)))
                 .repeatedly()
                 .withName("Oscillate Intake Command");

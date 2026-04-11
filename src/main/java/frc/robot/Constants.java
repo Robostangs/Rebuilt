@@ -77,7 +77,7 @@ public final class Constants {
         public static final Pose2d HubPosition = new Pose2d(4.636, 4.042, new Rotation2d());
 
         // TODO find john
-        public static final Pose2d resetPose = new Pose2d(3.5, 4, new Rotation2d(Units.degreesToRadians(180)));
+        public static final Pose2d resetPose = new Pose2d(3.5, 4, new Rotation2d(Units.degreesToRadians(0)));
 
         // THIS IS IN FEET
         public static final double maxRegressionDistance = 30;
@@ -148,15 +148,15 @@ public final class Constants {
         public static final double hopperExtenderKS = 15;
         public static final double extenderSensorToMechanismRatio = 4.0 * 4 * 48 / 16;
         public static final double kExtendSetpoint = 0.02;
-        public static final double kRetractSetpoint = 0.23;
+        public static final double kRetractSetpoint = 0.2;
         // TODO: find this john
         public static final double kHopperExtensionTolerance = 0.01;
-        public static final double IntakeWheelCurrentLimit = 20;
+        public static final double IntakeWheelCurrentLimit = 100;
         public static final double hopperExtenderKG = 40;
         public static final double kHomeDutyCycle = 0.1;
         public static final double kHomePosition = 0.29;
         public static final double extenderPositionTolerance = 0.015;
-        public static final double IntakeWheelsStatorLimit = 40;
+        public static final double IntakeWheelsStatorLimit = 100;
         public static final double IntakePivotOscillateUpPos = 0.4;
         public static final double kIntakePivotBump = .15;
     }

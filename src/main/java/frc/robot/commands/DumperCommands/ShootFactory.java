@@ -16,14 +16,9 @@ import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Dumper.Flywheel;
+import frc.robot.subsystems.Dumper.Hood;
 
 public class ShootFactory {
-        public static Command Shoot() {
-                return new ChargeUp()
-                                .alongWith(new setHoodPosition())
-                                .alongWith(new RunHopper(() -> Constants.HopperConstants.kRollerDC))
-                                .alongWith(new setFeederSpeed(() -> Constants.FeederConstants.kFeedDutyCycle));
-        }
 
         public static Command SmartFeed() {
                 return new DeferredCommand(
@@ -31,17 +26,19 @@ public class ShootFactory {
                                         if (!Robot.isShooterDumb()) {
 
                                                 return new WaitUntilCommand(
-                                                                () -> Flywheel.getInstance().shooterAtTargetVelocity()).withTimeout(0.5)
+                                                                () -> Flywheel.getInstance().shooterAtTargetVelocity())
+                                                                .withTimeout(0.5)
                                                                 .andThen(new Feed(
                                                                                 () -> Constants.FeederConstants.kFeedRPSSetpoint))
                                                                 .alongWith(
-                                                                
-                                                                new WaitUntilCommand(() -> Feeder
-                                                                                .getInstance().feederAtTargetVelocity()).withTimeout(0.5)
 
+                                                                                new WaitUntilCommand(() -> Feeder
+                                                                                                .getInstance()
+                                                                                                .feederAtTargetVelocity())
+                                                                                                .withTimeout(0.5)
 
-                                                                                .andThen(new RunHopper(
-                                                                                                () -> Constants.HopperConstants.kRollerDC)));
+                                                                                                .andThen(new RunHopper(
+                                                                                                                () -> Constants.HopperConstants.kRollerDC)));
                                         } else {
                                                 return (new RunHopper(() -> Constants.HopperConstants.kRollerDC))
                                                                 .alongWith(new setFeederSpeed(
@@ -60,6 +57,18 @@ public class ShootFactory {
                                                 SmartFeed())
                                 .withName("Regression Shoot Command");
         }
+
+        
+        public static Command DumbShoot() {
+
+                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
+                                .alongWith(
+                                                new setHoodPosition(() -> 0.03))
+                                .alongWith(
+                                                SmartFeed())
+                                .withName("Regression Shoot Command");
+        }
+
 
         public static Command Pass() {
                 return new ChargeUp(() -> Constants.FlywheelConstants.kPassSetpoint)
@@ -80,11 +89,22 @@ public class ShootFactory {
         }
 
         public static Command SmartShoot() {
-                if (Robot.isPassing()) {
-                        return Pass();
-                } else {
-                        return RegressionShoot().alongWith(IntakeFactory.OscillateIntake());
-                }
+
+                return new DeferredCommand(
+
+                                () -> {
+                                        if (Robot.isPassing()) {
+                                                return Pass();
+                                        } else if (Robot.isShooterDumb()) {
+                                                return DumbShoot();
+
+                                        } else {
+                                                return RegressionShoot();
+                                        }
+
+                                }, Set.of(Flywheel.getInstance(), Hood.getInstance(), Hopper.getInstance(),
+                                                Feeder.getInstance()));
+
         }
 
         public static Command PhotoShoot() {

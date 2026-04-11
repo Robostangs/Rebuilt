@@ -21,6 +21,7 @@ import frc.robot.Stable.ControllerStangs;
 import frc.robot.commands.DumperCommands.ShootFactory;
 import frc.robot.commands.DumperCommands.Hood.HomeHood;
 import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
+import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.setKirbyWheels;
@@ -100,6 +101,7 @@ public class RobotContainer {
 
                 xDrive.rightTrigger().whileTrue(
                                 (ShootFactory.RegressionShoot()));
+
                 xDrive.rightBumper().whileTrue(ShootFactory.Pass());
                 // close shoot
 
@@ -109,7 +111,7 @@ public class RobotContainer {
                 xDrive.lm()
                                 .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToTower));
 
-                xDrive.rightPaddle().whileTrue(new setKirbyWheels(() -> 1));
+                xDrive.rightPaddle().whileTrue(IntakeFactory.ExtendIntake());
                 xDrive.leftPaddle().whileTrue(IntakeFactory.RetractIntake());
 
                 // TODO Find ts pose
@@ -125,7 +127,7 @@ public class RobotContainer {
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                xDrive.x().whileTrue(ShootFactory.SmartFeed());
+                xDrive.x().whileTrue(new RunHopper(() -> 1));
 
                 xDrive.a().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2));

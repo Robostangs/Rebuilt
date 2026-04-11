@@ -282,7 +282,7 @@ public class Robot extends TimedRobotstangs {
 
                     autoCommand = new InstantCommand(() -> CommandSwerveDrivetrain.getInstance()
                             .resetPose(Constants.FieldConstants.ShootPoseDepot)).andThen(
-                                    ShootFactory.Shoot());
+                                    ShootFactory.DumbShoot());
                 } else if (autoname.equals("SitAndShit")) {
                     autoCommand = new PrintCommand("Pooping");
                 } else {

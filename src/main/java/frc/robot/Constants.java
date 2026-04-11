@@ -104,6 +104,7 @@ public final class Constants {
         public static final double HopperExtenderCurrentLimit = 60;
         public static final double kFeederVelocityTolerance = 3;
         public static final double feederExtenderKS = 0.33;
+        public static final double kFeedRPSSetpoint = 75*.53;
 
     }
 
@@ -243,7 +244,7 @@ public final class Constants {
 
         // Theoretical free speed (m/s) at 12 V applied output;
         // This needs to be tuned to your individual robot
-        public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.39);
+        public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.12);
 
         // The maximum acceleration of the robot in meters per second squared.
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;

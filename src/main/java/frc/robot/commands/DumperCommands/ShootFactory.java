@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.Constants.FeederConstants;
 import frc.robot.FeederCommands.Feed;
 import frc.robot.FeederCommands.setFeederSpeed;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
@@ -33,7 +34,7 @@ public class ShootFactory {
                                                 return new WaitUntilCommand(
                                                                 () -> Flywheel.getInstance().shooterAtTargetVelocity()).withTimeout(0.5)
                                                                 .andThen(new Feed(
-                                                                                () -> 75))
+                                                                                () -> Constants.FeederConstants.kFeedRPSSetpoint))
                                                                 .alongWith(
                                                                 
                                                                 new WaitUntilCommand(() -> Feeder

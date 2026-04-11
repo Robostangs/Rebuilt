@@ -19,6 +19,12 @@
         {
           "type": "named",
           "data": {
+            "name": "AutoAlign"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Photoshoot"
           }
         },
@@ -26,6 +32,12 @@
           "type": "path",
           "data": {
             "pathName": "DBump - DIntake - DBump - DShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoAlign"
           }
         },
         {

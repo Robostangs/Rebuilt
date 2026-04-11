@@ -258,22 +258,22 @@ public final class Constants {
     }
 
     public class VisionConstants {
-        public static final double kLL4SeedMaxWz = 1;
-        public static final String kLimelightFour = "limelight-jarvis";
-        public static final String kLimelightFourR = "limelight-ultron";
+     //   public static final double kLL4SeedMaxWz = 1;
+        public static final String kLimelightFourSide = "limelight-jarvis";
+        public static final String kLimelightFourFront = "limelight-ultron";
 
-        public static final String kLimelightThree = "limelight-agomoto";
+     //   public static final String kLimelightThree = "limelight-agomoto";
         public static final double kVisionAngularThreshold = 20;
 
-        public static final String kPhotonCamNameRight = "Daredevil";
-        public static final Transform3d kRobotToCamRight = new Transform3d(
-                Units.inchesToMeters(1),
-                Units.inchesToMeters(-12.5),
-                Units.inchesToMeters(27.75),
-                new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(10),
-                        Units.degreesToRadians(-90)));
+        //public static final String kPhotonCamNameRight = "Daredevil";
+        // public static final Transform3d kRobotToCamRight = new Transform3d(
+        //         Units.inchesToMeters(1),
+        //         Units.inchesToMeters(-12.5),
+        //         Units.inchesToMeters(27.75),
+        //         new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(10),
+        //                 Units.degreesToRadians(-90)));
 
-        public static final String kPhotonCamNameBack = "Kratos";
+    //    public static final String kPhotonCamNameBack = "Kratos";
         public static final Transform3d kRobotToCamBack = new Transform3d(
                 Units.inchesToMeters(-13.02),
                 Units.inchesToMeters(8.787),
@@ -281,9 +281,9 @@ public final class Constants {
                 new Rotation3d(0, Units.degreesToRadians(32.29), Units.degreesToRadians(180)));
 
         public static final double kMTErrorThres = 0.05;
-        public static final String kLimelightLeft = "Jarvis";
-        public static final String kLimelightRight = "Ultron";
-        public static final Transform3d kRobotToCamRear = new Transform3d(new Transform2d());
+       // public static final String kLimelightLeft = "Jarvis";
+        //public static final String kLimelightRight = "Ultron";
+       // public static final Transform3d kRobotToCamRear = new Transform3d(new Transform2d());
 
         public static final double kPhotonAmbiguityThres = 0.2;
         public static final double kLLDisThres = 6;
@@ -291,7 +291,13 @@ public final class Constants {
                 26, 27, 29, 30, 31, 32 };
         // {1,12,6,7,17,28,22,23};
         //
-                public static final double kLLAmbiguityThres = .7;
+        public static final double kLLAmbiguityThres = .7;
+        public static final String kPhotonLL3Name = "friday";
+        public static final Transform3d kRobotToCamLL3 = new Transform3d(
+        Units.inchesToMeters(-13.02),
+        Units.inchesToMeters(8.787),
+        Units.inchesToMeters(9.9),
+        new Rotation3d(0, Units.degreesToRadians(32.29), Units.degreesToRadians(180)));
 
     }
 

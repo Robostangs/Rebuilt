@@ -321,8 +321,8 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void autonomousInit() {
 
-        LimelightHelpers.setRewindEnabled(Constants.VisionConstants.kLimelightFour, true);
-        LimelightHelpers.setRewindEnabled(Constants.VisionConstants.kLimelightFourR, true);
+        LimelightHelpers.setRewindEnabled(Constants.VisionConstants.kLimelightFourSide, true);
+        LimelightHelpers.setRewindEnabled(Constants.VisionConstants.kLimelightFourFront, true);
 
         CommandScheduler.getInstance().cancelAll();
 
@@ -439,8 +439,8 @@ public class Robot extends TimedRobotstangs {
     public void teleopExit() {
 
         if (DriverStation.isFMSAttached()) {
-            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFour, 150);
-            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourR, 150);
+            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourSide, 150);
+            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourFront, 150);
         }
     }
 

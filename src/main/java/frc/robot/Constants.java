@@ -69,7 +69,7 @@ public final class Constants {
     public static class HopperConstants {
 
         public static final int kRollerID = 17;
-        public static final double kRollerDC = 0.5;
+        public static final double kRollerDC = 1;
 
     }
 
@@ -178,7 +178,7 @@ public final class Constants {
         public static final double kHoodStatorCurrentLimit = 40;
         public static final double kHoodHomeTimeout = .5;
         public static final double kHoodUpPos = 0.8;
-        public static final double kPosAtOppositeAlliancePass = 1.3;
+        public static final double kPosAtOppositeAlliancePass = .4;
         public static final double kDumbShootHoodPos = 0.2;
         public static final double kHalfSetpoint = 0.17;
         public static final double kTrenchSetpoint = 0;
@@ -190,7 +190,7 @@ public final class Constants {
         public static final double kPeakReverseOutput = 0;
         public static final double kShootSpeed = 60;
         // public static final int kFlywheelMotorID = 0;
-        public static final double kShooterMotorP = .2;
+        public static final double kShooterMotorP = .4;
         public static final double kShooterMotorI = 0.07;
         public static final double kShooterMotorD = 0;
         public static final double kShooterMotorG = 0;
@@ -207,7 +207,7 @@ public final class Constants {
         public static final double kHalfSetpoint = 30;
         public static final double kTrenchSetpoint = 0;
         public static final double kShootSetpoint = 30d;
-        public static final double kPassSetpoint = 50;
+        public static final double kPassSetpoint = 40;
 
     }
 
@@ -285,7 +285,7 @@ public final class Constants {
         public static final Transform3d kRobotToCamRear = new Transform3d(new Transform2d());
 
         public static final double kPhotonAmbiguityThres = 0.2;
-        public static final double kLLDisThres = 3;
+        public static final double kLLDisThres = 6;
         public static final int[] goodIDS = { 2, 3, 4, 5, 8, 9, 10, 11, 13, 14, 15, 16, 18, 19, 20, 21, 24, 25,
                 26, 27, 29, 30, 31, 32 };
         // {1,12,6,7,17,28,22,23};

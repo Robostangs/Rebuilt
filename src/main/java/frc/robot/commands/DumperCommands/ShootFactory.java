@@ -31,11 +31,15 @@ public class ShootFactory {
                                         if (!Robot.isShooterDumb()) {
 
                                                 return new WaitUntilCommand(
-                                                                () -> Flywheel.getInstance().shooterAtTargetVelocity())
+                                                                () -> Flywheel.getInstance().shooterAtTargetVelocity()).withTimeout(0.5)
                                                                 .andThen(new Feed(
-                                                                                () -> 85))
-                                                                .alongWith(new WaitUntilCommand(() -> Feeder
-                                                                                .getInstance().feederAtTargetVelocity())
+                                                                                () -> 75))
+                                                                .alongWith(
+                                                                
+                                                                new WaitUntilCommand(() -> Feeder
+                                                                                .getInstance().feederAtTargetVelocity()).withTimeout(0.5)
+
+
                                                                                 .andThen(new RunHopper(
                                                                                                 () -> Constants.HopperConstants.kRollerDC)));
                                         } else {
@@ -51,7 +55,7 @@ public class ShootFactory {
 
                 return new ChargeUp()
                                 .alongWith(
-                                                new setHoodPosition())
+                                                new setHoodPosition(() -> 0.03))
                                 .alongWith(
                                                 SmartFeed())
                                 .withName("Regression Shoot Command");

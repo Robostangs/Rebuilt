@@ -62,8 +62,7 @@ public class Flywheel extends SubsystemBase {
 
         double MetersfromTarget = (Robot.getMetersFromTarget());
 
-            // Acc get regression here
-            return 15.3+(8.27*MetersfromTarget) +((-.936)*Math.pow(MetersfromTarget, 2));
+            return 0.596 + 23*MetersfromTarget- 6.46*Math.pow(MetersfromTarget, 2)+0.627*Math.pow(MetersfromTarget, 3);
 
         
     }

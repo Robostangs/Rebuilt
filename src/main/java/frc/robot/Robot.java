@@ -451,11 +451,11 @@ public class Robot extends TimedRobotstangs {
         CommandScheduler.getInstance().cancelAll();
         setupPitTestDashboard();
         setupAutoPitTest();
-        SmartDashboard.putNumber("Regression Hood Setpoint", 0);
+        SmartDashboard.putNumber("Regression Hood Setpoint", 0.03);
         SmartDashboard.putNumber("Regression Flywheel Setpoint", 0);
 
         Hood.getInstance()
-                .setDefaultCommand(new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood Setpoint", 0)));
+                .setDefaultCommand(new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood Setpoint", 0.03)));
         Flywheel.getInstance()
                 .setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0)));
 

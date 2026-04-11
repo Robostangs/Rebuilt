@@ -55,10 +55,10 @@ public class Hood extends SubsystemBase {
     }
 
     public double getHoodAngle(double metersFromTarget) {
-        double MetersfromTarget = (metersFromTarget);
 
 
-            return -1.57+ (1.83*MetersfromTarget)-(0.674* Math.pow(MetersfromTarget, 2))+ (.0838 * Math.pow(MetersfromTarget, 3));
+            // return -1.57+ (1.83*MetersfromTarget)-(0.674* Math.pow(MetersfromTarget, 2))+ (.0838 * Math.pow(MetersfromTarget, 3));
+            return 0.03;
 
         
     }
@@ -120,18 +120,10 @@ public class Hood extends SubsystemBase {
     public void setMotionMagic(double target) {
         hoodTargetPosition.Position = target;
 
-        // if (Math.abs(mainMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.04) {
-        //     mainMotor.set(0);
-        // } else {
-        //     if (hoodTargetPosition.Position > 1.3) {
-        //         hoodTargetPosition.Position = 1.3;
-        //     } else if (hoodTargetPosition.Position < 0) {
-        //         hoodTargetPosition.Position = 0;
 
-        //     }
             mainMotor.setControl(hoodTargetPosition);
 
-        // }
+        
 
     }
 

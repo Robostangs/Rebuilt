@@ -180,7 +180,7 @@ public final class Constants {
         public static final double kHoodHomeTimeout = .5;
         public static final double kHoodUpPos = 0.8;
         public static final double kPosAtOppositeAlliancePass = .4;
-        public static final double kDumbShootHoodPos = 0.2;
+        public static final double kDumbShootHoodPos = 0.03;
         public static final double kHalfSetpoint = 0.17;
         public static final double kTrenchSetpoint = 0;
         public static final double kShootSetpoint = 0.5;

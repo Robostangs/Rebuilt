@@ -62,7 +62,18 @@ public class Flywheel extends SubsystemBase {
 
         double MetersfromTarget = (Robot.getMetersFromTarget());
 
-            return 0.596 + 23*MetersfromTarget- 6.46*Math.pow(MetersfromTarget, 2)+0.627*Math.pow(MetersfromTarget, 3);
+        double regressionValue = 0.596 + 23*MetersfromTarget- 6.46*Math.pow(MetersfromTarget, 2)+0.627*Math.pow(MetersfromTarget, 3);;
+
+        if(regressionValue < 0 ){
+            return 0;
+        }
+        else if(regressionValue > 50){
+            return 50;
+        }
+        else{
+            return regressionValue;
+        }
+
 
         
     }

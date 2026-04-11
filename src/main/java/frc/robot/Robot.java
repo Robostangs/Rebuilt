@@ -345,7 +345,8 @@ public class Robot extends TimedRobotstangs {
     public void teleopInit() {
         CommandScheduler.getInstance().cancelAll();
 
-        lastMatchSecond = Robot.isSimulation() ? (int) Timer.getFPGATimestamp() : (int) DriverStation.getMatchTime();
+        lastMatchSecond = 
+        (int) DriverStation.getMatchTime();
 
     }
 

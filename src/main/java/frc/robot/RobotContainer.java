@@ -23,6 +23,7 @@ import frc.robot.commands.DumperCommands.Hood.HomeHood;
 import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
 import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
+import frc.robot.commands.IntakeCommands.setKirbyWheels;
 import frc.robot.commands.AlignToHub;
 import frc.robot.commands.AutoAlign;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -108,7 +109,7 @@ public class RobotContainer {
                 xDrive.lm()
                                 .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToTower));
 
-                xDrive.rightPaddle().whileTrue(IntakeFactory.ExtendIntake());
+                xDrive.rightPaddle().whileTrue(new setKirbyWheels(() -> 1));
                 xDrive.leftPaddle().whileTrue(IntakeFactory.RetractIntake());
 
                 // TODO Find ts pose

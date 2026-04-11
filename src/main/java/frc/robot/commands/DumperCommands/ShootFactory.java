@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Constants.FeederConstants;
 import frc.robot.FeederCommands.Feed;
 import frc.robot.FeederCommands.setFeederSpeed;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
@@ -90,9 +89,7 @@ public class ShootFactory {
 
         public static Command PhotoShoot() {
                 return (RegressionShoot());
-                
-                // .alongWith(IntakeFactory.OscillateIntake()))
-                //                 .until(() -> Hopper.getInstance().getPhotoSensor());
+
         }
 
 }

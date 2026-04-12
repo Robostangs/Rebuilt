@@ -112,7 +112,8 @@ public class RobotContainer {
                                 .whileTrue(IntakeFactory.OscillateIntake());
 
                 xDrive.lm()
-                                .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToTower));
+                                .onTrue(                (ShootFactory.RegressionShoot()).withTimeout(3)
+);
 
                 xDrive.rightPaddle().whileTrue(IntakeFactory.ExtendIntake());
                 xDrive.leftPaddle().whileTrue(IntakeFactory.RetractIntake());

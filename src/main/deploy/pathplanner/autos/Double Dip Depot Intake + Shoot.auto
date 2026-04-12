@@ -11,15 +11,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "sequential",
           "data": {
-            "name": "AutoAlign"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Photoshoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlign"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Photoshoot"
+                }
+              }
+            ]
           }
         },
         {
@@ -29,15 +36,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "sequential",
           "data": {
-            "name": "AutoAlign"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Photoshoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlign"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Photoshoot"
+                }
+              }
+            ]
           }
         }
       ]

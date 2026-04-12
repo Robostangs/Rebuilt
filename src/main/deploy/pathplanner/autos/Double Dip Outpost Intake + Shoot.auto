@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Extend"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "OStart - OBump - OIntake - OBump"

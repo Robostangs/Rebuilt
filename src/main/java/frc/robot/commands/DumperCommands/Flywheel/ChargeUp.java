@@ -51,6 +51,7 @@ public class ChargeUp extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        shooter.setVelocity(0);
         shooter.postStatus("Charged");
     }
 

@@ -20,30 +20,21 @@ import frc.robot.subsystems.Dumper.Hood;
 public class ShootFactory {
 
         public static Command SmartFeed() {
-                return new DeferredCommand(
-                                () -> {
-                                        if (!Robot.isShooterDumb()) {
 
-                                                return new WaitUntilCommand(
-                                                                () -> Flywheel.getInstance().shooterAtTargetVelocity())
+                return new WaitUntilCommand(
+                                () -> Flywheel.getInstance().shooterAtTargetVelocity())
+                                .withTimeout(0.5)
+                                .andThen(new Feed(
+                                                () -> Constants.FeederConstants.kFeedRPSSetpoint))
+                                .alongWith(
+
+                                                new WaitUntilCommand(() -> Feeder
+                                                                .getInstance()
+                                                                .feederAtTargetVelocity())
                                                                 .withTimeout(0.5)
-                                                                .andThen(new Feed(
-                                                                                () -> Constants.FeederConstants.kFeedRPSSetpoint))
-                                                                .alongWith(
 
-                                                                                new WaitUntilCommand(() -> Feeder
-                                                                                                .getInstance()
-                                                                                                .feederAtTargetVelocity())
-                                                                                                .withTimeout(0.5)
-
-                                                                                                .andThen(new RunHopper(
-                                                                                                                () -> Constants.HopperConstants.kRollerDC)));
-                                        } else {
-                                                return (new RunHopper(() -> Constants.HopperConstants.kRollerDC))
-                                                                .alongWith(new setFeederSpeed(
-                                                                                () -> 1));
-                                        }
-                                }, Set.of(Hopper.getInstance(), Feeder.getInstance()));
+                                                                .andThen(new RunHopper(
+                                                                                () -> Constants.HopperConstants.kRollerDC)));
 
         }
 

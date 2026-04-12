@@ -36,7 +36,7 @@ public class AutoAlign extends Command {
         this.babyOnBoard = babyOnBoard;
         this.isAuto = false;
 
-        PhoenixPIDController tunePID = new PhoenixPIDController(6.5, 0.5, 0.4);
+        PhoenixPIDController tunePID = new PhoenixPIDController(7, 0.5, 0);
         tunePID.enableContinuousInput(-Math.PI, Math.PI);
 
         tunePID.setTolerance(0.01);
@@ -126,10 +126,10 @@ public class AutoAlign extends Command {
 
         driveRequest
                 .withVelocityX(-translateX.get()
-                        * (babyOnBoard.get() ? 1.0 : 0.25)
+                        * (babyOnBoard.get() ? 1.0 : 0.15)
                         * (Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude()))
                 .withVelocityY(-translateY.get()
-                        * (babyOnBoard.get() ? 1.0 : 0.25)
+                        * (babyOnBoard.get() ? 1.0 : 0.15)
                         * Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude());
 
         drivetrain.setControl(driveRequest);

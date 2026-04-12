@@ -321,9 +321,7 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void autonomousInit() {
 
-        LimelightHelpers.setRewindEnabled(Constants.VisionConstants.kLimelightFourSide, true);
-        LimelightHelpers.setRewindEnabled(Constants.VisionConstants.kLimelightFourFront, true);
-
+     
         CommandScheduler.getInstance().cancelAll();
 
         CommandScheduler.getInstance().schedule(
@@ -526,9 +524,9 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Retract", IntakeFactory.RetractIntake());
 
         NamedCommands.registerCommand("Photoshoot",
-                (ShootFactory.RegressionShoot()));
+                (ShootFactory.RegressionShoot()).withTimeout(3));
 
-        NamedCommands.registerCommand("AutoAlign", new AutoAlign(() -> 0d, () -> 0d, () -> false).withTimeout(1));
+        NamedCommands.registerCommand("AutoAlign", new AutoAlign(() -> 0d, () -> 0d, () -> false).withTimeout(2));
 
         // new PrintCommand("ALIGN!"));
 

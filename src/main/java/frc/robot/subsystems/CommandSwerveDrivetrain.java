@@ -62,7 +62,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     // private VisionStangs photonLL3= new VisionStangs(Constants.VisionConstants.kPhotonLL3Name, Constants.VisionConstants.kRobotToCamLL3);
     private VisionStangs LL4Front = new VisionStangs(Constants.VisionConstants.kLimelightFourFront);
-    // private VisionStangs LL4Side = new VisionStangs(Constants.VisionConstants.kLimelightFourSide);
+    private VisionStangs LL4Side = new VisionStangs(Constants.VisionConstants.kLimelightFourSide);
 
 
     // private VisionStangs photonVisionRight = new
@@ -286,11 +286,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         // photonLL3.periodic();
         LL4Front.periodic();
-        // LL4Side.periodic();
+        LL4Side.periodic();
 
         // visionPoses.add(photonLL3);
         visionPoses.add(LL4Front);
-        // visionPoses.add(LL4Side);
+        visionPoses.add(LL4Side);
 
         setVisionPose(visionPoses);
 

@@ -132,7 +132,7 @@ public class RobotContainer {
 
                 xDrive.x().whileTrue(IntakeFactory.RetractIntake().alongWith(new setKirbyWheels(() -> 1)));
 
-                xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                xDrive.a().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
 
                 xDrive.y().whileTrue(IntakeFactory.TrueSpit());

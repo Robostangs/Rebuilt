@@ -31,6 +31,7 @@ public class RunHopper extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        hopper.setRollerDutyCycle(0);
         hopper.postRollerStatus("Stopped");
     }
 

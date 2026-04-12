@@ -58,12 +58,13 @@ public class Hopper extends SubsystemBase {
 
     @Override
     public void periodic() {
+
         if (roller.getAncillaryDeviceTemp().getValueAsDouble() > 80) {
             hopperAlert.set(true);
         } else {
             hopperAlert.set(false);
         }
 
-        SmartDashboard.putBoolean("Hopper/photoelectric", getPhotoSensor());
+        SmartDashboard.putBoolean("Hopper/photoelectric", photosensor.get());
     }
 }

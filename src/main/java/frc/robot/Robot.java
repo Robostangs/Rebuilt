@@ -528,7 +528,7 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Photoshoot",
                 (ShootFactory.RegressionShoot()));
 
-        NamedCommands.registerCommand("AutoAlign", new AutoAlign());
+        NamedCommands.registerCommand("AutoAlign", new AutoAlign(() -> 0d, () -> 0d, () -> false).withTimeout(1));
 
         // new PrintCommand("ALIGN!"));
 
@@ -566,8 +566,9 @@ public class Robot extends TimedRobotstangs {
                 CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
                         hubPose));
 
-        double vx = Math.abs(robotSpeeds.vxMetersPerSecond) > 0.05 ? robotSpeeds.vxMetersPerSecond : 0;
-        double vy = Math.abs(robotSpeeds.vyMetersPerSecond) > 0.05 ? robotSpeeds.vyMetersPerSecond : 0;
+        double vx = Math.abs(robotSpeeds.vxMetersPerSecond) > 0.1 && Math.abs(robotSpeeds.vxMetersPerSecond) < 3 ? robotSpeeds.vxMetersPerSecond : 0;
+        double vy = Math.abs(robotSpeeds.vyMetersPerSecond) > 0.1
+         && Math.abs(robotSpeeds.vyMetersPerSecond) < 3 ? robotSpeeds.vyMetersPerSecond : 0;
 
         Translation2d targetHubPose = hubPose.minus(
                 new Translation2d(

@@ -12,7 +12,6 @@ import frc.robot.FeederCommands.setFeederSpeed;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
-import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Dumper.Flywheel;
@@ -58,7 +57,6 @@ public class ShootFactory {
                                 .withName("Regression Shoot Command");
         }
 
-        
         public static Command DumbShoot() {
 
                 return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
@@ -69,9 +67,26 @@ public class ShootFactory {
                                 .withName("Regression Shoot Command");
         }
 
+        public static Command FarPass() {
+                return new ChargeUp(() -> 70)
+                                .alongWith(new setHoodPosition(
+                                                () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
+                                .alongWith(
+                                                SmartFeed())
+                                .withName("Pass Command");
+        }
 
-        public static Command Pass() {
-                return new ChargeUp(() -> Constants.FlywheelConstants.kPassSetpoint)
+        public static Command MedPass() {
+                return new ChargeUp(() -> 40)
+                                .alongWith(new setHoodPosition(
+                                                () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
+                                .alongWith(
+                                                SmartFeed())
+                                .withName("Pass Command");
+        }
+
+        public static Command ClosePass() {
+                return new ChargeUp(() -> 30)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 .alongWith(
@@ -93,9 +108,7 @@ public class ShootFactory {
                 return new DeferredCommand(
 
                                 () -> {
-                                        if (Robot.isPassing()) {
-                                                return Pass();
-                                        } else if (Robot.isShooterDumb()) {
+                                        if (Robot.isShooterDumb()) {
                                                 return DumbShoot();
 
                                         } else {

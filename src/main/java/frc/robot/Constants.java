@@ -74,7 +74,7 @@ public final class Constants {
     }
 
     public static class FieldConstants {
-        public static final Pose2d HubPosition = new Pose2d(4.636, 4.042, new Rotation2d());
+        public static final Pose2d HubPosition = new Pose2d(4.619, 4.03, new Rotation2d());
 
         // TODO find john
         public static final Pose2d resetPose = new Pose2d(3.5, 4, new Rotation2d(Units.degreesToRadians(0)));
@@ -94,17 +94,17 @@ public final class Constants {
     public static class FeederConstants {
 
         public static final int feederMotorID = 45;
-        public static final double feederSupplyLimit = 80;
+        public static final double feederSupplyLimit = 100;
         public static final double kFeedDutyCycle = 1d;
         public static final int fuelSensorID = 0;
-        public static final double feederExtenderKP = 0.35;
+        public static final double feederExtenderKP = 0.5;
         public static final double feederExtenderKI = 0.1;
         public static final double feederExtenderKD = 0;
-        public static final double feederExtenderKV = 0.1;
+        public static final double feederExtenderKV = 0.13;
         public static final double HopperExtenderCurrentLimit = 60;
         public static final double kFeederVelocityTolerance = 3;
         public static final double feederExtenderKS = 0.33;
-        public static final double kFeedRPSSetpoint = 75*.53;
+        public static final double kFeedRPSSetpoint = 35.775;
 
     }
 
@@ -147,14 +147,14 @@ public final class Constants {
         public static final double hopperExtenderKD = 150;
         public static final double hopperExtenderKS = 15;
         public static final double extenderSensorToMechanismRatio = 4.0 * 4 * 48 / 16;
-        public static final double kExtendSetpoint = 0.02;
+        public static final double kExtendSetpoint = 0.045;
         public static final double kRetractSetpoint = 0.2;
         // TODO: find this john
         public static final double kHopperExtensionTolerance = 0.01;
         public static final double IntakeWheelCurrentLimit = 100;
         public static final double hopperExtenderKG = 40;
         public static final double kHomeDutyCycle = 0.1;
-        public static final double kHomePosition = 0.29;
+        public static final double kHomePosition = 0.215;
         public static final double extenderPositionTolerance = 0.015;
         public static final double IntakeWheelsStatorLimit = 100;
         public static final double IntakePivotOscillateUpPos = 0.4;
@@ -179,7 +179,7 @@ public final class Constants {
         public static final double kHoodStatorCurrentLimit = 40;
         public static final double kHoodHomeTimeout = .5;
         public static final double kHoodUpPos = 0.8;
-        public static final double kPosAtOppositeAlliancePass = .4;
+        public static final double kPosAtOppositeAlliancePass = .47;
         public static final double kDumbShootHoodPos = 0.03;
         public static final double kHalfSetpoint = 0.17;
         public static final double kTrenchSetpoint = 0;
@@ -189,7 +189,7 @@ public final class Constants {
     public static class FlywheelConstants {
 
         public static final double kPeakReverseOutput = 0;
-        public static final double kShootSpeed = 60;
+        public static final double kShootSpeed = 90;
         // public static final int kFlywheelMotorID = 0;
         public static final double kShooterMotorP = .4;
         public static final double kShooterMotorI = 0.07;
@@ -198,7 +198,7 @@ public final class Constants {
         public static final double kShooterMotorA = 0;
         public static final double kShooterMotorV = 0.11;
         public static final double kShooterMotorS = 0.38;
-        public static final double kShooterMotorStatorCurrentLimit = 100;
+        public static final double kShooterMotorStatorCurrentLimit = 120;
         public static final double kVelocityAtOppositeAlliancePass = 80;
         public static final double kShooterVelocityTolerance = 3;
         public static final int kFlywheelMotorID = 9;
@@ -208,7 +208,7 @@ public final class Constants {
         public static final double kHalfSetpoint = 30;
         public static final double kTrenchSetpoint = 0;
         public static final double kShootSetpoint = 30d;
-        public static final double kPassSetpoint = 40;
+        public static final double kPassSetpoint = 50;
 
     }
 
@@ -360,7 +360,7 @@ public final class Constants {
 
         // Theoretical free speed (m/s) at 12 V applied output;
         // This needs to be tuned to your individual robot
-        public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.39);
+        public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5.12);
 
         public static final double kAngularRateAt12Volts = RotationsPerSecond.of(1.5).in(RadiansPerSecond);
 

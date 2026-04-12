@@ -99,7 +99,7 @@ public class VisionStangs {
 
             LimelightHelpers.SetRobotOrientation(CameraName,
                     drivetrain.getState().Pose.getRotation().getDegrees(),
-                    drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 
+                    0d,
                     0d,
                     0d,
                     0d,
@@ -107,6 +107,7 @@ public class VisionStangs {
 
             LimelightHelpers.SetIMUMode(CameraName, 4);
             LimelightHelpers.SetThrottle(CameraName, 0);
+            // LimelightHelpers.SetIMUAssistAlpha(CameraName, 0.01);
 
         }
 
@@ -124,7 +125,7 @@ public class VisionStangs {
                 fourPoseEsti = null;
                 mtLabel = "Rejected (too fast)";
             } else {
-                fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(CameraName);
+                fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
                 mtLabel = "MT2";
             }
 

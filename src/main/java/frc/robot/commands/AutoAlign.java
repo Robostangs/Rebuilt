@@ -6,6 +6,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -24,6 +25,7 @@ public class AutoAlign extends Command {
     boolean isAuto;
 
     Pose2d targetPose;
+
 
     public AutoAlign(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Boolean> babyOnBoard) {
 
@@ -56,10 +58,10 @@ public class AutoAlign extends Command {
         this.babyOnBoard = () -> false;
         this.isAuto = true;
 
-        PhoenixPIDController tunePID = new PhoenixPIDController(6.5, 0.5, 0.4);
+        PhoenixPIDController tunePID = new PhoenixPIDController(7, 0.5, 0);
         tunePID.enableContinuousInput(-Math.PI, Math.PI);
 
-        tunePID.setTolerance(0.01);
+        tunePID.setTolerance(0.001);
 
         driveRequest = new SwerveRequest.FieldCentricFacingAngle();
         driveRequest.HeadingController = tunePID;
@@ -108,6 +110,14 @@ public class AutoAlign extends Command {
         SmartDashboard.putNumber("Drive Target theta",
 
                 driveRequest.HeadingController.getSetpoint()
+
+        );
+
+         SmartDashboard.putNumber("Drive Target theta Degrees",
+
+         Units.radiansToDegrees(
+                driveRequest.HeadingController.getSetpoint()
+         )
 
         );
 

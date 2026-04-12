@@ -30,10 +30,11 @@ public class IntakeFactory {
     }
 
     public static Command OscillateIntake() {
-        return (new setIntakePosition(0.145)
-                .andThen(new WaitCommand(0.25))
-                .andThen(new setIntakePosition(Constants.KirbyConstants.kExtendSetpoint))
-                .andThen(new WaitCommand(0.25)))
+        return (new setIntakePosition(0.118)
+                // .andThen(new WaitCommand(0.25))
+                .andThen(new setIntakePosition(.204))
+                // .andThen(new WaitCommand(0.25))
+                )
                 .repeatedly()
                 .withName("Oscillate Intake Command");
     }

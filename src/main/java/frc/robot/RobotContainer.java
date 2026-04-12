@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Stable.ControllerStangs;
@@ -50,6 +51,8 @@ public class RobotContainer {
         private final GenericHID xSim = new GenericHID(2);
         private static RobotContainer mInstance;
         public final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
+
+        
 
         public static RobotContainer getInstance() {
                 if (mInstance == null) {
@@ -100,13 +103,13 @@ public class RobotContainer {
                 setDrivetrain();
 
                 xDrive.rightTrigger().whileTrue(
-                                (ShootFactory.RegressionShoot()));
+                                (ShootFactory.SmartShoot()));
 
-                xDrive.rightBumper().whileTrue(ShootFactory.Pass());
+                xDrive.rightBumper().whileTrue(ShootFactory.MedPass());
                 // close shoot
 
                 xDrive.rm()
-                                .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToHalfBump));
+                                .whileTrue(IntakeFactory.OscillateIntake());
 
                 xDrive.lm()
                                 .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToTower));
@@ -122,15 +125,15 @@ public class RobotContainer {
                                                                                 Constants.FieldConstants.resetPose))));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(
-                                () -> drivetrain.seedFieldCentric()));
+                                () -> drivetrain.seedFieldCentric())); //setoperatorperspective???? huh tweakin
 
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                xDrive.x().whileTrue(new RunHopper(() -> 1));
+                xDrive.x().whileTrue(IntakeFactory.RetractIntake().alongWith(new setKirbyWheels(() -> 1)));
 
-                xDrive.a().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
-                                () -> xDrive.getLeftTriggerAxis() < 0.2));
+                xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                                () -> xDrive.getLeftTriggerAxis() < 0.2).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
 
                 xDrive.y().whileTrue(IntakeFactory.TrueSpit());
                 xDrive.b().whileTrue(IntakeFactory.ballStuck());
@@ -138,12 +141,16 @@ public class RobotContainer {
         }
 
         public void configureManipBindings() {
-                xManip.b().onTrue(
-                                new InstantCommand(() -> Robot.toggleShooterPass()));
+                xManip.rightBumper().onTrue(
+                new InstantCommand(() -> Robot.toggleShooterPass()));
 
-                xManip.x().onTrue(new InstantCommand(() -> Robot.toggleShooterIsDumb()));
+                // xManip.x().onTrue(new InstantCommand(() -> Robot.toggleShooterIsDumb()));
 
-                xManip.a().whileTrue(new HomeHood());
+                xManip.x().whileTrue(new HomeHood());
+
+                xManip.a().whileTrue(ShootFactory.ClosePass());
+                xManip.b().whileTrue(ShootFactory.MedPass());
+                xManip.y().whileTrue(ShootFactory.FarPass());
 
                 xManip.rightPaddle().whileTrue(new HomeIntake(false));
                 xManip.leftPaddle().whileTrue(new HomeIntake(true));
@@ -173,24 +180,21 @@ public class RobotContainer {
 
                 } else {
 
-              
                         new Trigger(isMoving).debounce(0.15, DebounceType.kFalling).whileTrue(
-                                   drivetrain.applyRequest(
-                                       (() -> drive
-                                                        .withVelocityX(-xDrive.getLeftY() * MaxSpeed
-                                                                        * leftBumper.getAsDouble())
-                                                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed
-                                                                        * leftBumper.getAsDouble())
-                                                        .withRotationalRate(
-                                                                        -xDrive.getRightX() * MaxAngularRate
-                                                                                        * (leftBumper.getAsDouble()
-                                                                                                        + .25)))));
-                     
-                                        drivetrain.setDefaultCommand( drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
+                                        drivetrain.applyRequest(
+                                                        (() -> drive
+                                                                        .withVelocityX(-xDrive.getLeftY() * MaxSpeed
+                                                                                        * leftBumper.getAsDouble())
+                                                                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed
+                                                                                        * leftBumper.getAsDouble())
+                                                                        .withRotationalRate(
+                                                                                        -xDrive.getRightX()
+                                                                                                        * MaxAngularRate
+                                                                                                        * (leftBumper.getAsDouble()
+                                                                                                                        + .25)))));
 
-             
-                     
-                   
+                        drivetrain.setDefaultCommand(
+                                        drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
 
                 }
         }

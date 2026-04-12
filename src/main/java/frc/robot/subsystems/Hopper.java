@@ -28,7 +28,7 @@ public class Hopper extends SubsystemBase {
     public void configureLeftRighter() {
         TalonFXConfiguration rollerConfigs = new TalonFXConfiguration();
 
-        rollerConfigs.CurrentLimits.StatorCurrentLimit = 100;
+        // rollerConfigs.CurrentLimits.StatorCurrentLimit = 100;
         rollerConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
 
         roller.getConfigurator().apply(rollerConfigs);

@@ -131,7 +131,7 @@ public class RobotContainer {
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                xDrive.x().whileTrue(IntakeFactory.RetractIntake().alongWith(new setKirbyWheels(() -> 1)));
+                xDrive.x().whileTrue(IntakeFactory.RetractIntake());
 
                 xDrive.a().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));

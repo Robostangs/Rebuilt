@@ -85,7 +85,7 @@ public class AutoAlign extends Command {
     @Override
     public void execute() {
 
-        targetPose = Robot.setTargetPose();
+        targetPose = Robot.getTargetPose();
 
         if (!Robot.isPassing()) {
 

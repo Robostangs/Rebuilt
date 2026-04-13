@@ -82,6 +82,8 @@ public class Robot extends TimedRobotstangs {
     String oldAutoname = " ";
     public CommandScheduler scheduler = CommandScheduler.getInstance();
 
+    private static Pose2d targetPose;
+
     public Color allianceScore = Constants.ElasticConstants.purple;
 
     private SendableChooser<String> autoChooser = new SendableChooser<>();
@@ -243,6 +245,8 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void robotPeriodic() {
+
+        setTargetPose();
 
         CommandScheduler.getInstance().run();
         gscollect.update();
@@ -541,8 +545,9 @@ public class Robot extends TimedRobotstangs {
     public static double getMetersFromTarget() {
 
         return CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
-                setTargetPose().getTranslation());
+                getTargetPose().getTranslation());
 
+ 
     }
 
     public static double timeToShoot(double metersfromHub) {
@@ -550,9 +555,8 @@ public class Robot extends TimedRobotstangs {
                 + .013 * Math.pow(metersfromHub, 4);
     }
 
-    public static Pose2d setTargetPose() {
+    public static void setTargetPose() {
 
-        Pose2d targetPose;
 
         ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
                 CommandSwerveDrivetrain.getInstance().getState().Speeds,
@@ -578,8 +582,11 @@ public class Robot extends TimedRobotstangs {
 
         Robot.teleopField.getObject("TargetPose").setPose(targetPose);
 
-        return targetPose;
 
+    }
+
+    public static Pose2d getTargetPose(){
+        return targetPose;
     }
 
     public static void setShooterPass(boolean pass) {

@@ -109,7 +109,7 @@ public class RobotContainer {
                 // close shoot
 
                 xDrive.rm()
-                                .whileTrue(IntakeFactory.OscillateIntake());
+                                .whileTrue(ShootFactory.DumbShoot());
 
                 xDrive.lm()
                                 .onTrue(                (ShootFactory.RegressionShoot()).withTimeout(3)

@@ -133,7 +133,7 @@ public class RobotContainer {
 
                 xDrive.x().whileTrue(IntakeFactory.RetractIntake());
 
-                xDrive.a().toggleOnTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2).withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
 
                 xDrive.y().whileTrue(IntakeFactory.TrueSpit());

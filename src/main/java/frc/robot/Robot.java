@@ -246,9 +246,9 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void robotPeriodic() {
 
-        setTargetPose();
-
         CommandScheduler.getInstance().run();
+
+        setTargetPose();
         gscollect.update();
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
         SmartDashboard.putBoolean("Alliance is Red", Robot.isRed());
@@ -325,7 +325,6 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void autonomousInit() {
 
-     
         CommandScheduler.getInstance().cancelAll();
 
         CommandScheduler.getInstance().schedule(
@@ -347,8 +346,7 @@ public class Robot extends TimedRobotstangs {
     public void teleopInit() {
         CommandScheduler.getInstance().cancelAll();
 
-        lastMatchSecond = 
-        (int) DriverStation.getMatchTime();
+        lastMatchSecond = (int) DriverStation.getMatchTime();
 
     }
 
@@ -458,7 +456,8 @@ public class Robot extends TimedRobotstangs {
         SmartDashboard.putNumber("Regression Flywheel Setpoint", 0);
 
         Hood.getInstance()
-                .setDefaultCommand(new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood Setpoint", 0.03)));
+                .setDefaultCommand(
+                        new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood Setpoint", 0.03)));
         Flywheel.getInstance()
                 .setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0)));
 
@@ -528,8 +527,7 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Retract", IntakeFactory.RetractIntake());
 
         NamedCommands.registerCommand("Photoshoot",
-                (ShootFactory.RegressionShoot()).withTimeout(3)
-                );
+                (ShootFactory.RegressionShoot()).withTimeout(3));
 
         NamedCommands.registerCommand("AutoAlign", new AutoAlign(() -> 0d, () -> 0d, () -> false).withTimeout(2));
 
@@ -547,7 +545,6 @@ public class Robot extends TimedRobotstangs {
         return CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
                 getTargetPose().getTranslation());
 
- 
     }
 
     public static double timeToShoot(double metersfromHub) {
@@ -556,7 +553,6 @@ public class Robot extends TimedRobotstangs {
     }
 
     public static void setTargetPose() {
-
 
         ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
                 CommandSwerveDrivetrain.getInstance().getState().Speeds,
@@ -569,9 +565,11 @@ public class Robot extends TimedRobotstangs {
                 CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
                         hubPose));
 
-        double vx = Math.abs(robotSpeeds.vxMetersPerSecond) > 0.1 && Math.abs(robotSpeeds.vxMetersPerSecond) < 3 ? robotSpeeds.vxMetersPerSecond : 0;
+        double vx = Math.abs(robotSpeeds.vxMetersPerSecond) > 0.1 && Math.abs(robotSpeeds.vxMetersPerSecond) < 3
+                ? robotSpeeds.vxMetersPerSecond
+                : 0;
         double vy = Math.abs(robotSpeeds.vyMetersPerSecond) > 0.1
-         && Math.abs(robotSpeeds.vyMetersPerSecond) < 3 ? robotSpeeds.vyMetersPerSecond : 0;
+                && Math.abs(robotSpeeds.vyMetersPerSecond) < 3 ? robotSpeeds.vyMetersPerSecond : 0;
 
         Translation2d targetHubPose = hubPose.minus(
                 new Translation2d(
@@ -582,10 +580,9 @@ public class Robot extends TimedRobotstangs {
 
         Robot.teleopField.getObject("TargetPose").setPose(targetPose);
 
-
     }
 
-    public static Pose2d getTargetPose(){
+    public static Pose2d getTargetPose() {
         return targetPose;
     }
 

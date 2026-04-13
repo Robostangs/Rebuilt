@@ -86,6 +86,8 @@ public class AutoAlign extends Command {
     public void execute() {
 
         targetPose = Robot.getTargetPose();
+            Pose2d currentPose = drivetrain.getState().Pose; 
+
 
         if (!Robot.isPassing()) {
 
@@ -93,8 +95,8 @@ public class AutoAlign extends Command {
 
                 return Rotation2d
                         .fromRadians((Math.atan2(
-                                drivetrain.getState().Pose.getY() - targetPose.getY(),
-                                drivetrain.getState().Pose.getX() - targetPose.getX())))
+                                currentPose.getY() - targetPose.getY(),
+                                currentPose.getX() - targetPose.getX())))
 
                         .minus(!Robot.isRed() ? Rotation2d.k180deg : Rotation2d.kZero)
                         ;

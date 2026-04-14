@@ -20,13 +20,13 @@ public class IntakeFactory {
 
     public static Command ExtendIntake() {
         return new setIntakePosition(Constants.KirbyConstants.kExtendSetpoint)
-                .alongWith(new setKirbyWheels(() -> 0))
+                .alongWith(new setKirbyWheels(() -> 1))
                 .withName("Extend Intake Command");
     }
 
     public static Command RetractIntake() {
         return new setIntakePosition(Constants.KirbyConstants.kRetractSetpoint)
-                .alongWith(new setKirbyWheels(() -> 0))
+                .alongWith(new setKirbyWheels(() -> 1))
 
                 // .alongWith(new RunHopper(() -> 0.5))
                 .withName("Retract Intake Command");

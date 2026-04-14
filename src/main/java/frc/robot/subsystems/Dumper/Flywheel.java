@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Dumper;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -19,6 +21,8 @@ public class Flywheel extends SubsystemBase {
     public Pose2d targetPose;
     private VelocityVoltage flywheelTargetVelocity = new VelocityVoltage(0);
     private Follower slaveControl;
+    private double adjValue = 0;
+
 
     public Flywheel() {
         mainShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
@@ -84,7 +88,6 @@ public class Flywheel extends SubsystemBase {
     public void setFlywheelDC(double dc) {
         mainShooterMotor.set(dc);
         slaveShooterMotor.set(0);
-
     }
 
     public static Flywheel getInstance() {
@@ -94,13 +97,21 @@ public class Flywheel extends SubsystemBase {
         return mInstance;
     }
 
+
+    public void setAdj(DoubleSupplier av){
+        adjValue = av.getAsDouble();
+    }
+
+
     public void setVelocity(double target) {
-        flywheelTargetVelocity.Velocity = target;
+        flywheelTargetVelocity.Velocity = target+adjValue;
 
         mainShooterMotor.setControl(flywheelTargetVelocity);
         slaveShooterMotor.setControl(slaveControl);
 
     }
+
+
 
     public boolean shooterAtTargetVelocity() {
         double currentVelocity = mainShooterMotor.getVelocity().getValueAsDouble();

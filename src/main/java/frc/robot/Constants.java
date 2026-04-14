@@ -295,10 +295,10 @@ public final class Constants {
                 public static final double kLLAmbiguityThres = .7;
                 public static final String kPhotonLL3Name = "Friday";
                 public static final Transform3d kRobotToCamLL3 = new Transform3d(
-                                Units.inchesToMeters(-4.25),
-                                Units.inchesToMeters(11.75),
-                                Units.inchesToMeters(7.25),
-                                new Rotation3d(0, Units.degreesToRadians(16.2), Units.degreesToRadians(90)));
+                                Units.inchesToMeters(0),
+                                Units.inchesToMeters(-12.5),
+                                Units.inchesToMeters(10.43),
+                                new Rotation3d(0, Units.degreesToRadians(19.5), Units.degreesToRadians(90)));
 
         }
 

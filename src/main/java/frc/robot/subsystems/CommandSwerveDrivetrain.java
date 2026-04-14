@@ -60,7 +60,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
-    // private VisionStangs photonLL3= new VisionStangs(Constants.VisionConstants.kPhotonLL3Name, Constants.VisionConstants.kRobotToCamLL3);
+    private VisionStangs photonLL3= new VisionStangs(Constants.VisionConstants.kPhotonLL3Name, Constants.VisionConstants.kRobotToCamLL3);
     private VisionStangs LL4Front = new VisionStangs(Constants.VisionConstants.kLimelightFourFront);
     private VisionStangs LL4Side = new VisionStangs(Constants.VisionConstants.kLimelightFourSide);
 

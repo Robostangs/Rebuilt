@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "OStart - OBump - OIntake - OBump"
+            "pathName": "First Dip Reg"
           }
         },
         {
@@ -58,7 +58,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "OBump - OIntake - OBump - OShoot"
+            "pathName": ".5Dip"
           }
         }
       ]

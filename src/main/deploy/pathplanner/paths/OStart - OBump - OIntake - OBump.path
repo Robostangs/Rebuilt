@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 5.527906976744187,
-        "y": 2.6477280858676204
+        "x": 5.53792975508218,
+        "y": 2.5069619382278017
       },
       "prevControl": {
-        "x": 5.260606139642373,
-        "y": 2.6627314231759147
+        "x": 5.270628917980367,
+        "y": 2.521965275536096
       },
       "nextControl": {
-        "x": 5.777514096286132,
-        "y": 2.633717879803009
+        "x": 5.787536874624125,
+        "y": 2.49295173216319
       },
       "isLocked": false,
       "linkedName": "OutpostBumpOut"
@@ -151,7 +151,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.12,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

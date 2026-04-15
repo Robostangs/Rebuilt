@@ -517,10 +517,7 @@ public class Robot extends TimedRobotstangs {
 
     public void loadNamedCommands() {
 
-        NamedCommands.registerCommand("Shoot",
-                new PrintCommand("you're supposed to shoot bruh"));
-        NamedCommands.registerCommand("Pass",
-                new PrintCommand("you're supposed to pass bruh"));
+
 
         NamedCommands.registerCommand("Extend", IntakeFactory.ExtendIntake());
 
@@ -535,8 +532,6 @@ public class Robot extends TimedRobotstangs {
 
         NamedCommands.registerCommand("BumpTake", new setIntakePosition(Constants.KirbyConstants.kIntakePivotBump));
 
-        NamedCommands.registerCommand("Climb",
-                new PrintCommand("Hi!"));
 
     }
 

@@ -3,119 +3,59 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.737137745974955,
-        "y": 2.5069619382278017
+        "x": 2.493756708407871,
+        "y": 2.7
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2500735779326857,
-        "y": 2.5069619382278017
-      },
-      "isLocked": false,
-      "linkedName": "OutpostShoot"
-    },
-    {
-      "anchor": {
-        "x": 5.527906976744187,
-        "y": 2.6477280858676204
-      },
-      "prevControl": {
-        "x": 4.316260557559538,
-        "y": 2.7108250611335016
-      },
-      "nextControl": {
-        "x": 7.165350628945786,
-        "y": 2.5624575482038656
-      },
-      "isLocked": false,
-      "linkedName": "OutpostBumpOut"
-    },
-    {
-      "anchor": {
-        "x": 6.928908865538573,
-        "y": 3.241684804858079
-      },
-      "prevControl": {
-        "x": 6.89580177160119,
-        "y": 2.6893823697205983
-      },
-      "nextControl": {
-        "x": 7.03736700554949,
-        "y": 5.051015909297671
+        "x": 2.743756708407871,
+        "y": 2.7
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.854599822598253,
-        "y": 4.468184304494178
+        "x": 5.5441323792486585,
+        "y": 2.50169946332737
       },
       "prevControl": {
-        "x": 6.182128524745692,
-        "y": 4.509071136911736
+        "x": 5.299080226096967,
+        "y": 2.452207623235091
       },
       "nextControl": {
-        "x": 5.4783124090247455,
-        "y": 4.421210710061864
+        "x": 6.049706974146,
+        "y": 2.6038075928971973
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.527906976744187,
-        "y": 2.6477280858676204
+        "x": 7.848139534883721,
+        "y": 3.3291949910554557
       },
       "prevControl": {
-        "x": 6.253653997304595,
-        "y": 2.596216702588872
-      },
-      "nextControl": {
-        "x": 5.278534325143121,
-        "y": 2.6654278212739624
-      },
-      "isLocked": false,
-      "linkedName": "OutpostBumpOut"
-    },
-    {
-      "anchor": {
-        "x": 2.737137745974955,
-        "y": 2.5069619382278017
-      },
-      "prevControl": {
-        "x": 3.7505858672356167,
-        "y": 2.5069619382278017
+        "x": 7.718336314847942,
+        "y": 2.826207513416815
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "OutpostShoot"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0120240480961928,
-      "rotationDegrees": 45.0
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 40.0
     },
     {
-      "waypointRelativePos": 1.7460518374463527,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 1.1205357142857153,
+      "rotationDegrees": 40.0
     },
     {
-      "waypointRelativePos": 2.1519581545064375,
-      "rotationDegrees": -90.0
-    },
-    {
-      "waypointRelativePos": 3.1062124248497014,
-      "rotationDegrees": 90.0
-    },
-    {
-      "waypointRelativePos": 4.024912821888409,
-      "rotationDegrees": 45.0
-    },
-    {
-      "waypointRelativePos": 5.0,
-      "rotationDegrees": 45.0
+      "waypointRelativePos": 1.4241071428571441,
+      "rotationDegrees": -142.2221150127418
     }
   ],
   "constraintZones": [],
@@ -131,7 +71,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 39.817271025988
+    "rotation": -144.0
   },
   "reversed": false,
   "folder": "Outpost",

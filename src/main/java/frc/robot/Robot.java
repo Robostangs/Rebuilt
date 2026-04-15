@@ -527,9 +527,9 @@ public class Robot extends TimedRobotstangs {
         NamedCommands.registerCommand("Retract", IntakeFactory.RetractIntake());
 
         NamedCommands.registerCommand("Photoshoot",
-                (ShootFactory.RegressionShoot()).withTimeout(3));
+                (ShootFactory.RegressionShoot()));
 
-        NamedCommands.registerCommand("AutoAlign", new AutoAlign(() -> 0d, () -> 0d, () -> false).withTimeout(2));
+        NamedCommands.registerCommand("AutoAlign", new AutoAlign(() -> 0d, () -> 0d, () -> false));
 
         // new PrintCommand("ALIGN!"));
 

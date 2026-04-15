@@ -65,7 +65,7 @@ public class AutoAlign extends Command {
 
         driveRequest = new SwerveRequest.FieldCentricFacingAngle();
         driveRequest.HeadingController = tunePID;
-        driveRequest.HeadingController.reset(); // still reset on first use
+        driveRequest.HeadingController.reset(); 
 
         this.addRequirements(drivetrain);
 
@@ -84,6 +84,8 @@ public class AutoAlign extends Command {
 
     @Override
     public void execute() {
+
+                driveRequest.HeadingController.reset();
 
         targetPose = Robot.getTargetPose();
             Pose2d currentPose = drivetrain.getState().Pose; 

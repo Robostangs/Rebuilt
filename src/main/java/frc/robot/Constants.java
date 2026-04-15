@@ -154,7 +154,7 @@ public final class Constants {
                 public static final double IntakeWheelCurrentLimit = 100;
                 public static final double hopperExtenderKG = 45;
                 public static final double kHomeDutyCycle = 0.1;
-                public static final double kHomePosition = 0.215;
+                public static final double kHomePosition = 0.2;
                 public static final double extenderPositionTolerance = 0.015;
                 public static final double IntakeWheelsStatorLimit = 100;
                 public static final double IntakePivotOscillateUpPos = 0.4;
@@ -265,20 +265,6 @@ public final class Constants {
                 // public static final String kLimelightThree = "limelight-agomoto";
                 public static final double kVisionAngularThreshold = 250;
 
-                // public static final String kPhotonCamNameRight = "Daredevil";
-                // public static final Transform3d kRobotToCamRight = new Transform3d(
-                // Units.inchesToMeters(1),
-                // Units.inchesToMeters(-12.5),
-                // Units.inchesToMeters(27.75),
-                // new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(10),
-                // Units.degreesToRadians(-90)));
-
-                // public static final String kPhotonCamNameBack = "Kratos";
-                public static final Transform3d kRobotToCamBack = new Transform3d(
-                                Units.inchesToMeters(-13.02),
-                                Units.inchesToMeters(8.787),
-                                Units.inchesToMeters(9.9),
-                                new Rotation3d(0, Units.degreesToRadians(16.2), Units.degreesToRadians(90)));
 
                 public static final double kMTErrorThres = 0.05;
                 // public static final String kLimelightLeft = "Jarvis";
@@ -295,10 +281,11 @@ public final class Constants {
                 public static final double kLLAmbiguityThres = .7;
                 public static final String kPhotonLL3Name = "Friday";
                 public static final Transform3d kRobotToCamLL3 = new Transform3d(
-                                Units.inchesToMeters(0),
-                                Units.inchesToMeters(-12.5),
-                                Units.inchesToMeters(10.43),
-                                new Rotation3d(0, Units.degreesToRadians(19.5), Units.degreesToRadians(90)));
+                                   Units.inchesToMeters(0),
+                                Units.inchesToMeters(12),
+                                Units.inchesToMeters(13),
+                                new Rotation3d(0, Units.degreesToRadians(20), Units.degreesToRadians(90)));
+
 
         }
 

@@ -269,43 +269,53 @@ public class Robot extends TimedRobotstangs {
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
-        autoname = autoChooser.getSelected();
+        if (autoChooser.getSelected() == null) {
+            autoname = "";
+        } else {
+            autoname = autoChooser.getSelected();
+
+        }
         oldAutoname = "nada";
     }
 
     @Override
     public void disabledPeriodic() {
-        autoname = autoChooser.getSelected();
+        if(autoname == null){
+            autoname ="";
+        }
 
-        if (!autoname.equals(oldAutoname)) {
+        if (autoname != null) {
+            autoname = autoChooser.getSelected();
 
-            if (autoname != null) {
+            if (!autoname.equals(oldAutoname)) {
 
-                autoAlert.set(false);
-                if (autoname.equals("Piss")) {
+                if (autoname != null) {
 
-                    autoCommand = new InstantCommand(() -> CommandSwerveDrivetrain.getInstance()
-                            .resetPose(Constants.FieldConstants.ShootPoseDepot)).andThen(
-                                    ShootFactory.DumbShoot());
-                } else if (autoname.equals("SitAndShit")) {
-                    autoCommand = new PrintCommand("Pooping");
+                    autoAlert.set(false);
+                    if (autoname.equals("Piss")) {
+
+                        autoCommand = new InstantCommand(() -> CommandSwerveDrivetrain.getInstance()
+                                .resetPose(Constants.FieldConstants.ShootPoseDepot)).andThen(
+                                        ShootFactory.DumbShoot());
+                    } else if (autoname.equals("SitAndShit")) {
+                        autoCommand = new PrintCommand("Pooping");
+                    } else {
+                        autoCommand = new PathPlannerAuto(autoname);
+
+                        drawCurrentAuto(autoCommand.getName());
+
+                    }
+
                 } else {
-                    autoCommand = new PathPlannerAuto(autoname);
-
-                    drawCurrentAuto(autoCommand.getName());
+                    autoCommand = new PrintCommand("Auto not Autoing....");
+                    autoAlert.set(true);
 
                 }
-
-            } else {
-                autoCommand = new PrintCommand("Auto not Autoing....");
-                autoAlert.set(true);
+                SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
 
             }
-            SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
-
+            oldAutoname = autoname;
         }
-        oldAutoname = autoname;
-
     }
 
     @Override
@@ -517,8 +527,6 @@ public class Robot extends TimedRobotstangs {
 
     public void loadNamedCommands() {
 
-
-
         NamedCommands.registerCommand("Extend", IntakeFactory.ExtendIntake());
 
         NamedCommands.registerCommand("Retract", IntakeFactory.RetractIntake());
@@ -531,7 +539,6 @@ public class Robot extends TimedRobotstangs {
         // new PrintCommand("ALIGN!"));
 
         NamedCommands.registerCommand("BumpTake", new setIntakePosition(Constants.KirbyConstants.kIntakePivotBump));
-
 
     }
 

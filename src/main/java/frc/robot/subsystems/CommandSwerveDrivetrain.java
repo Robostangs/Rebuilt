@@ -260,6 +260,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Drivetrain/Vely", this.getState().Speeds.vyMetersPerSecond);
+                SmartDashboard.putNumber("Drivetrain/Velx", this.getState().Speeds.vxMetersPerSecond);
+
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
                 setOperatorPerspectiveForward(
@@ -275,19 +278,31 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putBoolean("Vision/UseVision", RobotContainer.useVision);
 
                     SmartDashboard.putNumber("Drivetrain/current speed", Math.sqrt(
-                        
 
                     Math.pow(this.getState().Speeds.vxMetersPerSecond, 2)+
  Math.pow(this.getState().Speeds.vyMetersPerSecond, 2)                    
                     )
                     );
+
+
+                    
+                    SmartDashboard.putNumber("Drivetrain/current X acceleration", 
+                                    this.getPigeon2().getAccelerationX().getValueAsDouble()
+                    );
+
+
+                         
+                    SmartDashboard.putNumber("Drivetrain/current X acceleration", 
+                                    this.getPigeon2().getAccelerationY
+                                    ().getValueAsDouble()
+                    );
+
         visionPoses.clear();
 
-        // photonLL3.periodic();
         LL4Front.periodic();
         LL4Side.periodic();
         // photonVisionRight.periodic();
-        // visionPoses.add(photonLL3);
+
         visionPoses.add(LL4Front);
         visionPoses.add(LL4Side);
         // visionPoses.add(photonVisionRight);

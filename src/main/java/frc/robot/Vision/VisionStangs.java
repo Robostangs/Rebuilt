@@ -168,6 +168,7 @@ public class VisionStangs {
     }
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
+
         if (Robot.isSimulation()) {
             SmartDashboard.putString("Vision" + CameraName + "/LL_RejectReason", "Simulation mode");
             return false;
@@ -185,6 +186,7 @@ public class VisionStangs {
             SmartDashboard.putString("Vision" + CameraName + "/LL_RejectReason", "Too far: " + yoPoseEsti.avgTagDist);
             return false;
         }
+        SmartDashboard.putNumber("Vision/" + CameraName + " avg dis", yoPoseEsti.avgTagDist);
 
         double maxAmbiguity = 0;
         for (LimelightHelpers.RawFiducial fiducial : yoPoseEsti.rawFiducials) {

@@ -258,6 +258,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
+        if (this.getCurrentCommand() != null) {
+            SmartDashboard.putString("Drive command", this.getCurrentCommand().getName());
+
+        }
         SmartDashboard.putNumber("Drivetrain/Vely", this.getState().Speeds.vyMetersPerSecond);
         SmartDashboard.putNumber("Drivetrain/Velx", this.getState().Speeds.vxMetersPerSecond);
 

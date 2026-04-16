@@ -130,7 +130,7 @@ public class RobotContainer {
 
                 xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2)
-                                .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+                                .withInterruptBehavior(InterruptionBehavior.kCancelIncoming).withName("Auto Align"));
 
                 xDrive.y().whileTrue(IntakeFactory.TrueSpit());
                 xDrive.b().whileTrue(IntakeFactory.ballStuck());
@@ -164,7 +164,7 @@ public class RobotContainer {
 
         private void setDrivetrain() {
                 DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
-                BooleanSupplier isMoving = () -> (((Math.abs(xDrive.getLeftX()) > 0.1
+                BooleanSupplier isMoving = () -> (!((Math.abs(xDrive.getLeftX()) > 0.1
                                 || Math.abs(xDrive.getLeftY()) > 0.1
                                 || Math.abs(xDrive.getRightX()) > 0.1)));
                 if (Robot.isSimulation()) {
@@ -181,23 +181,8 @@ public class RobotContainer {
 
                 } else {
 
-                        new Trigger(isMoving).debounce(0.15, DebounceType.kFalling).whileTrue(
-                                        drivetrain.applyRequest(
-                                                        (() -> drive
-                                                                        .withVelocityX(-xDrive.getLeftY() * MaxSpeed
-                                                                                        * leftBumper.getAsDouble())
-                                                                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed
-                                                                                        * leftBumper.getAsDouble())
-                                                                        .withRotationalRate(
-                                                                                        -xDrive.getRightX()
-                                                                                                        * MaxAngularRate
-                                                                                                        * (leftBumper.getAsDouble()
-                                                                                                                        + .25)))));
-
-                        drivetrain.setDefaultCommand(
-                                        drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
-
-                        // drivetrain.setDefaultCommand(drivetrain.applyRequest(
+                        // new Trigger(isMoving).debounce(0.15, DebounceType.kFalling).whileTrue(
+                        // drivetrain.applyRequest(
                         // (() -> drive
                         // .withVelocityX(-xDrive.getLeftY() * MaxSpeed
                         // * leftBumper.getAsDouble())
@@ -207,7 +192,26 @@ public class RobotContainer {
                         // -xDrive.getRightX()
                         // * MaxAngularRate
                         // * (leftBumper.getAsDouble()
-                        // + .25)))));
+                        // + .25)))).withName("Reg Drive"));
+
+                        new Trigger(isMoving).debounce(0.15, DebounceType.kFalling).whileTrue(drivetrain
+                                        .applyRequest(() -> new SwerveRequest.SwerveDriveBrake()).withName("XDrive"));
+
+                        // drivetrain.setDefaultCommand(
+                        // drivetrain.applyRequest(() -> new
+                        // SwerveRequest.SwerveDriveBrake()).withName("XDrive"));
+
+                        drivetrain.setDefaultCommand(drivetrain.applyRequest(
+                                        (() -> drive
+                                                        .withVelocityX(-xDrive.getLeftY() * MaxSpeed
+                                                                        * leftBumper.getAsDouble())
+                                                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed
+                                                                        * leftBumper.getAsDouble())
+                                                        .withRotationalRate(
+                                                                        -xDrive.getRightX()
+                                                                                        * MaxAngularRate
+                                                                                        * (leftBumper.getAsDouble()
+                                                                                                        + .25)))));
 
                 }
         }

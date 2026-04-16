@@ -1,0 +1,130 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.8182647584973166,
+        "y": 2.5069619382278017
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.077871198568873,
+        "y": 2.519591634113311
+      },
+      "isLocked": false,
+      "linkedName": "Oend"
+    },
+    {
+      "anchor": {
+        "x": 6.241824686940967,
+        "y": 2.4530232558139526
+      },
+      "prevControl": {
+        "x": 5.859354182876024,
+        "y": 2.097015323236212
+      },
+      "nextControl": {
+        "x": 6.623402315407356,
+        "y": 2.8082000895422086
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.566332737030411,
+        "y": 3.6212522361359563
+      },
+      "prevControl": {
+        "x": 6.41295425186321,
+        "y": 3.054963408949029
+      },
+      "nextControl": {
+        "x": 6.631690017940283,
+        "y": 3.862557905012732
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.241824686940967,
+        "y": 2.4530232558139526
+      },
+      "prevControl": {
+        "x": 6.654451180881813,
+        "y": 2.8067031077632483
+      },
+      "nextControl": {
+        "x": 6.052010536349642,
+        "y": 2.290325412449961
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.8831663685152056,
+        "y": 2.7
+      },
+      "prevControl": {
+        "x": 4.638503683837715,
+        "y": 2.2959462431498063
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.7589285714285708,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Retract",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract"
+        }
+      }
+    },
+    {
+      "name": "Extend",
+      "waypointRelativePos": 0.8238482384823841,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.12,
+    "maxAcceleration": 7.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -93.57633437499727
+  },
+  "reversed": false,
+  "folder": "Outpost",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 47.197137391199746
+  },
+  "useDefaultConstraints": true
+}

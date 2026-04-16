@@ -8,53 +8,69 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.265066737594104,
-        "y": 4.643897577694079
+        "x": 3.3875922309027784,
+        "y": 5.666077835648148
       },
       "isLocked": false,
       "linkedName": "CenterStartDepot"
     },
     {
       "anchor": {
-        "x": 0.5629338103756705,
-        "y": 5.925259391771019
+        "x": 0.47389409722222264,
+        "y": 4.898368995949074
       },
       "prevControl": {
-        "x": 0.5470890321672827,
-        "y": 5.323157819852282
+        "x": 0.5304830053667258,
+        "y": 4.43252236135957
       },
       "nextControl": {
-        "x": 0.5791592128801428,
-        "y": 6.5418246869409655
+        "x": 0.43086877522428785,
+        "y": 5.25255857323666
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.029194991055456,
-        "y": 4.8706082289803225
+        "x": 0.610823278356482,
+        "y": 6.992001085069444
       },
       "prevControl": {
-        "x": 2.4205506506874284,
-        "y": 4.9802447770348195
+        "x": 0.33577817531305865,
+        "y": 7.077262969588551
+      },
+      "nextControl": {
+        "x": 1.2015321048375318,
+        "y": 6.8088858534563474
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.8678255931712964,
+        "y": 5.509465494791666
+      },
+      "prevControl": {
+        "x": 2.0431545269548472,
+        "y": 6.083852226551455
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "DepotShootAcc"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.9458917835671348,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 2.036287006578947,
+      "rotationDegrees": -90.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0.787259615384615,
-      "maxWaypointRelativePos": 1.3803464854111394,
+      "maxWaypointRelativePos": 1.8528083471760803,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
@@ -81,7 +97,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.12,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -89,13 +105,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -35.75388725443687
+    "rotation": -38.2
   },
   "reversed": false,
   "folder": "Center",
   "idealStartingState": {
     "velocity": 0.0,
-    "rotation": 0.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

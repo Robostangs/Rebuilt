@@ -32,12 +32,14 @@ public class Feeder extends SubsystemBase {
     public void configureFeeder() {
         feedConfigurator = new TalonFXConfiguration();
         feedConfigurator.CurrentLimits.SupplyCurrentLimit = Constants.FeederConstants.feederSupplyLimit;
+
         feedConfigurator.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         feedConfigurator.Slot0.kP = Constants.FeederConstants.feederExtenderKP;
         feedConfigurator.Slot0.kI = Constants.FeederConstants.feederExtenderKI;
         feedConfigurator.Slot0.kD = Constants.FeederConstants.feederExtenderKD;
         feedConfigurator.Slot0.kS = Constants.FeederConstants.feederExtenderKS;
+        feedConfigurator.Slot0.kV = Constants.FeederConstants.feederExtenderKV;
 
         feedConfigurator.Voltage.PeakReverseVoltage = 0;
 

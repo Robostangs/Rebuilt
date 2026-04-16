@@ -1,17 +1,15 @@
 package frc.robot.commands.IntakeCommands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake.IntakePivot;
 
 
-public class setPivotPosition extends Command {
+public class setIntakePosition extends Command {
     IntakePivot pivot;
     double pos;
 
   
-    public setPivotPosition(double position) {
+    public setIntakePosition(double position) {
         pivot = IntakePivot.getInstance();
         this.pos = position;
 

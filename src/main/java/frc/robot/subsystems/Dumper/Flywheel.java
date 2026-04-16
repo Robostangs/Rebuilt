@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Dumper;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -7,8 +9,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -21,6 +21,8 @@ public class Flywheel extends SubsystemBase {
     public Pose2d targetPose;
     private VelocityVoltage flywheelTargetVelocity = new VelocityVoltage(0);
     private Follower slaveControl;
+    private double adjValue = 0;
+
 
     public Flywheel() {
         mainShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
@@ -62,22 +64,30 @@ public class Flywheel extends SubsystemBase {
 
     public double getFlywheelTargetVelocity() {
 
-        double feetFromTarget = Units.metersToFeet(Robot.getMetersFromTarget());
-        if (Robot.isPassing() && feetFromTarget > Constants.FieldConstants.maxRegressionDistance) {
-            // full send if we on opposing alliance and we're past the max actual distance
-            // for passing
-            return Constants.FlywheelConstants.kVelocityAtOppositeAlliancePass;
-        } else {
-            // Acc get regression here
-            return 2.2 * feetFromTarget + 52;
+        double MetersfromTarget = (Robot.getMetersFromTarget());
+        double fudge = 1;
 
+        // double regressionValue = fudge+0.596 + 23*MetersfromTarget- 6.46*Math.pow(MetersfromTarget, 2)+0.627*Math.pow(MetersfromTarget, 3);;
+                double regressionValue = fudge+3.33*MetersfromTarget+19.2;
+
+
+        if(regressionValue < 0 ){
+            return 0;
         }
+        else if(regressionValue > 50){
+            return 50;
+        }
+        else{
+            return regressionValue;
+        }
+
+
+        
     }
 
     public void setFlywheelDC(double dc) {
         mainShooterMotor.set(dc);
         slaveShooterMotor.set(0);
-
     }
 
     public static Flywheel getInstance() {
@@ -87,13 +97,21 @@ public class Flywheel extends SubsystemBase {
         return mInstance;
     }
 
+
+    public void setAdj(DoubleSupplier av){
+        adjValue = av.getAsDouble();
+    }
+
+
     public void setVelocity(double target) {
-        flywheelTargetVelocity.Velocity = target;
+        flywheelTargetVelocity.Velocity = target+adjValue;
 
         mainShooterMotor.setControl(flywheelTargetVelocity);
         slaveShooterMotor.setControl(slaveControl);
 
     }
+
+
 
     public boolean shooterAtTargetVelocity() {
         double currentVelocity = mainShooterMotor.getVelocity().getValueAsDouble();

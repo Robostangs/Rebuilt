@@ -4,11 +4,9 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
-import com.pathplanner.lib.util.FlippingUtil;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -28,6 +26,7 @@ public class AutoAlign extends Command {
 
     Pose2d targetPose;
 
+
     public AutoAlign(Supplier<Double> translateX, Supplier<Double> translateY, Supplier<Boolean> babyOnBoard) {
 
         drivetrain = CommandSwerveDrivetrain.getInstance();
@@ -36,6 +35,15 @@ public class AutoAlign extends Command {
         this.translateY = translateY;
         this.babyOnBoard = babyOnBoard;
         this.isAuto = false;
+
+        PhoenixPIDController tunePID = new PhoenixPIDController(7, 0.5, 0);
+        tunePID.enableContinuousInput(-Math.PI, Math.PI);
+
+        tunePID.setTolerance(0.01);
+
+        driveRequest = new SwerveRequest.FieldCentricFacingAngle();
+        driveRequest.HeadingController = tunePID;
+        driveRequest.HeadingController.reset();
 
         this.addRequirements(drivetrain);
 
@@ -50,6 +58,15 @@ public class AutoAlign extends Command {
         this.babyOnBoard = () -> false;
         this.isAuto = true;
 
+        PhoenixPIDController tunePID = new PhoenixPIDController(7, 0.5, 0);
+        tunePID.enableContinuousInput(-Math.PI, Math.PI);
+
+        tunePID.setTolerance(0.001);
+
+        driveRequest = new SwerveRequest.FieldCentricFacingAngle();
+        driveRequest.HeadingController = tunePID;
+        driveRequest.HeadingController.reset(); 
+
         this.addRequirements(drivetrain);
 
     }
@@ -57,13 +74,7 @@ public class AutoAlign extends Command {
     @Override
     public void initialize() {
 
-        PhoenixPIDController tunePID = new PhoenixPIDController(6.5, 0.5, 0.4);
-        tunePID.enableContinuousInput(-Math.PI, Math.PI);
-
-        driveRequest = new SwerveRequest.FieldCentricFacingAngle();
-        driveRequest.HeadingController = tunePID;
-
-        // this is for tuning and now we can tune the PID controller
+        driveRequest.HeadingController.reset();
         SmartDashboard.putData("Auto Align PID", driveRequest.HeadingController);
         drivetrain.postStatus("Auto Aligning");
 
@@ -74,57 +85,61 @@ public class AutoAlign extends Command {
     @Override
     public void execute() {
 
+                driveRequest.HeadingController.reset();
+
+        targetPose = Robot.getTargetPose();
+            Pose2d currentPose = drivetrain.getState().Pose; 
+
 
         if (!Robot.isPassing()) {
-            setTargetPose();
 
             getTargetRotation = () -> {
 
                 return Rotation2d
                         .fromRadians((Math.atan2(
-                                drivetrain.getState().Pose.getY() - targetPose.getY(),
-                                drivetrain.getState().Pose.getX() - targetPose.getX())))
-                        // .minus(Rotation2d.kZero)
+                                currentPose.getY() - targetPose.getY(),
+                                currentPose.getX() - targetPose.getX())))
 
                         .minus(!Robot.isRed() ? Rotation2d.k180deg : Rotation2d.kZero)
                         ;
+
             };
-            SmartDashboard.putNumber("Drive current theta",
-                    Math.atan2(
-                            drivetrain.getState().Pose.getY() - targetPose.getY(),
-                            drivetrain.getState().Pose.getX() - targetPose.getX()));
+
         } else {
             getTargetRotation = () -> Rotation2d.k180deg;
         }
 
         driveRequest.TargetDirection = getTargetRotation.get();
 
+        SmartDashboard.putNumber("Drive Target theta",
+
+                driveRequest.HeadingController.getSetpoint()
+
+        );
+
+         SmartDashboard.putNumber("Drive Target theta Degrees",
+
+         Units.radiansToDegrees(
+                driveRequest.HeadingController.getSetpoint()
+         )
+
+        );
+
+        SmartDashboard.putNumber("Drive Current theta",
+                (driveRequest.TargetDirection.getRadians()));
+
         driveRequest
                 .withVelocityX(-translateX.get()
-                        * (babyOnBoard.get() ? 1.0 : 0.25)
+                        * (babyOnBoard.get() ? 1.0 : 0.15)
                         * (Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude()))
                 .withVelocityY(-translateY.get()
-                        * (babyOnBoard.get() ? 1.0 : 0.25)
+                        * (babyOnBoard.get() ? 1.0 : 0.15)
                         * Constants.TunerConstants.kSpeedAt12Volts.baseUnitMagnitude());
 
         drivetrain.setControl(driveRequest);
         drivetrain.postStatus("Currently aligning");
 
-    }
-
-    public double timeToShoot(double metersfromHub) {
-        return 1.15 - .455 * metersfromHub + .378 * Math.pow(metersfromHub, 2) - .118 * Math.pow(metersfromHub, 3)
-                + .013 * Math.pow(metersfromHub, 4);
-    }
-
-    public void setTargetPose() {
-
-        Translation2d targetHubPose = !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
-                : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation());
-
-        targetPose = new Pose2d(targetHubPose, new Rotation2d());
-
-        Robot.teleopField.getObject("TargetPose").setPose(targetPose);
+        SmartDashboard.putBoolean("Is pid at setpoint", driveRequest.HeadingController.atSetpoint());
 
     }
 
@@ -135,9 +150,8 @@ public class AutoAlign extends Command {
 
     @Override
     public boolean isFinished() {
-        if(isAuto){
-            return
-            (driveRequest.HeadingController.atSetpoint());
+        if (isAuto) {
+            return (driveRequest.HeadingController.atSetpoint());
         }
 
         return false;

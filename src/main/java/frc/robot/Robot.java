@@ -20,6 +20,9 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -45,15 +48,14 @@ import frc.robot.FeederCommands.setFeederSpeed;
 import frc.robot.Stable.LimelightHelpers;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.AutoAlign;
-import frc.robot.commands.DumperCommands.DumpFactory;
+import frc.robot.commands.DumperCommands.ShootFactory;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
 import frc.robot.commands.DumperCommands.Flywheel.setFlywheelDutyCycle;
 import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
 import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
-import frc.robot.commands.IntakeCommands.MovePivot;
-import frc.robot.commands.IntakeCommands.setPivotPosition;
+import frc.robot.commands.IntakeCommands.setIntakePosition;
 import frc.robot.commands.IntakeCommands.setKirbyWheels;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
@@ -79,6 +81,8 @@ public class Robot extends TimedRobotstangs {
     String autoname = "";
     String oldAutoname = " ";
     public CommandScheduler scheduler = CommandScheduler.getInstance();
+
+    private static Pose2d targetPose;
 
     public Color allianceScore = Constants.ElasticConstants.purple;
 
@@ -132,14 +136,12 @@ public class Robot extends TimedRobotstangs {
         configureTeleopTab();
         loadNamedCommands();
 
-        Hood.getInstance().setDefaultCommand( new setHoodDutyCycle(() -> 0d));
+        Hood.getInstance().setDefaultCommand(new setHoodDutyCycle(() -> 0d));
         Flywheel.getInstance().setDefaultCommand(new setFlywheelDutyCycle(() -> 0d));
         Feeder.getInstance().setDefaultCommand(new setFeederSpeed(() -> 0d));
-        IntakePivot.getInstance().setDefaultCommand(new MovePivot(() -> 0d));
+        // IntakePivot.getInstance().setDefaultCommand(new MovePivot(() -> 0d));
         Kirby.getInstance().setDefaultCommand(new setKirbyWheels(() -> 0));
         Hopper.getInstance().setDefaultCommand(new RunHopper(() -> 0d));
-
-
 
     }
 
@@ -245,64 +247,70 @@ public class Robot extends TimedRobotstangs {
     public void robotPeriodic() {
 
         CommandScheduler.getInstance().run();
+
+        setTargetPose();
         gscollect.update();
         SmartDashboard.putString("Alliance can score", allianceScore.toHexString());
+        SmartDashboard.putBoolean("Alliance is Red", Robot.isRed());
 
     }
 
     @Override
     public void disabledInit() {
 
-           
-
-
         for (String name : AutoBuilder.getAllAutoNames()) {
             autoChooser.addOption(name, name);
         }
 
         autoChooser.setDefaultOption("Sit and Shit", "SitAndShit");
-        autoChooser.addOption("Piss", "Piss");
+        // autoChooser.addOption("Piss", "Piss");
         // autoChooser.addOption("DStart - DTrench - DIntake - DBump - DShoot", "DStart
         // - DTrench - DIntake - DBump - DShoot");
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
-        autoname = autoChooser.getSelected();
+        if (autoChooser.getSelected() == null) {
+            autoname = "";
+        } else {
+            autoname = autoChooser.getSelected();
+
+        }
         oldAutoname = "nada";
     }
 
     @Override
     public void disabledPeriodic() {
-        autoname = autoChooser.getSelected();
+        if(autoname == null){
+            autoname ="";
+        }
 
-        if (!autoname.equals(oldAutoname)) {
+        if (autoname != null) {
+            autoname = autoChooser.getSelected();
 
-            if (autoname != null) {
+            if (!autoname.equals(oldAutoname)) {
 
-                autoAlert.set(false);
-                if (autoname.equals("Piss")) {
+                if (autoname != null) {
 
-                    autoCommand = new InstantCommand(() -> CommandSwerveDrivetrain.getInstance()
-                            .resetPose(Constants.FieldConstants.ShootPoseDepot)).andThen(
-                                    DumpFactory.Shoot());
-                } else if (autoname.equals("SitAndShit")) {
-                    autoCommand = new PrintCommand("Pooping");
+                    autoAlert.set(false);
+                    if (autoname.equals("SitAndShit")) {
+                        autoCommand = new PrintCommand("Pooping");
+                    } else {
+                        autoCommand = new PathPlannerAuto(autoname);
+
+                        drawCurrentAuto(autoCommand.getName());
+
+                    }
+
                 } else {
-                    autoCommand = new PathPlannerAuto(autoname);
-                }
+                    autoCommand = new PrintCommand("Auto not Autoing....");
+                    autoAlert.set(true);
 
-            } else {
-                autoCommand = new PrintCommand("Auto not Autoing....");
-                autoAlert.set(true);
+                }
+                SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
 
             }
-            SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
-
-            drawCurrentAuto(autoCommand.getName());
-
+            oldAutoname = autoname;
         }
-        oldAutoname = autoname;
-
     }
 
     @Override
@@ -314,16 +322,13 @@ public class Robot extends TimedRobotstangs {
                 new InstantCommand(() -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
                 autoCommand
         // ,new AutoAlign(),
-        // dumpFactory.PhotoShoot()
+        // ShootFactory.PhotoShoot()
         );
 
     }
 
     @Override
     public void autonomousInit() {
-
-        LimelightHelpers.setRewindEnabled(Constants.VisionConstants.kLimelightFour, true);
-        LimelightHelpers.setRewindEnabled(Constants.VisionConstants.kLimelightFourR, true);
 
         CommandScheduler.getInstance().cancelAll();
 
@@ -346,9 +351,7 @@ public class Robot extends TimedRobotstangs {
     public void teleopInit() {
         CommandScheduler.getInstance().cancelAll();
 
-        lastMatchSecond = Robot.isSimulation() ? (int) Timer.getFPGATimestamp() : (int) DriverStation.getMatchTime();
-
-     
+        lastMatchSecond = (int) DriverStation.getMatchTime();
 
     }
 
@@ -356,6 +359,7 @@ public class Robot extends TimedRobotstangs {
     public void teleopPeriodic() {
 
         SmartDashboard.putBoolean("IsPassing", shooterPass);
+        SmartDashboard.putBoolean("Is dumb", isShooterDumb());
         shiftAlert.set(canBlueScore == whoCanScore.error);
         String gameData = DriverStation.getGameSpecificMessage();
         int gameTimeInt = (int) DriverStation.getMatchTime();
@@ -440,8 +444,8 @@ public class Robot extends TimedRobotstangs {
     public void teleopExit() {
 
         if (DriverStation.isFMSAttached()) {
-            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFour, 150);
-            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourR, 150);
+            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourSide, 150);
+            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourFront, 150);
         }
     }
 
@@ -449,35 +453,28 @@ public class Robot extends TimedRobotstangs {
     public void testInit() {
         SwerveRequest rightRequest = new SwerveRequest.FieldCentric().withVelocityY(0.3);
         Command driveRightCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> rightRequest);
-        SmartDashboard.putData("Test Oscillate Intake", IntakeFactory.OscillateIntake());
         SmartDashboard.putData("Get wheel odometry", driveRightCommand);
         CommandScheduler.getInstance().cancelAll();
         setupPitTestDashboard();
         setupAutoPitTest();
-        SmartDashboard.putNumber("Regression Hood Setpoint", 0);
-        SmartDashboard.putNumber("Regression Flywheel Setpoint", 0);     
+        SmartDashboard.putNumber("Regression Hood Setpoint", 0.03);
+        SmartDashboard.putNumber("Regression Flywheel Setpoint", 0);
 
-
-        Hood.getInstance().setDefaultCommand( new setHoodPosition(() ->SmartDashboard.getNumber("Regression Hood Setpoint", 0)));
-        Flywheel.getInstance().setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0)));
-
-        CommandScheduler.getInstance().schedule(
-        new setHoodPosition(() ->SmartDashboard.getNumber("Regression Hood Setpoint", 0)), 
-        new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0))
-        );
-
+        Hood.getInstance()
+                .setDefaultCommand(
+                        new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood Setpoint", 0.03)));
+        Flywheel.getInstance()
+                .setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0)));
 
     }
 
     @Override
     public void testPeriodic() {
 
-
     }
 
     @Override
     public void testExit() {
-
 
     }
 
@@ -516,8 +513,8 @@ public class Robot extends TimedRobotstangs {
 
     }
 
-
-    //Q41, put autoalign back in changed path to go more in and slower, canceled commands going into teleop., added auto align back to auto
+    // Q41, put autoalign back in changed path to go more in and slower, canceled
+    // commands going into teleop., added auto align back to auto
     public void configureTeleopTab() {
         teleopTab = Shuffleboard.getTab("Teleop");
 
@@ -525,34 +522,65 @@ public class Robot extends TimedRobotstangs {
 
     public void loadNamedCommands() {
 
-        NamedCommands.registerCommand("Shoot",
-                new PrintCommand("you're supposed to shoot bruh"));
-        NamedCommands.registerCommand("Pass",
-                new PrintCommand("you're supposed to pass bruh"));
-
         NamedCommands.registerCommand("Extend", IntakeFactory.ExtendIntake());
 
-        NamedCommands.registerCommand("Retract",IntakeFactory.RetractIntake());
+        NamedCommands.registerCommand("Retract", IntakeFactory.RetractIntake());
 
         NamedCommands.registerCommand("Photoshoot",
-                (DumpFactory.PhotoShoot()));
+                (ShootFactory.RegressionShoot()));
 
-        NamedCommands.registerCommand("AutoAlign", new AutoAlign());
+        NamedCommands.registerCommand("AutoAlign", new AutoAlign(() -> 0d, () -> 0d, () -> false));
 
-        //  new PrintCommand("ALIGN!"));
+        // new PrintCommand("ALIGN!"));
 
-        NamedCommands.registerCommand("BumpTake", new setPivotPosition(Constants.KirbyConstants.kIntakePivotBump));
-
-        NamedCommands.registerCommand("Climb",
-                new PrintCommand("Hi!"));
+        NamedCommands.registerCommand("BumpTake", new setIntakePosition(Constants.KirbyConstants.kIntakePivotBump));
 
     }
 
     public static double getMetersFromTarget() {
-        return CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
-                !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
-                        : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation()));
 
+        return CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
+                getTargetPose().getTranslation());
+
+    }
+
+    public static double timeToShoot(double metersfromHub) {
+        return 1.15 - .455 * metersfromHub + .378 * Math.pow(metersfromHub, 2) - .118 * Math.pow(metersfromHub, 3)
+                + .013 * Math.pow(metersfromHub, 4);
+    }
+
+    public static void setTargetPose() {
+
+        ChassisSpeeds robotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+                CommandSwerveDrivetrain.getInstance().getState().Speeds,
+                CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation());
+
+        Translation2d hubPose = !Robot.isRed() ? Constants.FieldConstants.HubPosition.getTranslation()
+                : FlippingUtil.flipFieldPosition(Constants.FieldConstants.HubPosition.getTranslation());
+
+        double time = timeToShoot(
+                CommandSwerveDrivetrain.getInstance().getState().Pose.getTranslation().getDistance(
+                        hubPose));
+
+        double vx = Math.abs(robotSpeeds.vxMetersPerSecond) > 0.1 && Math.abs(robotSpeeds.vxMetersPerSecond) < 3
+                ? robotSpeeds.vxMetersPerSecond
+                : 0;
+        double vy = Math.abs(robotSpeeds.vyMetersPerSecond) > 0.1
+                && Math.abs(robotSpeeds.vyMetersPerSecond) < 3 ? robotSpeeds.vyMetersPerSecond : 0;
+
+        Translation2d targetHubPose = hubPose.minus(
+                new Translation2d(
+                        vx * time,
+                        vy * time));
+
+        targetPose = new Pose2d(targetHubPose, new Rotation2d());
+
+        Robot.teleopField.getObject("TargetPose").setPose(targetPose);
+
+    }
+
+    public static Pose2d getTargetPose() {
+        return targetPose;
     }
 
     public static void setShooterPass(boolean pass) {
@@ -586,6 +614,9 @@ public class Robot extends TimedRobotstangs {
             try {
                 for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
                     for (Pose2d pose : path.getPathPoses()) {
+                        if (Robot.isRed()) {
+                            pose = FlippingUtil.flipFieldPose(pose);
+                        }
                         poses.add(pose);
                     }
 
@@ -595,6 +626,7 @@ public class Robot extends TimedRobotstangs {
                 e.printStackTrace();
                 autoAlert.set(true);
             }
+
             teleopField.getObject("auto").setPoses(poses);
 
         }

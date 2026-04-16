@@ -39,6 +39,7 @@ public class Feed extends Command{
 
     @Override
     public void end(boolean interrupted) {
+        feeder.setFeederControl(0);
         feeder.postStatus("Charged");
     }
 

@@ -2,6 +2,8 @@ package frc.robot.subsystems.Intake;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -15,7 +17,7 @@ public class Kirby extends SubsystemBase {
     public Kirby() {
 
         kirbyWheels = new TalonFX(Constants.KirbyConstants.kirbyWheelsID);
-        setIntakePivotConfig();
+        setKirbyConfig();
 
     }
 
@@ -26,10 +28,12 @@ public class Kirby extends SubsystemBase {
         return mInstance;
     }
 
-    public void setIntakePivotConfig() {
+    public void setKirbyConfig() {
         kirbyConfig = new TalonFXConfiguration();
         kirbyConfig.CurrentLimits.SupplyCurrentLimit = Constants.KirbyConstants.IntakeWheelCurrentLimit;
         kirbyConfig.CurrentLimits.StatorCurrentLimit = Constants.KirbyConstants.IntakeWheelsStatorLimit;
+        kirbyConfig.MotorOutput.Inverted=InvertedValue.CounterClockwise_Positive;
+        kirbyWheels.getConfigurator().apply(kirbyConfig);
 
     }
 

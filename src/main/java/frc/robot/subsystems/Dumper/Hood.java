@@ -5,7 +5,6 @@ import com.ctre.phoenix6.controls.MotionMagicExpoDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -47,21 +46,21 @@ public class Hood extends SubsystemBase {
         mainMotorConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.HoodConstants.kHoodMotionMagicCruiseVelocity;
         mainMotorConfig.MotionMagic.MotionMagicAcceleration = Constants.HoodConstants.kHoodMotionMagicAcceleration;
 
+        mainMotorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 1.3;
+        mainMotorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+
+
         mainMotor.getConfigurator().apply(mainMotorConfig);
 
     }
 
     public double getHoodAngle(double metersFromTarget) {
-        double feetFromTarget = Units.metersToFeet(metersFromTarget);
-        if (Robot.isPassing() && feetFromTarget > Constants.FieldConstants.maxRegressionDistance) {
-            // full send if we on opposing alliance and we're past the max actual distance
-            // for passing
-            return Constants.HoodConstants.kPosAtOppositeAlliancePass;
-        } else {
 
-            return -0.522 + 0.429 * Math.log(feetFromTarget);
 
-        }
+            // return -1.57+ (1.83*MetersfromTarget)-(0.674* Math.pow(MetersfromTarget, 2))+ (.0838 * Math.pow(MetersfromTarget, 3));
+            return 0.03;
+
+        
     }
 
     public double getHoodAngle() {
@@ -121,18 +120,10 @@ public class Hood extends SubsystemBase {
     public void setMotionMagic(double target) {
         hoodTargetPosition.Position = target;
 
-        // if (Math.abs(mainMotor.getPosition().getValueAsDouble() - hoodTargetPosition.Position) < 0.04) {
-        //     mainMotor.set(0);
-        // } else {
-        //     if (hoodTargetPosition.Position > 1.3) {
-        //         hoodTargetPosition.Position = 1.3;
-        //     } else if (hoodTargetPosition.Position < 0) {
-        //         hoodTargetPosition.Position = 0;
 
-        //     }
             mainMotor.setControl(hoodTargetPosition);
 
-        // }
+        
 
     }
 

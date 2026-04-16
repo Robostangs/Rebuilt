@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
@@ -19,17 +15,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Stable.ControllerStangs;
-import frc.robot.commands.DumperCommands.DumpFactory;
+import frc.robot.commands.DumperCommands.ShootFactory;
 import frc.robot.commands.DumperCommands.Hood.HomeHood;
 import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
+import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
+import frc.robot.commands.IntakeCommands.setKirbyWheels;
 import frc.robot.commands.AlignToHub;
 import frc.robot.commands.AutoAlign;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Dumper.Flywheel;
 
 public class RobotContainer {
         public static boolean useVision = true;
@@ -102,15 +102,13 @@ public class RobotContainer {
                 setDrivetrain();
 
                 xDrive.rightTrigger().whileTrue(
-                                (DumpFactory.SmartShoot()));
-                xDrive.rightBumper().whileTrue(DumpFactory.Pass());
+                                (ShootFactory.SmartShoot()));
+
+                xDrive.rightBumper().whileTrue(ShootFactory.MedPass());
                 // close shoot
 
                 xDrive.rm()
-                                .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToHalfBump));
-
-                xDrive.lm()
-                                .whileTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToTower));
+                                .whileTrue(ShootFactory.DumbShoot());
 
                 xDrive.rightPaddle().whileTrue(IntakeFactory.ExtendIntake());
                 xDrive.leftPaddle().whileTrue(IntakeFactory.RetractIntake());
@@ -123,15 +121,16 @@ public class RobotContainer {
                                                                                 Constants.FieldConstants.resetPose))));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(
-                                () -> drivetrain.seedFieldCentric()));
+                                () -> drivetrain.seedFieldCentric())); // setoperatorperspective???? huh tweakin
 
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                xDrive.x().whileTrue(DumpFactory.SmartFeed());
+                xDrive.x().whileTrue(IntakeFactory.RetractIntake());
 
                 xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
-                                () -> xDrive.getLeftTriggerAxis() < 0.2));
+                                () -> xDrive.getLeftTriggerAxis() < 0.2)
+                                .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
 
                 xDrive.y().whileTrue(IntakeFactory.TrueSpit());
                 xDrive.b().whileTrue(IntakeFactory.ballStuck());
@@ -139,12 +138,20 @@ public class RobotContainer {
         }
 
         public void configureManipBindings() {
-                xManip.b().onTrue(
+                xManip.rightBumper().onTrue(
                                 new InstantCommand(() -> Robot.toggleShooterPass()));
 
-                xManip.x().onTrue(new InstantCommand(() -> Robot.toggleShooterIsDumb()));
+                // xManip.x().onTrue(new InstantCommand(() -> Robot.toggleShooterIsDumb()));
 
-                xManip.a().whileTrue(new HomeHood());
+                new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05).whileTrue(
+                                new InstantCommand(
+                                                () -> Flywheel.getInstance().setAdj(() -> xManip.getLeftY())));
+
+                xManip.x().whileTrue(new HomeHood());
+
+                xManip.a().whileTrue(ShootFactory.ClosePass());
+                xManip.b().whileTrue(ShootFactory.MedPass());
+                xManip.y().whileTrue(ShootFactory.FarPass());
 
                 xManip.rightPaddle().whileTrue(new HomeIntake(false));
                 xManip.leftPaddle().whileTrue(new HomeIntake(true));
@@ -157,8 +164,9 @@ public class RobotContainer {
 
         private void setDrivetrain() {
                 DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
-                BooleanSupplier isMoving = () -> (Math.abs(xDrive.getLeftX()) > 0 || Math.abs(xDrive.getLeftY()) > 0
-                                || Math.abs(xDrive.getRightX()) > 0);
+                BooleanSupplier isMoving = () -> (((Math.abs(xDrive.getLeftX()) > 0.1
+                                || Math.abs(xDrive.getLeftY()) > 0.1
+                                || Math.abs(xDrive.getRightX()) > 0.1)));
                 if (Robot.isSimulation()) {
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(
@@ -173,19 +181,33 @@ public class RobotContainer {
 
                 } else {
 
+                        new Trigger(isMoving).debounce(0.15, DebounceType.kFalling).whileTrue(
+                                        drivetrain.applyRequest(
+                                                        (() -> drive
+                                                                        .withVelocityX(-xDrive.getLeftY() * MaxSpeed
+                                                                                        * leftBumper.getAsDouble())
+                                                                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed
+                                                                                        * leftBumper.getAsDouble())
+                                                                        .withRotationalRate(
+                                                                                        -xDrive.getRightX()
+                                                                                                        * MaxAngularRate
+                                                                                                        * (leftBumper.getAsDouble()
+                                                                                                                        + .25)))));
+
                         drivetrain.setDefaultCommand(
                                         drivetrain.applyRequest(() -> new SwerveRequest.SwerveDriveBrake()));
 
-                        new Trigger(isMoving).debounce(0.15, DebounceType.kFalling)
-                                        .whileTrue(drivetrain.applyRequest(() -> drive
-                                                        .withVelocityX(-xDrive.getLeftY() * MaxSpeed
-                                                                        * leftBumper.getAsDouble())
-                                                        .withVelocityY(-xDrive.getLeftX() * MaxSpeed
-                                                                        * leftBumper.getAsDouble())
-                                                        .withRotationalRate(
-                                                                        -xDrive.getRightX() * MaxAngularRate
-                                                                                        * (leftBumper.getAsDouble()
-                                                                                                        + .25))));
+                        // drivetrain.setDefaultCommand(drivetrain.applyRequest(
+                        // (() -> drive
+                        // .withVelocityX(-xDrive.getLeftY() * MaxSpeed
+                        // * leftBumper.getAsDouble())
+                        // .withVelocityY(-xDrive.getLeftX() * MaxSpeed
+                        // * leftBumper.getAsDouble())
+                        // .withRotationalRate(
+                        // -xDrive.getRightX()
+                        // * MaxAngularRate
+                        // * (leftBumper.getAsDouble()
+                        // + .25)))));
 
                 }
         }
@@ -197,7 +219,7 @@ public class RobotContainer {
                                                 () -> true));
 
                 new Trigger(() -> xSim.getRawButtonPressed(2))
-                                .onTrue(new AlignToHub().getAlignToHub(Constants.FieldConstants.kMeterToHalfBump));
+                                .onTrue(new AutoAlign());
 
         }
 }

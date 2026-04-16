@@ -1,0 +1,119 @@
+package frc.robot.commands.DumperCommands;
+
+import java.util.Set;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.FeederCommands.Feed;
+import frc.robot.FeederCommands.setFeederSpeed;
+import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
+import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
+import frc.robot.commands.HopperCommands.RunHopper;
+import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Hopper;
+import frc.robot.subsystems.Dumper.Flywheel;
+import frc.robot.subsystems.Dumper.Hood;
+
+public class ShootFactory {
+
+        public static Command SmartFeed() {
+
+                return new WaitUntilCommand(
+                                () -> Flywheel.getInstance().shooterAtTargetVelocity())
+                                .withTimeout(0.5)
+                                .andThen(new Feed(
+                                                () -> Constants.FeederConstants.kFeedRPSSetpoint))
+                                .alongWith(
+
+                                                new WaitUntilCommand(() -> Feeder
+                                                                .getInstance()
+                                                                .feederAtTargetVelocity())
+                                                                .withTimeout(0.5)
+
+                                                                .andThen(new RunHopper(
+                                                                                () -> Constants.HopperConstants.kRollerDC)));
+
+        }
+
+        public static Command RegressionShoot() {
+
+                return new ChargeUp()
+                                .alongWith(
+                                                new setHoodPosition(() -> 0.03))
+                                .alongWith(
+                                                SmartFeed())
+                                .withName("Regression Shoot Command");
+        }
+
+        public static Command DumbShoot() {
+
+                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
+                                .alongWith(
+                                                new setHoodPosition(() -> 0.03))
+                                .alongWith(
+                                                SmartFeed())
+                                .withName("Regression Shoot Command");
+        }
+
+        public static Command FarPass() {
+                return new ChargeUp(() -> 70)
+                                .alongWith(new setHoodPosition(
+                                                () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
+                                .alongWith(
+                                                SmartFeed())
+                                .withName("Pass Command");
+        }
+
+        public static Command MedPass() {
+                return new ChargeUp(() -> 40)
+                                .alongWith(new setHoodPosition(
+                                                () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
+                                .alongWith(
+                                                SmartFeed())
+                                .withName("Pass Command");
+        }
+
+        public static Command ClosePass() {
+                return new ChargeUp(() -> 30)
+                                .alongWith(new setHoodPosition(
+                                                () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
+                                .alongWith(
+                                                SmartFeed())
+                                .withName("Pass Command");
+        }
+
+        public static Command ElectroShoot() {
+                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
+                                .alongWith(
+                                                new setHoodPosition(() -> Constants.HoodConstants.kDumbShootHoodPos))
+                                .alongWith(
+                                                SmartFeed())
+                                .withName("Regression Shoot Command");
+        }
+
+        public static Command SmartShoot() {
+
+                return new DeferredCommand(
+
+                                () -> {
+                                        if (Robot.isShooterDumb()) {
+                                                return DumbShoot();
+
+                                        } else {
+                                                return RegressionShoot();
+                                        }
+
+                                }, Set.of(Flywheel.getInstance(), Hood.getInstance(), Hopper.getInstance(),
+                                                Feeder.getInstance()));
+
+        }
+
+        public static Command PhotoShoot() {
+                return (RegressionShoot());
+
+        }
+
+}

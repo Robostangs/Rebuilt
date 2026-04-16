@@ -45,12 +45,13 @@ public class ChargeUp extends Command {
 
         SmartDashboard.putNumber("Flywheel/Meters", Robot.getMetersFromTarget());
 
-        shooter.postStatus("Charging to " + targetRPS.getAsDouble() + " rps");
+        shooter.postStatus("Charging to " + currentTarget + " rps");
 
     }
 
     @Override
     public void end(boolean interrupted) {
+        shooter.setVelocity(0);
         shooter.postStatus("Charged");
     }
 

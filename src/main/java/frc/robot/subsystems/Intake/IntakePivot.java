@@ -52,7 +52,7 @@ public class IntakePivot extends SubsystemBase {
         hopperExtenderConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         hopperExtenderConfig.Slot0.GravityArmPositionOffset = 0.03;
 
-        hopperExtenderConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        hopperExtenderConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         hopperExtenderConfig.CurrentLimits.StatorCurrentLimit = 80;
 

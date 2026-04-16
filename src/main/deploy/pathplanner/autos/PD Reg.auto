@@ -5,15 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Extend"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "DStart - DepotIntake - Shoot"
+            "pathName": "Depot First Pass"
           }
         },
         {

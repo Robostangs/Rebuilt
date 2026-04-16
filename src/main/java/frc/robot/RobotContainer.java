@@ -120,7 +120,7 @@ public class RobotContainer {
                                                                 : FlippingUtil.flipFieldPose(
                                                                                 Constants.FieldConstants.resetPose))));
 
-                xDrive.povUp().onTrue(drivetrain.runOnce(
+                xDrive.povUp().onTrue(drivetrain.runOnce( 
                                 () -> drivetrain.seedFieldCentric())); // setoperatorperspective???? huh tweakin
 
                 xDrive.povRight().onTrue(new InstantCommand(

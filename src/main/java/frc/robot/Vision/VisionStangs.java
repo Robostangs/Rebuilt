@@ -63,7 +63,6 @@ public class VisionStangs {
         }
 
         if (bigAmbiguity < Constants.VisionConstants.kPhotonAmbiguityThres) {
-            // Only use the estimate if present and valid
 
             visionEst.ifPresent(est -> {
                 var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;

@@ -63,10 +63,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private VisionStangs LL4Front = new VisionStangs(Constants.VisionConstants.kLimelightFourFront);
     private VisionStangs LL4Side = new VisionStangs(Constants.VisionConstants.kLimelightFourSide);
 
-
-    // private VisionStangs photonVisionRight = new
-    // VisionStangs(Constants.VisionConstants.kPhotonLL3Name,
-    // Constants.VisionConstants.kRobotToCamLL3);
+    private VisionStangs photonVisionRight = new VisionStangs(Constants.VisionConstants.kPhotonLL3Name,
+            Constants.VisionConstants.kRobotToCamLL3);
 
     private ArrayList<VisionStangs> visionPoses = new ArrayList<>();
 
@@ -261,7 +259,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Drivetrain/Vely", this.getState().Speeds.vyMetersPerSecond);
-                SmartDashboard.putNumber("Drivetrain/Velx", this.getState().Speeds.vxMetersPerSecond);
+        SmartDashboard.putNumber("Drivetrain/Velx", this.getState().Speeds.vxMetersPerSecond);
 
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
@@ -277,35 +275,29 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 getPigeon2().getAngularVelocityZWorld().getValueAsDouble());
         SmartDashboard.putBoolean("Vision/UseVision", RobotContainer.useVision);
 
-                    SmartDashboard.putNumber("Drivetrain/current speed", Math.sqrt(
+        SmartDashboard.putNumber("Drivetrain/current speed", Math.sqrt(
 
-                    Math.pow(this.getState().Speeds.vxMetersPerSecond, 2)+
- Math.pow(this.getState().Speeds.vyMetersPerSecond, 2)                    
-                    )
-                    );
+                Math.pow(this.getState().Speeds.vxMetersPerSecond, 2) +
+                        Math.pow(this.getState().Speeds.vyMetersPerSecond, 2)));
 
+        SmartDashboard.putNumber("Drivetrain/current X acceleration",
+                this.getPigeon2().getAccelerationX().getValueAsDouble());
 
-                    
-                    SmartDashboard.putNumber("Drivetrain/current X acceleration", 
-                                    this.getPigeon2().getAccelerationX().getValueAsDouble()
-                    );
-
-
-                         
-                    SmartDashboard.putNumber("Drivetrain/current X acceleration", 
-                                    this.getPigeon2().getAccelerationY
-                                    ().getValueAsDouble()
-                    );
+        SmartDashboard.putNumber("Drivetrain/current X acceleration",
+                this.getPigeon2().getAccelerationY().getValueAsDouble());
 
         visionPoses.clear();
 
         LL4Front.periodic();
         LL4Side.periodic();
-        // photonVisionRight.periodic();
+        if (!DriverStation.isAutonomousEnabled()) {
+            // photonVisionRight.periodic();
+            // visionPoses.add(photonVisionRight);
+
+        }
 
         visionPoses.add(LL4Front);
         visionPoses.add(LL4Side);
-        // visionPoses.add(photonVisionRight);
 
         setVisionPose(visionPoses);
 

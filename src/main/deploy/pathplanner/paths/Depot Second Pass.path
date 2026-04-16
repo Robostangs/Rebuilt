@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.341109112357545,
-        "y": 5.62847096336667
+        "x": 2.420534589640491,
+        "y": 5.6883878950449
       },
       "isLocked": false,
       "linkedName": "DepotShootAcc"
@@ -20,98 +20,66 @@
         "y": 5.5
       },
       "prevControl": {
-        "x": 4.687783899603701,
-        "y": 5.5
+        "x": 5.090468149554158,
+        "y": 5.600292458167322
       },
       "nextControl": {
-        "x": 5.713005366726298,
-        "y": 5.5
+        "x": 6.830197627692719,
+        "y": 5.131931881382197
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.971793463427947,
-        "y": 5.4994092862991275
+        "x": 6.777262969588551,
+        "y": 3.9782110912343462
       },
       "prevControl": {
-        "x": 6.6220099017526985,
-        "y": 5.624649686176157
+        "x": 6.996160772809671,
+        "y": 4.133700770574764
       },
       "nextControl": {
-        "x": 7.34434094113901,
-        "y": 5.366018240538574
+        "x": 6.573448978524572,
+        "y": 3.8334358963749624
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.526441900927947,
-        "y": 3.0853056199963613
+        "x": 5.479230769230769,
+        "y": 5.552075134168158
       },
       "prevControl": {
-        "x": 7.152032430627023,
-        "y": 3.1310458406390436
+        "x": 6.2194033331490814,
+        "y": 5.218997480404917
       },
       "nextControl": {
-        "x": 5.101027679221252,
-        "y": 2.9810860739628824
+        "x": 5.154722719141324,
+        "y": 5.6981037567084085
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.463005366726297,
-        "y": 5.211341681574241
+        "x": 2.315277280858676,
+        "y": 5.470948121645796
       },
       "prevControl": {
-        "x": 6.248793246558934,
-        "y": 5.230743851446651
-      },
-      "nextControl": {
-        "x": 4.148747763864042,
-        "y": 5.178890876565296
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.305753773298217,
-        "y": 5.380983589951378
-      },
-      "prevControl": {
-        "x": 2.484525703159262,
-        "y": 5.55574227240738
+        "x": 3.5484078711985685,
+        "y": 5.7143291592128795
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "DepotShootAcc"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.314067529506438,
-      "rotationDegrees": -45.0
-    },
-    {
-      "waypointRelativePos": 1.8228607832618038,
+      "waypointRelativePos": 1.1294642857142876,
       "rotationDegrees": 90.0
-    },
-    {
-      "waypointRelativePos": 2.595854010193131,
-      "rotationDegrees": 90.0
-    },
-    {
-      "waypointRelativePos": 3.325828192060081,
-      "rotationDegrees": -90.0
-    },
-    {
-      "waypointRelativePos": 4.448897795591183,
-      "rotationDegrees": -90.0
     }
   ],
   "constraintZones": [],
@@ -127,7 +95,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -36.365279489644074
+    "rotation": 101.97613244420337
   },
   "reversed": false,
   "folder": "Depot",

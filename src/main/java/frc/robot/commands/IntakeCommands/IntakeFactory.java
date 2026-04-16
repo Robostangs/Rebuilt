@@ -13,8 +13,9 @@ public class IntakeFactory {
                 .alongWith(new RunHopper(() -> -0.5));
     }
 
+
     public static Command ballStuck() {
-        return new setFeederSpeed(() -> -1).alongWith(new setKirbyWheels(() -> -1))
+        return new setFeederSpeed(() -> -1).alongWith(new setKirbyWheels(() -> 1))
                 .alongWith(new RunHopper(() -> -0.5));
     }
 

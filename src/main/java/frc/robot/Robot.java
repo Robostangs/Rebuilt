@@ -263,7 +263,7 @@ public class Robot extends TimedRobotstangs {
         }
 
         autoChooser.setDefaultOption("Sit and Shit", "SitAndShit");
-        autoChooser.addOption("Piss", "Piss");
+        // autoChooser.addOption("Piss", "Piss");
         // autoChooser.addOption("DStart - DTrench - DIntake - DBump - DShoot", "DStart
         // - DTrench - DIntake - DBump - DShoot");
 
@@ -292,12 +292,7 @@ public class Robot extends TimedRobotstangs {
                 if (autoname != null) {
 
                     autoAlert.set(false);
-                    if (autoname.equals("Piss")) {
-
-                        autoCommand = new InstantCommand(() -> CommandSwerveDrivetrain.getInstance()
-                                .resetPose(Constants.FieldConstants.ShootPoseDepot)).andThen(
-                                        ShootFactory.DumbShoot());
-                    } else if (autoname.equals("SitAndShit")) {
+                    if (autoname.equals("SitAndShit")) {
                         autoCommand = new PrintCommand("Pooping");
                     } else {
                         autoCommand = new PathPlannerAuto(autoname);

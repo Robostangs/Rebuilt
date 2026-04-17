@@ -120,15 +120,20 @@ public class VisionStangs {
             if (isDisabled) {
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
                 mtLabel = "MT1 (disabled)";
-            } else if (isFastJohn) {
-                fourPoseEsti = null;
-                mtLabel = "Rejected (too fast)";
-            } else {
+            } 
+            // else if (isFastJohn) {
+            //     fourPoseEsti = null;
+            //     mtLabel = "Rejected (too fast)";
+            // } 
+            else {
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
                 mtLabel = "MT2";
             }
 
+            
             SmartDashboard.putString("Vision/" + CameraName + "/MT Mode ", mtLabel);
+       Robot.teleopField.getObject("Raw "+CameraName).setPose(fourPoseEsti.pose);
+            SmartDashboard.putNumber("Tag count "+CameraName, fourPoseEsti.tagCount);
 
             if (isPosegoo(fourPoseEsti)) {
                 this.currentPose = fourPoseEsti.pose;
@@ -177,12 +182,12 @@ public class VisionStangs {
             SmartDashboard.putString("Vision" + CameraName + "/LL_RejectReason", "Pose null");
             return false;
         }
-        if (yoPoseEsti.tagCount < 2) {
+        if (yoPoseEsti.tagCount < 1) {
             SmartDashboard.putString("Vision" + CameraName + "/LL_RejectReason",
                     "Not enough tags: " + yoPoseEsti.tagCount);
             return false;
         }
-        if (yoPoseEsti.avgTagDist > Constants.VisionConstants.kLLDisThres) {
+        if (yoPoseEsti.avgTagDist > Constants.VisionConstants.kLLD+isThres) {
             SmartDashboard.putString("Vision" + CameraName + "/LL_RejectReason", "Too far: " + yoPoseEsti.avgTagDist);
             return false;
         }
@@ -218,4 +223,4 @@ public class VisionStangs {
             Photonperiodic();
         }
     }
-}
+}    

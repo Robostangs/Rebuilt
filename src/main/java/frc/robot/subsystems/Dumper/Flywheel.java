@@ -65,7 +65,7 @@ public class Flywheel extends SubsystemBase {
     public double getFlywheelTargetVelocity() {
 
         double MetersfromTarget = (Robot.getMetersFromTarget());
-        double fudge = .5;
+        double fudge = -.5;
 
         // double regressionValue = fudge+0.596 + 23*MetersfromTarget- 6.46*Math.pow(MetersfromTarget, 2)+0.627*Math.pow(MetersfromTarget, 3);;
                 double regressionValue = fudge+3.33*MetersfromTarget+19.2;

@@ -132,8 +132,6 @@ public class RobotContainer {
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                // xDrive.x().whileTrue(new setKirbyWheels(() -> 1));
-
                 xDrive.a().whileTrue(new AutoAlign(()
                  -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2)
@@ -152,8 +150,8 @@ public class RobotContainer {
                 xTest.rightPaddle().whileTrue(new HomeIntake(false));
                 xTest.leftPaddle().whileTrue(new HomeIntake(true));
                 xTest.a().whileTrue(new HomeHood());
-                xTest.lm().whileTrue(IntakeFactory.ExtendIntake());
-                xTest.rm().whileTrue(IntakeFactory.RetractIntake());
+                xTest.leftBumper().whileTrue(IntakeFactory.ExtendIntake());
+                xTest.rightBumper().whileTrue(IntakeFactory.RetractIntake());
 
                 xTest.leftTrigger().whileTrue(new setKirbyWheels(()-> 1));
                 xTest.rightTrigger().whileTrue(ShootFactory.DumbShoot());

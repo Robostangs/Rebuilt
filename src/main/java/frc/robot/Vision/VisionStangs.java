@@ -187,7 +187,7 @@ public class VisionStangs {
                     "Not enough tags: " + yoPoseEsti.tagCount);
             return false;
         }
-        if (yoPoseEsti.avgTagDist > Constants.VisionConstants.kLLD+isThres) {
+        if (yoPoseEsti.avgTagDist > Constants.VisionConstants.kLLDisThres) {
             SmartDashboard.putString("Vision" + CameraName + "/LL_RejectReason", "Too far: " + yoPoseEsti.avgTagDist);
             return false;
         }

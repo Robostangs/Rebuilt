@@ -68,10 +68,6 @@
     {
       "waypointRelativePos": 1.6270022883295185,
       "rotationDegrees": -110.32119727698144
-    },
-    {
-      "waypointRelativePos": 2.491990846681923,
-      "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [],
@@ -110,7 +106,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Outpost",

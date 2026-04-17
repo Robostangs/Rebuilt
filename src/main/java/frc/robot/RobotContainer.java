@@ -172,9 +172,11 @@ public class RobotContainer {
 
                 xManip.x().whileTrue(new HomeHood());
 
-                xManip.a().whileTrue(ShootFactory.ClosePass(xManip.leftBumper()));
-                xManip.b().whileTrue(ShootFactory.MedPass(xManip.leftBumper()));
-                xManip.y().whileTrue(ShootFactory.FarPass(xManip.leftBumper()));
+                xManip.a().whileTrue(ShootFactory.ClosePass());
+                xManip.b().whileTrue(ShootFactory.MedPass());
+                xManip.y().whileTrue(ShootFactory.FarPass());
+
+                xManip.leftBumper().whileTrue(ShootFactory.SmartFeed());
 
                 xManip.rightPaddle().whileTrue(new HomeIntake(false));
                 xManip.leftPaddle().whileTrue(new HomeIntake(true));

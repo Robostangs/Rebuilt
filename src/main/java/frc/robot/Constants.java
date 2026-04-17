@@ -77,7 +77,7 @@ public final class Constants {
                 public static final Pose2d HubPosition = new Pose2d(4.619, 4.03, new Rotation2d());
 
                 // TODO find john
-                public static final Pose2d resetPose = new Pose2d(3.5, 4, new Rotation2d(Units.degreesToRadians(0)));
+                public static final Pose2d resetPose = new Pose2d(3.581, 6.574, new Rotation2d(Units.degreesToRadians(-90)));
 
                 // THIS IS IN FEET
                 public static final double maxRegressionDistance = 30;
@@ -360,7 +360,7 @@ public final class Constants {
 
                 private static final double kDriveGearRatio = 6.026785714285714;
                 private static final double kSteerGearRatio = 26.09090909090909;
-                
+
                 //it acc is 277 inches
                 private static final Distance kWheelRadius = Inches.of(2 * (181.5 / 187.32));
 

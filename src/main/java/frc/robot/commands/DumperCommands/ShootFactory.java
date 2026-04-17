@@ -64,7 +64,7 @@ public class ShootFactory {
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 .alongWith(
                                                 SmartFeed())
-                                .withName("Pass Command");
+                                .withName("Pass Far Command");
         }
 
         public static Command MedPass() {
@@ -73,7 +73,7 @@ public class ShootFactory {
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 .alongWith(
                                                 SmartFeed())
-                                .withName("Pass Command");
+                                .withName("Pass Med Command");
         }
 
         public static Command ClosePass() {
@@ -82,7 +82,7 @@ public class ShootFactory {
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 .alongWith(
                                                 SmartFeed())
-                                .withName("Pass Command");
+                                .withName("Pass Close Command");
         }
 
         public static Command ElectroShoot() {

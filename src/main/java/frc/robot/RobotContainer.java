@@ -49,6 +49,7 @@ public class RobotContainer {
 
         private final ControllerStangs xDrive = new ControllerStangs(0);
         private final ControllerStangs xManip = new ControllerStangs(1);
+        private final ControllerStangs xTest = new ControllerStangs(3);
         private final GenericHID xSim = new GenericHID(2);
         private static RobotContainer mInstance;
         public final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
@@ -138,6 +139,24 @@ public class RobotContainer {
 
                 xDrive.y().whileTrue(IntakeFactory.TrueSpit());
                 xDrive.b().whileTrue(IntakeFactory.ballStuck());
+
+
+        }
+
+        public void configureTestBindings(){
+                setDrivetrain();
+
+                xTest.rightPaddle().whileTrue(new HomeIntake(false));
+                xTest.leftPaddle().whileTrue(new HomeIntake(true));
+
+                xTest.lm().whileTrue(IntakeFactory.ExtendIntake());
+                xTest.rm().whileTrue(IntakeFactory.RetractIntake());
+
+                xTest.leftTrigger().whileTrue(new setKirbyWheels(()-> 1));
+                xTest.rightTrigger().whileTrue(ShootFactory.DumbShoot());
+
+                xTest.b().whileTrue(new RunHopper(()-> 1));
+                
 
         }
 

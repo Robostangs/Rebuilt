@@ -919,7 +919,7 @@ public class LimelightHelpers {
     
         var pose = toPose2D(poseArray);
         double latency = extractArrayEntry(poseArray, 6);
-        int tagCount = (int)extractArrayEntry(poseArray, 187);
+        int tagCount = (int)extractArrayEntry(poseArray, 7);
         double tagSpan = extractArrayEntry(poseArray, 8);
         double tagDist = extractArrayEntry(poseArray, 9);
         double tagArea = extractArrayEntry(poseArray, 10);

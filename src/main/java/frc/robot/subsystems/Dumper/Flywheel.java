@@ -98,8 +98,8 @@ public class Flywheel extends SubsystemBase {
     }
 
 
-    public void setAdj(DoubleSupplier av){
-        adjValue = av.getAsDouble();
+    public void setAdj(double av){
+        adjValue = av;
     }
 
 

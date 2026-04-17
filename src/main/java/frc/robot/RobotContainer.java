@@ -13,6 +13,7 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
@@ -109,12 +110,9 @@ public class RobotContainer {
                 xDrive.rightBumper().whileTrue(ShootFactory.MedPass());
                 // close shoot
 
-                
                 xDrive.rm().whileTrue(new setKirbyWheels(() -> 1));
                 xDrive.lm()
                                 .whileTrue(ShootFactory.DumbShoot());
-
-                
 
                 xDrive.rightPaddle().whileTrue(IntakeFactory.ExtendIntake());
                 xDrive.leftPaddle().whileTrue(IntakeFactory.RetractIntake());
@@ -126,25 +124,22 @@ public class RobotContainer {
                                                                 : FlippingUtil.flipFieldPose(
                                                                                 Constants.FieldConstants.resetPose))));
 
-                xDrive.povUp().onTrue(drivetrain.runOnce( 
+                xDrive.povUp().onTrue(drivetrain.runOnce(
                                 () -> drivetrain.seedFieldCentric())); // setoperatorperspective???? huh tweakin
 
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
 
-                xDrive.a().whileTrue(new AutoAlign(()
-                 -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2)
                                 .withInterruptBehavior(InterruptionBehavior.kCancelIncoming).withName("Auto Align"));
 
                 xDrive.y().whileTrue(IntakeFactory.TrueSpit());
                 xDrive.b().whileTrue(IntakeFactory.ballStuck());
 
-
         }
 
-        public void 
-        configureTestBindings(){
+        public void configureTestBindings() {
                 setDrivetrain();
 
                 xTest.rightPaddle().whileTrue(new HomeIntake(false));
@@ -153,24 +148,27 @@ public class RobotContainer {
                 xTest.leftBumper().whileTrue(IntakeFactory.ExtendIntake());
                 xTest.rightBumper().whileTrue(IntakeFactory.RetractIntake());
 
-                xTest.leftTrigger().whileTrue(new setKirbyWheels(()-> 1));
+                xTest.leftTrigger().whileTrue(new setKirbyWheels(() -> 1));
                 xTest.rightTrigger().whileTrue(ShootFactory.DumbShoot());
 
-                xTest.b().whileTrue(new RunHopper(()-> 1));
-                
+                xTest.b().whileTrue(new RunHopper(() -> 1));
 
         }
 
         public void configureManipBindings() {
-                
+
                 xManip.rightBumper().onTrue(
                                 new InstantCommand(() -> Robot.toggleShooterPass()));
 
                 // xManip.x().onTrue(new InstantCommand(() -> Robot.toggleShooterIsDumb()));
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05).whileTrue(
-                                new InstantCommand(
-                                                () -> Flywheel.getInstance().setAdj(() -> xManip.getLeftY())));
+                                new RunCommand(
+                                                () -> Flywheel.getInstance().setAdj(xManip.getLeftY() * -5)))
+                                                .onFalse(
+                                                                new InstantCommand(
+                                                                                () -> Flywheel.getInstance()
+                                                                                                .setAdj(0)));
 
                 xManip.x().whileTrue(new HomeHood());
 

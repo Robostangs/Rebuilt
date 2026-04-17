@@ -1,6 +1,7 @@
 package frc.robot.commands.DumperCommands;
 
 import java.util.Set;
+import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
@@ -67,6 +68,16 @@ public class ShootFactory {
                                 .withName("Pass Far Command");
         }
 
+        public static Command FarPass(BooleanSupplier leftBumper) {
+                return new ChargeUp(() -> 70)
+                                .alongWith(new setHoodPosition(
+                                                () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
+                                .alongWith(
+                                                new WaitUntilCommand(leftBumper)
+                                                                .andThen(SmartFeed()))
+                                .withName("Pass Far Command");
+        }
+
         public static Command MedPass() {
                 return new ChargeUp(() -> 40)
                                 .alongWith(new setHoodPosition(
@@ -76,12 +87,34 @@ public class ShootFactory {
                                 .withName("Pass Med Command");
         }
 
+        public static Command MedPass(BooleanSupplier leftBumper) {
+                return new ChargeUp(() -> 40)
+                                .alongWith(new setHoodPosition(
+                                                () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
+                                .alongWith(
+
+                                                new WaitUntilCommand(leftBumper)
+                                                                .andThen(SmartFeed()))
+                                .withName("Pass Med Command");
+        }
+
         public static Command ClosePass() {
                 return new ChargeUp(() -> 30)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 .alongWith(
                                                 SmartFeed())
+                                .withName("Pass Close Command");
+        }
+
+        public static Command ClosePass(BooleanSupplier leftBumper) {
+                return new ChargeUp(() -> 30)
+                                .alongWith(new setHoodPosition(
+                                                () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
+                                .alongWith(
+
+                                                new WaitUntilCommand(leftBumper)
+                                                                .andThen(SmartFeed()))
                                 .withName("Pass Close Command");
         }
 

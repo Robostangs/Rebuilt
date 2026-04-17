@@ -26,7 +26,6 @@ import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.setKirbyWheels;
-import frc.robot.commands.AlignToHub;
 import frc.robot.commands.AutoAlign;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Dumper.Flywheel;
@@ -161,6 +160,7 @@ public class RobotContainer {
         }
 
         public void configureManipBindings() {
+                
                 xManip.rightBumper().onTrue(
                                 new InstantCommand(() -> Robot.toggleShooterPass()));
 
@@ -172,9 +172,9 @@ public class RobotContainer {
 
                 xManip.x().whileTrue(new HomeHood());
 
-                xManip.a().whileTrue(ShootFactory.ClosePass());
-                xManip.b().whileTrue(ShootFactory.MedPass());
-                xManip.y().whileTrue(ShootFactory.FarPass());
+                xManip.a().whileTrue(ShootFactory.ClosePass(xManip.leftBumper()));
+                xManip.b().whileTrue(ShootFactory.MedPass(xManip.leftBumper()));
+                xManip.y().whileTrue(ShootFactory.FarPass(xManip.leftBumper()));
 
                 xManip.rightPaddle().whileTrue(new HomeIntake(false));
                 xManip.leftPaddle().whileTrue(new HomeIntake(true));

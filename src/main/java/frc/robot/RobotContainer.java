@@ -63,6 +63,8 @@ public class RobotContainer {
         public RobotContainer() {
                 configureDrivingBinding();
                 configureManipBindings();
+                configureTestBindings();
+
                 if (Robot.isSimulation()) {
                         configureSimBinds();
 
@@ -132,7 +134,8 @@ public class RobotContainer {
 
                 // xDrive.x().whileTrue(new setKirbyWheels(() -> 1));
 
-                xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+                xDrive.a().whileTrue(new AutoAlign(()
+                 -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2)
                                 .withInterruptBehavior(InterruptionBehavior.kCancelIncoming).withName("Auto Align"));
 
@@ -142,12 +145,13 @@ public class RobotContainer {
 
         }
 
-        public void configureTestBindings(){
+        public void 
+        configureTestBindings(){
                 setDrivetrain();
 
                 xTest.rightPaddle().whileTrue(new HomeIntake(false));
                 xTest.leftPaddle().whileTrue(new HomeIntake(true));
-
+                xTest.a().whileTrue(new HomeHood());
                 xTest.lm().whileTrue(IntakeFactory.ExtendIntake());
                 xTest.rm().whileTrue(IntakeFactory.RetractIntake());
 

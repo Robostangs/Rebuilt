@@ -148,7 +148,7 @@ public final class Constants {
                 public static final double hopperExtenderKS = 15;
                 public static final double extenderSensorToMechanismRatio = 4.0 * 4 * 48 / 16;
                 public static final double kExtendSetpoint = 0.01;
-                public static final double kRetractSetpoint = 0.17;
+                public static final double kRetractSetpoint = 0.165;
                 // TODO: find this john
                 public static final double kHopperExtensionTolerance = 0.01;
                 public static final double IntakeWheelCurrentLimit = 100;
@@ -360,6 +360,8 @@ public final class Constants {
 
                 private static final double kDriveGearRatio = 6.026785714285714;
                 private static final double kSteerGearRatio = 26.09090909090909;
+                
+                //it acc is 277 inches
                 private static final Distance kWheelRadius = Inches.of(2 * (181.5 / 187.32));
 
                 private static final boolean kInvertLeftSide = false;

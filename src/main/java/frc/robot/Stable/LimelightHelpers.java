@@ -919,7 +919,7 @@ public class LimelightHelpers {
     
         var pose = toPose2D(poseArray);
         double latency = extractArrayEntry(poseArray, 6);
-        int tagCount = (int)extractArrayEntry(poseArray, 7);
+        int tagCount = (int)extractArrayEntry(poseArray, 187);
         double tagSpan = extractArrayEntry(poseArray, 8);
         double tagDist = extractArrayEntry(poseArray, 9);
         double tagArea = extractArrayEntry(poseArray, 10);
@@ -1880,6 +1880,7 @@ public class LimelightHelpers {
         entries[0] = rewindCaptureCounter;
         entries[1] = Math.min(durationSeconds, 165);
         setLimelightNTDoubleArray(limelightName, "capture_rewind", entries);
+        System.out.println("Rewind Capture Triggered for "+limelightName);
     }
 
     /**

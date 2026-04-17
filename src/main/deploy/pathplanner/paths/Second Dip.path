@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8182647584973166,
+        "x": 2.542432915921288,
         "y": 2.5069619382278017
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.077871198568873,
+        "x": 2.8020393559928443,
         "y": 2.519591634113311
       },
       "isLocked": false,
@@ -74,17 +74,6 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Retract",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Retract"
-        }
-      }
-    },
-    {
       "name": "Extend",
       "waypointRelativePos": 0.8238482384823841,
       "endWaypointRelativePos": null,
@@ -112,7 +101,7 @@
   "folder": "Outpost",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 47.197137391199746
+    "rotation": 36.081883021799605
   },
   "useDefaultConstraints": true
 }

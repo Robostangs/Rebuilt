@@ -121,10 +121,10 @@ public class VisionStangs {
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
                 mtLabel = "MT1 (disabled)";
             } 
-            // else if (isFastJohn) {
-            //     fourPoseEsti = null;
-            //     mtLabel = "Rejected (too fast)";
-            // } 
+            else if (isFastJohn) {
+                fourPoseEsti = null;
+                mtLabel = "Rejected (too fast)";
+            } 
             else {
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
                 mtLabel = "MT2";
@@ -182,7 +182,7 @@ public class VisionStangs {
             SmartDashboard.putString("Vision" + CameraName + "/LL_RejectReason", "Pose null");
             return false;
         }
-        if (yoPoseEsti.tagCount < 1) {
+        if (yoPoseEsti.tagCount < 2) {
             SmartDashboard.putString("Vision" + CameraName + "/LL_RejectReason",
                     "Not enough tags: " + yoPoseEsti.tagCount);
             return false;

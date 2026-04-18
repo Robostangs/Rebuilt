@@ -130,11 +130,7 @@ public class VisionStangs {
 
             SmartDashboard.putString("Vision/" + CameraName + "/MT Mode ", mtLabel);
             
-            if (fourPoseEsti != null) {
-                Robot.teleopField.getObject("Raw " + CameraName).setPose(fourPoseEsti.pose);
-                SmartDashboard.putNumber("Tag count " + CameraName, fourPoseEsti.tagCount);
 
-            }
 
             if (isPosegoo(fourPoseEsti)) {
                 this.currentPose = fourPoseEsti.pose;

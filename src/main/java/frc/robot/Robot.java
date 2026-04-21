@@ -43,8 +43,10 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.FeederCommands.setFeederSpeed;
 import frc.robot.Stable.LimelightHelpers;
@@ -282,8 +284,8 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void disabledPeriodic() {
-        if(autoname == null){
-            autoname ="";
+        if (autoname == null) {
+            autoname = "";
         }
 
         if (autoname != null) {
@@ -464,20 +466,18 @@ public class Robot extends TimedRobotstangs {
         SmartDashboard.putNumber("Regression Hood Setpoint", 0.03);
         SmartDashboard.putNumber("Regression Flywheel Setpoint", 0);
 
-
-       
-       
         // Hood.getInstance()
-        //         .setDefaultCommand(
-        //                 new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood Setpoint", 0.03)));
+        // .setDefaultCommand(
+        // new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood
+        // Setpoint", 0.03)));
         // Flywheel.getInstance()
-        //         .setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0)));
+        // .setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression
+        // Flywheel Setpoint", 0)));
 
     }
 
     @Override
     public void testPeriodic() {
-  
 
     }
 
@@ -542,6 +542,25 @@ public class Robot extends TimedRobotstangs {
         // new PrintCommand("ALIGN!"));
 
         NamedCommands.registerCommand("BumpTake", new setIntakePosition(Constants.KirbyConstants.kIntakePivotBump));
+
+        NamedCommands.registerCommand("FullShoot", 
+        
+        new AutoAlign(() -> 0d, () -> 0d, () -> false)
+        .raceWith(
+            new SequentialCommandGroup(
+                        new WaitCommand(1)
+                        .andThen(
+                            new ParallelRaceGroup(  
+                                ShootFactory.RegressionShoot(),
+                                new WaitCommand(3)
+                                        ))
+                        .andThen(new SequentialCommandGroup(
+                            new WaitCommand(1.5),
+                            IntakeFactory.RetractIntake()
+                        ))
+        )
+        
+        ));
 
     }
 

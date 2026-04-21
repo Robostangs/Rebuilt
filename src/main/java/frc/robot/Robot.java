@@ -24,6 +24,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.units.LinearVelocityUnit;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -442,11 +444,13 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void teleopExit() {
-
+        System.out.println("Teleop Exited");
         if (DriverStation.isFMSAttached()) {
-            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourSide, 150);
-            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourFront, 150);
+            System.out.println("fms is attached");
+            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourSide, 165);
+            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourFront, 165);
         }
+
     }
 
     @Override
@@ -460,16 +464,20 @@ public class Robot extends TimedRobotstangs {
         SmartDashboard.putNumber("Regression Hood Setpoint", 0.03);
         SmartDashboard.putNumber("Regression Flywheel Setpoint", 0);
 
-        Hood.getInstance()
-                .setDefaultCommand(
-                        new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood Setpoint", 0.03)));
-        Flywheel.getInstance()
-                .setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0)));
+
+       
+       
+        // Hood.getInstance()
+        //         .setDefaultCommand(
+        //                 new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood Setpoint", 0.03)));
+        // Flywheel.getInstance()
+        //         .setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0)));
 
     }
 
     @Override
     public void testPeriodic() {
+  
 
     }
 

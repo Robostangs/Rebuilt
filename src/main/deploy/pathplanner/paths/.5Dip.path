@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8182647584973166,
+        "x": 2.136797853309481,
         "y": 2.5069619382278017
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0682647584973166,
+        "x": 2.386797853309481,
         "y": 2.5069619382278017
       },
       "isLocked": false,
@@ -77,7 +77,7 @@
   "folder": "Outpost",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 47.197137391199746
+    "rotation": 36.760708633597645
   },
   "useDefaultConstraints": true
 }

@@ -120,15 +120,20 @@ public class VisionStangs {
             if (isDisabled) {
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
                 mtLabel = "MT1 (disabled)";
-            } else if (isFastJohn) {
+            } 
+            else if (isFastJohn) {
                 fourPoseEsti = null;
                 mtLabel = "Rejected (too fast)";
-            } else {
+            } 
+            else {
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
                 mtLabel = "MT2";
             }
 
+            
             SmartDashboard.putString("Vision/" + CameraName + "/MT Mode ", mtLabel);
+       Robot.teleopField.getObject("Raw "+CameraName).setPose(fourPoseEsti.pose);
+            SmartDashboard.putNumber("Tag count "+CameraName, fourPoseEsti.tagCount);
 
             if (isPosegoo(fourPoseEsti)) {
                 this.currentPose = fourPoseEsti.pose;
@@ -168,6 +173,7 @@ public class VisionStangs {
     }
 
     private boolean isPosegoo(LimelightHelpers.PoseEstimate yoPoseEsti) {
+
         if (Robot.isSimulation()) {
             SmartDashboard.putString("Vision" + CameraName + "/LL_RejectReason", "Simulation mode");
             return false;
@@ -185,6 +191,7 @@ public class VisionStangs {
             SmartDashboard.putString("Vision" + CameraName + "/LL_RejectReason", "Too far: " + yoPoseEsti.avgTagDist);
             return false;
         }
+        SmartDashboard.putNumber("Vision/" + CameraName + " avg dis", yoPoseEsti.avgTagDist);
 
         double maxAmbiguity = 0;
         for (LimelightHelpers.RawFiducial fiducial : yoPoseEsti.rawFiducials) {
@@ -216,4 +223,4 @@ public class VisionStangs {
             Photonperiodic();
         }
     }
-}
+}    

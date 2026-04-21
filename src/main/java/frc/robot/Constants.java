@@ -77,7 +77,7 @@ public final class Constants {
                 public static final Pose2d HubPosition = new Pose2d(4.619, 4.03, new Rotation2d());
 
                 // TODO find john
-                public static final Pose2d resetPose = new Pose2d(3.5, 4, new Rotation2d(Units.degreesToRadians(0)));
+                public static final Pose2d resetPose = new Pose2d(3.581, 6.574, new Rotation2d(Units.degreesToRadians(-90)));
 
                 // THIS IS IN FEET
                 public static final double maxRegressionDistance = 30;
@@ -148,7 +148,7 @@ public final class Constants {
                 public static final double hopperExtenderKS = 15;
                 public static final double extenderSensorToMechanismRatio = 4.0 * 4 * 48 / 16;
                 public static final double kExtendSetpoint = 0.01;
-                public static final double kRetractSetpoint = 0.17;
+                public static final double kRetractSetpoint = 0.175;
                 // TODO: find this john
                 public static final double kHopperExtensionTolerance = 0.01;
                 public static final double IntakeWheelCurrentLimit = 100;
@@ -203,7 +203,7 @@ public final class Constants {
                 public static final double kShooterVelocityTolerance = 3;
                 public static final int kFlywheelMotorID = 9;
                 public static final int kFlywheelSlaveMotorID = 10;
-                public static final double kDumbShootRPS = 30;
+                public static final double kDumbShootRPS = 29;
                 public static final double kShooterSlaveMotorStatorCurrentLimit = 60;
                 public static final double kHalfSetpoint = 30;
                 public static final double kTrenchSetpoint = 0;
@@ -360,6 +360,8 @@ public final class Constants {
 
                 private static final double kDriveGearRatio = 6.026785714285714;
                 private static final double kSteerGearRatio = 26.09090909090909;
+
+                //it acc is 277 inches
                 private static final Distance kWheelRadius = Inches.of(2 * (181.5 / 187.32));
 
                 private static final boolean kInvertLeftSide = false;

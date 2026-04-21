@@ -1,10 +1,12 @@
 package frc.robot.commands.DumperCommands;
 
 import java.util.Set;
+import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.FeederCommands.Feed;
@@ -37,7 +39,11 @@ public class ShootFactory {
                                                                                 () -> Constants.HopperConstants.kRollerDC)));
 
         }
+        public static Command StopFeed() {
 
+                return new setFeederSpeed(() ->0.0).alongWith(new RunHopper(() -> 0.0));
+
+        }
         public static Command RegressionShoot() {
 
                 return new ChargeUp()
@@ -62,29 +68,58 @@ public class ShootFactory {
                 return new ChargeUp(() -> 70)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
+                               
+                                .withName("Pass Far Command");
+        }
+
+        public static Command FarPass(BooleanSupplier leftBumper) {
+                return new ChargeUp(() -> 70)
+                                .alongWith(new setHoodPosition(
+                                                () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 .alongWith(
-                                                SmartFeed())
-                                .withName("Pass Command");
+                                                new WaitUntilCommand(leftBumper)
+                                                                .andThen(SmartFeed()))
+                                .withName("Pass Far Command");
         }
 
         public static Command MedPass() {
                 return new ChargeUp(() -> 40)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
+                                
+                                .withName("Pass Med Command");
+        }
+
+        public static Command MedPass(BooleanSupplier leftBumper) {
+                return new ChargeUp(() -> 40)
+                                .alongWith(new setHoodPosition(
+                                                () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 .alongWith(
-                                                SmartFeed())
-                                .withName("Pass Command");
+
+                                                new WaitUntilCommand(leftBumper)
+                                                                .andThen(SmartFeed()))
+                                .withName("Pass Med Command");
         }
 
         public static Command ClosePass() {
                 return new ChargeUp(() -> 30)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
-                                .alongWith(
-                                                SmartFeed())
-                                .withName("Pass Command");
+                               
+                                .withName("Pass Close Command");
         }
 
+        public static Command ClosePass(BooleanSupplier leftBumper) {
+                return new ChargeUp(() -> 30)
+                                .alongWith(new setHoodPosition(
+                                                () -> Constants.HoodConstants.kPosAtOppositeAlliancePass)
+                                                )
+                                
+                                .alongWith(SmartFeed()).onlyWhile(leftBumper)
+                                                                
+                                .withName("Pass Close Command");
+        }
+        
         public static Command ElectroShoot() {
                 return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
                                 .alongWith(

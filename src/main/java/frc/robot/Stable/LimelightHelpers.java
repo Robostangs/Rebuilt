@@ -1880,6 +1880,7 @@ public class LimelightHelpers {
         entries[0] = rewindCaptureCounter;
         entries[1] = Math.min(durationSeconds, 165);
         setLimelightNTDoubleArray(limelightName, "capture_rewind", entries);
+        System.out.println("Rewind Capture Triggered for "+limelightName);
     }
 
     /**

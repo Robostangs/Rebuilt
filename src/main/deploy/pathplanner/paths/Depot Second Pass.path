@@ -3,67 +3,111 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.1,
+        "x": 2.305753773298217,
         "y": 5.380983589951378
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3477259641941455,
-        "y": 5.347340661064596
+        "x": 2.1607277582672157,
+        "y": 5.85738996199391
       },
       "isLocked": false,
       "linkedName": "DepotShootAcc"
     },
     {
       "anchor": {
-        "x": 6.024610749421297,
-        "y": 5.656039424189815
+        "x": 2.6910916701331113,
+        "y": 7.370224625623959
       },
       "prevControl": {
-        "x": 5.654366222627733,
-        "y": 5.76449008450599
+        "x": 1.7496791304313772,
+        "y": 7.285159456116942
       },
       "nextControl": {
-        "x": 6.324254050925926,
-        "y": 5.5682690142152875
+        "x": 2.959946062867517,
+        "y": 7.394518060782476
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.653225260416667,
-        "y": 4.314763310185185
+        "x": 6.213958051684692,
+        "y": 7.370224625623959
       },
       "prevControl": {
-        "x": 6.2105419850800585,
-        "y": 4.28921590702329
+        "x": 6.000296596224236,
+        "y": 7.500027485571341
       },
       "nextControl": {
-        "x": 7.262026578817861,
-        "y": 4.349897442403897
+        "x": 6.9259489236381615,
+        "y": 6.937678421926051
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.642566478587963,
-        "y": 5.27477662037037
+        "x": 6.338404092138103,
+        "y": 3.9525272332570713
       },
       "prevControl": {
-        "x": 7.553204616222881,
-        "y": 5.041293307145112
+        "x": 5.248690658797837,
+        "y": 4.085108543053245
+      },
+      "nextControl": {
+        "x": 7.538877498630252,
+        "y": 3.806470176659784
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.492197509359401,
+        "y": 5.11840565203827
+      },
+      "prevControl": {
+        "x": 7.669349816350606,
+        "y": 4.845917392493745
+      },
+      "nextControl": {
+        "x": 7.148452904014143,
+        "y": 5.647139208090682
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.305753773298217,
+        "y": 5.380983589951378
+      },
+      "prevControl": {
+        "x": 2.5093009459217055,
+        "y": 5.235833500330379
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "DepotShootAcc"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.9961742912371137,
+      "waypointRelativePos": 0.9636824324324325,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.9194291948198197,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 2.5241413288288292,
       "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 3.6343081362612595,
+      "rotationDegrees": -109.82232750278891
     }
   ],
   "constraintZones": [],
@@ -71,7 +115,7 @@
   "eventMarkers": [
     {
       "name": "Extend",
-      "waypointRelativePos": 0.8246738470873791,
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -91,13 +135,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -98.35780018439925
+    "rotation": -36.365279489644074
   },
   "reversed": false,
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -33.86700476538108
+    "rotation": -36.365279489644074
   },
   "useDefaultConstraints": true
 }

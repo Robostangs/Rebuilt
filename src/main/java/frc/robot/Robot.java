@@ -24,12 +24,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.units.LinearVelocityUnit;
-import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -127,12 +124,14 @@ public class Robot extends TimedRobotstangs {
 
         CommandScheduler.getInstance()
                 .onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
+                
         CommandScheduler.getInstance()
                 .onCommandInterrupt((action, cause) -> {
                     String reason = cause.map(c -> c.getName()).orElse("no cause");
                     DataLogManager.log(action.getName() + " Command Interrupted by: " + reason);
                     SmartDashboard.putString("Auto/LastInterrupt", action.getName() + " <- " + reason);
                 });
+
         CommandScheduler.getInstance()
                 .onCommandFinish((action) -> DataLogManager.log(action.getName() + " Command Finished"));
 

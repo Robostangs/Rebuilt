@@ -23,6 +23,7 @@ import frc.robot.Stable.ControllerStangs;
 import frc.robot.commands.DumperCommands.ShootFactory;
 import frc.robot.commands.DumperCommands.Hood.HomeHood;
 import frc.robot.commands.DumperCommands.Hood.setHoodDutyCycle;
+import frc.robot.commands.DumperCommands.Hood.setHoodPosition;
 import frc.robot.commands.HopperCommands.RunHopper;
 import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
@@ -105,14 +106,17 @@ public class RobotContainer {
                 setDrivetrain();
 
                 xDrive.rightTrigger().whileTrue(
-                                (ShootFactory.SmartShoot()));
+                                (ShootFactory.SmartShoot()))
+                                .onFalse(new setHoodPosition(() -> 0));
+                ;
 
-                xDrive.rightBumper().whileTrue(ShootFactory.MedPass());
                 // close shoot
 
                 xDrive.rm().whileTrue(new setKirbyWheels(() -> 1));
                 xDrive.lm()
-                                .whileTrue(ShootFactory.DumbShoot());
+                                .whileTrue(ShootFactory.DumbShoot())
+                                .onFalse(new setHoodPosition(() -> 0));
+                ;
 
                 xDrive.rightPaddle().whileTrue(IntakeFactory.ExtendIntake());
                 xDrive.leftPaddle().whileTrue(IntakeFactory.RetractIntake());
@@ -125,7 +129,8 @@ public class RobotContainer {
                                                                                 Constants.FieldConstants.resetPose))));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(
-                                () -> drivetrain.seedFieldCentric())); // setoperatorperspective???? huh tweakin
+                                () -> drivetrain.seedFieldCentric())); 
+                                // setoperatorperspective???? huh tweakin
 
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
@@ -136,10 +141,47 @@ public class RobotContainer {
 
                 xDrive.y().whileTrue(IntakeFactory.TrueSpit());
                 xDrive.b().whileTrue(IntakeFactory.ballStuck());
+        }
+
+     
+        public void configureManipBindings() {
+
+                xManip.rightBumper().onTrue(
+                                new InstantCommand(() -> Robot.toggleShooterPass()));
+
+                // xManip.x().onTrue(new InstantCommand(() -> Robot.toggleShooterIsDumb()));
+
+                new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05).whileTrue(
+                                new RunCommand(
+                                                () -> Flywheel.getInstance().setAdj(xManip.getLeftY() * -5)))
+                                .onFalse(
+                                                new InstantCommand(
+                                                                () -> Flywheel.getInstance()
+                                                                                .setAdj(0)));
+
+                xManip.x().whileTrue(new HomeHood());
+
+                xManip.a().whileTrue(ShootFactory.ClosePass())
+                                .onFalse(new setHoodPosition(() -> 0));
+                xManip.b().whileTrue(ShootFactory.MedPass())
+                                .onFalse(new setHoodPosition(() -> 0));
+                ;
+                xManip.y().whileTrue(ShootFactory.FarPass())
+                                .onFalse(new setHoodPosition(() -> 0));
+                ;
+
+                xManip.leftBumper().whileTrue(ShootFactory.SmartFeed());
+
+                xManip.rightPaddle().whileTrue(new HomeIntake(false));
+                xManip.leftPaddle().whileTrue(new HomeIntake(true));
+
+                xManip.rightTrigger().whileTrue(new setHoodDutyCycle(() -> xManip.getLeftTriggerAxis() * -0.2));
+
+                xManip.leftTrigger().whileTrue(new setHoodDutyCycle(() -> xManip.getLeftTriggerAxis() * 0.2));
 
         }
 
-        public void configureTestBindings() {
+           public void configureTestBindings() {
                 setDrivetrain();
 
                 xTest.rightPaddle().whileTrue(new HomeIntake(false));
@@ -155,37 +197,6 @@ public class RobotContainer {
 
         }
 
-        public void configureManipBindings() {
-
-                xManip.rightBumper().onTrue(
-                                new InstantCommand(() -> Robot.toggleShooterPass()));
-
-                // xManip.x().onTrue(new InstantCommand(() -> Robot.toggleShooterIsDumb()));
-
-                new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05).whileTrue(
-                                new RunCommand(
-                                                () -> Flywheel.getInstance().setAdj(xManip.getLeftY() * -5)))
-                                                .onFalse(
-                                                                new InstantCommand(
-                                                                                () -> Flywheel.getInstance()
-                                                                                                .setAdj(0)));
-
-                xManip.x().whileTrue(new HomeHood());
-
-                xManip.a().whileTrue(ShootFactory.ClosePass());
-                xManip.b().whileTrue(ShootFactory.MedPass());
-                xManip.y().whileTrue(ShootFactory.FarPass());
-
-                xManip.leftBumper().whileTrue(ShootFactory.SmartFeed());
-
-                xManip.rightPaddle().whileTrue(new HomeIntake(false));
-                xManip.leftPaddle().whileTrue(new HomeIntake(true));
-
-                xManip.rightTrigger().whileTrue(new setHoodDutyCycle(() -> xManip.getLeftTriggerAxis() * -0.2));
-
-                xManip.leftTrigger().whileTrue(new setHoodDutyCycle(() -> xManip.getLeftTriggerAxis() * 0.2));
-
-        }
 
         private void setDrivetrain() {
                 DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;

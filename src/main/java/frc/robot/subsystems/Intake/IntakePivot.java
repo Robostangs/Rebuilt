@@ -61,6 +61,7 @@ public class IntakePivot extends SubsystemBase {
     }
 
     public void setDC(double dutyCycle) {
+        SmartDashboard.putNumber("IntakePivot/dc", dutyCycle);
         hopperExtenderMotor.set(dutyCycle);
     }
 

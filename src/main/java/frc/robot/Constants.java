@@ -281,9 +281,9 @@ public final class Constants {
                 public static final String kPhotonLL3Name = "Friday";
                 public static final Transform3d kRobotToCamLL3 = new Transform3d(
                                    Units.inchesToMeters(0),
+                                Units.inchesToMeters(13.5),
                                 Units.inchesToMeters(12),
-                                Units.inchesToMeters(13),
-                                new Rotation3d(0, Units.degreesToRadians(20), Units.degreesToRadians(90)));
+                                new Rotation3d(0, Units.degreesToRadians(10), Units.degreesToRadians(90)));
 
 
         }

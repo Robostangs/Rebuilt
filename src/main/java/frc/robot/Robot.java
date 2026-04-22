@@ -245,7 +245,6 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void robotPeriodic() {
-
         CommandScheduler.getInstance().run();
         setTargetPose();
         gscollect.update();

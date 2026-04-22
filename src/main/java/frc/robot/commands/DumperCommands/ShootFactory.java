@@ -5,6 +5,7 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -25,6 +26,7 @@ public class ShootFactory {
                 return new WaitUntilCommand(
                                 () -> Flywheel.getInstance().shooterAtTargetVelocity())
                                 .withTimeout(0.5)
+                                .andThen(new WaitCommand(0.5))
                                 .andThen(new Feed(
                                                 () -> Constants.FeederConstants.kFeedRPSSetpoint))
                                 .alongWith(

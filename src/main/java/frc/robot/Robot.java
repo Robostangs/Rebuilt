@@ -93,6 +93,7 @@ public class Robot extends TimedRobotstangs {
 
     public static boolean shooterPass = false;
     public static boolean shooterIsDumb = false;
+
     // pit test choosers
     SendableChooser<Command> hoodSetpointChooser = new SendableChooser<>();
     SendableChooser<Command> intakePivotSetpointChooser = new SendableChooser<>();
@@ -261,6 +262,8 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void disabledInit() {
 
+        SmartDashboard.putNumber("Auto Delay", 0);
+
         for (String name : AutoBuilder.getAllAutoNames()) {
             autoChooser.addOption(name, name);
         }
@@ -310,6 +313,7 @@ public class Robot extends TimedRobotstangs {
 
                 }
                 autoGroup = new SequentialCommandGroup(
+                        new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)),
                         new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
                         new InstantCommand(
                                 () -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),

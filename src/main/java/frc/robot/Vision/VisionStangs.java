@@ -65,16 +65,20 @@ public class VisionStangs {
 
         if (bigAmbiguity < Constants.VisionConstants.kPhotonAmbiguityThres) {
 
-            visionEst.ifPresent(est -> {
+            if (visionEst.isPresent()) {
 
-                if (isPosegoo(est)) {
-                    var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
+                if (isPosegoo(visionEst.get())) {
+                    var pose2d = visionEst.get().estimatedPose != null ? visionEst.get().estimatedPose.toPose2d()
+                            : null;
 
-                    timestampSeconds = est.timestampSeconds;
+                    timestampSeconds = visionEst.get().timestampSeconds;
                     Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
                     currentPose = pose2d;
                 }
-            });
+            } else {
+                SmartDashboard.putString("Vision" + CameraName + "/Photon_RejectReason", "Ts not present bro");
+
+            }
 
         }
 
@@ -176,9 +180,12 @@ public class VisionStangs {
                 mtLabel = "MT2";
             }
 
-            SmartDashboard.putString("Vision/" + CameraName + "/MT Mode ", mtLabel);
-            Robot.teleopField.getObject("Raw " + CameraName).setPose(fourPoseEsti.pose);
-            SmartDashboard.putNumber("Tag count " + CameraName, fourPoseEsti.tagCount);
+            if (fourPoseEsti != null) {
+                SmartDashboard.putString("Vision/" + CameraName + "/MT Mode ", mtLabel);
+                Robot.teleopField.getObject("Raw " + CameraName).setPose(fourPoseEsti.pose);
+                SmartDashboard.putNumber("Tag count " + CameraName, fourPoseEsti.tagCount);
+
+            }
 
             if (isPosegoo(fourPoseEsti)) {
                 this.currentPose = fourPoseEsti.pose;

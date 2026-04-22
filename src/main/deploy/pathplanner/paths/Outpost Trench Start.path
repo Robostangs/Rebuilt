@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.446953969945923,
+        "x": 4.473616038937409,
         "y": 0.5001665193427618
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.861672632403676,
+        "x": 4.888334701395161,
         "y": 0.5027957832078744
       },
       "isLocked": false,
@@ -72,8 +72,8 @@
         "y": 2.782773344443152
       },
       "nextControl": {
-        "x": 5.2669299002973515,
-        "y": 2.617226655556849
+        "x": 5.26692990029735,
+        "y": 2.6172266555568484
       },
       "isLocked": false,
       "linkedName": null
@@ -94,10 +94,6 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.9547877956081083,
-      "rotationDegrees": 0.0
-    },
-    {
       "waypointRelativePos": 2.061866554054055,
       "rotationDegrees": -90.0
     },
@@ -115,7 +111,7 @@
   "eventMarkers": [
     {
       "name": "Extend",
-      "waypointRelativePos": 1.397260273972603,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -141,7 +137,7 @@
   "folder": "Outpost",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.10179442502579128
+    "rotation": -88.3757948657006
   },
   "useDefaultConstraints": true
 }

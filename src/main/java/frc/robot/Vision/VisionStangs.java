@@ -120,20 +120,17 @@ public class VisionStangs {
             if (isDisabled) {
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
                 mtLabel = "MT1 (disabled)";
-            } 
-            else if (isFastJohn) {
+            } else if (isFastJohn) {
                 fourPoseEsti = null;
                 mtLabel = "Rejected (too fast)";
-            } 
-            else {
+            } else {
                 fourPoseEsti = LimelightHelpers.getBotPoseEstimate_wpiBlue(CameraName);
                 mtLabel = "MT2";
             }
 
-            
             SmartDashboard.putString("Vision/" + CameraName + "/MT Mode ", mtLabel);
-       Robot.teleopField.getObject("Raw "+CameraName).setPose(fourPoseEsti.pose);
-            SmartDashboard.putNumber("Tag count "+CameraName, fourPoseEsti.tagCount);
+            
+
 
             if (isPosegoo(fourPoseEsti)) {
                 this.currentPose = fourPoseEsti.pose;
@@ -223,4 +220,4 @@ public class VisionStangs {
             Photonperiodic();
         }
     }
-}    
+}

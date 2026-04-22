@@ -124,7 +124,7 @@ public class Robot extends TimedRobotstangs {
 
         CommandScheduler.getInstance()
                 .onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
-                
+
         CommandScheduler.getInstance()
                 .onCommandInterrupt((action, cause) -> {
                     String reason = cause.map(c -> c.getName()).orElse("no cause");
@@ -309,6 +309,11 @@ public class Robot extends TimedRobotstangs {
                     autoAlert.set(true);
 
                 }
+                autoGroup = new SequentialCommandGroup(
+                        new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
+                        new InstantCommand(
+                                () -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
+                        autoCommand);
                 SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
 
             }
@@ -319,14 +324,6 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void disabledExit() {
         drawCurrentAuto(null);
-
-        autoGroup = new SequentialCommandGroup(
-                new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
-                new InstantCommand(() -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
-                autoCommand
-        // ,new AutoAlign(),
-        // ShootFactory.PhotoShoot()
-        );
 
     }
 
@@ -542,24 +539,21 @@ public class Robot extends TimedRobotstangs {
 
         NamedCommands.registerCommand("BumpTake", new setIntakePosition(Constants.KirbyConstants.kIntakePivotBump));
 
-        NamedCommands.registerCommand("FullShoot", 
-        
-        new AutoAlign(() -> 0d, () -> 0d, () -> false)
-        .raceWith(
-            new SequentialCommandGroup(
-                        new WaitCommand(1)
-                        .andThen(
-                            new ParallelRaceGroup(  
-                                ShootFactory.RegressionShoot(),
-                                new WaitCommand(3)
-                                        ))
-                        .andThen(new SequentialCommandGroup(
-                            new WaitCommand(1.5),
-                            IntakeFactory.RetractIntake()
-                        ))
-        )
-        
-        ));
+        NamedCommands.registerCommand("FullShoot",
+
+                new AutoAlign(() -> 0d, () -> 0d, () -> false)
+                        .raceWith(
+                                new SequentialCommandGroup(
+                                        new WaitCommand(1)
+                                                .andThen(
+                                                        new ParallelRaceGroup(
+                                                                ShootFactory.RegressionShoot(),
+                                                                new WaitCommand(3)))
+                                                .andThen(new SequentialCommandGroup(
+                                                        new WaitCommand(1.5),
+                                                        IntakeFactory.RetractIntake())))
+
+                        ));
 
     }
 

@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Dumper.Flywheel;
 
 public class Feed extends Command{
      Feeder feeder;
@@ -18,6 +19,7 @@ public class Feed extends Command{
 
     @Override
     public void initialize() {
+        Flywheel.getInstance().setnewCurrentLimit(120);
     }
 
     @Override

@@ -57,7 +57,7 @@ public class ShootFactory {
 
         public static Command DumbShoot() {
 
-                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
+                return new ChargeUp(() -> 10)
                                 .alongWith(
                                                 new setHoodPosition(() -> 0.03))
                                 .alongWith(

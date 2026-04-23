@@ -64,8 +64,8 @@ public class RobotContainer {
 
         public RobotContainer() {
                 configureDrivingBinding();
-                configureManipBindings();
-                configureTestBindings();
+                // configureManipBindings();
+                // configureTestBindings();
 
                 if (Robot.isSimulation()) {
                         configureSimBinds();
@@ -105,42 +105,24 @@ public class RobotContainer {
         private void configureDrivingBinding() {
                 setDrivetrain();
 
-                xDrive.rightTrigger().whileTrue(
-                                (ShootFactory.SmartShoot()))
-                                .onFalse(new setHoodPosition(() -> 0));
-                ;
+                xDrive.rightTrigger()
+                                .whileTrue(ShootFactory.DumbShoot());
 
-                // close shoot
 
-                xDrive.rm().whileTrue(new setKirbyWheels(() -> 1));
-                xDrive.lm()
-                                .whileTrue(ShootFactory.DumbShoot())
-                                .onFalse(new setHoodPosition(() -> 0));
-                ;
+       
 
                 xDrive.rightPaddle().whileTrue(IntakeFactory.ExtendIntake());
                 xDrive.leftPaddle().whileTrue(IntakeFactory.RetractIntake());
 
-                // TODO Find ts pose
-                xDrive.povDown().onTrue(
-                                drivetrain.runOnce(() -> drivetrain.resetPose(
-                                                !Robot.isRed() ? Constants.FieldConstants.resetPose
-                                                                : FlippingUtil.flipFieldPose(
-                                                                                Constants.FieldConstants.resetPose))));
 
-                xDrive.povUp().onTrue(drivetrain.runOnce(
+                xDrive.leftBumper().onTrue(drivetrain.runOnce(
                                 () -> drivetrain.seedFieldCentric())); 
                                 // setoperatorperspective???? huh tweakin
 
-                xDrive.povRight().onTrue(new InstantCommand(
-                                (() -> useVision = !useVision)));
-
-                xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
-                                () -> xDrive.getLeftTriggerAxis() < 0.2)
-                                .withInterruptBehavior(InterruptionBehavior.kCancelIncoming).withName("Auto Align"));
-
+       
                 xDrive.y().whileTrue(IntakeFactory.TrueSpit());
-                xDrive.b().whileTrue(IntakeFactory.ballStuck());
+                xDrive.a().whileTrue(new HomeIntake(false));
+                xDrive.x().whileTrue(new HomeHood());
         }
 
      
@@ -199,7 +181,7 @@ public class RobotContainer {
 
 
         private void setDrivetrain() {
-                DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
+                DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.15 : 1;
                 BooleanSupplier isMoving = () -> (!((Math.abs(xDrive.getLeftX()) > 0.1
                                 || Math.abs(xDrive.getLeftY()) > 0.1
                                 || Math.abs(xDrive.getRightX()) > 0.1)));

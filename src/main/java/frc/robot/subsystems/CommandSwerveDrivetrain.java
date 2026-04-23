@@ -8,6 +8,9 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -371,7 +374,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public void postStatus(String status) {
         SmartDashboard.putString("Drivetrain/ Status", status);
+    }
 
+    public void setDriveMotorCurrentLimit(double currentLimit) {
+
+        TalonFXConfiguration configs =  Constants.TunerConstants.driveInitialConfigs.clone();
+       configs.CurrentLimits.StatorCurrentLimit = currentLimit;
+
+
+        for (var module : getModules()) {
+            module.getDriveMotor().getConfigurator().apply(configs,0);
+        }
+        
     }
 
     @Override

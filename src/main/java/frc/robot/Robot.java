@@ -168,7 +168,7 @@ public class Robot extends TimedRobotstangs {
                 .andThen(new InstantCommand(() -> postPitTestStatus("Running Hopper")))
                 .andThen(new RunHopper(() -> 0d).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
-                .andThen(new ChargeUp().withTimeout(7))
+                .andThen(new ChargeUp(false).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
                 .andThen(new setFeederSpeed(() -> 0).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))

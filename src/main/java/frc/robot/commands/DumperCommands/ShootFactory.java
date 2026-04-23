@@ -47,7 +47,7 @@ public class ShootFactory {
         }
         public static Command RegressionShoot() {
 
-                return new ChargeUp()
+                return new ChargeUp(false)
                                 .alongWith(
                                                 new setHoodPosition(() -> 0.1))
                                 .alongWith(
@@ -57,7 +57,7 @@ public class ShootFactory {
 
         public static Command DumbShoot() {
 
-                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
+                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS, false)
                                 .alongWith(
                                                 new setHoodPosition(() -> 0.1))
                                 .alongWith(
@@ -66,7 +66,7 @@ public class ShootFactory {
         }
 
         public static Command FarPass() {
-                return new ChargeUp(() -> 70)
+                return new ChargeUp(() -> 70, true)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                
@@ -74,7 +74,7 @@ public class ShootFactory {
         }
 
         public static Command FarPass(BooleanSupplier leftBumper) {
-                return new ChargeUp(() -> 70)
+                return new ChargeUp(() -> 70, true)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 .alongWith(
@@ -84,7 +84,7 @@ public class ShootFactory {
         }
 
         public static Command MedPass() {
-                return new ChargeUp(() -> 40)
+                return new ChargeUp(() -> 40, true)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 
@@ -92,7 +92,7 @@ public class ShootFactory {
         }
 
         public static Command MedPass(BooleanSupplier leftBumper) {
-                return new ChargeUp(() -> 40)
+                return new ChargeUp(() -> 40, true)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 .alongWith(
@@ -103,7 +103,7 @@ public class ShootFactory {
         }
 
         public static Command ClosePass() {
-                return new ChargeUp(() -> 30)
+                return new ChargeUp(() -> 30, true)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 
@@ -112,7 +112,7 @@ public class ShootFactory {
         }
 
         public static Command ClosePass(BooleanSupplier leftBumper) {
-                return new ChargeUp(() -> 30)
+                return new ChargeUp(() -> 30, true)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass)
                                                 )
@@ -123,7 +123,7 @@ public class ShootFactory {
         }
         
         public static Command ElectroShoot() {
-                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
+                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS,false)
                                 .alongWith(
                                                 new setHoodPosition(() -> Constants.HoodConstants.kDumbShootHoodPos))
                                 .alongWith(

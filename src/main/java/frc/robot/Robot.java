@@ -193,6 +193,8 @@ public class Robot extends TimedRobotstangs {
         SendableChooser<Command> dumperChooser = new SendableChooser<>();
 
         hoodSetpointChooser.addOption("Home Hood", new HomeHood());
+        hoodSetpointChooser.addOption("Zero", new setHoodPosition(() -> Constants.HoodConstants.kHoodDownPos));
+        hoodSetpointChooser.addOption("Shoot Pos", new setHoodPosition(() -> Constants.HoodConstants.kDumbShootHoodPos));
 
         SmartDashboard.putData("PitTest/HoodSetpoints", hoodSetpointChooser);
 
@@ -218,12 +220,10 @@ public class Robot extends TimedRobotstangs {
                                                                                 Constants.FieldConstants.resetPose)));
         SmartDashboard.putNumber("PitTest/HoodPos", 0);
         SmartDashboard.putNumber("PitTest/FlywheelDC", 0);
-        SmartDashboard.putNumber("PitTest/FlywheelVelocity", 0);
-        SmartDashboard.putNumber("PitTest/IntakeWheelsDC", 0);
+        SmartDashboard.putNumber("PitTest/KirbyDC", 0);
         SmartDashboard.putNumber("PitTest/IntakePivotDC", 0);
         SmartDashboard.putNumber("PitTest/FeederDC", 0);
-        SmartDashboard.putNumber("PitTest/IntakePivotPos", 0);
-
+        SmartDashboard.putNumber("PitTest/HopperDC", 0);
         initPitTestChoosers();
 
         Command everythingCommand=
@@ -238,11 +238,9 @@ public class Robot extends TimedRobotstangs {
         Kirby.getInstance().setDefaultCommand(new setKirbyWheels(() -> SmartDashboard.getNumber("PitTest/KirbyDC", 0)));
         IntakePivot.getInstance().setDefaultCommand(new setPivotDutyCycle(() -> SmartDashboard.getNumber("PitTest/IntakePivotDC", 0)));
         Feeder.getInstance().setDefaultCommand(new setFeederSpeed(() -> SmartDashboard.getNumber("PitTest/FeederDC", 0)));
-        
+        Hood.getInstance().setDefaultCommand(new setHoodPosition(() -> SmartDashboard.getNumber("PitTest/HoodPos", 0)));
 
     }
-
-
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
@@ -469,7 +467,7 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void testPeriodic() {
-
+        SmartDashboard.putData("PitTest/PDH",pdh);
     }
 
     @Override

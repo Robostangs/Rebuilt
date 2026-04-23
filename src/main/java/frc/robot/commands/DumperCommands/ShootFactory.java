@@ -49,7 +49,7 @@ public class ShootFactory {
 
                 return new ChargeUp()
                                 .alongWith(
-                                                new setHoodPosition(() -> 0.03))
+                                                new setHoodPosition(() -> 0.1))
                                 .alongWith(
                                                 SmartFeed())
                                 .withName("Regression Shoot Command");
@@ -59,7 +59,7 @@ public class ShootFactory {
 
                 return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
                                 .alongWith(
-                                                new setHoodPosition(() -> 0.03))
+                                                new setHoodPosition(() -> 0.1))
                                 .alongWith(
                                                 SmartFeed())
                                 .withName("Regression Shoot Command");

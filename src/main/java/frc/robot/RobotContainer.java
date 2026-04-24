@@ -65,7 +65,7 @@ public class RobotContainer {
         public RobotContainer() {
                 configureDrivingBinding();
                 configureManipBindings();
-                configureTestBindings();
+                // configureTestBindings();
 
                 if (Robot.isSimulation()) {
                         configureSimBinds();
@@ -106,9 +106,11 @@ public class RobotContainer {
                 setDrivetrain();
 
                 xDrive.rightTrigger().whileTrue(
-                                (ShootFactory.SmartShoot()))
-                                .onFalse(new setHoodPosition(() -> 0));
+                                (ShootFactory.RegressionShoot()))
                 ;
+
+                xDrive.rightBumper().whileTrue(ShootFactory.SmartFeed());
+
 
                 // close shoot
 
@@ -229,8 +231,8 @@ public class RobotContainer {
                         // * MaxAngularRate
                         // * (leftBumper.getAsDouble()
                         // + .25)))).withName("Reg Drive"));
-
-                        new Trigger(isMoving).debounce(0.15, DebounceType.kFalling).whileTrue(drivetrain
+// .debounce(0.15, DebounceType.kFalling
+                        new Trigger(isMoving).whileTrue(drivetrain
                                         .applyRequest(() -> new SwerveRequest.SwerveDriveBrake()).withName("XDrive"));
 
                         // drivetrain.setDefaultCommand(

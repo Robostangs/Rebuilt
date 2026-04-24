@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Vision.VisionStangs;
 
@@ -292,6 +293,32 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Drivetrain/current X acceleration",
                 this.getPigeon2().getAccelerationY().getValueAsDouble());
 
+
+                
+                
+                SmartDashboard.putNumber("KINGPIN/module "+"0",
+                getModule(0).getDriveMotor().getDeviceID()
+                );
+                
+
+                SmartDashboard.putNumber("KINGPIN/module "+"1",
+                getModule(1).getDriveMotor().getDeviceID()
+                );
+
+                
+                SmartDashboard.putNumber("KINGPIN/module "+"2",
+                getModule(2).getDriveMotor().getDeviceID()
+                );
+
+                
+                
+                SmartDashboard.putNumber("KINGPIN/module "+"3",
+                getModule(3).getDriveMotor().getDeviceID()
+                );
+                
+                
+
+
         visionPoses.clear();
 
         LL4Front.periodic();
@@ -378,14 +405,34 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public void setDriveMotorCurrentLimit(double currentLimit) {
 
-        TalonFXConfiguration configs =  Constants.TunerConstants.driveInitialConfigs.clone();
-       configs.CurrentLimits.StatorCurrentLimit = currentLimit;
+        TalonFXConfiguration config = new TalonFXConfiguration();
+
+        for (int c = 0; c < getModules().length; c++) {
+
+            if (c == 0) {
+            config = TunerConstants.FrontLeft.DriveMotorInitialConfigs.clone();
+
+            } 
+            else if (c == 1) {
+            config = TunerConstants.FrontRight.DriveMotorInitialConfigs.clone();
+
+            } 
+            else if (c == 2) {
+            config = TunerConstants.BackLeft.DriveMotorInitialConfigs.clone();
+
+            } 
+            else if (c == 3) {
+            config = TunerConstants.BackRight.DriveMotorInitialConfigs.clone();
+            }
+
+            config.CurrentLimits.StatorCurrentLimit = currentLimit;
+
+            getModule(c).getDriveMotor().getConfigurator().apply(config,0);
 
 
-        for (var module : getModules()) {
-            module.getDriveMotor().getConfigurator().apply(configs,0);
+           
         }
-        
+
     }
 
     @Override

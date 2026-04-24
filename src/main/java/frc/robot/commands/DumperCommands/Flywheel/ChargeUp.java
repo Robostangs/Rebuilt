@@ -26,7 +26,7 @@ public class ChargeUp extends Command {
         shooter = Flywheel.getInstance();
         this.targetRPS = targetRPS;
         smort = false;
-        this.Gentle = Gentle;
+        this.Gentle = false;
         addRequirements(shooter);
 
     }
@@ -37,7 +37,6 @@ public class ChargeUp extends Command {
             shooter.setnewCurrentLimit(50);
         }
 
-        CommandSwerveDrivetrain.getInstance().setDriveMotorCurrentLimit(90);
 
     }
 
@@ -64,7 +63,6 @@ public class ChargeUp extends Command {
         shooter.setVelocity(0);
         shooter.postStatus("Charged");
         shooter.setnewCurrentLimit(120); 
-        CommandSwerveDrivetrain.getInstance().setDriveMotorCurrentLimit(120);
 
     }
 

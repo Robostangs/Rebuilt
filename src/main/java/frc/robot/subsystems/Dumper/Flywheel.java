@@ -48,12 +48,12 @@ public class Flywheel extends SubsystemBase {
 
         mainShooterMotor.getMotorVoltage().setUpdateFrequency(250);
 
-                configureFlywheelMotors();
+        configureFlywheelMotors();
 
     }
 
     private void configureFlywheelMotors() {
-  
+
         mainShooterMotor.getConfigurator().apply(flywheelConfig);
 
         slaveShooterMotor.getConfigurator().apply(flywheelConfig);
@@ -62,7 +62,7 @@ public class Flywheel extends SubsystemBase {
 
     public void setnewCurrentLimit(double currentLimit) {
         TalonFXConfiguration flywheelConfignew = flywheelConfig.clone();
-        
+
         flywheelConfignew.CurrentLimits.StatorCurrentLimit = currentLimit;
 
         mainShooterMotor.getConfigurator().apply(flywheelConfignew);
@@ -72,17 +72,17 @@ public class Flywheel extends SubsystemBase {
 
     public double getFlywheelTargetVelocity() {
 
-        double MetersfromTarget = (Robot.getMetersFromTarget());
-        double fudge = +1;
+        double x = (Robot.getMetersFromTarget());
+        double fudge = -1;
 
         // double regressionValue = fudge+0.596 + 23*MetersfromTarget-
         // 6.46*Math.pow(MetersfromTarget, 2)+0.627*Math.pow(MetersfromTarget, 3);;
-        double regressionValue = fudge + 3.33 * MetersfromTarget + 19.2;
+        double regressionValue = fudge + 24.4 - .469 * x + 0.69 * Math.pow(x, 2);
 
         if (regressionValue < 0) {
-            return 0;
+            return 30;
         } else if (regressionValue > 50) {
-            return 50;
+            return 30;
         } else {
             return regressionValue;
         }
@@ -119,6 +119,7 @@ public class Flywheel extends SubsystemBase {
         return Math.abs(currentVelocity - targetVelocity) <= Constants.FlywheelConstants.kShooterVelocityTolerance;
     }
 
+  
     @Override
     public void periodic() {
 

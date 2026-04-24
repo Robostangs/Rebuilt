@@ -457,22 +457,22 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void testInit() {
-        SwerveRequest rightRequest = new SwerveRequest.FieldCentric().withVelocityY(0.3);
-        Command driveRightCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> rightRequest);
-        SmartDashboard.putData("Get wheel odometry", driveRightCommand);
+        // SwerveRequest rightRequest = new SwerveRequest.FieldCentric().withVelocityY(0.3);
+        // Command driveRightCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> rightRequest);
+        // SmartDashboard.putData("Get wheel odometry", driveRightCommand);
         CommandScheduler.getInstance().cancelAll();
-        setupPitTestDashboard();
-        setupAutoPitTest();
+        // setupPitTestDashboard();
+        // setupAutoPitTest();
         SmartDashboard.putNumber("Regression Hood Setpoint", 0.03);
         SmartDashboard.putNumber("Regression Flywheel Setpoint", 0);
 
-        // Hood.getInstance()
-        // .setDefaultCommand(
-        // new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood
-        // Setpoint", 0.03)));
-        // Flywheel.getInstance()
-        // .setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression
-        // Flywheel Setpoint", 0)));
+        Hood.getInstance()
+                .setDefaultCommand(
+                        new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood Setpoint", 0.03)));
+
+        Flywheel.getInstance()
+                .setDefaultCommand(
+                        new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0), false));
 
     }
 

@@ -283,7 +283,7 @@ public final class Constants {
                                    Units.inchesToMeters(0.5),
                                 Units.inchesToMeters(12.25),
                                 Units.inchesToMeters(11.5),
-                                new Rotation3d(0, Units.degreesToRadians(25), Units.degreesToRadians(90)));
+                                new Rotation3d(0, Units.degreesToRadians(34-90), Units.degreesToRadians(90)));
 
 
         }
@@ -417,7 +417,7 @@ public final class Constants {
                 private static final int kFrontRightDriveMotorId = 31;
                 private static final int kFrontRightSteerMotorId = 32;
                 private static final int kFrontRightEncoderId = 33;
-                private static final Angle kFrontRightEncoderOffset = Rotations.of(-0.316650390625);
+                private static final Angle kFrontRightEncoderOffset = Rotations.of(-0.31640625);
                 private static final boolean kFrontRightSteerMotorInverted = false;
                 private static final boolean kFrontRightEncoderInverted = false;
 

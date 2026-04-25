@@ -270,6 +270,7 @@ public class VisionStangs {
     }
 
     public void periodic() {
+        currentPose = null;
         if (isLL) {
             LLperiodic();
         } else {

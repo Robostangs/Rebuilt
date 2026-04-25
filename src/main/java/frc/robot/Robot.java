@@ -94,6 +94,8 @@ public class Robot extends TimedRobotstangs {
     public static boolean shooterPass = false;
     public static boolean shooterIsDumb = false;
 
+    double delay = 0;
+
     // pit test choosers
     SendableChooser<Command> hoodSetpointChooser = new SendableChooser<>();
     SendableChooser<Command> intakePivotSetpointChooser = new SendableChooser<>();
@@ -261,8 +263,10 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void disabledInit() {
+         delay =0;
 
-        SmartDashboard.putNumber("Auto Delay", 0);
+
+        SmartDashboard.putNumber("Auto Delay", delay);
 
         for (String name : AutoBuilder.getAllAutoNames()) {
             autoChooser.addOption(name, name);
@@ -286,6 +290,7 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void disabledPeriodic() {
+
         if (autoname == null) {
             autoname = "";
         }
@@ -312,8 +317,9 @@ public class Robot extends TimedRobotstangs {
                     autoAlert.set(true);
 
                 }
+
                 autoGroup = new SequentialCommandGroup(
-                        new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)),
+                        new WaitCommand(delay),
                         new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
                         new InstantCommand(
                                 () -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
@@ -551,13 +557,11 @@ public class Robot extends TimedRobotstangs {
                         .raceWith(
                                 new SequentialCommandGroup(
                                         new SequentialCommandGroup(
-                                            new WaitCommand(1),
-                                             new ParallelRaceGroup(
-                                                                ShootFactory.RegressionShoot(),
-                                                                new WaitCommand(3)))
-                                            )
+                                                new WaitCommand(1),
+                                                new ParallelRaceGroup(
+                                                        ShootFactory.RegressionShoot(),
+                                                        new WaitCommand(3))))
 
-                                                
                                         .andThen(new SequentialCommandGroup(
                                                 new WaitCommand(1.5),
                                                 IntakeFactory.RetractIntake()))

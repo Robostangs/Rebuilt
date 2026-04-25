@@ -293,31 +293,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Drivetrain/current X acceleration",
                 this.getPigeon2().getAccelerationY().getValueAsDouble());
 
+        SmartDashboard.putNumber("KINGPIN/module " + "0",
+                getModule(0).getDriveMotor().getDeviceID());
 
-                
-                
-                SmartDashboard.putNumber("KINGPIN/module "+"0",
-                getModule(0).getDriveMotor().getDeviceID()
-                );
-                
+        SmartDashboard.putNumber("KINGPIN/module " + "1",
+                getModule(1).getDriveMotor().getDeviceID());
 
-                SmartDashboard.putNumber("KINGPIN/module "+"1",
-                getModule(1).getDriveMotor().getDeviceID()
-                );
+        SmartDashboard.putNumber("KINGPIN/module " + "2",
+                getModule(2).getDriveMotor().getDeviceID());
 
-                
-                SmartDashboard.putNumber("KINGPIN/module "+"2",
-                getModule(2).getDriveMotor().getDeviceID()
-                );
-
-                
-                
-                SmartDashboard.putNumber("KINGPIN/module "+"3",
-                getModule(3).getDriveMotor().getDeviceID()
-                );
-                
-                
-
+        SmartDashboard.putNumber("KINGPIN/module " + "3",
+                getModule(3).getDriveMotor().getDeviceID());
 
         visionPoses.clear();
 
@@ -360,6 +346,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (bestCamera == null) {
             SmartDashboard.putString("Vision/Status", "No valid measurement");
             return;
+        } else {
+            SmartDashboard.putString("Vision/Status", bestCamera.getName()+ " is valid measurment");
+
         }
 
         this.addVisionMeasurement(
@@ -370,7 +359,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         SmartDashboard.putString("Vision/Best Camera", bestCamera.getName());
         SmartDashboard.putNumber("Vision/Best Ambiguity", bestCamera.getAmbiguity());
-       
+
     }
 
     private void startSimThread() {
@@ -411,27 +400,22 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         for (int c = 0; c < getModules().length; c++) {
 
             if (c == 0) {
-            config = TunerConstants.FrontLeft.DriveMotorInitialConfigs.clone();
+                config = TunerConstants.FrontLeft.DriveMotorInitialConfigs.clone();
 
-            } 
-            else if (c == 1) {
-            config = TunerConstants.FrontRight.DriveMotorInitialConfigs.clone();
+            } else if (c == 1) {
+                config = TunerConstants.FrontRight.DriveMotorInitialConfigs.clone();
 
-            } 
-            else if (c == 2) {
-            config = TunerConstants.BackLeft.DriveMotorInitialConfigs.clone();
+            } else if (c == 2) {
+                config = TunerConstants.BackLeft.DriveMotorInitialConfigs.clone();
 
-            } 
-            else if (c == 3) {
-            config = TunerConstants.BackRight.DriveMotorInitialConfigs.clone();
+            } else if (c == 3) {
+                config = TunerConstants.BackRight.DriveMotorInitialConfigs.clone();
             }
 
             config.CurrentLimits.StatorCurrentLimit = currentLimit;
 
-            getModule(c).getDriveMotor().getConfigurator().apply(config,0);
+            getModule(c).getDriveMotor().getConfigurator().apply(config, 0);
 
-
-           
         }
 
     }

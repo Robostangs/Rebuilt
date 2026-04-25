@@ -75,7 +75,8 @@ public class VisionStangs {
                     Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
                     currentPose = pose2d;
                 }
-            } else {
+            } 
+            else {
                 SmartDashboard.putString("Vision" + CameraName + "/Photon_RejectReason", "Ts not present bro");
 
             }

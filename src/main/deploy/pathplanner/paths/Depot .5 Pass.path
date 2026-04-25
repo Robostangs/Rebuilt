@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.305753773298217,
+        "x": 2.1,
         "y": 5.380983589951378
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7498977233859447,
+        "x": 2.5441439500877276,
         "y": 5.512596152891662
       },
       "isLocked": false,
@@ -63,9 +63,9 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.12,
-    "maxAcceleration": 7.0,
+    "maxAcceleration": 9.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularAcceleration": 1080.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -77,7 +77,7 @@
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -36.365279489644074
+    "rotation": -33.86700476538108
   },
   "useDefaultConstraints": true
 }

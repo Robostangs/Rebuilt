@@ -370,6 +370,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         SmartDashboard.putString("Vision/Best Camera", bestCamera.getName());
         SmartDashboard.putNumber("Vision/Best Ambiguity", bestCamera.getAmbiguity());
+       
     }
 
     private void startSimThread() {

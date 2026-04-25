@@ -213,7 +213,7 @@ public final class Constants {
 
         public class AutoConstants {
                 public static final PIDConstants translationPID = new PIDConstants(2, 0, 0);
-                public static final PIDConstants rotationPID = new PIDConstants(5, 0, 1);
+                public static final PIDConstants rotationPID = new PIDConstants(3, 0, 0);
                 private final static MomentOfInertia kRobotMomentOfInertia = KilogramSquareMeters.of(0.01);
                 private final static double robotWeight = 69;
                 private final static double wheelCOF = 0.2; // typical carpet COF for colson/nitrile wheels

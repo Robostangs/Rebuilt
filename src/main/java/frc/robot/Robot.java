@@ -263,7 +263,7 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void disabledInit() {
-         delay =0;
+        delay =0;
 
 
         SmartDashboard.putNumber("Auto Delay", delay);
@@ -343,7 +343,8 @@ public class Robot extends TimedRobotstangs {
         CommandScheduler.getInstance().cancelAll();
 
         CommandScheduler.getInstance().schedule(
-                autoGroup);
+            new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)).andThen(
+                autoGroup));
     }
 
     @Override

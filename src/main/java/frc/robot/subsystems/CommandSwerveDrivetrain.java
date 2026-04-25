@@ -324,6 +324,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         isVisionGood = false;
 
         if (!RobotContainer.useVision) {
+            SmartDashboard.putString("Vision/Status", "Vision switch reject");
+
             return;
         }
 
@@ -346,10 +348,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (bestCamera == null) {
             SmartDashboard.putString("Vision/Status", "No valid measurement");
             return;
-        } else {
-            SmartDashboard.putString("Vision/Status", bestCamera.getName()+ " is valid measurment");
-
         }
+        SmartDashboard.putString("Vision/Status", bestCamera.getName() + " is valid measurment");
 
         this.addVisionMeasurement(
                 bestCamera.getPose(),

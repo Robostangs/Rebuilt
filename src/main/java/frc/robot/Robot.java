@@ -140,7 +140,7 @@ public class Robot extends TimedRobotstangs {
         configureTeleopTab();
         loadNamedCommands();
 
-        Hood.getInstance().setDefaultCommand(new setHoodDutyCycle(() -> 0d));
+        Hood.getInstance().setDefaultCommand(new setHoodPosition(() -> 0.1));
         Flywheel.getInstance().setDefaultCommand(new setFlywheelDutyCycle(() -> 0d));
         Feeder.getInstance().setDefaultCommand(new setFeederSpeed(() -> 0d));
         // IntakePivot.getInstance().setDefaultCommand(new MovePivot(() -> 0d));
@@ -457,8 +457,10 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void testInit() {
-        // SwerveRequest rightRequest = new SwerveRequest.FieldCentric().withVelocityY(0.3);
-        // Command driveRightCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> rightRequest);
+        // SwerveRequest rightRequest = new
+        // SwerveRequest.FieldCentric().withVelocityY(0.3);
+        // Command driveRightCommand =
+        // CommandSwerveDrivetrain.getInstance().applyRequest(() -> rightRequest);
         // SmartDashboard.putData("Get wheel odometry", driveRightCommand);
         CommandScheduler.getInstance().cancelAll();
         // setupPitTestDashboard();
@@ -548,14 +550,17 @@ public class Robot extends TimedRobotstangs {
                 new AutoAlign(() -> 0d, () -> 0d, () -> false)
                         .raceWith(
                                 new SequentialCommandGroup(
-                                        new WaitCommand(1)
-                                                .andThen(
-                                                        new ParallelRaceGroup(
+                                        new SequentialCommandGroup(
+                                            new WaitCommand(1),
+                                             new ParallelRaceGroup(
                                                                 ShootFactory.RegressionShoot(),
                                                                 new WaitCommand(3)))
-                                                .andThen(new SequentialCommandGroup(
-                                                        new WaitCommand(1.5),
-                                                        IntakeFactory.RetractIntake())))
+                                            )
+
+                                                
+                                        .andThen(new SequentialCommandGroup(
+                                                new WaitCommand(1.5),
+                                                IntakeFactory.RetractIntake()))
 
                         ));
 

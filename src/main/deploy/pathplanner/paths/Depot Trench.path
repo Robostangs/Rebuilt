@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.495856190866085,
-        "y": 7.563804016557496
+        "x": 4.473255813953489,
+        "y": 7.411372582154743
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.495856190866084,
-        "y": 7.563804016557496
+        "x": 5.473255813953488,
+        "y": 7.411372582154743
       },
       "isLocked": false,
       "linkedName": null
@@ -20,43 +20,43 @@
         "y": 7.411372582154743
       },
       "prevControl": {
-        "x": 5.295953136371907,
-        "y": 7.432407603256914
+        "x": 5.295620178497773,
+        "y": 7.407277455510398
       },
       "nextControl": {
-        "x": 7.51976947885633,
-        "y": 7.359214775464965
+        "x": 8.770043859649123,
+        "y": 7.42952850877193
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.900847415765391,
-        "y": 5.08138428140599
+        "x": 8.202686403508773,
+        "y": 5.054320175438596
       },
       "prevControl": {
-        "x": 8.371160305740434,
-        "y": 6.793563721921797
+        "x": 8.084289098418965,
+        "y": 6.825967637308243
       },
       "nextControl": {
-        "x": 7.684357866980821,
-        "y": 4.29325160969641
+        "x": 8.328457950176299,
+        "y": 3.172327665052283
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.814563487936772,
+        "x": 5.935059796173045,
         "y": 5.380983589951378
       },
       "prevControl": {
-        "x": 6.516677756810039,
+        "x": 6.637174065046312,
         "y": 5.107586721884374
       },
       "nextControl": {
-        "x": 5.383268172307132,
+        "x": 5.503764480543405,
         "y": 5.548926037117905
       },
       "isLocked": false,
@@ -77,6 +77,10 @@
     }
   ],
   "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9495225102319235,
+      "rotationDegrees": 0.0
+    },
     {
       "waypointRelativePos": 1.4376055743243243,
       "rotationDegrees": 90.0
@@ -107,7 +111,7 @@
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
-    "unlimited": false
+    "unlimited": true
   },
   "goalEndState": {
     "velocity": 0,
@@ -117,7 +121,7 @@
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.3520739818308
+    "rotation": 0.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

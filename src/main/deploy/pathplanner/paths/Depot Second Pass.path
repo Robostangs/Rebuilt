@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.305753773298217,
+        "x": 2.1,
         "y": 5.380983589951378
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1607277582672157,
-        "y": 5.85738996199391
+        "x": 1.5601670977218798,
+        "y": 5.949421255643988
       },
       "isLocked": false,
       "linkedName": "DepotShootAcc"
@@ -20,12 +20,12 @@
         "y": 7.370224625623959
       },
       "prevControl": {
-        "x": 1.7496791304313772,
-        "y": 7.285159456116942
+        "x": 2.023602553407562,
+        "y": 7.176043691918238
       },
       "nextControl": {
-        "x": 2.959946062867517,
-        "y": 7.394518060782476
+        "x": 2.9311402742108403,
+        "y": 7.440057767328551
       },
       "isLocked": false,
       "linkedName": null
@@ -36,56 +36,72 @@
         "y": 7.370224625623959
       },
       "prevControl": {
-        "x": 6.000296596224236,
-        "y": 7.500027485571341
+        "x": 5.489346864596093,
+        "y": 7.466821226840444
       },
       "nextControl": {
-        "x": 6.9259489236381615,
-        "y": 6.937678421926051
+        "x": 7.85011668129315,
+        "y": 7.152111290517703
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.338404092138103,
-        "y": 3.9525272332570713
+        "x": 7.84688596491228,
+        "y": 5.188947368421052
       },
       "prevControl": {
-        "x": 5.248690658797837,
-        "y": 4.085108543053245
+        "x": 7.847516976891134,
+        "y": 5.4389465720675485
       },
       "nextControl": {
-        "x": 7.538877498630252,
-        "y": 3.806470176659784
+        "x": 7.846208382088036,
+        "y": 4.920497367244714
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.492197509359401,
-        "y": 5.11840565203827
+        "x": 7.04873903508772,
+        "y": 4.054232456140351
       },
       "prevControl": {
-        "x": 7.669349816350606,
-        "y": 4.845917392493745
+        "x": 7.675119753766056,
+        "y": 3.909079739406238
       },
       "nextControl": {
-        "x": 7.148452904014143,
-        "y": 5.647139208090682
+        "x": 6.5396339207553815,
+        "y": 4.172208613842803
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.305753773298217,
+        "x": 5.933256578947368,
+        "y": 5.044703947368421
+      },
+      "prevControl": {
+        "x": 6.308250313347166,
+        "y": 4.734626690447543
+      },
+      "nextControl": {
+        "x": 5.049249582468271,
+        "y": 5.775677399513787
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.1,
         "y": 5.380983589951378
       },
       "prevControl": {
-        "x": 2.5093009459217055,
-        "y": 5.235833500330379
+        "x": 3.457482071810788,
+        "y": 5.341579319664038
       },
       "nextControl": null,
       "isLocked": false,
@@ -95,19 +111,19 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.9636824324324325,
-      "rotationDegrees": 0.0
+      "rotationDegrees": 180.0
     },
     {
       "waypointRelativePos": 1.9194291948198197,
-      "rotationDegrees": 0.0
+      "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 2.5241413288288292,
+      "waypointRelativePos": 2.643929058663028,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 3.6343081362612595,
-      "rotationDegrees": -109.82232750278891
+      "waypointRelativePos": 5.017735334242834,
+      "rotationDegrees": -90.0
     }
   ],
   "constraintZones": [],
@@ -131,17 +147,17 @@
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
-    "unlimited": false
+    "unlimited": true
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -36.365279489644074
+    "rotation": -33.86700476538108
   },
   "reversed": false,
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -36.365279489644074
+    "rotation": -33.86700476538108
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

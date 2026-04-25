@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6,
-        "y": 2.5069619382278017
+        "x": 2.493756708407871,
+        "y": 2.7
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8499999999999999,
-        "y": 2.5069619382278017
+        "x": 2.743756708407871,
+        "y": 2.7
       },
       "isLocked": false,
       "linkedName": "Oend"
@@ -77,7 +77,7 @@
   "folder": "Outpost",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 36.760708633597645
+    "rotation": 43.390386887156446
   },
   "useDefaultConstraints": true
 }

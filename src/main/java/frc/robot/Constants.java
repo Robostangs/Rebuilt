@@ -73,7 +73,7 @@ public final class Constants {
         }
 
         public static class FieldConstants {
-                public static final Pose2d HubPosition = new Pose2d(4.619, 4.03, new Rotation2d());
+                public static final Pose2d HubPosition = new Pose2d(4.619, 4.108, new Rotation2d());
 
                 // TODO find john
                 public static final Pose2d resetPose = new Pose2d(3.581, 6.574, new Rotation2d(Units.degreesToRadians(-90)));

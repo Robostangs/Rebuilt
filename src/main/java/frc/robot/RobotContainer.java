@@ -259,8 +259,6 @@ public class RobotContainer {
                                                 () -> xSim.getRawAxis(1),
                                                 () -> true));
 
-                new Trigger(() -> xSim.getRawButtonPressed(2))
-                                .onTrue(new AutoAlign());
 
         }
 }

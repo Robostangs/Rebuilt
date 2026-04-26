@@ -34,6 +34,7 @@ import frc.robot.subsystems.Dumper.Flywheel;
 
 public class RobotContainer {
         public static boolean useVision = true;
+        public static boolean useFriday = true;
         private double MaxSpeed = Constants.TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
         private double MaxAngularRate = Constants.TunerConstants.kAngularRateAt12Volts;
 
@@ -170,6 +171,9 @@ public class RobotContainer {
                 xManip.y().whileTrue(ShootFactory.FarPass())
                                 .onFalse(new setHoodPosition(() -> 0));
                 ;
+
+                xManip.rightBumper().onTrue(new InstantCommand(
+                                (() -> useFriday = !useFriday)));
 
                 xManip.leftBumper().whileTrue(ShootFactory.SmartFeed());
 

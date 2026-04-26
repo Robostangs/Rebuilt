@@ -17,6 +17,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class VisionStangs {
     private PhotonCamera camera;
@@ -64,18 +65,70 @@ public class VisionStangs {
 
         if (bigAmbiguity < Constants.VisionConstants.kPhotonAmbiguityThres) {
 
-            visionEst.ifPresent(est -> {
-                var pose2d = est.estimatedPose != null ? est.estimatedPose.toPose2d() : null;
+            if (visionEst.isPresent()) {
 
-                if (pose2d != null) {
-                    timestampSeconds = est.timestampSeconds;
+                if (isPosegoo(visionEst.get())) {
+                    var pose2d = visionEst.get().estimatedPose != null ? visionEst.get().estimatedPose.toPose2d()
+                            : null;
+
+                    timestampSeconds = visionEst.get().timestampSeconds;
                     Robot.teleopField.getObject(camera.getName() + " Pose").setPose(pose2d);
                     currentPose = pose2d;
                 }
-            });
+            } 
+            else {
+                SmartDashboard.putString("Vision" + CameraName + "/Photon_RejectReason", "Ts not present bro");
+
+            }
 
         }
 
+    }
+
+    public double getavgDisPhoton(EstimatedRobotPose yoPoseEsti) {
+        double avgDist = 0;
+        for (PhotonTrackedTarget target : yoPoseEsti.targetsUsed) {
+            avgDist += target.getBestCameraToTarget().getTranslation().getNorm();
+        }
+        avgDist /= yoPoseEsti.targetsUsed.size();
+        return avgDist;
+    }
+
+    private boolean isPosegoo(EstimatedRobotPose yoPoseEsti) {
+
+        if (Robot.isSimulation()) {
+            SmartDashboard.putString("Vision" + CameraName + "/Photon_RejectReason", "Simulation mode");
+            return false;
+        }
+        if (yoPoseEsti == null) {
+            SmartDashboard.putString("Vision" + CameraName + "/Photon_RejectReason", "Pose null");
+            return false;
+        }
+        if (yoPoseEsti.targetsUsed.size() < 2) {
+            SmartDashboard.putString("Vision" + CameraName + "/Photon_RejectReason",
+                    "Not enough tags: " + yoPoseEsti.targetsUsed.size());
+            return false;
+        }
+
+        if (getavgDisPhoton(yoPoseEsti) > Constants.VisionConstants.kLLDisThres) {
+            SmartDashboard.putString("Vision" + CameraName + "/Photon_RejectReason",
+                    "Too far: " + getavgDisPhoton(yoPoseEsti));
+            return false;
+        }
+        SmartDashboard.putNumber("Vision/" + CameraName + " avg dis", getavgDisPhoton(yoPoseEsti));
+
+        if (bigAmbiguity > Constants.VisionConstants.kLLAmbiguityThres) {
+            SmartDashboard.putString("Vision" + CameraName + "/Photon_RejectReason", "High ambiguity: " + bigAmbiguity);
+            return false;
+        }
+
+        if (!RobotContainer.useVision) {
+            SmartDashboard.putString("Vision" + CameraName + "/Photon_RejectReason", "useVision disabled");
+            return false;
+        }
+
+        SmartDashboard.putString("Vision" + CameraName + "/Photon_RejectReason", "Accepted");
+        return true;
     }
 
     private void LLperiodic() {
@@ -128,9 +181,12 @@ public class VisionStangs {
                 mtLabel = "MT2";
             }
 
-            SmartDashboard.putString("Vision/" + CameraName + "/MT Mode ", mtLabel);
-            
+            if (fourPoseEsti != null) {
+                SmartDashboard.putString("Vision/" + CameraName + "/MT Mode ", mtLabel);
+                Robot.teleopField.getObject("Raw " + CameraName).setPose(fourPoseEsti.pose);
+                SmartDashboard.putNumber("Tag count " + CameraName, fourPoseEsti.tagCount);
 
+            }
 
             if (isPosegoo(fourPoseEsti)) {
                 this.currentPose = fourPoseEsti.pose;
@@ -214,6 +270,7 @@ public class VisionStangs {
     }
 
     public void periodic() {
+        currentPose = null;
         if (isLL) {
             LLperiodic();
         } else {

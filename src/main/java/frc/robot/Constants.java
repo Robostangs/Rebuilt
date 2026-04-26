@@ -28,7 +28,6 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
@@ -74,7 +73,7 @@ public final class Constants {
         }
 
         public static class FieldConstants {
-                public static final Pose2d HubPosition = new Pose2d(4.619, 4.03, new Rotation2d());
+                public static final Pose2d HubPosition = new Pose2d(4.619, 4.108, new Rotation2d());
 
                 // TODO find john
                 public static final Pose2d resetPose = new Pose2d(3.581, 6.574, new Rotation2d(Units.degreesToRadians(-90)));
@@ -213,8 +212,8 @@ public final class Constants {
         }
 
         public class AutoConstants {
-                public static final PIDConstants translationPID = new PIDConstants(1, 0, 0);
-                public static final PIDConstants rotationPID = new PIDConstants(1, 0, 0);
+                public static final PIDConstants translationPID = new PIDConstants(2, 0, 0);
+                public static final PIDConstants rotationPID = new PIDConstants(3, 0, 0);
                 private final static MomentOfInertia kRobotMomentOfInertia = KilogramSquareMeters.of(0.01);
                 private final static double robotWeight = 69;
                 private final static double wheelCOF = 0.2; // typical carpet COF for colson/nitrile wheels
@@ -281,10 +280,10 @@ public final class Constants {
                 public static final double kLLAmbiguityThres = .7;
                 public static final String kPhotonLL3Name = "Friday";
                 public static final Transform3d kRobotToCamLL3 = new Transform3d(
-                                   Units.inchesToMeters(0),
-                                Units.inchesToMeters(13.5),
-                                Units.inchesToMeters(12),
-                                new Rotation3d(0, Units.degreesToRadians(10), Units.degreesToRadians(90)));
+                                   Units.inchesToMeters(0.5),
+                                Units.inchesToMeters(12.25),
+                                Units.inchesToMeters(11.5),
+                                new Rotation3d(0, Units.degreesToRadians(34-90), Units.degreesToRadians(90)));
 
 
         }
@@ -418,7 +417,7 @@ public final class Constants {
                 private static final int kFrontRightDriveMotorId = 31;
                 private static final int kFrontRightSteerMotorId = 32;
                 private static final int kFrontRightEncoderId = 33;
-                private static final Angle kFrontRightEncoderOffset = Rotations.of(-0.316650390625);
+                private static final Angle kFrontRightEncoderOffset = Rotations.of(-0.31640625);
                 private static final boolean kFrontRightSteerMotorInverted = false;
                 private static final boolean kFrontRightEncoderInverted = false;
 

@@ -5,8 +5,8 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.FeederCommands.Feed;
@@ -26,6 +26,7 @@ public class ShootFactory {
                 return new WaitUntilCommand(
                                 () -> Flywheel.getInstance().shooterAtTargetVelocity())
                                 .withTimeout(0.5)
+                                // .andThen(new WaitCommand(0.5))
                                 .andThen(new Feed(
                                                 () -> Constants.FeederConstants.kFeedRPSSetpoint))
                                 .alongWith(
@@ -37,6 +38,7 @@ public class ShootFactory {
 
                                                                 .andThen(new RunHopper(
                                                                                 () -> Constants.HopperConstants.kRollerDC)));
+                                                                                
 
         }
         public static Command StopFeed() {
@@ -46,9 +48,9 @@ public class ShootFactory {
         }
         public static Command RegressionShoot() {
 
-                return new ChargeUp()
+                return new ChargeUp(false)
                                 .alongWith(
-                                                new setHoodPosition(() -> 0.03))
+                                                new setHoodPosition(() -> 0.1))
                                 .alongWith(
                                                 SmartFeed())
                                 .withName("Regression Shoot Command");
@@ -56,16 +58,16 @@ public class ShootFactory {
 
         public static Command DumbShoot() {
 
-                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
+                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS, false)
                                 .alongWith(
-                                                new setHoodPosition(() -> 0.03))
+                                                new setHoodPosition(() -> 0.1))
                                 .alongWith(
                                                 SmartFeed())
                                 .withName("Regression Shoot Command");
         }
 
         public static Command FarPass() {
-                return new ChargeUp(() -> 70)
+                return new ChargeUp(() -> 70, true)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                
@@ -73,7 +75,7 @@ public class ShootFactory {
         }
 
         public static Command FarPass(BooleanSupplier leftBumper) {
-                return new ChargeUp(() -> 70)
+                return new ChargeUp(() -> 70, true)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 .alongWith(
@@ -83,7 +85,7 @@ public class ShootFactory {
         }
 
         public static Command MedPass() {
-                return new ChargeUp(() -> 40)
+                return new ChargeUp(() -> 40, true)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 
@@ -91,7 +93,7 @@ public class ShootFactory {
         }
 
         public static Command MedPass(BooleanSupplier leftBumper) {
-                return new ChargeUp(() -> 40)
+                return new ChargeUp(() -> 40, true)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
                                 .alongWith(
@@ -102,15 +104,16 @@ public class ShootFactory {
         }
 
         public static Command ClosePass() {
-                return new ChargeUp(() -> 30)
+                return new ChargeUp(() -> 30, true)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass))
+                                
                                
                                 .withName("Pass Close Command");
         }
 
         public static Command ClosePass(BooleanSupplier leftBumper) {
-                return new ChargeUp(() -> 30)
+                return new ChargeUp(() -> 30, true)
                                 .alongWith(new setHoodPosition(
                                                 () -> Constants.HoodConstants.kPosAtOppositeAlliancePass)
                                                 )
@@ -121,7 +124,7 @@ public class ShootFactory {
         }
         
         public static Command ElectroShoot() {
-                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS)
+                return new ChargeUp(() -> Constants.FlywheelConstants.kDumbShootRPS,false)
                                 .alongWith(
                                                 new setHoodPosition(() -> Constants.HoodConstants.kDumbShootHoodPos))
                                 .alongWith(

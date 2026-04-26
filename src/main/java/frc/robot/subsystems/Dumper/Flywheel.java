@@ -1,7 +1,5 @@
 package frc.robot.subsystems.Dumper;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -22,18 +20,15 @@ public class Flywheel extends SubsystemBase {
     private VelocityVoltage flywheelTargetVelocity = new VelocityVoltage(0);
     private Follower slaveControl;
     private double adjValue = 0;
-
+    TalonFXConfiguration flywheelConfig;
 
     public Flywheel() {
         mainShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelMotorID);
         slaveShooterMotor = new TalonFX(Constants.FlywheelConstants.kFlywheelSlaveMotorID);
-        configureFlywheelMotors();
 
         slaveControl = new Follower(Constants.FlywheelConstants.kFlywheelMotorID, MotorAlignmentValue.Opposed);
-    }
 
-    private void configureFlywheelMotors() {
-        TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
+        flywheelConfig = new TalonFXConfiguration();
 
         flywheelConfig.CurrentLimits.SupplyCurrentLimit = Constants.DumperConstants.kShooterSupplyCurrentLimit;
         flywheelConfig.CurrentLimits.StatorCurrentLimit = Constants.FlywheelConstants.kShooterMotorStatorCurrentLimit;
@@ -51,38 +46,47 @@ public class Flywheel extends SubsystemBase {
 
         flywheelTargetVelocity.EnableFOC = false;
 
-        // mainShooterMotor.getVelocity().setUpdateFrequency(1000);
-
         mainShooterMotor.getMotorVoltage().setUpdateFrequency(250);
 
-        // Apply the PID configurations to the shooter motor
+        configureFlywheelMotors();
+
+    }
+
+    private void configureFlywheelMotors() {
+
         mainShooterMotor.getConfigurator().apply(flywheelConfig);
 
         slaveShooterMotor.getConfigurator().apply(flywheelConfig);
 
     }
 
+    public void setnewCurrentLimit(double currentLimit) {
+        TalonFXConfiguration flywheelConfignew = flywheelConfig.clone();
+
+        flywheelConfignew.CurrentLimits.StatorCurrentLimit = currentLimit;
+
+        mainShooterMotor.getConfigurator().apply(flywheelConfignew);
+
+        slaveShooterMotor.getConfigurator().apply(flywheelConfignew);
+    }
+
     public double getFlywheelTargetVelocity() {
 
-        double MetersfromTarget = (Robot.getMetersFromTarget());
-        double fudge = +1;
+        double x = (Robot.getMetersFromTarget());
+        double fudge = 0;
 
-        // double regressionValue = fudge+0.596 + 23*MetersfromTarget- 6.46*Math.pow(MetersfromTarget, 2)+0.627*Math.pow(MetersfromTarget, 3);;
-                double regressionValue = fudge+3.33*MetersfromTarget+19.2;
+        // double regressionValue = fudge+0.596 + 23*MetersfromTarget-
+        // 6.46*Math.pow(MetersfromTarget, 2)+0.627*Math.pow(MetersfromTarget, 3);;
+        double regressionValue = fudge + 24.4 - .469 * x + 0.69 * Math.pow(x, 2);
 
-
-        if(regressionValue < 0 ){
-            return 0;
-        }
-        else if(regressionValue > 50){
-            return 50;
-        }
-        else{
+        if (regressionValue < 0) {
+            return 30;
+        } else if (regressionValue > 50) {
+            return 30;
+        } else {
             return regressionValue;
         }
 
-
-        
     }
 
     public void setFlywheelDC(double dc) {
@@ -97,21 +101,17 @@ public class Flywheel extends SubsystemBase {
         return mInstance;
     }
 
-
-    public void setAdj(double av){
+    public void setAdj(double av) {
         adjValue = av;
     }
 
-
     public void setVelocity(double target) {
-        flywheelTargetVelocity.Velocity = target+adjValue;
+        flywheelTargetVelocity.Velocity = target + adjValue;
 
         mainShooterMotor.setControl(flywheelTargetVelocity);
         slaveShooterMotor.setControl(slaveControl);
 
     }
-
-
 
     public boolean shooterAtTargetVelocity() {
         double currentVelocity = mainShooterMotor.getVelocity().getValueAsDouble();
@@ -119,6 +119,7 @@ public class Flywheel extends SubsystemBase {
         return Math.abs(currentVelocity - targetVelocity) <= Constants.FlywheelConstants.kShooterVelocityTolerance;
     }
 
+  
     @Override
     public void periodic() {
 

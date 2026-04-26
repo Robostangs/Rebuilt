@@ -36,7 +36,7 @@ public class AutoAlign extends Command {
         this.babyOnBoard = babyOnBoard;
         this.isAuto = false;
 
-        PhoenixPIDController tunePID = new PhoenixPIDController(7, 0.5, 0);
+        PhoenixPIDController tunePID = new PhoenixPIDController(7.5, 0.5, 0.75);
         tunePID.enableContinuousInput(-Math.PI, Math.PI);
 
         tunePID.setTolerance(0.01);
@@ -49,27 +49,27 @@ public class AutoAlign extends Command {
 
     }
 
-    public AutoAlign() {
+    // public AutoAlign() {
 
-        drivetrain = CommandSwerveDrivetrain.getInstance();
+    //     drivetrain = CommandSwerveDrivetrain.getInstance();
 
-        this.translateX = () -> 0D;
-        this.translateY = () -> 0D;
-        this.babyOnBoard = () -> false;
-        this.isAuto = true;
+    //     this.translateX = () -> 0D;
+    //     this.translateY = () -> 0D;
+    //     this.babyOnBoard = () -> false;
+    //     this.isAuto = true;
 
-        PhoenixPIDController tunePID = new PhoenixPIDController(7, 0.5, 0);
-        tunePID.enableContinuousInput(-Math.PI, Math.PI);
+    //     PhoenixPIDController tunePID = new PhoenixPIDController(7, 0.5, 0);
+    //     tunePID.enableContinuousInput(-Math.PI, Math.PI);
 
-        tunePID.setTolerance(0.001);
+    //     tunePID.setTolerance(0.001);
 
-        driveRequest = new SwerveRequest.FieldCentricFacingAngle();
-        driveRequest.HeadingController = tunePID;
-        driveRequest.HeadingController.reset(); 
+    //     driveRequest = new SwerveRequest.FieldCentricFacingAngle();
+    //     driveRequest.HeadingController = tunePID;
+    //     driveRequest.HeadingController.reset(); 
 
-        this.addRequirements(drivetrain);
+    //     this.addRequirements(drivetrain);
 
-    }
+    // }
 
     @Override
     public void initialize() {

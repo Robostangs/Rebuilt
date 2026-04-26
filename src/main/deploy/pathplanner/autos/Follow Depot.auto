@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Gem Start"
+            "pathName": "Follow Depot"
           }
         },
         {
@@ -27,7 +27,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 1.0
                       }
                     },
                     {
@@ -43,7 +43,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 3.5
+                              "waitTime": 2.0
                             }
                           }
                         ]
@@ -73,17 +73,11 @@
               }
             ]
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Second Dip"
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Outpost",
+  "folder": "Depot",
   "choreoAuto": false
 }

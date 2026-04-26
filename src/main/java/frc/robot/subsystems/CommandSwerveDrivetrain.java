@@ -8,6 +8,9 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -25,7 +28,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -33,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.TunerConstants;
 import frc.robot.Constants.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.Vision.VisionStangs;
 
@@ -290,15 +293,30 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Drivetrain/current X acceleration",
                 this.getPigeon2().getAccelerationY().getValueAsDouble());
 
+        SmartDashboard.putNumber("KINGPIN/module " + "0",
+                getModule(0).getDriveMotor().getDeviceID());
+
+        SmartDashboard.putNumber("KINGPIN/module " + "1",
+                getModule(1).getDriveMotor().getDeviceID());
+
+        SmartDashboard.putNumber("KINGPIN/module " + "2",
+                getModule(2).getDriveMotor().getDeviceID());
+
+        SmartDashboard.putNumber("KINGPIN/module " + "3",
+                getModule(3).getDriveMotor().getDeviceID());
+
         visionPoses.clear();
 
         LL4Front.periodic();
         LL4Side.periodic();
-        photonVisionRight.periodic();
+        if (RobotContainer.useFriday) {
+            photonVisionRight.periodic();
+            visionPoses.add(photonVisionRight);
+
+        }
 
         visionPoses.add(LL4Front);
         visionPoses.add(LL4Side);
-        visionPoses.add(photonVisionRight);
 
         setVisionPose(visionPoses);
 
@@ -309,6 +327,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         isVisionGood = false;
 
         if (!RobotContainer.useVision) {
+            SmartDashboard.putString("Vision/Status", "Vision switch reject");
+
             return;
         }
 
@@ -332,6 +352,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SmartDashboard.putString("Vision/Status", "No valid measurement");
             return;
         }
+        SmartDashboard.putString("Vision/Status", bestCamera.getName() + " is valid measurment");
 
         this.addVisionMeasurement(
                 bestCamera.getPose(),
@@ -341,6 +362,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         SmartDashboard.putString("Vision/Best Camera", bestCamera.getName());
         SmartDashboard.putNumber("Vision/Best Ambiguity", bestCamera.getAmbiguity());
+
     }
 
     private void startSimThread() {
@@ -372,6 +394,32 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public void postStatus(String status) {
         SmartDashboard.putString("Drivetrain/ Status", status);
+    }
+
+    public void setDriveMotorCurrentLimit(double currentLimit) {
+
+        TalonFXConfiguration config = new TalonFXConfiguration();
+
+        for (int c = 0; c < getModules().length; c++) {
+
+            if (c == 0) {
+                config = TunerConstants.FrontLeft.DriveMotorInitialConfigs.clone();
+
+            } else if (c == 1) {
+                config = TunerConstants.FrontRight.DriveMotorInitialConfigs.clone();
+
+            } else if (c == 2) {
+                config = TunerConstants.BackLeft.DriveMotorInitialConfigs.clone();
+
+            } else if (c == 3) {
+                config = TunerConstants.BackRight.DriveMotorInitialConfigs.clone();
+            }
+
+            config.CurrentLimits.StatorCurrentLimit = currentLimit;
+
+            getModule(c).getDriveMotor().getConfigurator().apply(config, 0);
+
+        }
 
     }
 

@@ -11,7 +11,7 @@
           }
         },
         {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -27,7 +27,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 1.0
                       }
                     },
                     {
@@ -35,15 +35,15 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "named",
-                            "data": {
-                              "name": "Photoshoot"
-                            }
-                          },
-                          {
                             "type": "wait",
                             "data": {
                               "waitTime": 3.0
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "Photoshoot"
                             }
                           }
                         ]
@@ -59,7 +59,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.0
+                        "waitTime": 2.0
                       }
                     },
                     {
@@ -78,6 +78,25 @@
           "type": "path",
           "data": {
             "pathName": "Depot Second Pass"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlign"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Photoshoot"
+                }
+              }
+            ]
           }
         }
       ]

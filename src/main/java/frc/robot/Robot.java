@@ -24,12 +24,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.units.LinearVelocityUnit;
-import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -43,8 +40,10 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ElasticConstants.whoCanScore;
 import frc.robot.FeederCommands.setFeederSpeed;
 import frc.robot.Stable.LimelightHelpers;
@@ -81,7 +80,9 @@ public class Robot extends TimedRobotstangs {
     public static Constants.ElasticConstants.whoCanScore canBlueScore;
 
     String autoname = "";
+    boolean flip = false;
     String oldAutoname = " ";
+    boolean oldFlip = false;
     public CommandScheduler scheduler = CommandScheduler.getInstance();
 
     private static Pose2d targetPose;
@@ -89,11 +90,15 @@ public class Robot extends TimedRobotstangs {
     public Color allianceScore = Constants.ElasticConstants.purple;
 
     private SendableChooser<String> autoChooser = new SendableChooser<>();
+    private SendableChooser<Boolean> flipChooser = new SendableChooser<>();
 
     public PowerDistribution pdh = new PowerDistribution(Constants.ElasticConstants.kPdhCanId, ModuleType.kRev);
 
     public static boolean shooterPass = false;
     public static boolean shooterIsDumb = false;
+
+    double delay = 0;
+
     // pit test choosers
     SendableChooser<Command> hoodSetpointChooser = new SendableChooser<>();
     SendableChooser<Command> intakePivotSetpointChooser = new SendableChooser<>();
@@ -125,12 +130,14 @@ public class Robot extends TimedRobotstangs {
 
         CommandScheduler.getInstance()
                 .onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));
+
         CommandScheduler.getInstance()
                 .onCommandInterrupt((action, cause) -> {
                     String reason = cause.map(c -> c.getName()).orElse("no cause");
                     DataLogManager.log(action.getName() + " Command Interrupted by: " + reason);
                     SmartDashboard.putString("Auto/LastInterrupt", action.getName() + " <- " + reason);
                 });
+
         CommandScheduler.getInstance()
                 .onCommandFinish((action) -> DataLogManager.log(action.getName() + " Command Finished"));
 
@@ -138,7 +145,7 @@ public class Robot extends TimedRobotstangs {
         configureTeleopTab();
         loadNamedCommands();
 
-        Hood.getInstance().setDefaultCommand(new setHoodDutyCycle(() -> 0d));
+        Hood.getInstance().setDefaultCommand(new setHoodPosition(() -> 0.1));
         Flywheel.getInstance().setDefaultCommand(new setFlywheelDutyCycle(() -> 0d));
         Feeder.getInstance().setDefaultCommand(new setFeederSpeed(() -> 0d));
         // IntakePivot.getInstance().setDefaultCommand(new MovePivot(() -> 0d));
@@ -166,7 +173,7 @@ public class Robot extends TimedRobotstangs {
                 .andThen(new InstantCommand(() -> postPitTestStatus("Running Hopper")))
                 .andThen(new RunHopper(() -> 0d).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Charging up Flywheel")))
-                .andThen(new ChargeUp().withTimeout(7))
+                .andThen(new ChargeUp(false).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Starting Feeder")))
                 .andThen(new setFeederSpeed(() -> 0).withTimeout(7))
                 .andThen(new InstantCommand(() -> postPitTestStatus("Testing Hood")))
@@ -259,6 +266,13 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void disabledInit() {
+        delay = 0;
+
+        SmartDashboard.putNumber("Auto Delay", delay);
+
+        flipChooser.setDefaultOption("N", Boolean.valueOf(false));
+        flipChooser.addOption("Y",  Boolean.valueOf(true));
+        SmartDashboard.putData("Flip Chooser", flipChooser);
 
         for (String name : AutoBuilder.getAllAutoNames()) {
             autoChooser.addOption(name, name);
@@ -278,18 +292,26 @@ public class Robot extends TimedRobotstangs {
 
         }
         oldAutoname = "nada";
+        oldFlip = false;
     }
 
     @Override
     public void disabledPeriodic() {
-        if(autoname == null){
-            autoname ="";
+        
+
+        flip = flipChooser.getSelected().booleanValue();
+        SmartDashboard.putBoolean("FLIPPPPPPP", flip);
+
+        if (autoname == null) {
+            autoname = "";
         }
+
 
         if (autoname != null) {
             autoname = autoChooser.getSelected();
+        flip = flipChooser.getSelected().booleanValue();
 
-            if (!autoname.equals(oldAutoname)) {
+            if (!autoname.equals(oldAutoname)|| flip != oldFlip) {
 
                 if (autoname != null) {
 
@@ -297,7 +319,8 @@ public class Robot extends TimedRobotstangs {
                     if (autoname.equals("SitAndShit")) {
                         autoCommand = new PrintCommand("Pooping");
                     } else {
-                        autoCommand = new PathPlannerAuto(autoname);
+
+                        autoCommand = new PathPlannerAuto(autoname, flip);
 
                         drawCurrentAuto(autoCommand.getName());
 
@@ -308,24 +331,24 @@ public class Robot extends TimedRobotstangs {
                     autoAlert.set(true);
 
                 }
+
+                autoGroup = new SequentialCommandGroup(
+                        new WaitCommand(delay),
+                        new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
+                        new InstantCommand(
+                                () -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
+                        autoCommand);
                 SmartDashboard.putString("Auto/Auto Name", autoCommand.getName());
 
             }
             oldAutoname = autoname;
+            oldFlip = flip;
         }
     }
 
     @Override
     public void disabledExit() {
         drawCurrentAuto(null);
-
-        autoGroup = new SequentialCommandGroup(
-                new InstantCommand(() -> Hood.getInstance().setHoodPositionAuto(0)),
-                new InstantCommand(() -> IntakePivot.getInstance().setPosition(Constants.KirbyConstants.kHomePosition)),
-                autoCommand
-        // ,new AutoAlign(),
-        // ShootFactory.PhotoShoot()
-        );
 
     }
 
@@ -335,7 +358,8 @@ public class Robot extends TimedRobotstangs {
         CommandScheduler.getInstance().cancelAll();
 
         CommandScheduler.getInstance().schedule(
-                autoGroup);
+                new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)).andThen(
+                        autoGroup));
     }
 
     @Override
@@ -455,29 +479,29 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void testInit() {
-        SwerveRequest rightRequest = new SwerveRequest.FieldCentric().withVelocityY(0.3);
-        Command driveRightCommand = CommandSwerveDrivetrain.getInstance().applyRequest(() -> rightRequest);
-        SmartDashboard.putData("Get wheel odometry", driveRightCommand);
+        // SwerveRequest rightRequest = new
+        // SwerveRequest.FieldCentric().withVelocityY(0.3);
+        // Command driveRightCommand =
+        // CommandSwerveDrivetrain.getInstance().applyRequest(() -> rightRequest);
+        // SmartDashboard.putData("Get wheel odometry", driveRightCommand);
         CommandScheduler.getInstance().cancelAll();
-        setupPitTestDashboard();
-        setupAutoPitTest();
+        // setupPitTestDashboard();
+        // setupAutoPitTest();
         SmartDashboard.putNumber("Regression Hood Setpoint", 0.03);
         SmartDashboard.putNumber("Regression Flywheel Setpoint", 0);
 
+        Hood.getInstance()
+                .setDefaultCommand(
+                        new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood Setpoint", 0.03)));
 
-       
-       
-        // Hood.getInstance()
-        //         .setDefaultCommand(
-        //                 new setHoodPosition(() -> SmartDashboard.getNumber("Regression Hood Setpoint", 0.03)));
-        // Flywheel.getInstance()
-        //         .setDefaultCommand(new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0)));
+        Flywheel.getInstance()
+                .setDefaultCommand(
+                        new ChargeUp(() -> SmartDashboard.getNumber("Regression Flywheel Setpoint", 0), false));
 
     }
 
     @Override
     public void testPeriodic() {
-  
 
     }
 
@@ -542,6 +566,23 @@ public class Robot extends TimedRobotstangs {
         // new PrintCommand("ALIGN!"));
 
         NamedCommands.registerCommand("BumpTake", new setIntakePosition(Constants.KirbyConstants.kIntakePivotBump));
+
+        NamedCommands.registerCommand("FullShoot",
+
+                new AutoAlign(() -> 0d, () -> 0d, () -> false)
+                        .raceWith(
+                                new SequentialCommandGroup(
+                                        new SequentialCommandGroup(
+                                                new WaitCommand(1),
+                                                new ParallelRaceGroup(
+                                                        ShootFactory.RegressionShoot(),
+                                                        new WaitCommand(3))))
+
+                                        .andThen(new SequentialCommandGroup(
+                                                new WaitCommand(1.5),
+                                                IntakeFactory.RetractIntake()))
+
+                        ));
 
     }
 
@@ -620,6 +661,8 @@ public class Robot extends TimedRobotstangs {
         poses.clear();
         if (autoName != null && !autoName.equals("")) {
             try {
+
+
                 for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
                     for (Pose2d pose : path.getPathPoses()) {
                         if (Robot.isRed()) {

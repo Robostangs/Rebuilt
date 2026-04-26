@@ -5,29 +5,39 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Dumper.Flywheel;
 
 public class ChargeUp extends Command {
     Flywheel shooter;
     DoubleSupplier targetRPS;
     boolean smort;
+    boolean Gentle;
 
-    public ChargeUp() {
+    public ChargeUp(boolean Gentle) {
         shooter = Flywheel.getInstance();
-        addRequirements(shooter);
         smort = true;
+        this.Gentle = Gentle;
+        addRequirements(shooter);
+
     }
 
-    public ChargeUp(DoubleSupplier targetRPS) {
+    public ChargeUp(DoubleSupplier targetRPS, boolean Gentle) {
         shooter = Flywheel.getInstance();
         this.targetRPS = targetRPS;
         smort = false;
+        this.Gentle = false;
         addRequirements(shooter);
 
     }
 
     @Override
     public void initialize() {
+        if(Gentle){
+            shooter.setnewCurrentLimit(50);
+        }
+
+
     }
 
     @Override
@@ -36,8 +46,7 @@ public class ChargeUp extends Command {
 
         if (smort) {
             currentTarget = shooter.getFlywheelTargetVelocity();
-        }
-        else{
+        } else {
             currentTarget = targetRPS.getAsDouble();
         }
 
@@ -53,6 +62,8 @@ public class ChargeUp extends Command {
     public void end(boolean interrupted) {
         shooter.setVelocity(0);
         shooter.postStatus("Charged");
+        shooter.setnewCurrentLimit(120); 
+
     }
 
 }

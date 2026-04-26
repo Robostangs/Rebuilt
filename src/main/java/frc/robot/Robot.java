@@ -80,7 +80,9 @@ public class Robot extends TimedRobotstangs {
     public static Constants.ElasticConstants.whoCanScore canBlueScore;
 
     String autoname = "";
+    boolean flip = false;
     String oldAutoname = " ";
+    boolean oldFlip = false;
     public CommandScheduler scheduler = CommandScheduler.getInstance();
 
     private static Pose2d targetPose;
@@ -88,6 +90,7 @@ public class Robot extends TimedRobotstangs {
     public Color allianceScore = Constants.ElasticConstants.purple;
 
     private SendableChooser<String> autoChooser = new SendableChooser<>();
+    private SendableChooser<Boolean> flipChooser = new SendableChooser<>();
 
     public PowerDistribution pdh = new PowerDistribution(Constants.ElasticConstants.kPdhCanId, ModuleType.kRev);
 
@@ -263,10 +266,13 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void disabledInit() {
-        delay =0;
-
+        delay = 0;
 
         SmartDashboard.putNumber("Auto Delay", delay);
+
+        flipChooser.setDefaultOption("N", Boolean.valueOf(false));
+        flipChooser.addOption("Y",  Boolean.valueOf(true));
+        SmartDashboard.putData("Flip Chooser", flipChooser);
 
         for (String name : AutoBuilder.getAllAutoNames()) {
             autoChooser.addOption(name, name);
@@ -286,19 +292,26 @@ public class Robot extends TimedRobotstangs {
 
         }
         oldAutoname = "nada";
+        oldFlip = false;
     }
 
     @Override
     public void disabledPeriodic() {
+        
+
+        flip = flipChooser.getSelected().booleanValue();
+        SmartDashboard.putBoolean("FLIPPPPPPP", flip);
 
         if (autoname == null) {
             autoname = "";
         }
 
+
         if (autoname != null) {
             autoname = autoChooser.getSelected();
+        flip = flipChooser.getSelected().booleanValue();
 
-            if (!autoname.equals(oldAutoname)) {
+            if (!autoname.equals(oldAutoname)|| flip != oldFlip) {
 
                 if (autoname != null) {
 
@@ -306,7 +319,8 @@ public class Robot extends TimedRobotstangs {
                     if (autoname.equals("SitAndShit")) {
                         autoCommand = new PrintCommand("Pooping");
                     } else {
-                        autoCommand = new PathPlannerAuto(autoname);
+
+                        autoCommand = new PathPlannerAuto(autoname, flip);
 
                         drawCurrentAuto(autoCommand.getName());
 
@@ -328,6 +342,7 @@ public class Robot extends TimedRobotstangs {
 
             }
             oldAutoname = autoname;
+            oldFlip = flip;
         }
     }
 
@@ -343,8 +358,8 @@ public class Robot extends TimedRobotstangs {
         CommandScheduler.getInstance().cancelAll();
 
         CommandScheduler.getInstance().schedule(
-            new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)).andThen(
-                autoGroup));
+                new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)).andThen(
+                        autoGroup));
     }
 
     @Override
@@ -646,6 +661,8 @@ public class Robot extends TimedRobotstangs {
         poses.clear();
         if (autoName != null && !autoName.equals("")) {
             try {
+
+
                 for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
                     for (Pose2d pose : path.getPathPoses()) {
                         if (Robot.isRed()) {

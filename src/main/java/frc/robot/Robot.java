@@ -479,14 +479,10 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void testInit() {
-        // SwerveRequest rightRequest = new
-        // SwerveRequest.FieldCentric().withVelocityY(0.3);
-        // Command driveRightCommand =
-        // CommandSwerveDrivetrain.getInstance().applyRequest(() -> rightRequest);
-        // SmartDashboard.putData("Get wheel odometry", driveRightCommand);
+   
         CommandScheduler.getInstance().cancelAll();
-        // setupPitTestDashboard();
-        // setupAutoPitTest();
+        setupPitTestDashboard();
+        setupAutoPitTest();
         SmartDashboard.putNumber("Regression Hood Setpoint", 0.03);
         SmartDashboard.putNumber("Regression Flywheel Setpoint", 0);
 
@@ -563,7 +559,6 @@ public class Robot extends TimedRobotstangs {
 
         NamedCommands.registerCommand("AutoAlign", new AutoAlign(() -> 0d, () -> 0d, () -> false));
 
-        // new PrintCommand("ALIGN!"));
 
         NamedCommands.registerCommand("BumpTake", new setIntakePosition(Constants.KirbyConstants.kIntakePivotBump));
 

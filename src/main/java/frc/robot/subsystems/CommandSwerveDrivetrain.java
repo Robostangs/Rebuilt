@@ -314,6 +314,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             visionPoses.add(photonVisionRight);
 
         }
+        else{
+                        SmartDashboard.putString("Vision" + photonVisionRight.getName() + "/Photon_RejectReason", "useFriday disabled");
+
+        }
 
         visionPoses.add(LL4Front);
         visionPoses.add(LL4Side);

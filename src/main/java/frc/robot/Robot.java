@@ -371,6 +371,12 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void autonomousExit() {
         CommandScheduler.getInstance().cancelAll();
+
+                if (DriverStation.isFMSAttached()) {
+            System.out.println("fms is attached");
+            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourSide, 30);
+            LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourFront, 30);
+        }
     }
 
     @Override

@@ -481,8 +481,8 @@ public class Robot extends TimedRobotstangs {
     public void testInit() {
    
         CommandScheduler.getInstance().cancelAll();
-        setupPitTestDashboard();
-        setupAutoPitTest();
+        // setupPitTestDashboard();
+        // setupAutoPitTest();
         SmartDashboard.putNumber("Regression Hood Setpoint", 0.03);
         SmartDashboard.putNumber("Regression Flywheel Setpoint", 0);
 

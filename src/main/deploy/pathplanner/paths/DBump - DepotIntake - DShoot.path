@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.3315026833631483,
-        "y": 5.429353070175439
+        "x": 2.2016994633273703,
+        "y": 4.28649373881932
       },
       "prevControl": null,
       "nextControl": {
-        "x": -0.10269690497382422,
-        "y": 6.467924224196545
+        "x": -0.23250012500960215,
+        "y": 5.325064892840426
       },
       "isLocked": false,
       "linkedName": "DepotShootAcc"
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 2.3315026833631483,
-        "y": 5.429353070175439
+        "x": 2.2016994633273703,
+        "y": 4.28649373881932
       },
       "prevControl": {
-        "x": 0.984178322464313,
-        "y": 6.2228178627518576
+        "x": 0.8543751024285351,
+        "y": 5.0799585313957385
       },
       "nextControl": null,
       "isLocked": false,
@@ -77,13 +77,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -33.86700476538108
+    "rotation": -7.765166018425302
   },
   "reversed": false,
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 1.5,
-    "rotation": -33.86700476538108
+    "rotation": -7.765166018425302
   },
   "useDefaultConstraints": true
 }

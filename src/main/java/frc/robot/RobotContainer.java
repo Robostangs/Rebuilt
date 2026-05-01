@@ -109,7 +109,7 @@ public class RobotContainer {
                                 (ShootFactory.RegressionShoot()))
                 ;
 
-                xDrive.rightBumper().whileTrue(ShootFactory.SmartFeed());
+                xDrive.leftBumper().whileTrue(new HomeIntake(false));
 
 
                 // close shoot
@@ -177,7 +177,6 @@ public class RobotContainer {
 
                 xManip.leftBumper().whileTrue(ShootFactory.SmartFeed());
 
-                xManip.rightPaddle().whileTrue(new HomeIntake(false));
                 xManip.leftPaddle().whileTrue(new HomeIntake(true));
 
                 xManip.rightTrigger().whileTrue(new setHoodDutyCycle(() -> xManip.getLeftTriggerAxis() * -0.2));

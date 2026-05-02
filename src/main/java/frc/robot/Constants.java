@@ -288,6 +288,21 @@ public final class Constants {
 
         }
 
+        public class BlockerConstants{
+
+            public static final int kBlockerMotorID = 0;
+            public static final double extenderSensorToMechanismRatio = 0;
+            public static final double BlockerCurrentLimit = 60;
+            
+        public static final double extenderPositionTolerance = 0.05;
+        public static final double kHomePosition = 0;
+        public static final double kHomeDutyCycle = 0;
+        public static final double BlockerStatorCurrent = 80;
+        public static final double kExtendSetpoint = .5;
+        public static final double kRetractSetpoint = 0;
+
+        }
+
         public class TunerConstants {
                 // Both sets of gains need to be tuned to your individual robot.
 
@@ -564,5 +579,6 @@ public final class Constants {
                         }
                 }
         }
+
 
 }

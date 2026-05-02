@@ -29,6 +29,8 @@ import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.setKirbyWheels;
 import frc.robot.commands.AutoAlign;
+import frc.robot.commands.BlockerCommands.HomeBlocker;
+import frc.robot.commands.BlockerCommands.setBlockerPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Dumper.Flywheel;
 
@@ -148,7 +150,6 @@ public class RobotContainer {
                 xManip.rightBumper().onTrue(
                                 new InstantCommand(() -> Robot.toggleShooterPass()));
 
-                // xManip.x().onTrue(new InstantCommand(() -> Robot.toggleShooterIsDumb()));
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05).whileTrue(
                                 new RunCommand(
@@ -169,8 +170,14 @@ public class RobotContainer {
                                 .onFalse(new setHoodPosition(() -> 0));
                 ;
 
-                xManip.rightBumper().onTrue(new InstantCommand(
-                                (() -> useFriday = !useFriday)));
+           
+                xManip.rightPaddle().whileTrue(new setBlockerPosition(Constants.BlockerConstants.kExtendSetpoint,false))
+                .whileFalse(new setBlockerPosition(Constants.BlockerConstants.kRetractSetpoint,true));
+
+                xManip.leftPaddle().whileTrue(new setBlockerPosition(Constants.BlockerConstants.kRetractSetpoint,true));
+
+                xManip.rightBumper().whileTrue(new HomeBlocker());
+
 
                 xManip.leftBumper().whileTrue(ShootFactory.SmartFeed());
 

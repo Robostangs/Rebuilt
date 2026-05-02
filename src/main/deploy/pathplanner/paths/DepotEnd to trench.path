@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0394454382826472,
-        "y": 4.010661896243291
+        "x": 1.48778175313059,
+        "y": 4.903059033989266
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0602068082460825,
-        "y": 4.259798335804511
+        "x": 1.5085431230940252,
+        "y": 5.152195473550487
       },
       "isLocked": false,
-      "linkedName": "DepotIntakeEnd"
+      "linkedName": "DepotEndAcc"
     },
     {
       "anchor": {
@@ -44,7 +44,12 @@
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9090909090909096,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -64,7 +69,7 @@
   "folder": "Center",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -26.565051177078036
   },
   "useDefaultConstraints": true
 }

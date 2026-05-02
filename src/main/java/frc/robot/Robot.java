@@ -27,6 +27,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -127,6 +128,8 @@ public class Robot extends TimedRobotstangs {
         DataLogManager.start("");
         DataLogManager.log("Driverstation connected");
         DriverStation.startDataLog(DataLogManager.getLog());
+
+        RobotController.setBrownoutVoltage(5);
 
         CommandScheduler.getInstance()
                 .onCommandInitialize((action) -> DataLogManager.log(action.getName() + " Command Initialized"));

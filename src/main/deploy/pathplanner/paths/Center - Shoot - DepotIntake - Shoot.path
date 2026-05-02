@@ -32,32 +32,32 @@
     },
     {
       "anchor": {
-        "x": 2.3477280858676206,
-        "y": 5.779230769230769
+        "x": 1.8771914132379246,
+        "y": 5.746779964221824
       },
       "prevControl": {
-        "x": 2.1530232558139533,
-        "y": 6.022611806797853
+        "x": 1.6928753023974934,
+        "y": 5.9981201153678665
       },
       "nextControl": {
-        "x": 2.6013708132682742,
-        "y": 5.462177359979952
+        "x": 2.0556708407871196,
+        "y": 5.50339892665474
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.0394454382826472,
-        "y": 4.010661896243291
+        "x": 1.48778175313059,
+        "y": 4.903059033989266
       },
       "prevControl": {
-        "x": 2.266601073345259,
-        "y": 4.659677996422182
+        "x": 1.7473881932021467,
+        "y": 5.195116279069768
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "DepotIntakeEnd"
+      "linkedName": "DepotEndAcc"
     }
   ],
   "rotationTargets": [
@@ -81,21 +81,10 @@
       }
     }
   ],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 4.75,
-        "y": 4.1
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 1.535593220338984,
-      "maxWaypointRelativePos": 3.0,
-      "name": "Point Towards Zone"
-    }
-  ],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Extend",
+      "name": "Retract",
       "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
@@ -104,6 +93,12 @@
           "name": "Extend"
         }
       }
+    },
+    {
+      "name": "Extend",
+      "waypointRelativePos": 0.76271186440678,
+      "endWaypointRelativePos": null,
+      "command": null
     }
   ],
   "globalConstraints": {
@@ -116,7 +111,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -26.565051177078036
   },
   "reversed": false,
   "folder": "Center",

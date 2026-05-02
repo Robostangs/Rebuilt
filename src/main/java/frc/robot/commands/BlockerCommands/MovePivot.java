@@ -7,12 +7,12 @@ import frc.robot.subsystems.Blocker;
 import frc.robot.subsystems.Intake.IntakePivot;
 
 
-public class MoveBlocker extends Command {
+public class MovePivot extends Command {
     private final Blocker blocker;
     private final DoubleSupplier dutyCycle;
 
     
-    public MoveBlocker(DoubleSupplier dutyCycle) {
+    public MovePivot(DoubleSupplier dutyCycle) {
         blocker = Blocker.getInstance();
         this.dutyCycle = dutyCycle;
         addRequirements(blocker);

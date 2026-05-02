@@ -1,6 +1,7 @@
 package frc.robot.commands.BlockerCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Blocker;
 import frc.robot.subsystems.Intake.IntakePivot;
 
@@ -21,10 +22,10 @@ public class setBlockerPosition extends Command {
     @Override
     public void initialize() {
         if (isBack) {
-            blocker.setDC(-0.3);
+            blocker.setDC(Constants.BlockerConstants.kDutyCycle);
 
         } else {
-            blocker.setDC(0.3);
+            blocker.setDC(-Constants.BlockerConstants.kDutyCycle);
 
         }
         blocker.postStatus("going to: " + pos);

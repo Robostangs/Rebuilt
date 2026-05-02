@@ -258,12 +258,17 @@ public class RobotContainer {
         }
 
         private void configureSimBinds() {
-                new Trigger(() -> xSim.getRawButtonPressed(1))
-                                .whileTrue(new AutoAlign(() -> 0d,
-                                                () -> 0d,
-                                                () -> true));
+                // new Trigger(() -> xSim.getRawButtonPressed(1))
+                //                 .whileTrue(new AutoAlign(() -> 0d,
+                //                                 () -> 0d,
+                //                                 () -> true));
 
-                new Trigger(() -> xSim.getRawButtonPressed(2))
-                                .onTrue(new InstantCommand(() -> Robot.toggleDefense()));
-        }
+                // new Trigger(() -> xSim.getRawButtonPressed(2))
+                //                 .onTrue(new InstantCommand(() -> Robot.toggleDefense()));
+
+         new Trigger(() -> xSim.getRawButtonPressed(1))
+                                .whileTrue(new  setBlockerPosition(0.5, false));       
+                                  new Trigger(() -> xSim.getRawButtonPressed(2))
+                                .whileTrue(new  setBlockerPosition(0, true));     
+}
 }

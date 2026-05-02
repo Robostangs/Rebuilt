@@ -94,7 +94,7 @@ public class Robot extends TimedRobotstangs {
 
     public PowerDistribution pdh = new PowerDistribution(Constants.ElasticConstants.kPdhCanId, ModuleType.kRev);
 
-    public static boolean shooterPass = false;
+    public static boolean robotDefense = false;
     public static boolean shooterIsDumb = false;
 
     double delay = 0;
@@ -271,7 +271,7 @@ public class Robot extends TimedRobotstangs {
         SmartDashboard.putNumber("Auto Delay", delay);
 
         flipChooser.setDefaultOption("N", Boolean.valueOf(false));
-        flipChooser.addOption("Y",  Boolean.valueOf(true));
+        flipChooser.addOption("Y", Boolean.valueOf(true));
         SmartDashboard.putData("Flip Chooser", flipChooser);
 
         for (String name : AutoBuilder.getAllAutoNames()) {
@@ -297,7 +297,6 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void disabledPeriodic() {
-        
 
         flip = flipChooser.getSelected().booleanValue();
         SmartDashboard.putBoolean("FLIPPPPPPP", flip);
@@ -306,12 +305,11 @@ public class Robot extends TimedRobotstangs {
             autoname = "";
         }
 
-
         if (autoname != null) {
             autoname = autoChooser.getSelected();
-        flip = flipChooser.getSelected().booleanValue();
+            flip = flipChooser.getSelected().booleanValue();
 
-            if (!autoname.equals(oldAutoname)|| flip != oldFlip) {
+            if (!autoname.equals(oldAutoname) || flip != oldFlip) {
 
                 if (autoname != null) {
 
@@ -372,7 +370,7 @@ public class Robot extends TimedRobotstangs {
     public void autonomousExit() {
         CommandScheduler.getInstance().cancelAll();
 
-                if (DriverStation.isFMSAttached()) {
+        if (DriverStation.isFMSAttached()) {
             System.out.println("fms is attached");
             LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourSide, 30);
             LimelightHelpers.triggerRewindCapture(Constants.VisionConstants.kLimelightFourFront, 30);
@@ -390,7 +388,7 @@ public class Robot extends TimedRobotstangs {
     @Override
     public void teleopPeriodic() {
 
-        SmartDashboard.putBoolean("IsPassing", shooterPass);
+        SmartDashboard.putBoolean("is Defense", robotDefense);
         SmartDashboard.putBoolean("Is dumb", isShooterDumb());
         shiftAlert.set(canBlueScore == whoCanScore.error);
         String gameData = DriverStation.getGameSpecificMessage();
@@ -485,7 +483,7 @@ public class Robot extends TimedRobotstangs {
 
     @Override
     public void testInit() {
-   
+
         CommandScheduler.getInstance().cancelAll();
         // setupPitTestDashboard();
         // setupAutoPitTest();
@@ -565,7 +563,6 @@ public class Robot extends TimedRobotstangs {
 
         NamedCommands.registerCommand("AutoAlign", new AutoAlign(() -> 0d, () -> 0d, () -> false));
 
-
         NamedCommands.registerCommand("BumpTake", new setIntakePosition(Constants.KirbyConstants.kIntakePivotBump));
 
         NamedCommands.registerCommand("FullShoot",
@@ -633,12 +630,12 @@ public class Robot extends TimedRobotstangs {
         return targetPose;
     }
 
-    public static void setShooterPass(boolean pass) {
-        shooterPass = pass;
+    public static void setRobotDefense(boolean defense) {
+        robotDefense = defense;
     }
 
-    public static void toggleShooterPass() {
-        shooterPass = !shooterPass;
+    public static void toggleDefense() {
+        robotDefense = !robotDefense;
     }
 
     public static void setShooterIsDumb(boolean isDumb) {
@@ -649,8 +646,8 @@ public class Robot extends TimedRobotstangs {
         shooterIsDumb = !shooterIsDumb;
     }
 
-    public static boolean isPassing() {
-        return shooterPass;
+    public static boolean isDefense() {
+        return robotDefense;
     }
 
     public static boolean isShooterDumb() {
@@ -662,7 +659,6 @@ public class Robot extends TimedRobotstangs {
         poses.clear();
         if (autoName != null && !autoName.equals("")) {
             try {
-
 
                 for (PathPlannerPath path : PathPlannerAuto.getPathGroupFromAutoFile(autoName)) {
                     for (Pose2d pose : path.getPathPoses()) {

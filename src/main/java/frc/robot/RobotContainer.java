@@ -148,7 +148,7 @@ public class RobotContainer {
         public void configureManipBindings() {
 
                 xManip.rightBumper().onTrue(
-                                new InstantCommand(() -> Robot.toggleShooterPass()));
+                                new InstantCommand(() -> Robot.toggleDefense()));
 
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05).whileTrue(
@@ -165,10 +165,9 @@ public class RobotContainer {
                                 .onFalse(new setHoodPosition(() -> 0));
                 xManip.b().whileTrue(ShootFactory.MedPass())
                                 .onFalse(new setHoodPosition(() -> 0));
-                ;
+                
                 xManip.y().whileTrue(ShootFactory.FarPass())
-                                .onFalse(new setHoodPosition(() -> 0));
-                ;
+                                .onFalse(new setHoodPosition(() -> 0));;
 
            
                 xManip.rightPaddle().whileTrue(new setBlockerPosition(Constants.BlockerConstants.kExtendSetpoint,false))
@@ -183,7 +182,7 @@ public class RobotContainer {
 
                 xManip.leftPaddle().whileTrue(new HomeIntake(true));
 
-                xManip.leftTrigger().onTrue(new InstantCommand(() -> Robot.toggleShooterPass()));
+                xManip.leftTrigger().onTrue(new InstantCommand(() -> Robot.toggleDefense()));
 
 
         }
@@ -265,6 +264,6 @@ public class RobotContainer {
                                                 () -> true));
 
                 new Trigger(() -> xSim.getRawButtonPressed(2))
-                                .onTrue(new InstantCommand(() -> Robot.toggleShooterPass()));
+                                .onTrue(new InstantCommand(() -> Robot.toggleDefense()));
         }
 }

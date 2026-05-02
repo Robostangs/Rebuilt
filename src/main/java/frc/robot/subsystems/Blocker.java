@@ -19,6 +19,8 @@ public class Blocker extends SubsystemBase{
 
 
     public Blocker() {
+        setBlockerPivotConfig();
+        
         extenderControl = new PositionTorqueCurrentFOC(blockerExtenderMotor.getPosition().getValueAsDouble());
     }
 

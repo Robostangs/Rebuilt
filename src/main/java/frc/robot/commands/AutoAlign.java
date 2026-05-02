@@ -4,6 +4,8 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+import com.pathplanner.lib.util.FlippingUtil;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -89,7 +91,7 @@ public class AutoAlign extends Command {
         targetPose = Robot.getTargetPose();
         Pose2d currentPose = drivetrain.getState().Pose;
 
-        if (!Robot.isPassing()) {
+        if (!Robot.isDefense()) {
 
             getTargetRotation = () -> {
 
@@ -103,13 +105,18 @@ public class AutoAlign extends Command {
             };
 
         } else {
-            if (Robot.isRed()) {
-                getTargetRotation = () -> Rotation2d.k180deg;
+            Pose2d flipTargetPose = FlippingUtil.flipFieldPose(targetPose);
+              getTargetRotation = () -> {
 
-            } else {
-                getTargetRotation = () -> Rotation2d.kZero;
+                return Rotation2d
+                        .fromRadians((Math.atan2(
+                                currentPose.getY() - flipTargetPose.getY(),
+                                currentPose.getX() - flipTargetPose.getX())))
 
-            }
+                        .minus(!Robot.isRed() ? Rotation2d.k180deg : Rotation2d.kZero);
+
+            };
+
 
         }
 

@@ -15,12 +15,6 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "AutoAlign"
-                }
-              },
-              {
                 "type": "race",
                 "data": {
                   "commands": [

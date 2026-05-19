@@ -52,37 +52,53 @@
         "y": 4.658970899290393
       },
       "prevControl": {
-        "x": 6.36856016321299,
-        "y": 3.930788063085157
+        "x": 6.107447874810955,
+        "y": 3.921253462964078
       },
       "nextControl": {
-        "x": 5.926007664665211,
-        "y": 5.979218124545124
+        "x": 6.339177101967799,
+        "y": 5.56830053667263
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.649864731168122,
-        "y": 5.023190786481077
+        "x": 2.2990518783542035,
+        "y": 5.2437924865831835
       },
       "prevControl": {
-        "x": 1.7988637759279476,
-        "y": 5.547380196961427
+        "x": 2.445080500894454,
+        "y": 5.56830053667263
+      },
+      "nextControl": {
+        "x": 2.099190975063318,
+        "y": 4.79965714593677
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.2990518783542035,
+        "y": 3.7997316636851517
+      },
+      "prevControl": {
+        "x": 2.319813248317639,
+        "y": 4.048868103246372
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "DepotFollowEnd"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8699285810085837,
+      "waypointRelativePos": 0.6684491978609619,
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 1.191389484978541,
+      "waypointRelativePos": 1.323529411764706,
       "rotationDegrees": 90.0
     },
     {
@@ -92,13 +108,17 @@
     {
       "waypointRelativePos": 3.212211641630902,
       "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 3.5514874141876422,
+      "rotationDegrees": -90.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 1.751080022609817,
-      "maxWaypointRelativePos": 3.2082021156330747,
+      "maxWaypointRelativePos": 3.06145251396648,
       "constraints": {
         "maxVelocity": 2.0,
         "maxAcceleration": 7.0,
@@ -133,13 +153,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -19.42033088689537
+    "rotation": 1.6846843178963444
   },
   "reversed": false,
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 178.7596159470856
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

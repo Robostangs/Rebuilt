@@ -7,19 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CStart - Shoot "
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Photoshoot"
+            "pathName": "Forward Trench"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Center",
+  "folder": "Outpost",
   "choreoAuto": false
 }

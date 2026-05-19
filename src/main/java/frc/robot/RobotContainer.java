@@ -29,6 +29,8 @@ import frc.robot.commands.IntakeCommands.HomeIntake;
 import frc.robot.commands.IntakeCommands.IntakeFactory;
 import frc.robot.commands.IntakeCommands.setKirbyWheels;
 import frc.robot.commands.AutoAlign;
+import frc.robot.commands.BlockerCommands.HomeBlocker;
+import frc.robot.commands.BlockerCommands.setBlockerPosition;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Dumper.Flywheel;
 
@@ -106,11 +108,9 @@ public class RobotContainer {
                 setDrivetrain();
 
                 xDrive.rightTrigger().whileTrue(
-                                (ShootFactory.RegressionShoot()))
-                ;
+                                (ShootFactory.RegressionShoot()));
 
-                xDrive.rightBumper().whileTrue(ShootFactory.SmartFeed());
-
+                xDrive.leftBumper().whileTrue(new HomeIntake(false));
 
                 // close shoot
 
@@ -131,8 +131,8 @@ public class RobotContainer {
                                                                                 Constants.FieldConstants.resetPose))));
 
                 xDrive.povUp().onTrue(drivetrain.runOnce(
-                                () -> drivetrain.seedFieldCentric())); 
-                                // setoperatorperspective???? huh tweakin
+                                () -> drivetrain.seedFieldCentric()));
+                // setoperatorperspective???? huh tweakin
 
                 xDrive.povRight().onTrue(new InstantCommand(
                                 (() -> useVision = !useVision)));
@@ -145,13 +145,11 @@ public class RobotContainer {
                 xDrive.b().whileTrue(IntakeFactory.ballStuck());
         }
 
-     
         public void configureManipBindings() {
 
                 xManip.rightBumper().onTrue(
-                                new InstantCommand(() -> Robot.toggleShooterPass()));
+                                new InstantCommand(() -> Robot.toggleDefense()));
 
-                // xManip.x().onTrue(new InstantCommand(() -> Robot.toggleShooterIsDumb()));
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05).whileTrue(
                                 new RunCommand(
@@ -167,26 +165,29 @@ public class RobotContainer {
                                 .onFalse(new setHoodPosition(() -> 0));
                 xManip.b().whileTrue(ShootFactory.MedPass())
                                 .onFalse(new setHoodPosition(() -> 0));
-                ;
+                
                 xManip.y().whileTrue(ShootFactory.FarPass())
-                                .onFalse(new setHoodPosition(() -> 0));
-                ;
+                                .onFalse(new setHoodPosition(() -> 0));;
 
-                xManip.rightBumper().onTrue(new InstantCommand(
-                                (() -> useFriday = !useFriday)));
+           
+                xManip.rightPaddle().whileTrue(new setBlockerPosition(Constants.BlockerConstants.kExtendSetpoint,false))
+                .whileFalse(new setBlockerPosition(Constants.BlockerConstants.kRetractSetpoint,true));
+
+                xManip.leftPaddle().whileTrue(new setBlockerPosition(Constants.BlockerConstants.kRetractSetpoint,true));
+
+                xManip.rightBumper().whileTrue(new HomeBlocker());
+
 
                 xManip.leftBumper().whileTrue(ShootFactory.SmartFeed());
 
-                xManip.rightPaddle().whileTrue(new HomeIntake(false));
                 xManip.leftPaddle().whileTrue(new HomeIntake(true));
 
-                xManip.rightTrigger().whileTrue(new setHoodDutyCycle(() -> xManip.getLeftTriggerAxis() * -0.2));
+                xManip.leftTrigger().onTrue(new InstantCommand(() -> Robot.toggleDefense()));
 
-                xManip.leftTrigger().whileTrue(new setHoodDutyCycle(() -> xManip.getLeftTriggerAxis() * 0.2));
 
         }
 
-           public void configureTestBindings() {
+        public void configureTestBindings() {
                 setDrivetrain();
 
                 xTest.rightPaddle().whileTrue(new HomeIntake(false));
@@ -201,7 +202,6 @@ public class RobotContainer {
                 xTest.b().whileTrue(new RunHopper(() -> 1));
 
         }
-
 
         private void setDrivetrain() {
                 DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
@@ -234,7 +234,7 @@ public class RobotContainer {
                         // * MaxAngularRate
                         // * (leftBumper.getAsDouble()
                         // + .25)))).withName("Reg Drive"));
-// .debounce(0.15, DebounceType.kFalling
+                        // .debounce(0.15, DebounceType.kFalling
                         new Trigger(isMoving).whileTrue(drivetrain
                                         .applyRequest(() -> new SwerveRequest.SwerveDriveBrake()).withName("XDrive"));
 
@@ -258,11 +258,17 @@ public class RobotContainer {
         }
 
         private void configureSimBinds() {
-                new Trigger(() -> xSim.getRawButtonPressed(1))
-                                .whileTrue(new AutoAlign(() -> -xSim.getRawAxis(0),
-                                                () -> xSim.getRawAxis(1),
-                                                () -> true));
+                // new Trigger(() -> xSim.getRawButtonPressed(1))
+                //                 .whileTrue(new AutoAlign(() -> 0d,
+                //                                 () -> 0d,
+                //                                 () -> true));
 
+                // new Trigger(() -> xSim.getRawButtonPressed(2))
+                //                 .onTrue(new InstantCommand(() -> Robot.toggleDefense()));
 
-        }
+         new Trigger(() -> xSim.getRawButtonPressed(1))
+                                .whileTrue(new  setBlockerPosition(0.5, false));       
+                                  new Trigger(() -> xSim.getRawButtonPressed(2))
+                                .whileTrue(new  setBlockerPosition(0, true));     
+}
 }

@@ -34,7 +34,7 @@ public class ShootFactory {
                                                 new WaitUntilCommand(() -> Feeder
                                                                 .getInstance()
                                                                 .feederAtTargetVelocity())
-                                                                .withTimeout(0.5)
+                                                                .withTimeout(0.3)
 
                                                                 .andThen(new RunHopper(
                                                                                 () -> Constants.HopperConstants.kRollerDC)));

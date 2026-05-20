@@ -108,21 +108,21 @@ public class RobotContainer {
                 setDrivetrain();
 
                 xDrive.rightTrigger().whileTrue(
-                                (ShootFactory.RegressionShoot()));
+                                (ShootFactory.DumbShoot()));
 
                 xDrive.leftBumper().whileTrue(new HomeIntake(false));
 
                 // close shoot
 
-                xDrive.rm().whileTrue(new setKirbyWheels(() -> 1));
-                xDrive.lm()
+               // xDrive.rm().whileTrue(new setKirbyWheels(() -> 1));
+              /*   xDrive.lm()
                                 .whileTrue(ShootFactory.DumbShoot())
                                 .onFalse(new setHoodPosition(() -> 0));
-                ;
+                */
 
                 xDrive.rightPaddle().whileTrue(IntakeFactory.ExtendIntake());
                 xDrive.leftPaddle().whileTrue(IntakeFactory.RetractIntake());
-
+                xDrive.rightBumper().whileTrue(new HomeHood());
                 // TODO Find ts pose
                 xDrive.povDown().onTrue(
                                 drivetrain.runOnce(() -> drivetrain.resetPose(
@@ -134,13 +134,13 @@ public class RobotContainer {
                                 () -> drivetrain.seedFieldCentric()));
                 // setoperatorperspective???? huh tweakin
 
-                xDrive.povRight().onTrue(new InstantCommand(
-                                (() -> useVision = !useVision)));
+                // xDrive.povRight().onTrue(new InstantCommand(
+                //                 (() -> useVision = !useVision)));
 
-                xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
+              /*   xDrive.a().whileTrue(new AutoAlign(() -> xDrive.getLeftY(), () -> xDrive.getLeftX(),
                                 () -> xDrive.getLeftTriggerAxis() < 0.2)
                                 .withInterruptBehavior(InterruptionBehavior.kCancelIncoming).withName("Auto Align"));
-
+                */
                 xDrive.y().whileTrue(IntakeFactory.TrueSpit());
                 xDrive.b().whileTrue(IntakeFactory.ballStuck());
         }
@@ -204,7 +204,7 @@ public class RobotContainer {
         }
 
         private void setDrivetrain() {
-                DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.5 : 1;
+                DoubleSupplier leftBumper = () -> (xDrive.leftTrigger().getAsBoolean()) ? 0.1 : 0.3;
                 BooleanSupplier isMoving = () -> (!((Math.abs(xDrive.getLeftX()) > 0.1
                                 || Math.abs(xDrive.getLeftY()) > 0.1
                                 || Math.abs(xDrive.getRightX()) > 0.1)));

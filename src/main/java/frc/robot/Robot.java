@@ -50,6 +50,7 @@ import frc.robot.FeederCommands.setFeederSpeed;
 import frc.robot.Stable.LimelightHelpers;
 import frc.robot.Stable.TimedRobotstangs;
 import frc.robot.commands.AutoAlign;
+import frc.robot.commands.BlockerCommands.setBlockerPosition;
 import frc.robot.commands.DumperCommands.ShootFactory;
 import frc.robot.commands.DumperCommands.Flywheel.ChargeUp;
 import frc.robot.commands.DumperCommands.Flywheel.setFlywheelDutyCycle;
@@ -556,6 +557,10 @@ public class Robot extends TimedRobotstangs {
     }
 
     public void loadNamedCommands() {
+        SwerveRequest.ApplyRobotSpeeds john = new SwerveRequest.ApplyRobotSpeeds();
+        john.Speeds.omegaRadiansPerSecond = 5.48;
+
+        NamedCommands.registerCommand("ROATTEJOHN",CommandSwerveDrivetrain.getInstance().applyRequest(() -> john));
 
         NamedCommands.registerCommand("Extend", IntakeFactory.ExtendIntake());
 

@@ -111,7 +111,7 @@ public class RobotContainer {
                                 (ShootFactory.RegressionShoot()));
 
                 xDrive.leftBumper().whileTrue(new HomeIntake(false));
-
+                xDrive.rightBumper().whileTrue(new HomeIntake(false));
                 // close shoot
 
                 xDrive.rm().whileTrue(new setKirbyWheels(() -> 1));
@@ -147,13 +147,11 @@ public class RobotContainer {
 
         public void configureManipBindings() {
 
-                xManip.rightBumper().onTrue(
-                                new InstantCommand(() -> Robot.toggleDefense()));
-
+              
 
                 new Trigger(() -> Math.abs(xManip.getLeftY()) > 0.05).whileTrue(
                                 new RunCommand(
-                                                () -> Flywheel.getInstance().setAdj(xManip.getLeftY() * -5)))
+                                                () -> Flywheel.getInstance().setAdj(xManip.getLeftY() * -10)))
                                 .onFalse(
                                                 new InstantCommand(
                                                                 () -> Flywheel.getInstance()

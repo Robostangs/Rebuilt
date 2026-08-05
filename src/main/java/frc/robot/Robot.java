@@ -80,7 +80,7 @@ public class Robot extends TimedRobotstangs {
 
     public static Constants.ElasticConstants.whoCanScore canBlueScore;
 
-    String autoname = "";
+    String autoname = "Gem Follow";
     boolean flip = false;
     String oldAutoname = " ";
     boolean oldFlip = false;
